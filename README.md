@@ -3,8 +3,8 @@
 > Free, privacy-first utility hub. PDF · Images · Finance · Dev · Social · Resume  
 > No sign-up · No uploads · Files stay in your browser · Forever free
 
-**Live:** `toolverse.vercel.app` → [Link](https://toolverses.vercel.app/)  
-**Docs:** `toolverses.vercel.app/docs` or separate — see below  
+**Live:** `toolsversee.vercel.app` → [Link](https://toolsversee.vercel.app/)  
+**Docs:** `toolsversee.vercel.app/docs` or separate — see below  
 **Status:** Phase 1 in progress — Compress PDF live, 5 more tools shipping soon
 
 ---
