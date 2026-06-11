@@ -1,0 +1,1103 @@
+this is my project structure created
+
+# app folders
+mkdir app/(tools)
+mkdir app/(tools)/compress-pdf
+mkdir app/(tools)/merge-pdf
+mkdir app/(tools)/split-pdf
+mkdir app/(tools)/image
+mkdir app/(tools)/finance
+mkdir app/(tools)/dev
+mkdir app/(tools)/social
+mkdir app/(tools)/docs-tools
+
+# component folders
+mkdir components/layout
+mkdir components/tools
+mkdir components/home
+mkdir components/ui
+
+# lib folders
+mkdir lib/pdf
+mkdir lib/image
+mkdir lib/finance
+mkdir lib/utils
+
+# config
+mkdir config
+
+# public
+mkdir public/docs
+mkdir public/og
+
+
+this is my color palette File
+
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary)}
+.section{margin-bottom:2rem}
+.label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.swatch{border-radius:var(--border-radius-lg);overflow:hidden;border:0.5px solid rgba(0,0,0,0.08)}
+.swatch-color{height:52px}
+.swatch-info{padding:8px 10px;background:var(--color-background-primary)}
+.swatch-name{font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:1px}
+.swatch-hex{font-size:11px;color:var(--color-text-secondary);font-family:var(--font-mono)}
+.swatch-role{font-size:10px;color:var(--color-text-tertiary);margin-top:2px}
+.scale-row{display:flex;gap:4px;margin-bottom:12px;border-radius:var(--border-radius-md);overflow:hidden}
+.scale-stop{flex:1;height:36px;display:flex;align-items:center;justify-content:center}
+.scale-stop span{font-size:9px;font-weight:500;opacity:0.7}
+.rule-card{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:8px}
+.rule-head{font-size:13px;font-weight:500;margin-bottom:4px}
+.rule-body{font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.usage-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.usage-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px}
+.usage-card .tag{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:1.5rem 0}
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.comp-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.comp-header{padding:10px 14px;font-size:11px;font-weight:500;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+.comp-body{padding:12px 14px}
+.comp-btn-bad{padding:7px 16px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;border:none;cursor:default;margin-bottom:8px;display:block;width:100%}
+.comp-btn-good{padding:7px 16px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500;border:none;cursor:default;margin-bottom:8px;display:block;width:100%}
+.comp-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:20px;margin-right:4px;margin-bottom:4px}
+.badge-dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+</style>
+
+<h2 class="sr-only">Toolverse color palette guide for a premium, MNC-grade product design</h2>
+
+<div class="section">
+  <div class="label">Primary brand — Zinc (neutral-first, premium)</div>
+  <div class="scale-row">
+    <div class="scale-stop" style="background:#FAFAF9"><span style="color:#888">50</span></div>
+    <div class="scale-stop" style="background:#F4F4F0"><span style="color:#888">100</span></div>
+    <div class="scale-stop" style="background:#E8E8E2"><span style="color:#888">200</span></div>
+    <div class="scale-stop" style="background:#D1D0C8"><span style="color:#888">300</span></div>
+    <div class="scale-stop" style="background:#A8A79E"><span style="color:#888">400</span></div>
+    <div class="scale-stop" style="background:#6B6A62"><span style="color:#eee">500</span></div>
+    <div class="scale-stop" style="background:#3C3B35"><span style="color:#eee">700</span></div>
+    <div class="scale-stop" style="background:#1C1C18"><span style="color:#eee">900</span></div>
+  </div>
+
+  <div class="row">
+    <div class="swatch" style="width:140px">
+      <div class="swatch-color" style="background:#1C1C18"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Zinc 900</div>
+        <div class="swatch-hex">#1C1C18</div>
+        <div class="swatch-role">Headings, primary text</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:140px">
+      <div class="swatch-color" style="background:#FAFAF9"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Zinc 50</div>
+        <div class="swatch-hex">#FAFAF9</div>
+        <div class="swatch-role">Page background</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:140px">
+      <div class="swatch-color" style="background:#F4F4F0"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Zinc 100</div>
+        <div class="swatch-hex">#F4F4F0</div>
+        <div class="swatch-role">Card / surface bg</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:140px">
+      <div class="swatch-color" style="background:#E8E8E2"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Zinc 200</div>
+        <div class="swatch-hex">#E8E8E2</div>
+        <div class="swatch-role">Borders, dividers</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="label">Accent — Forest (single, purposeful)</div>
+  <div class="scale-row">
+    <div class="scale-stop" style="background:#E8F5EF"><span style="color:#888">50</span></div>
+    <div class="scale-stop" style="background:#C3E8D5"><span style="color:#888">100</span></div>
+    <div class="scale-stop" style="background:#6DC49A"><span style="color:#888">300</span></div>
+    <div class="scale-stop" style="background:#1F7A52"><span style="color:#eee">500</span></div>
+    <div class="scale-stop" style="background:#145C3C"><span style="color:#eee">600</span></div>
+    <div class="scale-stop" style="background:#0B3D28"><span style="color:#eee">800</span></div>
+  </div>
+
+  <div class="row">
+    <div class="swatch" style="width:140px">
+      <div class="swatch-color" style="background:#145C3C"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Forest 600</div>
+        <div class="swatch-hex">#145C3C</div>
+        <div class="swatch-role">CTA buttons, links, live badge</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:140px">
+      <div class="swatch-color" style="background:#1F7A52"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Forest 500</div>
+        <div class="swatch-hex">#1F7A52</div>
+        <div class="swatch-role">Button hover state</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:140px">
+      <div class="swatch-color" style="background:#E8F5EF"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Forest 50</div>
+        <div class="swatch-hex">#E8F5EF</div>
+        <div class="swatch-role">Live badge bg, selected chip bg</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:140px">
+      <div class="swatch-color" style="background:#C3E8D5"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Forest 100</div>
+        <div class="swatch-hex">#C3E8D5</div>
+        <div class="swatch-role">Progress fill, success states</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="label">Supporting semantics — used sparingly</div>
+  <div class="row">
+    <div class="swatch" style="width:130px">
+      <div class="swatch-color" style="background:#1A1A18"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Ink</div>
+        <div class="swatch-hex">#1A1A18</div>
+        <div class="swatch-role">Nav, footer bg (dark variant)</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:130px">
+      <div class="swatch-color" style="background:#FFFFFF;border:0.5px solid #E8E8E2"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">White</div>
+        <div class="swatch-hex">#FFFFFF</div>
+        <div class="swatch-role">Cards, modals, inputs</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:130px">
+      <div class="swatch-color" style="background:#FDF3E7"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Amber 50</div>
+        <div class="swatch-hex">#FDF3E7</div>
+        <div class="swatch-role">Warning, "soon" badges</div>
+      </div>
+    </div>
+    <div class="swatch" style="width:130px">
+      <div class="swatch-color" style="background:#FEF0F0"></div>
+      <div class="swatch-info">
+        <div class="swatch-name">Red 50</div>
+        <div class="swatch-hex">#FEF0F0</div>
+        <div class="swatch-role">Error states only</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="label">The 3 rules that separate MNC design from generic</div>
+  <div class="rule-card">
+    <div class="rule-head">Rule 1 — One accent color, used with discipline</div>
+    <div class="rule-body">Stripe, Linear, Vercel, Notion — they all pick one accent and protect it. Forest 600 (#145C3C) is the only color that draws attention. It appears on: primary CTA button, active nav link, live badge dot, selected chip border, progress fill. Nowhere else. The moment you add a second accent (blue for info, orange for warning on the same screen), it stops feeling premium.</div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-head">Rule 2 — Neutral base does the heavy lifting</div>
+    <div class="rule-body">90% of your UI is zinc. The page background (#FAFAF9) is barely off-white — not cream, not gray, not warm beige. Cards sit on #F4F4F0. Borders are #E8E8E2. Text is near-black (#1C1C18), not pure black. This slight warmth in the neutrals is what makes Linear, Craft, and Raycast feel "designed" rather than default-browser.</div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-head">Rule 3 — Dark mode is the same palette, inverted with intent</div>
+    <div class="rule-body">Dark mode bg: #111110. Card surface: #1A1A17. Border: #2C2C28. Text: #EDEDEA. Accent stays Forest but lightens to #4CAF82 for contrast. Every color in your CSS variables file should have a dark pair. Companies that skip this feel unfinished to power users.</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="label">How it looks in practice</div>
+  <div class="comparison">
+    <div class="comp-card">
+      <div class="comp-header">Generic / template look</div>
+      <div class="comp-body">
+        <button class="comp-btn-bad" style="background:#2563EB;color:#fff">Compress PDF</button>
+        <div style="margin-bottom:8px">
+          <span class="comp-badge" style="background:#DCFCE7;color:#16A34A"><span class="badge-dot" style="background:#16A34A"></span>Live</span>
+          <span class="comp-badge" style="background:#FEF9C3;color:#CA8A04">Soon</span>
+          <span class="comp-badge" style="background:#EDE9FE;color:#7C3AED">AI</span>
+        </div>
+        <div style="font-size:11px;color:#9CA3AF">Too many saturated colors. Blue CTA competes with green badge. Feels like a Tailwind default.</div>
+      </div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-header">MNC-grade / Toolverse</div>
+      <div class="comp-body">
+        <button class="comp-btn-good" style="background:#145C3C;color:#fff">Compress PDF</button>
+        <div style="margin-bottom:8px">
+          <span class="comp-badge" style="background:#E8F5EF;color:#0B3D28"><span class="badge-dot" style="background:#145C3C"></span>Live</span>
+          <span class="comp-badge" style="background:#F4F4F0;color:#6B6A62">Soon</span>
+          <span class="comp-badge" style="background:#F0EEFF;color:#3C3089">AI</span>
+        </div>
+        <div style="font-size:11px;color:var(--color-text-secondary)">One accent. Badges use muted tints. Everything defers to the CTA. Feels intentional.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="section">
+  <div class="label">Your globals.css variables — copy this</div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:16px;font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);line-height:1.9">
+    <span style="color:var(--color-text-tertiary)">/* Light mode */</span><br>
+    --bg: #FAFAF9;<br>
+    --bg-card: #FFFFFF;<br>
+    --bg-surface: #F4F4F0;<br>
+    --border: #E8E8E2;<br>
+    --border-faint: #F0F0EC;<br>
+    --text: #1C1C18;<br>
+    --text-secondary: #6B6A62;<br>
+    --text-tertiary: #A8A79E;<br>
+    --text-disabled: #D1D0C8;<br>
+    --brand: #145C3C;<br>
+    --brand-hover: #1F7A52;<br>
+    --brand-light: #E8F5EF;<br>
+    --brand-border: #C3E8D5;<br>
+    --brand-text: #0B3D28;<br>
+    <br>
+    <span style="color:var(--color-text-tertiary)">/* Dark mode */</span><br>
+    --bg: #111110;<br>
+    --bg-card: #1A1A17;<br>
+    --bg-surface: #222220;<br>
+    --border: #2C2C28;<br>
+    --text: #EDEDEA;<br>
+    --text-secondary: #A8A79E;<br>
+    --brand: #4CAF82;<br>
+    --brand-light: #0B3D28;<br>
+  </div>
+</div>
+
+
+
+this are my files created
+
+
+1. // components/home/AnnouncementBar.tsx
+
+export default function AnnouncementBar() {
+    return (
+        <div style={{
+            display: "flex", alignItems: "center", justifyContent: "center",
+            gap: 6,
+            padding: "7px 16px",
+            background: "var(--brand-light)",
+            border: "0.5px solid var(--brand-border)",
+            borderRadius: "var(--radius-lg)",
+            width: "fit-content",
+            margin: "0 auto 28px",
+        }}>
+            <span style={{
+                fontSize: 11, fontWeight: 600,
+                background: "var(--brand-light)",
+                color: "var(--brand-text)",
+                border: "0.5px solid var(--brand-border)",
+                borderRadius: 20, padding: "2px 8px",
+            }}>
+                ✓ No sign-up
+            </span>
+            <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>·</span>
+            <span style={{ fontSize: 11, color: "var(--text-secondary)", fontWeight: 500 }}>
+                No uploads
+            </span>
+            <span style={{ fontSize: 11, color: "var(--text-tertiary)" }}>·</span>
+            <span style={{ fontSize: 11, color: "var(--brand)", fontWeight: 600 }}>
+                100% free
+            </span>
+        </div>
+    );
+}
+
+
+
+2. // components/home/DailyWidgetsRow.tsx
+
+import QuickAccessWidget from "./QuickAccessWidget";
+import WeatherWidget from "./WeatherWidget";
+import TodoWidget from "./TodoWidget";
+
+export default function DailyWidgetsRow() {
+    return (
+        <section style={{
+            maxWidth: 900,
+            margin: "0 auto 40px",
+            padding: "0 24px",
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: 12,
+        }}>
+            <QuickAccessWidget />
+            <WeatherWidget />
+            <TodoWidget />
+
+            <style>{`
+        @media (max-width: 768px) {
+          .daily-widgets { grid-template-columns: 1fr 1fr !important; }
+        }
+        @media (max-width: 500px) {
+          .daily-widgets { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+        </section>
+    );
+}
+
+
+
+
+3. // components/home/HeroSection.tsx
+
+import Link from "next/link";
+import AnnouncementBar from "./AnnouncementBar";
+
+const trustSignals = [
+    { icon: "⚡", label: "Instant results" },
+    { icon: "🔒", label: "Files stay on device" },
+    { icon: "📱", label: "Any device" },
+    { icon: "✦", label: "AI-powered" },
+];
+
+export default function HeroSection() {
+    return (
+        <section style={{
+            paddingTop: "calc(var(--navbar-h) + 56px)",
+            paddingBottom: 64,
+            paddingLeft: 24,
+            paddingRight: 24,
+            textAlign: "center",
+            maxWidth: 640,
+            margin: "0 auto",
+        }}>
+            <AnnouncementBar />
+
+            {/* Headline */}
+            <h1 style={{
+                fontSize: "clamp(36px, 6vw, 52px)",
+                fontWeight: 700,
+                color: "var(--text)",
+                lineHeight: 1.15,
+                letterSpacing: "-1.5px",
+                marginBottom: 4,
+            }}>
+                PDF tools that
+            </h1>
+            <h1 style={{
+                fontSize: "clamp(36px, 6vw, 52px)",
+                fontWeight: 700,
+                fontStyle: "italic",
+                color: "var(--brand)",
+                lineHeight: 1.15,
+                letterSpacing: "-1.5px",
+                marginBottom: 20,
+            }}>
+                just work.
+            </h1>
+
+            <p style={{
+                fontSize: 15,
+                color: "var(--text-secondary)",
+                lineHeight: 1.7,
+                marginBottom: 32,
+                maxWidth: 420,
+                margin: "0 auto 32px",
+            }}>
+                Compress, merge, split, convert — processed entirely in your browser.
+                Your files never touch a server.
+            </p>
+
+            {/* CTA buttons */}
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
+                <Link href="/compress-pdf" style={{
+                    padding: "11px 22px",
+                    background: "var(--text)",
+                    color: "var(--bg)",
+                    borderRadius: "var(--radius-md)",
+                    fontSize: 14, fontWeight: 600,
+                    textDecoration: "none",
+                    letterSpacing: "-0.2px",
+                    transition: "opacity 0.15s",
+                }}
+                    onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
+                    onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+                >
+                    Compress a PDF →
+                </Link>
+                <Link href="/tools" style={{
+                    padding: "11px 22px",
+                    background: "transparent",
+                    color: "var(--text-secondary)",
+                    border: "0.5px solid var(--border)",
+                    borderRadius: "var(--radius-md)",
+                    fontSize: 14, fontWeight: 500,
+                    textDecoration: "none",
+                    transition: "border-color 0.15s, color 0.15s",
+                }}
+                    onMouseEnter={e => {
+                        e.currentTarget.style.borderColor = "var(--text-tertiary)";
+                        e.currentTarget.style.color = "var(--text)";
+                    }}
+                    onMouseLeave={e => {
+                        e.currentTarget.style.borderColor = "var(--border)";
+                        e.currentTarget.style.color = "var(--text-secondary)";
+                    }}
+                >
+                    Explore tools
+                </Link>
+            </div>
+
+            {/* Trust signals */}
+            <div style={{
+                display: "flex", gap: 16, justifyContent: "center",
+                flexWrap: "wrap",
+            }}>
+                {trustSignals.map(({ icon, label }) => (
+                    <div key={label} style={{
+                        display: "flex", alignItems: "center", gap: 5,
+                        fontSize: 12, color: "var(--text-tertiary)",
+                    }}>
+                        <span style={{ fontSize: 11 }}>{icon}</span>
+                        {label}
+                    </div>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+
+
+
+4. // components/home/QuickAccessWidget.tsx
+
+import Link from "next/link";
+
+const QUICK_LINKS = [
+    { label: "Compress PDF", href: "/compress-pdf" },
+    { label: "Merge PDF", href: "/merge-pdf" },
+    { label: "Image compress", href: "/image/compress" },
+    { label: "QR generator", href: "/social/qr-generator" },
+    { label: "JSON formatter", href: "/dev/json-formatter" },
+    { label: "Resume builder", href: "/docs/resume-builder" },
+];
+
+export default function QuickAccessWidget() {
+    return (
+        <div style={{
+            background: "var(--bg-card)",
+            border: "0.5px solid var(--border)",
+            borderRadius: "var(--radius-lg)",
+            padding: "14px 16px",
+            minWidth: 0,
+        }}>
+            <div style={{
+                fontSize: 11, fontWeight: 600, color: "var(--text-tertiary)",
+                textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 10,
+            }}>
+                Quick access
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {QUICK_LINKS.map(({ label, href }) => (
+                    <Link key={href} href={href} style={{
+                        display: "flex", alignItems: "center", gap: 7,
+                        fontSize: 12, color: "var(--text-secondary)",
+                        textDecoration: "none",
+                        padding: "3px 0",
+                        transition: "color 0.15s",
+                    }}
+                        onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+                        onMouseLeave={e => (e.currentTarget.style.color = "var(--text-secondary)")}
+                    >
+                        <span style={{
+                            width: 4, height: 4, borderRadius: "50%",
+                            background: "var(--border)", flexShrink: 0,
+                        }} />
+                        {label}
+                    </Link>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+
+
+
+5. // components/home/StatsRow.tsx
+
+const stats = [
+    { value: "0", label: "Sign-ups required" },
+    { value: "∞", label: "File size limit" },
+    { value: "100%", label: "Browser-side" },
+    { value: "Free", label: "Always, no card", accent: true },
+];
+
+export default function StatsRow() {
+    return (
+        <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 10,
+            maxWidth: 900,
+            margin: "0 auto 40px",
+            padding: "0 24px",
+        }}>
+            {stats.map(({ value, label, accent }) => (
+                <div key={label} style={{
+                    background: "var(--bg-card)",
+                    border: "0.5px solid var(--border)",
+                    borderRadius: "var(--radius-lg)",
+                    padding: "18px 16px",
+                    textAlign: "center",
+                }}>
+                    <div style={{
+                        fontSize: 22,
+                        fontWeight: 700,
+                        letterSpacing: "-0.5px",
+                        color: accent ? "var(--brand)" : "var(--text)",
+                        marginBottom: 4,
+                    }}>
+                        {value}
+                    </div>
+                    <div style={{
+                        fontSize: 11,
+                        color: "var(--text-tertiary)",
+                        fontWeight: 500,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                    }}>
+                        {label}
+                    </div>
+                </div>
+            ))}
+
+            <style>{`
+        @media (max-width: 500px) {
+          .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+      `}</style>
+        </div>
+    );
+}
+
+
+
+
+6. // components/home/TodoWidget.tsx
+
+"use client";
+
+import { useState } from "react";
+
+interface Task { id: number; text: string; done: boolean; }
+
+const INITIAL: Task[] = [
+    { id: 1, text: "Send invoice", done: true },
+    { id: 2, text: "Compress report PDF", done: false },
+    { id: 3, text: "Update resume", done: false },
+];
+
+export default function TodoWidget() {
+    const [tasks, setTasks] = useState<Task[]>(INITIAL);
+    const [input, setInput] = useState("");
+
+    const toggle = (id: number) =>
+        setTasks(t => t.map(x => x.id === id ? { ...x, done: !x.done } : x));
+
+    const add = () => {
+        const text = input.trim();
+        if (!text) return;
+        setTasks(t => [...t, { id: Date.now(), text, done: false }]);
+        setInput("");
+    };
+
+    return (
+        <div style={{
+            background: "var(--bg-card)",
+            border: "0.5px solid var(--border)",
+            borderRadius: "var(--radius-lg)",
+            padding: "14px 16px",
+            minWidth: 0,
+        }}>
+            <div style={{
+                fontSize: 11, fontWeight: 600, color: "var(--text-tertiary)",
+                textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 10,
+            }}>
+                Today's tasks
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 10 }}>
+                {tasks.map(task => (
+                    <label key={task.id} style={{
+                        display: "flex", alignItems: "center", gap: 8,
+                        cursor: "pointer",
+                    }}>
+                        <div onClick={() => toggle(task.id)} style={{
+                            width: 14, height: 14,
+                            borderRadius: 3,
+                            border: task.done ? "none" : "1.5px solid var(--border)",
+                            background: task.done ? "var(--brand)" : "transparent",
+                            flexShrink: 0, cursor: "pointer",
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>
+                            {task.done && (
+                                <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+                                    <path d="M2 5l2.5 2.5L8 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            )}
+                        </div>
+                        <span style={{
+                            fontSize: 12,
+                            color: task.done ? "var(--text-tertiary)" : "var(--text)",
+                            textDecoration: task.done ? "line-through" : "none",
+                        }}>
+                            {task.text}
+                        </span>
+                    </label>
+                ))}
+            </div>
+
+            {/* Add task row */}
+            <div style={{ display: "flex", gap: 6 }}>
+                <input
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && add()}
+                    placeholder="Add task…"
+                    style={{
+                        flex: 1, fontSize: 12, padding: "6px 8px",
+                        borderRadius: "var(--radius-sm)",
+                        border: "0.5px solid var(--border)",
+                        background: "var(--bg-surface)",
+                        color: "var(--text)",
+                        outline: "none",
+                    }}
+                />
+                <button onClick={add} style={{
+                    fontSize: 12, padding: "6px 10px",
+                    borderRadius: "var(--radius-sm)",
+                    border: "0.5px solid var(--border)",
+                    background: "var(--bg-surface)",
+                    color: "var(--text-secondary)",
+                    cursor: "pointer",
+                    fontWeight: 500,
+                }}>
+                    Add
+                </button>
+            </div>
+        </div>
+    );
+}
+
+
+
+
+7. // components/home/WeatherWidget.tsx
+
+"use client";
+
+import { useEffect, useState } from "react";
+
+interface WeatherDay { day: string; temp: string; }
+
+interface WeatherData {
+    city: string;
+    temp: string;
+    desc: string;
+    feels: string;
+    forecast: WeatherDay[];
+}
+
+// Mock data — replace with real API (e.g. Open-Meteo, free & no key)
+const MOCK: WeatherData = {
+    city: "Hyderabad",
+    temp: "32°C",
+    desc: "Partly cloudy",
+    feels: "36°",
+    forecast: [
+        { day: "Mon", temp: "34°" },
+        { day: "Tue", temp: "31°" },
+        { day: "Wed", temp: "29°" },
+    ],
+};
+
+export default function WeatherWidget() {
+    const [weather, setWeather] = useState<WeatherData>(MOCK);
+
+    // Swap this useEffect for a real Open-Meteo fetch when ready
+    useEffect(() => {
+        setWeather(MOCK);
+    }, []);
+
+    return (
+        <div style={{
+            background: "var(--bg-card)",
+            border: "0.5px solid var(--border)",
+            borderRadius: "var(--radius-lg)",
+            padding: "14px 16px",
+            minWidth: 0,
+        }}>
+            <div style={{
+                fontSize: 11, fontWeight: 600, color: "var(--text-tertiary)",
+                textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 10,
+                display: "flex", justifyContent: "space-between",
+            }}>
+                <span>Weather</span>
+                <span style={{ fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>
+                    {weather.city}
+                </span>
+            </div>
+
+            <div style={{ fontSize: 30, fontWeight: 700, color: "var(--text)", lineHeight: 1 }}>
+                {weather.temp}
+            </div>
+            <div style={{ fontSize: 12, color: "var(--text-secondary)", margin: "4px 0 12px" }}>
+                {weather.desc} · Feels {weather.feels}
+            </div>
+
+            <div style={{ display: "flex", gap: 6 }}>
+                {weather.forecast.map(({ day, temp }) => (
+                    <div key={day} style={{
+                        flex: 1, background: "var(--bg-surface)",
+                        borderRadius: "var(--radius-sm)",
+                        padding: "6px 4px", textAlign: "center",
+                    }}>
+                        <div style={{ fontSize: 10, color: "var(--text-tertiary)" }}>{day}</div>
+                        <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text)", marginTop: 2 }}>{temp}</div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+
+
+
+8. // components/layout/Footer.tsx
+
+import Link from "next/link";
+
+export default function Footer() {
+    return (
+        <footer style={{
+            background: "#1A1A18",
+            borderTop: "0.5px solid #2C2C28",
+            padding: "20px 24px",
+            display: "flex", alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap", gap: 12,
+        }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ color: "#4CAF82", fontSize: 14 }}>⚡</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#EDEDEA" }}>Toolverse</span>
+                <span style={{ fontSize: 12, color: "#6B6A62", marginLeft: 4 }}>
+                    · No sign-up · Always free
+                </span>
+            </div>
+
+            <div style={{ display: "flex", gap: 20 }}>
+                {["Privacy", "About", "Sitemap"].map(item => (
+                    <Link key={item} href={`/${item.toLowerCase()}`} style={{
+                        fontSize: 12, color: "#6B6A62", textDecoration: "none",
+                        transition: "color 0.15s",
+                    }}
+                        onMouseEnter={e => (e.currentTarget.style.color = "#A8A79E")}
+                        onMouseLeave={e => (e.currentTarget.style.color = "#6B6A62")}
+                    >
+                        {item}
+                    </Link>
+                ))}
+            </div>
+
+            <div style={{ fontSize: 11, color: "#3C3B35" }}>
+                © 2025 Toolverse
+            </div>
+        </footer>
+    );
+}
+
+
+
+
+9. //components/layout/Header.tsx
+
+import Link from 'next/link'
+
+export default function Header() {
+    return (
+        <nav className="nav">
+            <Link href="/" className="nav-logo" style={{ textDecoration: 'none' }}>
+                Toolverse<span className="dot" />
+            </Link>
+            <div className="nav-links">
+                {['Compress', 'Merge', 'Split', 'PDF → Word', 'AI Summarise'].map(t => (
+                    <span key={t} className="nav-link">{t}</span>
+                ))}
+            </div>
+            <div className="nav-actions">
+                <Link href="/compress-pdf" className="btn btn-primary btn-sm">
+                    Try free →
+                </Link>
+            </div>
+        </nav>
+    )
+}
+
+
+
+
+10. // components/layout/Navbar.tsx
+
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+
+export default function Navbar() {
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    return (
+        <>
+            <nav style={{
+                position: "fixed", top: 0, left: 0, right: 0,
+                height: "var(--navbar-h)",
+                background: "#1A1A18",
+                borderBottom: "0.5px solid #2C2C28",
+                zIndex: 1000,
+                display: "flex", alignItems: "center",
+                padding: "0 20px",
+            }}>
+                <div style={{
+                    display: "flex", alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%", maxWidth: 1100, margin: "0 auto",
+                }}>
+                    {/* Logo */}
+                    <Link href="/" style={{
+                        display: "flex", alignItems: "center", gap: 6,
+                        fontWeight: 700, fontSize: 16, color: "#EDEDEA",
+                        textDecoration: "none", letterSpacing: "-0.3px",
+                    }}>
+                        <span style={{ color: "#4CAF82" }}>⚡</span> Toolverse
+                        <span style={{
+                            fontSize: 10, fontWeight: 500,
+                            background: "#2C2C28", color: "#A8A79E",
+                            padding: "2px 6px", borderRadius: 4,
+                            border: "0.5px solid #3C3B35", marginLeft: 2,
+                        }}>Beta</span>
+                    </Link>
+
+                    {/* Desktop nav links */}
+                    <div style={{
+                        display: "flex", alignItems: "center", gap: 28,
+                    }} className="nav-links">
+                        {["Tools", "Blog", "API"].map(item => (
+                            <Link key={item} href={`/${item.toLowerCase()}`} style={{
+                                fontSize: 14, fontWeight: 500,
+                                color: "#A8A79E", textDecoration: "none",
+                                transition: "color 0.15s",
+                            }}
+                                onMouseEnter={e => (e.currentTarget.style.color = "#EDEDEA")}
+                                onMouseLeave={e => (e.currentTarget.style.color = "#A8A79E")}
+                            >
+                                {item}
+                            </Link>
+                        ))}
+                    </div>
+
+                    {/* CTA */}
+                    <Link href="/tools" style={{
+                        padding: "8px 18px",
+                        background: "var(--brand, #145C3C)",
+                        color: "#fff",
+                        borderRadius: "var(--radius-md)",
+                        fontSize: 13, fontWeight: 600,
+                        textDecoration: "none",
+                        display: "flex", alignItems: "center", gap: 4,
+                        letterSpacing: "-0.1px",
+                        transition: "background 0.15s",
+                    }}
+                        onMouseEnter={e => (e.currentTarget.style.background = "#1F7A52")}
+                        onMouseLeave={e => (e.currentTarget.style.background = "#145C3C")}
+                    >
+                        Try free →
+                    </Link>
+                </div>
+            </nav>
+
+            <style>{`
+        @media (max-width: 640px) {
+          .nav-links { display: none !important; }
+        }
+      `}</style>
+        </>
+    );
+}
+
+
+
+11. // config/tools.ts
+
+export type ToolStatus = "live" | "soon" | "ai";
+
+export interface Tool {
+    slug: string;
+    name: string;
+    desc: string;
+    category: string;
+    status: ToolStatus;
+    icon: string;         // emoji or svg name
+    related: string[];       // slugs of related tools
+    keywords: string[];
+}
+
+export const TOOLS: Tool[] = [
+    // ── PDF ──────────────────────────────────────────
+    {
+        slug: "compress-pdf",
+        name: "Compress PDF",
+        desc: "Reduce file size for email, portals, or storage.",
+        category: "pdf", status: "live", icon: "📄",
+        related: ["merge-pdf", "split-pdf", "image-compress", "image-to-pdf"],
+        keywords: ["compress pdf", "reduce pdf size", "pdf compressor free"],
+    },
+    {
+        slug: "merge-pdf",
+        name: "Merge PDF",
+        desc: "Combine multiple PDFs into one document.",
+        category: "pdf", status: "soon", icon: "🗂️",
+        related: ["compress-pdf", "split-pdf", "rotate-pdf"],
+        keywords: ["merge pdf", "combine pdf", "join pdf"],
+    },
+    {
+        slug: "split-pdf",
+        name: "Split PDF",
+        desc: "Extract pages or split into separate files.",
+        category: "pdf", status: "soon", icon: "✂️",
+        related: ["merge-pdf", "compress-pdf", "rotate-pdf"],
+        keywords: ["split pdf", "extract pages pdf"],
+    },
+    {
+        slug: "pdf-to-word",
+        name: "PDF → Word",
+        desc: "Convert any PDF into an editable .docx file.",
+        category: "pdf", status: "soon", icon: "📝",
+        related: ["word-to-pdf", "compress-pdf"],
+        keywords: ["pdf to word", "pdf to docx"],
+    },
+    {
+        slug: "image-to-pdf",
+        name: "Image → PDF",
+        desc: "Turn photos or PNGs into a clean PDF.",
+        category: "pdf", status: "soon", icon: "🖼️",
+        related: ["compress-pdf", "image-compress"],
+        keywords: ["image to pdf", "photo to pdf"],
+    },
+    {
+        slug: "ai-summarise",
+        name: "AI Summarise",
+        desc: "Smart summary, key points, and instant Q&A.",
+        category: "pdf", status: "ai", icon: "✦",
+        related: ["compress-pdf", "pdf-to-word"],
+        keywords: ["ai pdf summary", "pdf chat", "summarise pdf"],
+    },
+
+    // ── Image ─────────────────────────────────────────
+    {
+        slug: "image-compress",
+        name: "Image Compress",
+        desc: "Compress JPG, PNG, WebP without losing quality.",
+        category: "image", status: "live", icon: "🖼️",
+        related: ["compress-pdf", "image-resize", "image-to-pdf"],
+        keywords: ["image compressor", "compress image online"],
+    },
+    {
+        slug: "image-resize",
+        name: "Image Resize",
+        desc: "Resize to any dimension or preset.",
+        category: "image", status: "soon", icon: "📐",
+        related: ["image-compress", "image-convert"],
+        keywords: ["resize image online", "image resizer free"],
+    },
+
+    // ── Finance ───────────────────────────────────────
+    {
+        slug: "gst-calculator",
+        name: "GST Calculator",
+        desc: "Calculate GST inclusive / exclusive instantly.",
+        category: "finance", status: "soon", icon: "🧮",
+        related: ["gst-invoice", "emi-calculator"],
+        keywords: ["gst calculator india", "gst online"],
+    },
+    {
+        slug: "emi-calculator",
+        name: "EMI Calculator",
+        desc: "Monthly EMI for home, car, or personal loan.",
+        category: "finance", status: "soon", icon: "🏦",
+        related: ["gst-calculator", "sip-calculator"],
+        keywords: ["emi calculator", "loan emi calculator"],
+    },
+
+    // ── Dev ───────────────────────────────────────────
+    {
+        slug: "json-formatter",
+        name: "JSON Formatter",
+        desc: "Format, validate, and minify JSON instantly.",
+        category: "dev", status: "soon", icon: "{ }",
+        related: ["base64", "url-encoder", "regex-tester"],
+        keywords: ["json formatter online", "json validator"],
+    },
+
+    // ── Social ────────────────────────────────────────
+    {
+        slug: "qr-generator",
+        name: "QR Generator",
+        desc: "Generate QR codes for any URL or text.",
+        category: "social", status: "soon", icon: "▦",
+        related: ["gst-invoice", "image-compress"],
+        keywords: ["qr code generator free", "create qr code"],
+    },
+];
+
+// Convenience helpers
+export const getLiveTool = (slug: string) =>
+    TOOLS.find(t => t.slug === slug);
+
+export const getToolsByCategory = (category: string) =>
+    TOOLS.filter(t => t.category === category);
+
+export const getRelatedTools = (slug: string) => {
+    const tool = getLiveTool(slug);
+    if (!tool) return [];
+    return tool.related
+        .map(s => getLiveTool(s))
+        .filter(Boolean) as Tool[];
+};
+
+
+
+now i want to create my home page one by one components files which are remaining and same as the docs file diagrams
+
+make sure that reusable components are build and added in the main page 
+
+make sure to add the file path comments on header of the file
+
+and make this completely fit to all the sizes of the desktops and pcs and mobiles it should perfect with the correct and proper placements of buttons, icons, and elements

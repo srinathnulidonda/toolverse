@@ -1,34 +1,73 @@
 // app/layout.tsx
-
-import type { Metadata } from 'next'
-import './globals.css'
+import type { Metadata } from "next";
+import "./globals.css";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: 'Toolverse — Free PDF Tools. No Sign-Up.',
-  description: 'Compress, merge, split and convert PDFs instantly in your browser. No sign-up, no upload limit. 100% private.',
-  keywords: 'compress pdf, pdf tools, pdf compressor, merge pdf, pdf to word, split pdf, free pdf online',
-}
+    title: {
+        default: "Toolverse — Free Utility Hub for Everyone",
+        template: "%s · Toolverse",
+    },
+    description:
+        "PDF, image, finance, dev, and resume tools — processed in your browser. No sign-up. No upload limits. Free forever.",
+    keywords: [
+        "compress pdf",
+        "merge pdf",
+        "image compressor",
+        "qr code generator",
+        "json formatter",
+        "resume builder",
+        "gst calculator",
+        "free online tools",
+    ],
+    metadataBase: new URL(
+        process.env.NEXT_PUBLIC_APP_URL ?? "https://toolverse.com"
+    ),
+    openGraph: {
+        type: "website",
+        siteName: "Toolverse",
+        title: "Toolverse — Free Utility Hub for Everyone",
+        description:
+            "Every tool you need daily. PDF · Images · Finance · Dev · Resume — no sign-up ever.",
+        url: "/",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Toolverse — Free Utility Hub for Everyone",
+        description:
+            "Every tool you need daily. PDF · Images · Finance · Dev · Resume — no sign-up ever.",
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true },
+    },
+};
 
-export function generateViewport() {
-  return {
-    width: 'device-width',
-    initialScale: 1,
-    themeColor: '#F7F5F0',
-  }
-}
+export default function RootLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    return (
+        <html lang="en" suppressHydrationWarning>
+            <head>
+                <link rel="icon" href="/favicon.ico" sizes="any" />
+                <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+                <link rel="manifest" href="/manifest.json" />
+            </head>
+            <body>
+                {/* Navbar */}
+                <Navbar />
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>{children}</body>
-    </html>
-  )
+                {/* ── Page content pushed below navbar height (52px) ── */}
+                <div className="layout-content">
+                    <main className="layout-main">{children}</main>
+                    <Footer />
+                </div>
+            </body>
+        </html>
+    );
 }
