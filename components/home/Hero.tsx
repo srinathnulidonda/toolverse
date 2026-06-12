@@ -1,14 +1,8 @@
 // components/home/Hero.tsx
-import Link from "next/link";
+import SearchBar from "./SearchBar";
+import SocialProof from "./SocialProof";
 
 const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
-
-const trustItems = [
-    "0 sign-ups",
-    "No file size limits",
-    "Results in <3s",
-    "Works on any device",
-];
 
 export default function Hero() {
     return (
@@ -17,23 +11,37 @@ export default function Hero() {
             alignItems: "center",
             justifyContent: "center",
             background: "#111110",
-            padding: "72px 40px 64px",
+            padding: "28px 40px 44px",
+            minHeight: "260px",
         }}>
             <div style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 textAlign: "center",
-                maxWidth: "680px",
+                maxWidth: "640px",
                 width: "100%",
             }}>
 
+                {/* Eyebrow */}
+                <p className="hero-eyebrow" style={{
+                    fontSize: "12px",
+                    color: "#3C3B35",
+                    marginBottom: "14px",
+                    fontFamily: font,
+                    letterSpacing: "0.4px",
+                    textTransform: "uppercase",
+                    fontWeight: 500,
+                }}>
+                    PDF · Images · Finance · Dev · Resume
+                </p>
+
                 {/* Headline */}
                 <h1 style={{
-                    fontSize: "clamp(32px, 5vw, 56px)",
+                    fontSize: "clamp(28px, 4.5vw, 48px)",
                     fontWeight: 700,
-                    letterSpacing: "-1.5px",
-                    lineHeight: 1.1,
+                    letterSpacing: "-1.2px",
+                    lineHeight: 1.15,
                     color: "#EDEDEA",
                     marginBottom: "16px",
                     fontFamily: font,
@@ -42,128 +50,36 @@ export default function Hero() {
                     <span style={{ color: "#4CAF82" }}>Every file task.</span>
                 </h1>
 
-                {/* Sub-headline */}
-                <p style={{
-                    fontSize: "clamp(15px, 1.8vw, 17px)",
-                    color: "#A8A79E",
-                    lineHeight: 1.6,
-                    marginBottom: "32px",
-                    maxWidth: "520px",
+                {/* Body */}
+                <p className="hero-body" style={{
+                    fontSize: "clamp(14px, 1.6vw, 15px)",
+                    color: "#6B6A62",
+                    lineHeight: 1.7,
+                    marginBottom: "28px",
+                    maxWidth: "400px",
                     fontFamily: font,
                     fontWeight: 400,
                 }}>
-                    Compress, convert, merge and build — 51 tools that run entirely on
-                    your device. Your files never touch a server.
+                    51 privacy-first tools that run entirely in your browser.
+                    <br />
+                    No uploads. No waiting. No accounts required.
                 </p>
 
-                {/* CTAs */}
-                <div style={{
-                    display: "flex",
-                    gap: "10px",
-                    flexWrap: "wrap",
-                    justifyContent: "center",
-                    marginBottom: "40px",
-                }}>
-                    <Link
-                        href="/compress-pdf"
-                        className="hero-cta-primary"
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "7px",
-                            padding: "11px 24px",
-                            background: "#145C3C",
-                            color: "#FFFFFF",
-                            borderRadius: "8px",
-                            fontSize: "14px",
-                            fontWeight: 600,
-                            textDecoration: "none",
-                            letterSpacing: "-0.2px",
-                            fontFamily: font,
-                            whiteSpace: "nowrap",
-                        }}
-                    >
-                        Compress a PDF
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12" />
-                            <polyline points="12 5 19 12 12 19" />
-                        </svg>
-                    </Link>
+                {/* Search bar */}
+                <SearchBar />
 
-                    <Link
-                        href="#tools"
-                        className="hero-cta-secondary"
-                        style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            padding: "11px 24px",
-                            background: "transparent",
-                            color: "#EDEDEA",
-                            borderRadius: "8px",
-                            fontSize: "14px",
-                            fontWeight: 500,
-                            textDecoration: "none",
-                            border: "0.5px solid #2C2C28",
-                            fontFamily: font,
-                            whiteSpace: "nowrap",
-                        }}
-                    >
-                        Browse all tools
-                    </Link>
-                </div>
-
-                {/* Trust strip*/}
-                <div className="trust-strip" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexWrap: "nowrap",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                }}>
-                    {trustItems.map((item, i) => (
-                        <span key={item} style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            fontFamily: font,
-                        }}>
-                            <span className="trust-item" style={{
-                                fontSize: "12px",
-                                color: "#6B6A62",
-                                whiteSpace: "nowrap",
-                            }}>
-                                {item}
-                            </span>
-                            {i < trustItems.length - 1 && (
-                                <span style={{
-                                    display: "inline-block",
-                                    width: "3px",
-                                    height: "3px",
-                                    borderRadius: "50%",
-                                    background: "#3C3B35",
-                                    margin: "0 8px",
-                                    flexShrink: 0,
-                                }} />
-                            )}
-                        </span>
-                    ))}
-                </div>
+                {/* Social proof strip */}
+                <SocialProof />
 
             </div>
 
             <style>{`
-        .hero-cta-primary:hover  { background: #1F7A52 !important; transition: background 0.15s; }
-        .hero-cta-secondary:hover {
-          background: #1A1A17 !important;
-          border-color: #3C3B35 !important;
-          transition: background 0.15s, border-color 0.15s;
-        }
-        @media (max-width: 480px) {
-          .trust-strip { width: 100%; }
-          .trust-item  { font-size: 11px !important; }
-        }
-      `}</style>
+                @media (max-width: 480px) {
+                    section { padding: 16px 20px 36px !important; }
+                    .hero-eyebrow { font-size: 10px !important; letter-spacing: 0.2px !important; margin-bottom: 10px !important; }
+                    .hero-body { font-size: 12px !important; line-height: 1.6 !important; margin-bottom: 20px !important; }
+                }
+            `}</style>
         </section>
     );
 }
