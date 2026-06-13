@@ -8,30 +8,29 @@ const columns = [
     {
         heading: "Categories",
         links: [
-            { label: "PDF Tools", href: "/tools?cat=pdf" },
-            { label: "Image Tools", href: "/tools?cat=image" },
-            { label: "Developer Tools", href: "/tools?cat=dev" },
-            { label: "Finance Tools", href: "/tools?cat=finance" },
-            { label: "Resume Tools", href: "/tools?cat=resume" },
-            { label: "All Tools", href: "/tools" },
+            { label: "PDF Tools", href: "/tools/pdf" },
+            { label: "Image Tools", href: "/tools/image" },
+            { label: "Developer Tools", href: "/tools/developer" },
+            { label: "Finance Tools", href: "/tools/finance" },
+            { label: "Resume Tools", href: "/tools/resume" },
+            { label: "Social Tools", href: "/tools/social" },
         ],
     },
     {
-        heading: "Collections",
+        heading: "Quick Links",
         links: [
-            { label: "Student Toolkit", href: "/collections/student" },
-            { label: "Developer Toolkit", href: "/collections/developer" },
-            { label: "Creator Toolkit", href: "/collections/creator" },
-            { label: "Business Toolkit", href: "/collections/business" },
+            { label: "All Tools", href: "/tools" },
+            { label: "All Categories", href: "/categories" },
+            { label: "Popular Tools", href: "/tools?filter=popular" },
+            { label: "New Tools", href: "/tools?filter=new" },
         ],
     },
     {
         heading: "Resources",
         links: [
-            { label: "Blog", href: "/blog" },
-            { label: "Popular", href: "/popular" },
             { label: "About", href: "/about" },
             { label: "Contact", href: "/contact" },
+            { label: "FAQ", href: "/faq" },
         ],
     },
     {
@@ -67,32 +66,49 @@ const socials = [
 
 export default function Footer() {
     return (
-        <footer style={{ background: "#1A1A18", borderTop: "0.5px solid #2C2C28", fontFamily: font }}>
-
+        <footer
+            style={{
+                background: "#1A1A18",
+                borderTop: "0.5px solid #2C2C28",
+                fontFamily: font,
+            }}
+        >
             {/* ── Top ─────────────────────────────────────────────────────── */}
             <div style={{ width: "100%", padding: "52px 40px 44px" }}>
                 <div className="footer-inner">
-
                     {/* Brand */}
                     <div className="footer-brand">
-
                         {/* Logo */}
-                        <Link href="/" style={{
-                            display: "inline-flex", alignItems: "center",
-                            textDecoration: "none", marginBottom: 16,
-                        }}>
-                            <img src="/logo.png" alt="Toolverse" style={{
-                                height: 32,
-                                width: "auto",
-                                objectFit: "contain",
-                            }} />
+                        <Link
+                            href="/"
+                            style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                textDecoration: "none",
+                                marginBottom: 16,
+                            }}
+                        >
+                            <img
+                                src="/logo.png"
+                                alt="Toolverse"
+                                style={{
+                                    height: 32,
+                                    width: "auto",
+                                    objectFit: "contain",
+                                }}
+                            />
                         </Link>
 
                         {/* Description */}
-                        <p style={{
-                            fontSize: 13, color: "#6B6A62",
-                            lineHeight: 1.75, marginBottom: 24, maxWidth: 210,
-                        }}>
+                        <p
+                            style={{
+                                fontSize: 13,
+                                color: "#6B6A62",
+                                lineHeight: 1.75,
+                                marginBottom: 24,
+                                maxWidth: 210,
+                            }}
+                        >
                             Fast, private tools for work, study, and everyday productivity.
                         </p>
 
@@ -121,9 +137,16 @@ export default function Footer() {
                                 >
                                     {s.icon}
                                     {s.label}
-                                    <svg width="9" height="9" viewBox="0 0 10 10" fill="none"
-                                        stroke="currentColor" strokeWidth="1.4"
-                                        strokeLinecap="round" strokeLinejoin="round">
+                                    <svg
+                                        width="9"
+                                        height="9"
+                                        viewBox="0 0 10 10"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="1.4"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
                                         <path d="M2 8L8 2M5 2h3v3" />
                                     </svg>
                                 </a>
@@ -135,22 +158,26 @@ export default function Footer() {
                     <div className="footer-cols">
                         {columns.map((col) => (
                             <div key={col.heading}>
-                                <p style={{
-                                    fontSize: 12,
-                                    fontWeight: 600,
-                                    letterSpacing: "0.08em",
-                                    textTransform: "uppercase",
-                                    color: "#A8A79E",
-                                    marginBottom: 14,
-                                }}>
+                                <p
+                                    style={{
+                                        fontSize: 12,
+                                        fontWeight: 600,
+                                        letterSpacing: "0.08em",
+                                        textTransform: "uppercase",
+                                        color: "#A8A79E",
+                                        marginBottom: 14,
+                                    }}
+                                >
                                     {col.heading}
                                 </p>
-                                <ul style={{
-                                    listStyle: "none",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: 10,
-                                }}>
+                                <ul
+                                    style={{
+                                        listStyle: "none",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: 10,
+                                    }}
+                                >
                                     {col.links.map((link) => (
                                         <li key={link.href}>
                                             <Link
@@ -170,21 +197,23 @@ export default function Footer() {
                             </div>
                         ))}
                     </div>
-
                 </div>
             </div>
 
             {/* ── Bottom bar ──────────────────────────────────────────────── */}
             <div style={{ borderTop: "0.5px solid #2C2C28" }}>
-                <div className="footer-bottom" style={{
-                    width: "100%",
-                    padding: "14px 40px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    gap: 12,
-                }}>
+                <div
+                    className="footer-bottom"
+                    style={{
+                        width: "100%",
+                        padding: "14px 40px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        flexWrap: "wrap",
+                        gap: 12,
+                    }}
+                >
                     <p style={{ fontSize: 12, color: "#3C3B35" }}>
                         © 2025 Toolverse — Privacy-focused browser tools
                     </p>
@@ -192,43 +221,59 @@ export default function Footer() {
             </div>
 
             <style>{`
-                .footer-inner {
-                    display: flex;
-                    gap: 64px;
-                    align-items: flex-start;
-                }
-                .footer-brand {
-                    flex-shrink: 0;
-                    width: 210px;
-                    display: flex;
-                    flex-direction: column;
-                }
-                .footer-cols {
-                    flex: 1;
-                    display: grid;
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 32px;
-                }
-                .footer-link:hover {
-                    color: #A8A79E !important;
-                    transition: color 0.15s ease;
-                }
-                .footer-social:hover {
-                    color: #A8A79E !important;
-                    border-color: #3C3B35 !important;
-                    transition: color 0.15s ease, border-color 0.15s ease;
-                }
-                @media (max-width: 900px) {
-                    .footer-inner { flex-direction: column; gap: 36px; }
-                    .footer-brand { width: 100%; }
-                    .footer-cols  { width: 100%; grid-template-columns: repeat(2, 1fr) !important; }
-                }
-                @media (max-width: 600px) {
-                    .footer-cols   { grid-template-columns: repeat(2, 1fr) !important; }
-                    .footer-bottom { flex-direction: column; align-items: flex-start !important; padding: 16px 24px !important; }
-                    footer > div:first-child { padding: 36px 24px 32px !important; }
-                }
-            `}</style>
+        .footer-inner {
+          display: flex;
+          gap: 64px;
+          align-items: flex-start;
+        }
+        .footer-brand {
+          flex-shrink: 0;
+          width: 210px;
+          display: flex;
+          flex-direction: column;
+        }
+        .footer-cols {
+          flex: 1;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 32px;
+        }
+        .footer-link:hover {
+          color: #a8a79e !important;
+          transition: color 0.15s ease;
+        }
+        .footer-social:hover {
+          color: #a8a79e !important;
+          border-color: #3c3b35 !important;
+          transition: color 0.15s ease, border-color 0.15s ease;
+        }
+        @media (max-width: 900px) {
+          .footer-inner {
+            flex-direction: column;
+            gap: 36px;
+          }
+          .footer-brand {
+            width: 100%;
+          }
+          .footer-cols {
+            width: 100%;
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .footer-cols {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .footer-bottom {
+            flex-direction: column;
+            align-items: flex-start !important;
+            padding: 16px 24px !important;
+          }
+          footer > div:first-child {
+            padding: 36px 24px 32px !important;
+          }
+        }
+      `}</style>
         </footer>
     );
 }

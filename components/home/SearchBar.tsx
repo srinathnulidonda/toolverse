@@ -13,7 +13,9 @@ export default function SearchBar() {
     function handleSearch(e: React.FormEvent) {
         e.preventDefault();
         if (query.trim()) {
-            router.push(`/tools?s=${encodeURIComponent(query.trim())}`);
+            router.push(`/search?s=${encodeURIComponent(query.trim())}`);
+        } else {
+            router.push("/search");
         }
     }
 
@@ -31,21 +33,32 @@ export default function SearchBar() {
                     background: "#1A1A17",
                     border: "0.5px solid #2C2C28",
                     borderRadius: "9999px",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)",
+                    boxShadow:
+                        "0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)",
                     transition: "all 0.2s ease",
                 }}
             >
                 {/* Search icon */}
-                <span style={{
-                    position: "absolute",
-                    left: "16px",
-                    color: "#3C3B35",
-                    display: "flex",
-                    alignItems: "center",
-                    pointerEvents: "none",
-                }}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <span
+                    style={{
+                        position: "absolute",
+                        left: "16px",
+                        color: "#3C3B35",
+                        display: "flex",
+                        alignItems: "center",
+                        pointerEvents: "none",
+                    }}
+                >
+                    <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
@@ -75,27 +88,29 @@ export default function SearchBar() {
             </form>
 
             <style>{`
-                .hero-search-input::placeholder { 
-                    color: #3C3B35;
-                    font-weight: 400;
-                }
-                
-                .hero-search-form:hover {
-                    border-color: #3C3B35 !important;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.12) !important;
-                }
-                
-                .hero-search-form:focus-within {
-                    border-color: #4CAF82 !important;
-                    box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.12), 0 4px 12px rgba(0, 0, 0, 0.16) !important;
-                }
+        .hero-search-input::placeholder {
+          color: #3C3B35;
+          font-weight: 400;
+        }
 
-                @media (max-width: 480px) {
-                    .hero-search-form { 
-                        max-width: 100% !important; 
-                    }
-                }
-            `}</style>
+        .hero-search-form:hover {
+          border-color: #3C3B35 !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16),
+            0 2px 4px rgba(0, 0, 0, 0.12) !important;
+        }
+
+        .hero-search-form:focus-within {
+          border-color: #4CAF82 !important;
+          box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.12),
+            0 4px 12px rgba(0, 0, 0, 0.16) !important;
+        }
+
+        @media (max-width: 480px) {
+          .hero-search-form {
+            max-width: 100% !important;
+          }
+        }
+      `}</style>
         </>
     );
 }

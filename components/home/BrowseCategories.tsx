@@ -1,56 +1,51 @@
 // components/home/BrowseCategories.tsx
 import Link from "next/link";
 
-// Data
-
 const categories = [
-    { label: "PDF", icon: "ti-file-text", count: 18, href: "/tools?category=pdf" },
-    { label: "Image", icon: "ti-photo", count: 7, href: "/tools?category=image" },
-    { label: "Developer", icon: "ti-code", count: 9, href: "/tools?category=dev" },
-    { label: "Finance", icon: "ti-calculator", count: 8, href: "/tools?category=finance" },
-    { label: "Social", icon: "ti-qrcode", count: 5, href: "/tools?category=social" },
-    { label: "Resume", icon: "ti-file-cv", count: 4, href: "/tools?category=resume" },
+  { label: "PDF", icon: "ti-file-text", count: 18, href: "/tools/pdf" },
+  { label: "Image", icon: "ti-photo", count: 7, href: "/tools/image" },
+  { label: "Developer", icon: "ti-code", count: 9, href: "/tools/developer" },
+  { label: "Finance", icon: "ti-calculator", count: 8, href: "/tools/finance" },
+  { label: "Social", icon: "ti-qrcode", count: 5, href: "/tools/social" },
+  { label: "Resume", icon: "ti-file-cv", count: 4, href: "/tools/resume" },
 ];
 
-// Component
-
 export default function BrowseCategories() {
-    return (
-        <>
-            <div className="ws-card">
+  return (
+    <>
+      <div className="ws-card">
+        {/* Header */}
+        <div className="ws-header">
+          <span className="ws-label">Workspace</span>
+          <Link href="/tools" className="ws-all-link">
+            All tools
+            <i className="ti ti-arrow-right" aria-hidden="true" />
+          </Link>
+        </div>
 
-                {/* Header */}
-                <div className="ws-header">
-                    <span className="ws-label">Workspace</span>
-                    <Link href="/tools" className="ws-all-link">
-                        All tools
-                        <i className="ti ti-arrow-right" aria-hidden="true" />
-                    </Link>
-                </div>
+        <div className="ws-divider" />
 
-                <div className="ws-divider" />
+        {/* Category grid */}
+        <div className="ws-grid">
+          {categories.map((cat) => (
+            <Link key={cat.label} href={cat.href} className="ws-chip">
+              <i className={`ti ${cat.icon} ws-chip-icon`} aria-hidden="true" />
+              <span className="ws-chip-name">{cat.label}</span>
+              <span className="ws-chip-count" aria-label={`${cat.count} tools`}>
+                {cat.count}
+              </span>
+            </Link>
+          ))}
+        </div>
 
-                {/* Category grid */}
-                <div className="ws-grid">
-                    {categories.map((cat) => (
-                        <Link key={cat.label} href={cat.href} className="ws-chip">
-                            <i className={`ti ${cat.icon} ws-chip-icon`} aria-hidden="true" />
-                            <span className="ws-chip-name">{cat.label}</span>
-                            <span className="ws-chip-count" aria-label={`${cat.count} tools`}>
-                                {cat.count}
-                            </span>
-                        </Link>
-                    ))}
-                </div>
+        {/* Footer CTA */}
+        <Link href="/categories" className="ws-footer-link">
+          <i className="ti ti-layout-grid" aria-hidden="true" />
+          Browse all categories
+        </Link>
+      </div>
 
-                {/* Footer CTA */}
-                <Link href="/tools" className="ws-footer-link">
-                    <i className="ti ti-layout-grid" aria-hidden="true" />
-                    Browse all categories
-                </Link>
-            </div>
-
-            <style>{`
+      <style>{`
         .ws-card {
           background: var(--bg-card);
           border: 0.5px solid var(--border);
@@ -163,6 +158,6 @@ export default function BrowseCategories() {
           text-decoration: none;
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }
