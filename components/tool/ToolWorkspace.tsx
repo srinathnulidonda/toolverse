@@ -1,11 +1,22 @@
 // components/tool/ToolWorkspace.tsx
+import type { ComponentType } from "react";
 import type { Tool } from "@/lib/tools";
+import JsonFormatterWorkspace from "@/features/dev/json-formatter/Workspace";
+import QrGeneratorWorkspace from "@/features/social/qr-generator/Workspace";
 
 type ToolWorkspaceProps = {
   tool: Tool;
 };
+const WORKSPACES: Record<string, ComponentType<{ tool: Tool }>> = {
+  "json-formatter": JsonFormatterWorkspace,
+  "qr-generator": QrGeneratorWorkspace,
+};
 
 export default function ToolWorkspace({ tool }: ToolWorkspaceProps) {
+  const Workspace = WORKSPACES[tool.slug];
+  if (Workspace) {
+    return <Workspace tool={tool} />;
+  }
   return (
     <>
       <div className="tw-root">
