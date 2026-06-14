@@ -1,74 +1,78 @@
 // app/not-found.tsx
 import Link from "next/link";
-import { TOOLS, CATEGORIES } from "@/lib/tools";
+import { TOOLS } from "@/lib/tools";
+import { getCategoriesWithCount } from "@/lib/tools";
 
-const popular = TOOLS.filter((t) => t.badge === "popular").slice(0, 4);
+const popular = TOOLS.slice(0, 4);
 
 export default function NotFound() {
-    return (
-        <>
-            <div className="nf-page">
-                <div className="nf-shell">
+  const CATEGORIES = getCategoriesWithCount();
 
-                    {/* Status */}
-                    <div className="nf-status">
-                        <span className="nf-status-dot" aria-hidden="true" />
-                        404 — Page not found
-                    </div>
+  return (
+    <>
+      <div className="nf-page">
+        <div className="nf-shell">
 
-                    {/* Headline */}
-                    <h1 className="nf-title">
-                        We couldn&apos;t find that page.
-                        <br />
-                        <span className="nf-title-muted">Here are some popular tools to get you started.</span>
-                    </h1>
+          {/* Status */}
+          <div className="nf-status">
+            <span className="nf-status-dot" aria-hidden="true" />
+            404 — Page not found
+          </div>
 
-                    {/* Popular tools */}
-                    <div className="nf-results">
-                        <p className="nf-results-label">Popular tools</p>
-                        <div className="nf-results-list">
-                            {popular.map((tool) => (
-                                <Link key={tool.slug} href={tool.href} className="nf-result-item">
-                                    <div className="nf-result-icon">
-                                        <i className={`ti ${tool.icon}`} aria-hidden="true" />
-                                    </div>
-                                    <div className="nf-result-body">
-                                        <span className="nf-result-name">{tool.label}</span>
-                                        <span className="nf-result-desc">{tool.description}</span>
-                                    </div>
-                                    <i className="ti ti-arrow-right nf-result-arrow" aria-hidden="true" />
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
+          {/* Headline */}
+          <h1 className="nf-title">
+            We couldn&apos;t find that page.
+            <br />
+            <span className="nf-title-muted">Here are some popular tools to get you started.</span>
+          </h1>
 
-                    {/* Footer actions */}
-                    <div className="nf-footer">
-                        <Link href="/" className="nf-btn nf-btn-ghost">
-                            <i className="ti ti-home" aria-hidden="true" />
-                            Home
-                        </Link>
-                        <Link href="/tools" className="nf-btn nf-btn-primary">
-                            <i className="ti ti-layout-grid" aria-hidden="true" />
-                            Browse all {TOOLS.length} tools
-                        </Link>
-                        <div className="nf-footer-cats">
-                            {CATEGORIES.slice(0, 4).map((cat) => (
-                                <Link
-                                    key={cat.slug}
-                                    href={`/categories/${cat.slug}`}
-                                    className="nf-cat-chip"
-                                >
-                                    <i className={`ti ${cat.icon}`} aria-hidden="true" />
-                                    {cat.label.replace(" Tools", "")}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+          {/* Popular tools */}
+          <div className="nf-results">
+            <p className="nf-results-label">Popular tools</p>
+            <div className="nf-results-list">
+              {popular.map((tool) => (
+                <Link key={tool.slug} href={tool.href} className="nf-result-item">
+                  <div className="nf-result-icon">
+                    <i className={`ti ${tool.icon}`} aria-hidden="true" />
+                  </div>
+                  <div className="nf-result-body">
+                    <span className="nf-result-name">{tool.label}</span>
+                    <span className="nf-result-desc">{tool.description}</span>
+                  </div>
+                  <i className="ti ti-arrow-right nf-result-arrow" aria-hidden="true" />
+                </Link>
+              ))}
             </div>
+          </div>
 
-            <style>{`
+          {/* Footer actions */}
+          <div className="nf-footer">
+            <Link href="/" className="nf-btn nf-btn-ghost">
+              <i className="ti ti-home" aria-hidden="true" />
+              Home
+            </Link>
+            <Link href="/tools" className="nf-btn nf-btn-primary">
+              <i className="ti ti-layout-grid" aria-hidden="true" />
+              Browse all {TOOLS.length} tools
+            </Link>
+            <div className="nf-footer-cats">
+              {CATEGORIES.slice(0, 4).map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/categories/${cat.slug}`}
+                  className="nf-cat-chip"
+                >
+                  <i className={`ti ${cat.icon}`} aria-hidden="true" />
+                  {cat.label.replace(" Tools", "")}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* styles remain the same */}
+      <style>{`
         .nf-page {
           min-height: 100vh;
           background: var(--bg);
@@ -308,6 +312,6 @@ export default function NotFound() {
           .nf-btn { width: 100%; justify-content: center; }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

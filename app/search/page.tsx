@@ -4,109 +4,111 @@
 import { useSearchParams } from "next/navigation";
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { TOOLS } from "@/data/tools";
-import { CATEGORIES } from "@/data/categories";
+import { getCategoriesWithCount } from "@/data/categories";
 import SearchInput from "@/components/search/SearchInput";
 import SearchFilters from "@/components/search/SearchFilters";
 import SearchResults from "@/components/search/SearchResults";
 import SearchEmpty from "@/components/search/SearchEmpty";
 
-
 function SearchPage() {
-    const searchParams = useSearchParams();
-    const initialQuery = searchParams.get("s") ?? "";
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("s") ?? "";
 
-    const [query, setQuery] = useState(initialQuery);
-    const [activeFilter, setActiveFilter] = useState("all");
+  const [query, setQuery] = useState(initialQuery);
+  const [activeFilter, setActiveFilter] = useState("all");
 
-    useEffect(() => {
-        setQuery(initialQuery);
-    }, [initialQuery]);
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
 
-    const filtered = useMemo(() => {
-        let list =
-            activeFilter === "all"
-                ? TOOLS
-                : TOOLS.filter((t) => t.category === activeFilter);
+  const filtered = useMemo(() => {
+    let list =
+      activeFilter === "all"
+        ? TOOLS
+        : TOOLS.filter((t) => t.category === activeFilter);
 
-        if (query.trim()) {
-            const q = query.toLowerCase();
-            list = list.filter(
-                (t) =>
-                    t.label.toLowerCase().includes(q) ||
-                    t.description.toLowerCase().includes(q) ||
-                    t.tags?.some((tag) => tag.toLowerCase().includes(q))
-            );
-        }
-        return list;
-    }, [query, activeFilter]);
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      list = list.filter(
+        (t) =>
+          t.label.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q) ||
+          t.tags?.some((tag) => tag.toLowerCase().includes(q))
+      );
+    }
+    return list;
+  }, [query, activeFilter]);
 
-    const toolCounts = useMemo(() => {
-        const counts: Record<string, number> = { all: TOOLS.length };
-        CATEGORIES.forEach((cat) => {
-            counts[cat.slug] = cat.count;
-        });
-        return counts;
-    }, []);
+  const toolCounts = useMemo(() => {
+    const CATEGORIES = getCategoriesWithCount();
+    const counts: Record<string, number> = { all: TOOLS.length };
+    CATEGORIES.forEach((cat) => {
+      counts[cat.slug] = cat.count;
+    });
+    return counts;
+  }, []);
 
-    return (
-        <>
-            <div className="sp-page">
-                {/* Header */}
-                <div className="sp-header">
-                    <div className="sp-header-inner">
-                        <p className="sp-eyebrow">Search</p>
-                        <h1 className="sp-title">
-                            {query
-                                ? <>Results for <span className="sp-title-query">&quot;{query}&quot;</span></>
-                                : "Find the right tool"}
-                        </h1>
-                        <p className="sp-desc">
-                            Search across {TOOLS.length} free browser-based tools
-                        </p>
+  const CATEGORIES = useMemo(() => getCategoriesWithCount(), []);
 
-                        {/* Search input */}
-                        <SearchInput query={query} onChange={setQuery} />
+  return (
+    <>
+      <div className="sp-page">
+        {/* Header */}
+        <div className="sp-header">
+          <div className="sp-header-inner">
+            <p className="sp-eyebrow">Search</p>
+            <h1 className="sp-title">
+              {query
+                ? <>Results for <span className="sp-title-query">&quot;{query}&quot;</span></>
+                : "Find the right tool"}
+            </h1>
+            <p className="sp-desc">
+              Search across {TOOLS.length} free browser-based tools
+            </p>
 
-                        {/* Filters */}
-                        <SearchFilters
-                            activeFilter={activeFilter}
-                            onFilterChange={setActiveFilter}
-                            toolCounts={toolCounts}
-                        />
-                    </div>
-                </div>
+            {/* Search input */}
+            <SearchInput query={query} onChange={setQuery} />
 
-                {/* Results */}
-                <div className="sp-body">
-                    <div className="sp-body-inner">
-                        {/* Results count */}
-                        {query.trim() && (
-                            <p className="sp-count">
-                                {filtered.length} result{filtered.length !== 1 ? "s" : ""}
-                                {" "}for <span className="sp-count-query">&quot;{query}&quot;</span>
-                                {activeFilter !== "all" && (
-                                    <> in {CATEGORIES.find((c) => c.slug === activeFilter)?.label}</>
-                                )}
-                            </p>
-                        )}
+            {/* Filters */}
+            <SearchFilters
+              activeFilter={activeFilter}
+              onFilterChange={setActiveFilter}
+              toolCounts={toolCounts}
+            />
+          </div>
+        </div>
 
-                        {/* Results or empty */}
-                        {filtered.length > 0 ? (
-                            <SearchResults tools={filtered} query={query} />
-                        ) : (
-                            <SearchEmpty
-                                query={query}
-                                onClear={() => {
-                                    setQuery("");
-                                    setActiveFilter("all");
-                                }}
-                            />
-                        )}
-                    </div>
-                </div>
-            </div>
+        {/* Results */}
+        <div className="sp-body">
+          <div className="sp-body-inner">
+            {/* Results count */}
+            {query.trim() && (
+              <p className="sp-count">
+                {filtered.length} result{filtered.length !== 1 ? "s" : ""}
+                {" "}for <span className="sp-count-query">&quot;{query}&quot;</span>
+                {activeFilter !== "all" && (
+                  <> in {CATEGORIES.find((c) => c.slug === activeFilter)?.label}</>
+                )}
+              </p>
+            )}
 
-            <style>{`
+            {/* Results or empty */}
+            {filtered.length > 0 ? (
+              <SearchResults tools={filtered} query={query} />
+            ) : (
+              <SearchEmpty
+                query={query}
+                onClear={() => {
+                  setQuery("");
+                  setActiveFilter("all");
+                }}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
         .sp-page {
           min-height: 100vh;
           background: var(--bg);
@@ -204,14 +206,14 @@ function SearchPage() {
           }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }
 
 export default function SearchPageWrapper() {
-    return (
-        <Suspense>
-            <SearchPage />
-        </Suspense>
-    );
+  return (
+    <Suspense>
+      <SearchPage />
+    </Suspense>
+  );
 }

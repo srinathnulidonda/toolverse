@@ -1,4 +1,5 @@
 // data/categories.ts
+import { TOOLS } from "./tools";
 export type Category = {
     slug: string;
     label: string;
@@ -79,4 +80,10 @@ export type CategoryWithCount = Category & {
 
 export function getCategoryBySlug(slug: string): Category | undefined {
     return CATEGORIES.find((c) => c.slug === slug);
+}
+export function getCategoriesWithCount(): CategoryWithCount[] {
+    return CATEGORIES.map((cat) => ({
+        ...cat,
+        count: TOOLS.filter((t) => t.category === cat.slug).length,
+    }));
 }

@@ -1,6 +1,7 @@
 // app/categories/page.tsx
 import type { Metadata } from "next";
-import { CATEGORIES } from "@/lib/tools";
+import { CATEGORIES, TOOLS } from "@/lib/tools";
+import type { CategoryWithCount } from "@/lib/tools";
 import CategoriesHeader from "@/components/categories/CategoriesHeader";
 import CategoriesGrid from "@/components/categories/CategoriesGrid";
 import CategoriesCTA from "@/components/categories/CategoriesCTA";
@@ -13,12 +14,18 @@ export const metadata: Metadata = {
 };
 
 export default function CategoriesPage() {
+  // Add counts to categories
+  const categoriesWithCount: CategoryWithCount[] = CATEGORIES.map((cat) => ({
+    ...cat,
+    count: TOOLS.filter((t) => t.category === cat.slug).length,
+  }));
+
   return (
     <>
       <div className="cat-page">
         <CategoriesHeader />
         <div className="cat-page-body">
-          <CategoriesGrid categories={CATEGORIES} />
+          <CategoriesGrid categories={categoriesWithCount} />
           <CategoriesCTA />
         </div>
       </div>

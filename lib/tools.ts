@@ -2,6 +2,7 @@
 export {
     CATEGORIES,
     getCategoryBySlug,
+    getCategoriesWithCount,
     type Category,
     type CategoryWithCount,
 } from "@/data/categories";

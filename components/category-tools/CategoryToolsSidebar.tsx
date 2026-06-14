@@ -1,6 +1,6 @@
 // components/category-tools/CategoryToolsSidebar.tsx
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/tools";
+import { getCategoriesWithCount } from "@/lib/tools";
 import type { CategoryWithCount } from "@/lib/tools";
 
 type CategoryToolsSidebarProps = {
@@ -10,6 +10,7 @@ type CategoryToolsSidebarProps = {
 export default function CategoryToolsSidebar({
   currentCategory,
 }: CategoryToolsSidebarProps) {
+  const CATEGORIES = getCategoriesWithCount();
   const otherCategories = CATEGORIES.filter(
     (c) => c.slug !== currentCategory.slug
   );
@@ -68,6 +69,7 @@ export default function CategoryToolsSidebar({
         </Link>
       </aside>
 
+      {/* styles remain the same */}
       <style>{`
         .cts-root {
           display: flex;

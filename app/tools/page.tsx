@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { TOOLS, CATEGORIES } from "@/lib/tools";
+import { TOOLS } from "@/lib/tools";
+import { getCategoriesWithCount } from "@/lib/tools";
 import ToolsHeader from "@/components/tools-directory/ToolsHeader";
 import ToolsSearch from "@/components/tools-directory/ToolsSearch";
 import ToolsFilters from "@/components/tools-directory/ToolsFilters";
@@ -13,6 +14,8 @@ const ALL_FILTER = "all";
 export default function ToolsPage() {
   const [activeFilter, setActiveFilter] = useState(ALL_FILTER);
   const [query, setQuery] = useState("");
+
+  const CATEGORIES = useMemo(() => getCategoriesWithCount(), []);
 
   const filtered = useMemo(() => {
     let list =
@@ -38,7 +41,7 @@ export default function ToolsPage() {
       counts[cat.slug] = cat.count;
     });
     return counts;
-  }, []);
+  }, [CATEGORIES]);
 
   return (
     <>

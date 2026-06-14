@@ -1,12 +1,14 @@
 // app/tools/[category]/page.tsx
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CATEGORIES, getCategoryBySlug, getToolsByCategory } from "@/lib/tools";
+import { getCategoryBySlug, getToolsByCategory } from "@/lib/tools";
+import { getCategoriesWithCount } from "@/lib/tools";
 import CategoryToolsHeader from "@/components/category-tools/CategoryToolsHeader";
 import CategoryToolsGrid from "@/components/category-tools/CategoryToolsGrid";
 import CategoryToolsSidebar from "@/components/category-tools/CategoryToolsSidebar";
 
 export function generateStaticParams() {
+  const CATEGORIES = getCategoriesWithCount();
   return CATEGORIES.map((cat) => ({ category: cat.slug }));
 }
 
@@ -31,7 +33,12 @@ export default async function CategoryToolsPage({
   params: Promise<{ category: string }>;
 }) {
   const { category } = await params;
-  const cat = getCategoryBySlug(category);
+  const baseCat = getCategoryBySlug(category);
+  if (!baseCat) notFound();
+
+  // Get category with count
+  const CATEGORIES = getCategoriesWithCount();
+  const cat = CATEGORIES.find((c) => c.slug === category);
   if (!cat) notFound();
 
   const tools = getToolsByCategory(cat.slug);
