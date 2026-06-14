@@ -22,7 +22,7 @@ export const metadata: Metadata = {
         "free online tools",
     ],
     metadataBase: new URL(
-        process.env.NEXT_PUBLIC_APP_URL ?? "https://toolverse.com"
+        process.env.NEXT_PUBLIC_APP_URL ?? "https://toolverses.vercel.app"
     ),
     openGraph: {
         type: "website",

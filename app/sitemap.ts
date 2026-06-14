@@ -1,67 +1,54 @@
 // app/sitemap.ts
-import { MetadataRoute } from "next";
-import { TOOLS, CATEGORIES } from "@/data/tools";
-import { COLLECTIONS } from "@/data/collections";
+import type { MetadataRoute } from "next";
+import { TOOLS, CATEGORIES } from "@/lib/tools";
+
+// Safely import COLLECTIONS
+let COLLECTIONS: any[] = [];
+try {
+    const collections = require("@/data/collections");
+    COLLECTIONS = collections.COLLECTIONS || [];
+} catch {
+    // Collections file doesn't exist, that's fine
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://toolverses.vercel.app";
 
-    // Static pages
-    const staticPages = [
+    const routes: MetadataRoute.Sitemap = [
         {
             url: baseUrl,
             lastModified: new Date(),
-            changeFrequency: "weekly" as const,
+            changeFrequency: "daily",
             priority: 1,
         },
         {
             url: `${baseUrl}/tools`,
             lastModified: new Date(),
-            changeFrequency: "weekly" as const,
+            changeFrequency: "daily",
             priority: 0.9,
-        },
-        {
-            url: `${baseUrl}/categories`,
-            lastModified: new Date(),
-            changeFrequency: "weekly" as const,
-            priority: 0.9,
-        },
-        {
-            url: `${baseUrl}/search`,
-            lastModified: new Date(),
-            changeFrequency: "weekly" as const,
-            priority: 0.8,
         },
     ];
 
-    // Category pages
-    const categoryPages = CATEGORIES.map((cat) => ({
-        url: `${baseUrl}/tools/${cat.slug}`,
+    const categoryRoutes: MetadataRoute.Sitemap = CATEGORIES.map((category) => ({
+        url: `${baseUrl}/tools/${category.slug}`,
         lastModified: new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.8,
     }));
 
-    // Tool pages
-    const toolPages = TOOLS.map((tool) => ({
+    const toolRoutes: MetadataRoute.Sitemap = TOOLS.map((tool) => ({
         url: `${baseUrl}${tool.href}`,
         lastModified: new Date(),
         changeFrequency: "monthly" as const,
         priority: 0.7,
     }));
 
-    // Collection pages
-    const collectionPages = COLLECTIONS.map((col) => ({
-        url: `${baseUrl}/collections/${col.slug}`,
+    const collectionRoutes: MetadataRoute.Sitemap = COLLECTIONS.map((collection) => ({
+        url: `${baseUrl}/collections/${collection.slug}`,
         lastModified: new Date(),
-        changeFrequency: "monthly" as const,
+        changeFrequency: "weekly" as const,
         priority: 0.6,
     }));
 
-    return [
-        ...staticPages,
-        ...categoryPages,
-        ...toolPages,
-        ...collectionPages,
-    ];
+    return [...routes, ...categoryRoutes, ...toolRoutes, ...collectionRoutes];
 }
