@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   TOOLS,
-  getCategoryBySlug,
+  getCategoriesWithCount,
   getToolBySlug,
   getToolsByCategory,
 } from "@/lib/tools";
@@ -43,7 +43,8 @@ export default async function ToolPage({
   const tool = getToolBySlug(category, slug);
   if (!tool) notFound();
 
-  const cat = getCategoryBySlug(category);
+  const CATEGORIES = getCategoriesWithCount();
+  const cat = CATEGORIES.find((c) => c.slug === category);
   if (!cat) notFound();
 
   const related = getToolsByCategory(category)
