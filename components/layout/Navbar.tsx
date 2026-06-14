@@ -4,178 +4,180 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CATEGORIES, TOOLS } from "@/lib/tools";
+import { getCategoriesWithCount, TOOLS } from "@/lib/tools";
+
+const CATEGORIES = getCategoriesWithCount();
 
 type DropdownId = "categories" | null;
 
 export default function Navbar() {
-    const [open, setOpen] = useState<DropdownId>(null);
-    const [menuOpen, setMenuOpen] = useState(false);
-    const pathname = usePathname();
-    const navRef = useRef<HTMLElement>(null);
+  const [open, setOpen] = useState<DropdownId>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
 
-    const close = useCallback(() => setOpen(null), []);
+  const close = useCallback(() => setOpen(null), []);
 
-    useEffect(() => {
-        const handler = (e: MouseEvent) => {
-            if (navRef.current && !navRef.current.contains(e.target as Node)) close();
-        };
-        document.addEventListener("mousedown", handler);
-        return () => document.removeEventListener("mousedown", handler);
-    }, [close]);
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) close();
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [close]);
 
-    useEffect(() => {
-        close();
-        setMenuOpen(false);
-    }, [pathname, close]);
+  useEffect(() => {
+    close();
+    setMenuOpen(false);
+  }, [pathname, close]);
 
-    function toggle(id: DropdownId) {
-        setOpen((prev) => (prev === id ? null : id));
-    }
+  function toggle(id: DropdownId) {
+    setOpen((prev) => (prev === id ? null : id));
+  }
 
-    return (
-        <header className="tv-nav" ref={navRef as any}>
-            {/* Logo */}
-            <Link href="/" className="tv-logo" aria-label="Toolverse home">
-                <img src="/logo.png" alt="Toolverse" className="tv-logo-image" />
-            </Link>
+  return (
+    <header className="tv-nav" ref={navRef as any}>
+      {/* Logo */}
+      <Link href="/" className="tv-logo" aria-label="Toolverse home">
+        <img src="/logo.png" alt="Toolverse" className="tv-logo-image" />
+      </Link>
 
-            {/* Centre nav container */}
-            <div className="tv-nav-wrapper">
-                <nav className="tv-nav-center" aria-label="Main navigation">
-                    {/* Categories — mega menu */}
-                    <div
-                        className="tv-ni"
-                        onClick={() => toggle("categories")}
-                        aria-haspopup="true"
-                        aria-expanded={open === "categories"}
-                    >
-                        Categories{" "}
-                        <i
-                            className={`ti ti-chevron-down${open === "categories" ? " rot" : ""}`}
-                            aria-hidden="true"
-                        />
-                        <div
-                            className={`tv-mega${open === "categories" ? " open" : ""}`}
-                            role="menu"
-                        >
-                            <div className="tv-mega-grid">
-                                {/* First column */}
-                                <div className="tv-mega-col">
-                                    {CATEGORIES.slice(0, 3).map((c) => (
-                                        <Link
-                                            key={c.slug}
-                                            href={`/tools/${c.slug}`}
-                                            className="tv-mega-item"
-                                            role="menuitem"
-                                        >
-                                            <i
-                                                className={`ti ${c.icon} tv-mega-icon`}
-                                                aria-hidden="true"
-                                            />
-                                            <span className="tv-mega-body">
-                                                <span className="tv-mega-name">{c.label}</span>
-                                                <span className="tv-mega-sub">{c.count} tools</span>
-                                            </span>
-                                        </Link>
-                                    ))}
-                                </div>
-
-                                {/* Second column */}
-                                <div className="tv-mega-col">
-                                    {CATEGORIES.slice(3).map((c) => (
-                                        <Link
-                                            key={c.slug}
-                                            href={`/tools/${c.slug}`}
-                                            className="tv-mega-item"
-                                            role="menuitem"
-                                        >
-                                            <i
-                                                className={`ti ${c.icon} tv-mega-icon`}
-                                                aria-hidden="true"
-                                            />
-                                            <span className="tv-mega-body">
-                                                <span className="tv-mega-name">{c.label}</span>
-                                                <span className="tv-mega-sub">{c.count} tools</span>
-                                            </span>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Footer */}
-                            <div className="tv-mega-footer">
-                                <span className="tv-mega-footer-text">
-                                    {TOOLS.length} tools · free forever
-                                </span>
-                                <Link href="/categories" className="tv-mega-footer-link">
-                                    View all categories <i className="ti ti-arrow-right" aria-hidden="true" />
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Simple links */}
-                    <Link href="/tools" className="tv-link">
-                        All Tools
-                    </Link>
-                </nav>
-            </div>
-
-            {/* Right side - CTA */}
-            <div className="tv-nav-right">
-                <Link href="/tools" className="tv-cta">
-                    Browse Tools <i className="ti ti-arrow-right" aria-hidden="true" />
-                </Link>
-            </div>
-
-            {/* Hamburger */}
-            <button
-                className="tv-ham"
-                aria-label="Toggle menu"
-                aria-expanded={menuOpen}
-                onClick={() => {
-                    setMenuOpen((p) => !p);
-                    close();
-                }}
+      {/* Centre nav container */}
+      <div className="tv-nav-wrapper">
+        <nav className="tv-nav-center" aria-label="Main navigation">
+          {/* Categories — mega menu */}
+          <div
+            className="tv-ni"
+            onClick={() => toggle("categories")}
+            aria-haspopup="true"
+            aria-expanded={open === "categories"}
+          >
+            Categories{" "}
+            <i
+              className={`ti ti-chevron-down${open === "categories" ? " rot" : ""}`}
+              aria-hidden="true"
+            />
+            <div
+              className={`tv-mega${open === "categories" ? " open" : ""}`}
+              role="menu"
             >
-                <i
-                    className={`ti ${menuOpen ? "ti-x" : "ti-menu-2"}`}
-                    aria-hidden="true"
-                />
-            </button>
-
-            {/* Mobile drawer */}
-            {menuOpen && (
-                <div className="tv-mob" role="dialog" aria-label="Navigation menu">
+              <div className="tv-mega-grid">
+                {/* First column */}
+                <div className="tv-mega-col">
+                  {CATEGORIES.slice(0, 3).map((c) => (
                     <Link
-                        href="/categories"
-                        className="tv-mob-link"
-                        onClick={() => setMenuOpen(false)}
+                      key={c.slug}
+                      href={`/tools/${c.slug}`}
+                      className="tv-mega-item"
+                      role="menuitem"
                     >
-                        <i className="ti ti-layout-grid" aria-hidden="true" />
-                        Categories
+                      <i
+                        className={`ti ${c.icon} tv-mega-icon`}
+                        aria-hidden="true"
+                      />
+                      <span className="tv-mega-body">
+                        <span className="tv-mega-name">{c.label}</span>
+                        <span className="tv-mega-sub">{c.count} tools</span>
+                      </span>
                     </Link>
-                    <Link
-                        href="/tools"
-                        className="tv-mob-link"
-                        onClick={() => setMenuOpen(false)}
-                    >
-                        <i className="ti ti-layout-grid" aria-hidden="true" />
-                        All Tools
-                    </Link>
-                    <div className="tv-mob-sep" />
-                    <Link
-                        href="/tools"
-                        className="tv-mob-cta"
-                        onClick={() => setMenuOpen(false)}
-                    >
-                        Browse Tools <i className="ti ti-arrow-right" aria-hidden="true" />
-                    </Link>
+                  ))}
                 </div>
-            )}
 
-            <style>{`
+                {/* Second column */}
+                <div className="tv-mega-col">
+                  {CATEGORIES.slice(3).map((c) => (
+                    <Link
+                      key={c.slug}
+                      href={`/tools/${c.slug}`}
+                      className="tv-mega-item"
+                      role="menuitem"
+                    >
+                      <i
+                        className={`ti ${c.icon} tv-mega-icon`}
+                        aria-hidden="true"
+                      />
+                      <span className="tv-mega-body">
+                        <span className="tv-mega-name">{c.label}</span>
+                        <span className="tv-mega-sub">{c.count} tools</span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="tv-mega-footer">
+                <span className="tv-mega-footer-text">
+                  {TOOLS.length} tools · free forever
+                </span>
+                <Link href="/categories" className="tv-mega-footer-link">
+                  View all categories <i className="ti ti-arrow-right" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Simple links */}
+          <Link href="/tools" className="tv-link">
+            All Tools
+          </Link>
+        </nav>
+      </div>
+
+      {/* Right side - CTA */}
+      <div className="tv-nav-right">
+        <Link href="/tools" className="tv-cta">
+          Browse Tools <i className="ti ti-arrow-right" aria-hidden="true" />
+        </Link>
+      </div>
+
+      {/* Hamburger */}
+      <button
+        className="tv-ham"
+        aria-label="Toggle menu"
+        aria-expanded={menuOpen}
+        onClick={() => {
+          setMenuOpen((p) => !p);
+          close();
+        }}
+      >
+        <i
+          className={`ti ${menuOpen ? "ti-x" : "ti-menu-2"}`}
+          aria-hidden="true"
+        />
+      </button>
+
+      {/* Mobile drawer */}
+      {menuOpen && (
+        <div className="tv-mob" role="dialog" aria-label="Navigation menu">
+          <Link
+            href="/categories"
+            className="tv-mob-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            <i className="ti ti-layout-grid" aria-hidden="true" />
+            Categories
+          </Link>
+          <Link
+            href="/tools"
+            className="tv-mob-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            <i className="ti ti-layout-grid" aria-hidden="true" />
+            All Tools
+          </Link>
+          <div className="tv-mob-sep" />
+          <Link
+            href="/tools"
+            className="tv-mob-cta"
+            onClick={() => setMenuOpen(false)}
+          >
+            Browse Tools <i className="ti ti-arrow-right" aria-hidden="true" />
+          </Link>
+        </div>
+      )}
+
+      <style>{`
         .tv-nav {
           position: fixed;
           top: 0;
@@ -492,6 +494,6 @@ export default function Navbar() {
           }
         }
       `}</style>
-        </header>
-    );
+    </header>
+  );
 }
