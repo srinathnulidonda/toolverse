@@ -1,7 +1,7 @@
 // components/search/SearchFilters.tsx
 "use client";
 
-import { CATEGORIES } from "@/lib/tools";
+import { getCategoriesWithCount } from "@/lib/tools";
 
 type SearchFiltersProps = {
   activeFilter: string;
@@ -14,6 +14,8 @@ export default function SearchFilters({
   onFilterChange,
   toolCounts,
 }: SearchFiltersProps) {
+  const CATEGORIES = getCategoriesWithCount();
+
   return (
     <>
       <div className="sf-root" role="tablist" aria-label="Filter by category">
