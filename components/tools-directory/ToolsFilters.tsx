@@ -1,7 +1,7 @@
 // components/tools-directory/ToolsFilters.tsx
 "use client";
 
-import { CATEGORIES } from "@/lib/tools";
+import { getCategoriesWithCount } from "@/lib/tools";
 
 type ToolsFiltersProps = {
   activeFilter: string;
@@ -14,6 +14,8 @@ export default function ToolsFilters({
   onFilterChange,
   toolCounts,
 }: ToolsFiltersProps) {
+  const CATEGORIES = getCategoriesWithCount();
+
   return (
     <>
       <div className="tdf-container">

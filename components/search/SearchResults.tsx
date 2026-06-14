@@ -1,7 +1,7 @@
 // components/search/SearchResults.tsx
 import Link from "next/link";
 import type { Tool } from "@/lib/tools";
-import { CATEGORIES } from "@/lib/tools";
+import { getCategoriesWithCount } from "@/lib/tools";
 
 type SearchResultsProps = {
   tools: Tool[];
@@ -31,6 +31,8 @@ function highlight(text: string, query: string) {
 }
 
 export default function SearchResults({ tools, query }: SearchResultsProps) {
+  const CATEGORIES = getCategoriesWithCount();
+
   const grouped = CATEGORIES.map((cat) => ({
     category: cat,
     tools: tools.filter((t) => t.category === cat.slug),
