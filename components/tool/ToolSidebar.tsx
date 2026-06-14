@@ -136,11 +136,6 @@ export default function ToolSidebar({
           border: 0.5px solid var(--brand-border);
           border-radius: var(--radius-lg);
         }
-        @media (prefers-color-scheme: dark) {
-          .ts-priv {
-            background: #0b1f16;
-          }
-        }
 
         .ts-priv-icon {
           width: 30px;

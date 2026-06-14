@@ -21,6 +21,9 @@ export default function CategoriesCTA() {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 20px;
+          max-width: 720px;
+          margin: 0 auto;
           padding: 20px 28px;
           background: var(--bg-card);
           border: 0.5px solid var(--border);
@@ -48,6 +51,7 @@ export default function CategoriesCTA() {
           background: var(--brand-light);
           border: 0.5px solid var(--brand-border);
           transition: opacity 0.15s;
+          white-space: nowrap;
         }
         .cat-cta-link:hover {
           opacity: 0.85;

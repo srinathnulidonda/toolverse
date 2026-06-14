@@ -29,9 +29,14 @@ export default function CategoriesPage() {
           background: var(--bg);
         }
         .cat-page-body {
-          max-width: 1200px;
+          max-width: 1600px;
           margin: 0 auto;
           padding: 40px 40px 80px;
+        }
+        @media (max-width: 1280px) {
+          .cat-page-body {
+            max-width: 1200px;
+          }
         }
         @media (max-width: 1024px) {
           .cat-page-body {

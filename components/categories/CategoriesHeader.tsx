@@ -1,97 +1,77 @@
 // components/categories/CategoriesHeader.tsx
+import { CATEGORIES } from "@/lib/tools";
+
 export default function CategoriesHeader() {
   return (
     <>
-      <header className="ch-root">
-        <div className="ch-inner">
-          <div className="ch-icon-wrap">
-            <i className="ti ti-category" aria-hidden="true" />
+      <div className="cth-root">
+        <div className="cth-inner">
+          {/* Title row */}
+          <div className="cth-title-row">
+            <i className="ti ti-category cth-icon" aria-hidden="true" />
+            <h1 className="cth-title">All Categories</h1>
           </div>
-          <div className="ch-title-group">
-            <h1 className="ch-title">Categories</h1>
-            <p className="ch-subtitle">
-              Browse all tools grouped by what you need to do.
-            </p>
-          </div>
+          <p className="cth-subtitle">
+            Browse {CATEGORIES.length} categories of free, browser-based tools.
+          </p>
         </div>
-      </header>
+      </div>
 
       <style>{`
-        .ch-root {
+        .cth-root {
           background: var(--bg);
           padding: 40px 40px 32px;
         }
-
-        .ch-inner {
-          max-width: 1200px;
+        .cth-inner {
+          max-width: 1600px;
           margin: 0 auto;
           display: flex;
+          flex-direction: column;
           align-items: center;
-          justify-content: center;
-          gap: 14px;
+          text-align: center;
         }
 
-        .ch-icon-wrap {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
-          background: var(--bg-surface);
-          border: 0.5px solid var(--border);
+        .cth-title-row {
           display: flex;
           align-items: center;
+          gap: 12px;
+          margin-bottom: 10px;
+          flex-wrap: wrap;
           justify-content: center;
-          flex-shrink: 0;
         }
 
-        .ch-icon-wrap i {
-          font-size: 18px;
+        .cth-icon {
+          font-size: 26px;
           color: var(--text-secondary);
         }
 
-        .ch-title-group {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-          text-align: left;
-        }
-
-        .ch-title {
-          font-size: clamp(20px, 2.5vw, 26px);
+        .cth-title {
+          font-size: clamp(22px, 3vw, 30px);
           font-weight: 700;
           color: var(--text);
-          letter-spacing: -0.6px;
+          letter-spacing: -0.8px;
           line-height: 1.2;
           margin: 0;
           font-family: var(--font-sans);
         }
 
-        .ch-subtitle {
-          font-size: 13px;
+        .cth-subtitle {
+          font-size: 14px;
           color: var(--text-secondary);
-          line-height: 1.5;
+          line-height: 1.6;
           margin: 0;
+          max-width: 560px;
           font-family: var(--font-sans);
         }
 
         @media (max-width: 1024px) {
-          .ch-root {
+          .cth-root {
             padding: 32px 24px;
           }
         }
-
-        @media (max-width: 640px) {
-          .ch-root {
+        @media (max-width: 768px) {
+          .cth-root {
             padding: 24px 20px 20px;
-          }
-          .ch-inner {
-            gap: 10px;
-          }
-          .ch-icon-wrap {
-            width: 36px;
-            height: 36px;
-          }
-          .ch-icon-wrap i {
-            font-size: 16px;
           }
         }
       `}</style>

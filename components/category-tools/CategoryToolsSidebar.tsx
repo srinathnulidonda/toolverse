@@ -86,11 +86,6 @@ export default function CategoryToolsSidebar({
           border: 0.5px solid var(--brand-border);
           border-radius: var(--radius-lg);
         }
-        @media (prefers-color-scheme: dark) {
-          .cts-priv {
-            background: #0b1f16;
-          }
-        }
 
         .cts-priv-icon {
           width: 30px;

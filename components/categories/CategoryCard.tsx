@@ -8,18 +8,10 @@ type CategoryCardProps = {
 };
 
 export default function CategoryCard({ category, tools }: CategoryCardProps) {
-  const preview = tools
-    .filter((t) => t.badge === "popular")
-    .slice(0, 3)
-    .concat(tools.filter((t) => t.badge !== "popular"))
-    .slice(0, 3);
-
-  const popularCount = tools.filter((t) => t.badge === "popular").length;
-  const newCount = tools.filter((t) => t.badge === "new").length;
+  const preview = tools.slice(0, 3);
 
   return (
     <>
-      {/* FIXED: Link now points to /tools/{category} instead of /categories/{category} */}
       <Link href={`/tools/${category.slug}`} className="cc-root">
         {/* Top row: icon + name + count */}
         <div className="cc-top">
@@ -49,18 +41,10 @@ export default function CategoryCard({ category, tools }: CategoryCardProps) {
 
         {/* Footer: stats */}
         <div className="cc-footer">
-          {popularCount > 0 && (
-            <span className="cc-stat">
-              <i className="ti ti-flame" aria-hidden="true" />
-              {popularCount} popular
-            </span>
-          )}
-          {newCount > 0 && (
-            <span className="cc-stat">
-              <i className="ti ti-sparkles" aria-hidden="true" />
-              {newCount} new
-            </span>
-          )}
+          <span className="cc-stat">
+            <i className="ti ti-infinity" aria-hidden="true" />
+            Free forever
+          </span>
           <span className="cc-stat cc-stat-private">
             <i className="ti ti-lock" aria-hidden="true" />
             Browser-only

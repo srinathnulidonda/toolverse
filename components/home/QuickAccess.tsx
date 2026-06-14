@@ -3,28 +3,20 @@
 
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
+import { TOOLS } from "@/lib/tools";
 
-// Types
-
-type Tool = { slug: string; label: string; href: string; icon: string };
-
-// Constants
-
-const ALL_TOOLS: Tool[] = [
-    { slug: "compress-pdf", label: "Compress PDF", href: "/tools/compress-pdf", icon: "ti-file-zip" },
-    { slug: "merge-pdf", label: "Merge PDF", href: "/tools/merge-pdf", icon: "ti-files" },
-    { slug: "image-compress", label: "Image compressor", href: "/tools/image-compress", icon: "ti-photo" },
-    { slug: "qr-generator", label: "QR generator", href: "/tools/qr-generator", icon: "ti-qrcode" },
-    { slug: "json-formatter", label: "JSON formatter", href: "/tools/json-formatter", icon: "ti-code" },
-    { slug: "resume-builder", label: "Resume builder", href: "/tools/resume-builder", icon: "ti-file-cv" },
+const DEFAULT_SLUGS = [
+    "compress-pdf",
+    "merge-pdf",
+    "image-compress",
+    "qr-generator",
+    "json-formatter",
+    "resume-builder",
 ];
 
-const DEFAULT_SLUGS = ALL_TOOLS.map((t) => t.slug);
 const RECENT_KEY = "tv:recents";
 const PINNED_KEY = "tv:pins";
 const MAX_ITEMS = 6;
-
-// Component
 
 export default function QuickAccess() {
     const [pinned, setPinned] = useState<string[]>([]);
@@ -62,13 +54,13 @@ export default function QuickAccess() {
         try { localStorage.removeItem(RECENT_KEY); } catch { }
     }, []);
 
-    // Build ordered, deduplicated list
+    // Build ordered, deduplicated list using real TOOLS data (correct hrefs)
     const order = [...pinned, ...recent, ...DEFAULT_SLUGS];
     const seen = new Set<string>();
-    const items: Tool[] = [];
+    const items: typeof TOOLS = [];
     for (const slug of order) {
         if (seen.has(slug)) continue;
-        const tool = ALL_TOOLS.find((t) => t.slug === slug);
+        const tool = TOOLS.find((t) => t.slug === slug);
         if (!tool) continue;
         seen.add(slug);
         items.push(tool);

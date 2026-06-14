@@ -10,6 +10,7 @@ import {
 import ToolHeader from "@/components/tool/ToolHeader";
 import ToolWorkspace from "@/components/tool/ToolWorkspace";
 import ToolSidebar from "@/components/tool/ToolSidebar";
+import RecentToolTracker from "@/components/tool/RecentToolTracker";
 
 export function generateStaticParams() {
   return TOOLS.map((tool) => ({
@@ -51,6 +52,8 @@ export default async function ToolPage({
 
   return (
     <>
+      <RecentToolTracker slug={tool.slug} />
+
       <div
         className="tp-page"
         style={{
@@ -77,7 +80,7 @@ export default async function ToolPage({
         }
 
         .tp-body {
-          max-width: 1200px;
+          max-width: 1600px;
           margin: 0 auto;
           padding: 0 40px 80px;
         }
@@ -87,6 +90,12 @@ export default async function ToolPage({
           grid-template-columns: 1fr 280px;
           gap: 32px;
           align-items: flex-start;
+        }
+
+        @media (max-width: 1280px) {
+          .tp-body {
+            max-width: 1200px;
+          }
         }
 
         @media (max-width: 1024px) {

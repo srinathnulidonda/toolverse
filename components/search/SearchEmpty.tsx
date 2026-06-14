@@ -1,6 +1,9 @@
 // components/search/SearchEmpty.tsx
 import Link from "next/link";
-import { TOOLS, CATEGORIES } from "@/lib/tools";
+import { TOOLS } from "@/data/tools";
+import { CATEGORIES } from "@/data/categories";
+import Button from "@/components/ui/Button";
+import EmptyState from "@/components/ui/EmptyState";
 
 type SearchEmptyProps = {
   query: string;
@@ -14,20 +17,16 @@ export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
     <>
       <div className="se-root">
         {/* Empty state */}
-        <div className="se-empty">
-          <div className="se-empty-icon">
-            <i className="ti ti-search-off" aria-hidden="true" />
-          </div>
-          <p className="se-empty-title">
-            No results for &quot;{query}&quot;
-          </p>
-          <p className="se-empty-desc">
-            Try different keywords or browse by category below.
-          </p>
-          <button className="se-clear-btn" onClick={onClear}>
-            Clear search
-          </button>
-        </div>
+        <EmptyState
+          icon={<i className="ti ti-search-off" aria-hidden="true" />}
+          title={`No results for "${query}"`}
+          description="Try different keywords or browse by category below."
+          action={
+            <Button variant="secondary" size="sm" onClick={onClear}>
+              Clear search
+            </Button>
+          }
+        />
 
         {/* Popular tools */}
         <div className="se-section">
@@ -76,65 +75,6 @@ export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
           gap: 40px;
         }
 
-        .se-empty {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          gap: 10px;
-          padding: 40px 24px 0;
-        }
-
-        .se-empty-icon {
-          width: 52px;
-          height: 52px;
-          border-radius: 14px;
-          background: var(--bg-surface);
-          border: 0.5px solid var(--border);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 22px;
-          color: var(--text-tertiary);
-          margin-bottom: 4px;
-        }
-
-        .se-empty-title {
-          font-size: 16px;
-          font-weight: 600;
-          color: var(--text);
-          font-family: var(--font-sans);
-          margin: 0;
-          letter-spacing: -0.3px;
-        }
-
-        .se-empty-desc {
-          font-size: 13px;
-          color: var(--text-secondary);
-          font-family: var(--font-sans);
-          margin: 0;
-          line-height: 1.6;
-          max-width: 320px;
-        }
-
-        .se-clear-btn {
-          margin-top: 8px;
-          padding: 8px 18px;
-          border-radius: var(--radius-md);
-          border: 0.5px solid var(--border);
-          background: var(--bg-card);
-          font-size: 12px;
-          font-weight: 500;
-          font-family: var(--font-sans);
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: background 0.12s, color 0.12s;
-        }
-        .se-clear-btn:hover {
-          background: var(--bg-surface);
-          color: var(--text);
-        }
-
         .se-section {
           display: flex;
           flex-direction: column;
@@ -153,7 +93,7 @@ export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
 
         .se-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 8px;
         }
 
@@ -223,7 +163,7 @@ export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
           border: 0.5px solid var(--border);
           border-radius: 99px;
           text-decoration: none;
-          transition: background 0.12s, color 0.12s;
+          transition: background 0.12s;
         }
         .se-cat:hover {
           background: var(--bg-surface);
@@ -245,7 +185,17 @@ export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
           font-family: var(--font-sans);
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 1024px) {
+          .se-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+        }
+        @media (max-width: 768px) {
+          .se-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+        @media (max-width: 480px) {
           .se-grid {
             grid-template-columns: 1fr;
           }

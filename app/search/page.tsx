@@ -3,11 +3,13 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState, useMemo, useEffect, Suspense } from "react";
-import { TOOLS, CATEGORIES } from "@/lib/tools";
+import { TOOLS } from "@/data/tools";
+import { CATEGORIES } from "@/data/categories";
 import SearchInput from "@/components/search/SearchInput";
 import SearchFilters from "@/components/search/SearchFilters";
 import SearchResults from "@/components/search/SearchResults";
 import SearchEmpty from "@/components/search/SearchEmpty";
+
 
 function SearchPage() {
     const searchParams = useSearchParams();
@@ -156,7 +158,7 @@ function SearchPage() {
         }
 
         .sp-body {
-          max-width: 1200px;
+          max-width: 1600px;
           margin: 0 auto;
           padding: 32px 40px 80px;
         }
@@ -176,6 +178,12 @@ function SearchPage() {
         .sp-count-query {
           color: var(--text-secondary);
           font-weight: 500;
+        }
+
+        @media (max-width: 1280px) {
+          .sp-body {
+            max-width: 1200px;
+          }
         }
 
         @media (max-width: 1024px) {

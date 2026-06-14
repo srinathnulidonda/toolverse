@@ -64,8 +64,8 @@ export default function SearchInput({ query, onChange }: SearchInputProps) {
           align-items: center;
           width: 100%;
           max-width: 520px;
-          background: #1A1A17;
-          border: 0.5px solid #2C2C28;
+          background: var(--bg-card);
+          border: 0.5px solid var(--border);
           border-radius: 9999px;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12),
                       0 1px 2px rgba(0, 0, 0, 0.08);
@@ -73,37 +73,24 @@ export default function SearchInput({ query, onChange }: SearchInputProps) {
           margin-bottom: 20px;
         }
         .si-wrap:hover {
-          border-color: #3C3B35;
+          border-color: var(--text-disabled);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16),
                       0 2px 4px rgba(0, 0, 0, 0.12);
         }
         .si-wrap:focus-within {
-          border-color: #4CAF82;
+          border-color: var(--brand);
           box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.12),
                       0 4px 12px rgba(0, 0, 0, 0.16);
-        }
-
-        @media (prefers-color-scheme: light) {
-          .si-wrap {
-            background: #FFFFFF;
-            border-color: #E8E8E2;
-          }
-          .si-wrap:hover {
-            border-color: #D1D0C8;
-          }
         }
 
         .si-icon {
           position: absolute;
           left: 18px;
-          color: #3C3B35;
+          color: var(--text-tertiary);
           display: flex;
           align-items: center;
           pointer-events: none;
           flex-shrink: 0;
-        }
-        @media (prefers-color-scheme: light) {
-          .si-icon { color: #6B6A62; }
         }
 
         .si-input {
@@ -112,21 +99,17 @@ export default function SearchInput({ query, onChange }: SearchInputProps) {
           background: transparent;
           border: none;
           font-size: 15px;
-          color: #EDEDEA;
+          color: var(--text);
           font-family: var(--font-sans);
           outline: none;
-          caret-color: #4CAF82;
+          caret-color: var(--brand);
           letter-spacing: -0.1px;
           border-radius: 9999px;
           width: 100%;
         }
         .si-input::placeholder {
-          color: #3C3B35;
+          color: var(--text-disabled);
           font-weight: 400;
-        }
-        @media (prefers-color-scheme: light) {
-          .si-input { color: #1C1C18; }
-          .si-input::placeholder { color: #A8A79E; }
         }
 
         .si-clear {
@@ -136,8 +119,8 @@ export default function SearchInput({ query, onChange }: SearchInputProps) {
           height: 26px;
           border-radius: 50%;
           border: none;
-          background: #222220;
-          color: #6B6A62;
+          background: var(--bg-surface);
+          color: var(--text-secondary);
           font-size: 20px;
           line-height: 1;
           display: flex;
@@ -148,18 +131,8 @@ export default function SearchInput({ query, onChange }: SearchInputProps) {
           transition: background 0.15s, color 0.15s;
         }
         .si-clear:hover {
-          background: #2C2C28;
-          color: #A8A79E;
-        }
-        @media (prefers-color-scheme: light) {
-          .si-clear {
-            background: #F4F4F0;
-            color: #6B6A62;
-          }
-          .si-clear:hover {
-            background: #E8E8E2;
-            color: #1C1C18;
-          }
+          background: var(--border);
+          color: var(--text);
         }
 
         @media (max-width: 640px) {

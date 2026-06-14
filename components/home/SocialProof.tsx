@@ -25,8 +25,8 @@ export default function SocialProof() {
                     key={s.title}
                     style={{
                         flex: 1,
-                        background: "#1A1A17",
-                        border: "0.5px solid #2C2C28",
+                        background: "var(--bg-card)",
+                        border: "0.5px solid var(--border)",
                         borderRadius: "10px",
                         padding: "12px 8px",
                         textAlign: "center",
@@ -39,12 +39,12 @@ export default function SocialProof() {
                     <i
                         className={`ti ${s.icon}`}
                         aria-hidden="true"
-                        style={{ fontSize: "17px", color: "#4CAF82" }}
+                        style={{ fontSize: "17px", color: "var(--brand)" }}
                     />
                     <span style={{
                         fontSize: "13px",
                         fontWeight: 700,
-                        color: "#EDEDEA",
+                        color: "var(--text)",
                         letterSpacing: "-0.2px",
                         lineHeight: 1.2,
                         fontFamily: font,
@@ -53,7 +53,7 @@ export default function SocialProof() {
                     </span>
                     <span style={{
                         fontSize: "10.5px",
-                        color: "#6B6A62",
+                        color: "var(--text-secondary)",
                         fontWeight: 500,
                         fontFamily: font,
                         lineHeight: 1.3,

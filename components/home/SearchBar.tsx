@@ -30,8 +30,8 @@ export default function SearchBar() {
                     position: "relative",
                     display: "flex",
                     alignItems: "center",
-                    background: "#1A1A17",
-                    border: "0.5px solid #2C2C28",
+                    background: "var(--bg-card)",
+                    border: "0.5px solid var(--border)",
                     borderRadius: "9999px",
                     boxShadow:
                         "0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)",
@@ -43,7 +43,7 @@ export default function SearchBar() {
                     style={{
                         position: "absolute",
                         left: "16px",
-                        color: "#3C3B35",
+                        color: "var(--text-tertiary)",
                         display: "flex",
                         alignItems: "center",
                         pointerEvents: "none",
@@ -76,10 +76,10 @@ export default function SearchBar() {
                         background: "transparent",
                         border: "none",
                         fontSize: "14px",
-                        color: "#EDEDEA",
+                        color: "var(--text)",
                         fontFamily: font,
                         outline: "none",
-                        caretColor: "#4CAF82",
+                        caretColor: "var(--brand)",
                         minWidth: 0,
                         letterSpacing: "-0.1px",
                         borderRadius: "9999px",
@@ -89,18 +89,18 @@ export default function SearchBar() {
 
             <style>{`
         .hero-search-input::placeholder {
-          color: #3C3B35;
+          color: var(--text-disabled);
           font-weight: 400;
         }
 
         .hero-search-form:hover {
-          border-color: #3C3B35 !important;
+          border-color: var(--text-disabled) !important;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16),
             0 2px 4px rgba(0, 0, 0, 0.12) !important;
         }
 
         .hero-search-form:focus-within {
-          border-color: #4CAF82 !important;
+          border-color: var(--brand) !important;
           box-shadow: 0 0 0 3px rgba(76, 175, 130, 0.12),
             0 4px 12px rgba(0, 0, 0, 0.16) !important;
         }

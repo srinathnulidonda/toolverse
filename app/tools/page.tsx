@@ -76,7 +76,7 @@ export default function ToolsPage() {
         }
 
         .tdp-body {
-          max-width: 1200px;
+          max-width: 1600px;
           margin: 0 auto;
           padding: 0 40px 80px;
         }
@@ -87,6 +87,12 @@ export default function ToolsPage() {
           font-family: var(--font-sans);
           margin: 0 0 16px;
           text-align: center;
+        }
+
+        @media (max-width: 1280px) {
+          .tdp-body {
+            max-width: 1200px;
+          }
         }
 
         @media (max-width: 1024px) {

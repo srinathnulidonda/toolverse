@@ -47,7 +47,7 @@ export default async function CategoryToolsPage({
           "--cat-bg-dark": cat.bgDark,
         } as React.CSSProperties}
       >
-        <CategoryToolsHeader category={cat} tools={tools} />
+        <CategoryToolsHeader category={cat} />
 
         <div className="ctp-body">
           <div className="ctp-body-inner">
@@ -64,16 +64,22 @@ export default async function CategoryToolsPage({
         }
 
         .ctp-body {
-          max-width: 1200px;
+          max-width: 1600px;
           margin: 0 auto;
           padding: 0 40px 80px;
         }
 
         .ctp-body-inner {
           display: grid;
-          grid-template-columns: 1fr 260px;
+          grid-template-columns: 1fr 280px;
           gap: 32px;
           align-items: flex-start;
+        }
+
+        @media (max-width: 1280px) {
+          .ctp-body {
+            max-width: 1200px;
+          }
         }
 
         @media (max-width: 1024px) {

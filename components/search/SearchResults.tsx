@@ -130,7 +130,7 @@ export default function SearchResults({ tools, query }: SearchResultsProps) {
 
         .sr-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 10px;
         }
 
@@ -142,7 +142,17 @@ export default function SearchResults({ tools, query }: SearchResultsProps) {
           font-style: normal;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 1024px) {
+          .sr-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+        }
+        @media (max-width: 768px) {
+          .sr-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+        @media (max-width: 480px) {
           .sr-grid {
             grid-template-columns: 1fr;
           }
@@ -160,14 +170,7 @@ function SearchResultCard({ tool, query }: { tool: Tool; query: string }) {
           <i className={`ti ${tool.icon}`} aria-hidden="true" />
         </div>
         <div className="src-body">
-          <div className="src-title-row">
-            <span className="src-name">{highlight(tool.label, query)}</span>
-            {tool.badge && (
-              <span className={`src-badge src-badge-${tool.badge}`}>
-                {tool.badge}
-              </span>
-            )}
-          </div>
+          <span className="src-name">{highlight(tool.label, query)}</span>
           <p className="src-desc">{highlight(tool.description, query)}</p>
           {tool.tags && tool.tags.length > 0 && (
             <div className="src-tags">
@@ -226,12 +229,6 @@ function SearchResultCard({ tool, query }: { tool: Tool; query: string }) {
           gap: 4px;
         }
 
-        .src-title-row {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-
         .src-name {
           font-size: 13px;
           font-weight: 600;
@@ -242,36 +239,6 @@ function SearchResultCard({ tool, query }: { tool: Tool; query: string }) {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-        }
-
-        .src-badge {
-          font-size: 9px;
-          font-weight: 700;
-          padding: 2px 5px;
-          border-radius: 4px;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          flex-shrink: 0;
-          font-family: var(--font-sans);
-        }
-        .src-badge-popular {
-          background: #fdf3e7;
-          color: #b45309;
-        }
-        @media (prefers-color-scheme: dark) {
-          .src-badge-popular {
-            background: #2a1500;
-            color: #fbbf24;
-          }
-        }
-        .src-badge-new {
-          background: var(--brand-light);
-          color: var(--brand-text);
-        }
-        .src-badge-beta {
-          background: var(--bg-surface);
-          color: var(--text-tertiary);
-          border: 0.5px solid var(--border);
         }
 
         .src-desc {

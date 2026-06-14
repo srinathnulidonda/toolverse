@@ -1,6 +1,5 @@
 // app/page.tsx
 import type { Metadata } from "next";
-import Link from "next/link";
 import Hero from "@/components/home/Hero";
 import QuickAccess from "@/components/home/QuickAccess";
 import BrowseCategories from "@/components/home/BrowseCategories";
@@ -19,9 +18,9 @@ export default function HomePage() {
       <Hero />
 
       {/* Dashboard grid section */}
-      <section style={{ background: "#111110", padding: "0 40px 40px" }}>
-        <div style={{
-          maxWidth: "1280px",
+      <section style={{ background: "var(--bg)", padding: "0 40px 40px" }}>
+        <div className="dashboard-container" style={{
+          maxWidth: "1600px",
           margin: "0 auto",
           width: "100%",
         }}>
@@ -31,7 +30,6 @@ export default function HomePage() {
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
               gap: "20px",
-              maxWidth: "1200px",
             }}
           >
             <QuickAccess />
@@ -42,6 +40,11 @@ export default function HomePage() {
       </section>
 
       <style>{`
+        @media (max-width: 1280px) {
+          .dashboard-container {
+            max-width: 1200px !important;
+          }
+        }
         @media (max-width: 768px) {
           .dashboard-grid {
             grid-template-columns: 1fr !important;

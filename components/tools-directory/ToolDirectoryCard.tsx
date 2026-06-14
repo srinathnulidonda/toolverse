@@ -14,14 +14,7 @@ export default function ToolDirectoryCard({ tool }: ToolDirectoryCardProps) {
           <i className={`ti ${tool.icon}`} aria-hidden="true" />
         </div>
         <div className="tdc-body">
-          <div className="tdc-title-row">
-            <span className="tdc-name">{tool.label}</span>
-            {tool.badge && (
-              <span className={`tdc-badge tdc-badge-${tool.badge}`}>
-                {tool.badge}
-              </span>
-            )}
-          </div>
+          <span className="tdc-name">{tool.label}</span>
           <p className="tdc-desc">{tool.description}</p>
         </div>
         <i className="ti ti-arrow-right tdc-arrow" aria-hidden="true" />
@@ -71,12 +64,6 @@ export default function ToolDirectoryCard({ tool }: ToolDirectoryCardProps) {
           gap: 3px;
         }
 
-        .tdc-title-row {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-
         .tdc-name {
           font-size: 13px;
           font-weight: 600;
@@ -87,36 +74,6 @@ export default function ToolDirectoryCard({ tool }: ToolDirectoryCardProps) {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-        }
-
-        .tdc-badge {
-          font-size: 9px;
-          font-weight: 700;
-          padding: 2px 5px;
-          border-radius: 4px;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-          flex-shrink: 0;
-          font-family: var(--font-sans);
-        }
-        .tdc-badge-popular {
-          background: #fdf3e7;
-          color: #b45309;
-        }
-        @media (prefers-color-scheme: dark) {
-          .tdc-badge-popular {
-            background: #2a1500;
-            color: #fbbf24;
-          }
-        }
-        .tdc-badge-new {
-          background: var(--brand-light);
-          color: var(--brand-text);
-        }
-        .tdc-badge-beta {
-          background: var(--bg-surface);
-          color: var(--text-tertiary);
-          border: 0.5px solid var(--border);
         }
 
         .tdc-desc {

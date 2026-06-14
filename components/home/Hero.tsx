@@ -10,7 +10,7 @@ export default function Hero() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#111110",
+            background: "var(--bg)",
             padding: "28px 40px 44px",
             minHeight: "260px",
         }}>
@@ -26,7 +26,7 @@ export default function Hero() {
                 {/* Eyebrow */}
                 <p className="hero-eyebrow" style={{
                     fontSize: "12px",
-                    color: "#3C3B35",
+                    color: "var(--text-disabled)",
                     marginBottom: "14px",
                     fontFamily: font,
                     letterSpacing: "0.4px",
@@ -42,18 +42,18 @@ export default function Hero() {
                     fontWeight: 700,
                     letterSpacing: "-1.2px",
                     lineHeight: 1.15,
-                    color: "#EDEDEA",
+                    color: "var(--text)",
                     marginBottom: "16px",
                     fontFamily: font,
                 }}>
                     One tab.{" "}
-                    <span style={{ color: "#4CAF82" }}>Every file task.</span>
+                    <span style={{ color: "var(--brand)" }}>Every file task.</span>
                 </h1>
 
                 {/* Body */}
                 <p className="hero-body" style={{
                     fontSize: "clamp(14px, 1.6vw, 15px)",
-                    color: "#6B6A62",
+                    color: "var(--text-secondary)",
                     lineHeight: 1.7,
                     marginBottom: "28px",
                     maxWidth: "400px",
