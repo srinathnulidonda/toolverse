@@ -1,7 +1,7 @@
 // components/search/SearchEmpty.tsx
 import Link from "next/link";
 import { TOOLS } from "@/data/tools";
-import { CATEGORIES } from "@/data/categories";
+import { getCategoriesWithCount } from "@/data/categories";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
 
@@ -10,9 +10,20 @@ type SearchEmptyProps = {
   onClear: () => void;
 };
 
-const popular = TOOLS.filter((t) => t.badge === "popular").slice(0, 4);
+const POPULAR_SLUGS = [
+  "compress-pdf",
+  "image-compress",
+  "json-formatter",
+  "qr-generator",
+];
+
+const popular = POPULAR_SLUGS.map((slug) =>
+  TOOLS.find((t) => t.slug === slug)
+).filter(Boolean) as typeof TOOLS;
 
 export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
+  const CATEGORIES = getCategoriesWithCount();
+
   return (
     <>
       <div className="se-root">
