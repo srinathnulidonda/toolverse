@@ -20,24 +20,17 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
     const [downloading, setDownloading] = useState<ExportFormat | null>(null);
     const [hasQr, setHasQr] = useState(false);
 
-    // Reset saved state whenever the data changes
-    useEffect(() => {
-        setSaved(false);
-    }, [data]);
+    useEffect(() => { setSaved(false); }, [data]);
 
-    // Render QR to canvas whenever inputs change
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-
         if (!data) {
-            const ctx = canvas.getContext("2d");
-            ctx?.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
             setError(null);
             setHasQr(false);
             return;
         }
-
         QRCode.toCanvas(canvas, data, {
             width: style.size,
             margin: style.margin,
@@ -46,9 +39,9 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
                 dark: style.fgColor,
                 light: style.transparent ? "#ffffff00" : style.bgColor,
             },
-        }, (err) => {
+        }, err => {
             if (err) {
-                setError("Content too long for this error-correction level. Try level L or shorten the content.");
+                setError("Content too long. Try error-correction level L or shorten your input.");
                 setHasQr(false);
             } else {
                 setError(null);
@@ -57,12 +50,10 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
         });
     }, [data, style]);
 
-    // Explicit save to history — only fires when user clicks the button
     const handleSave = useCallback(() => {
         const canvas = canvasRef.current;
         if (!canvas || !hasQr) return;
-        const thumbnail = canvas.toDataURL("image/png");
-        onSave(thumbnail);
+        onSave(canvas.toDataURL("image/png"));
         setSaved(true);
         setTimeout(() => setSaved(false), 2000);
     }, [hasQr, onSave]);
@@ -74,10 +65,7 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
         canvas.toBlob(blob => {
             if (!blob) return;
             const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${slug}-qr.png`;
-            a.click();
+            Object.assign(document.createElement("a"), { href: url, download: `${slug}-qr.png` }).click();
             URL.revokeObjectURL(url);
             setDownloading(null);
         }, "image/png");
@@ -88,20 +76,11 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
         setDownloading("svg");
         try {
             const svg = await QRCode.toString(data, {
-                type: "svg",
-                margin: style.margin,
-                errorCorrectionLevel: style.errorLevel,
-                color: {
-                    dark: style.fgColor,
-                    light: style.transparent ? "transparent" : style.bgColor,
-                },
+                type: "svg", margin: style.margin, errorCorrectionLevel: style.errorLevel,
+                color: { dark: style.fgColor, light: style.transparent ? "transparent" : style.bgColor },
             });
-            const blob = new Blob([svg], { type: "image/svg+xml" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${slug}-qr.svg`;
-            a.click();
+            const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+            Object.assign(document.createElement("a"), { href: url, download: `${slug}-qr.svg` }).click();
             URL.revokeObjectURL(url);
         } catch { }
         setDownloading(null);
@@ -111,21 +90,16 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
         const canvas = canvasRef.current;
         if (!canvas || !hasQr) return;
         setDownloading("jpg");
-        // JPG has no transparency — composite onto white first
-        const offscreen = document.createElement("canvas");
-        offscreen.width = canvas.width;
-        offscreen.height = canvas.height;
-        const ctx = offscreen.getContext("2d")!;
+        const off = document.createElement("canvas");
+        off.width = canvas.width; off.height = canvas.height;
+        const ctx = off.getContext("2d")!;
         ctx.fillStyle = "#FFFFFF";
-        ctx.fillRect(0, 0, offscreen.width, offscreen.height);
+        ctx.fillRect(0, 0, off.width, off.height);
         ctx.drawImage(canvas, 0, 0);
-        offscreen.toBlob(blob => {
+        off.toBlob(blob => {
             if (!blob) return;
             const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${slug}-qr.jpg`;
-            a.click();
+            Object.assign(document.createElement("a"), { href: url, download: `${slug}-qr.jpg` }).click();
             URL.revokeObjectURL(url);
             setDownloading(null);
         }, "image/jpeg", 0.95);
@@ -147,20 +121,21 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
     return (
         <>
             <div className="qp-root">
-                {/* Canvas area */}
-                <div className="qp-canvas-area">
+
+                {/* Canvas */}
+                <div className="qp-canvas-region">
                     <div
-                        className={`qp-canvas-wrap${!data ? " empty" : ""}`}
-                        style={{ background: style.transparent ? "transparent" : "white" }}
+                        className={`qp-canvas-wrap${!data ? " qp-empty-state" : ""}`}
+                        style={data && !style.transparent ? { background: style.bgColor } : undefined}
                     >
-                        {!data && (
-                            <div className="qp-empty">
-                                <div className="qp-empty-icon">
+                        {!data ? (
+                            <div className="qp-placeholder">
+                                <div className="qp-placeholder-icon">
                                     <i className="ti ti-qrcode" aria-hidden="true" />
                                 </div>
-                                <p className="qp-empty-text">Fill in the form to generate your QR code</p>
+                                <p className="qp-placeholder-text">Enter content to generate</p>
                             </div>
-                        )}
+                        ) : null}
                         <canvas
                             ref={canvasRef}
                             className="qp-canvas"
@@ -169,53 +144,74 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
                     </div>
 
                     {error && (
-                        <div className="qp-error">
-                            <i className="ti ti-alert-circle" aria-hidden="true" />
-                            <span>{error}</span>
-                        </div>
+                        <p className="qp-error">
+                            <i className="ti ti-alert-triangle" aria-hidden="true" />
+                            {error}
+                        </p>
                     )}
                 </div>
 
-                {/* Raw data pill */}
+                {/* Data string */}
                 {data && (
-                    <div className="qp-data">
+                    <div className="qp-data-pill">
+                        <i className="ti ti-code" aria-hidden="true" />
                         <span className="qp-data-text">
-                            {data.length > 80 ? data.slice(0, 80) + "…" : data}
+                            {data.length > 72 ? data.slice(0, 72) + "…" : data}
                         </span>
                     </div>
                 )}
 
-                {/* Action buttons */}
-                <div className="qp-actions">
-                    {/* Save to history — explicit user action only */}
+                {/* Primary actions */}
+                <div className="qp-primary-actions">
                     <button
-                        className={`qp-btn qp-btn-save${saved ? " saved" : ""}`}
+                        className={`qp-action-btn qp-save-btn${saved ? " qp-saved" : ""}`}
                         onClick={handleSave}
                         disabled={!hasQr}
                     >
                         <i className={`ti ${saved ? "ti-check" : "ti-bookmark"}`} aria-hidden="true" />
-                        <span>{saved ? "Saved to history!" : "Save to history"}</span>
+                        <span>{saved ? "Saved!" : "Save to history"}</span>
                     </button>
 
-                    {/* Copy image */}
-                    <button className="qp-btn" onClick={copyImage} disabled={!hasQr}>
+                    <button
+                        className="qp-action-btn qp-copy-btn"
+                        onClick={copyImage}
+                        disabled={!hasQr}
+                    >
                         <i className={`ti ${copied ? "ti-check" : "ti-clipboard"}`} aria-hidden="true" />
                         <span>{copied ? "Copied!" : "Copy image"}</span>
                     </button>
+                </div>
 
-                    {/* Export group */}
-                    <div className="qp-export-row">
-                        <span className="qp-export-label">Export as</span>
-                        <button className="qp-btn qp-btn-primary" onClick={downloadPng} disabled={!hasQr}>
-                            <i className={`ti ${downloading === "png" ? "ti-loader-2" : "ti-download"}`} aria-hidden="true" />
+                {/* Export row */}
+                <div className="qp-export-section">
+                    <span className="qp-export-label">
+                        <i className="ti ti-download" aria-hidden="true" />
+                        Export
+                    </span>
+                    <div className="qp-export-btns">
+                        <button
+                            className={`qp-export-btn qp-export-primary`}
+                            onClick={downloadPng}
+                            disabled={!hasQr}
+                        >
+                            {downloading === "png"
+                                ? <i className="ti ti-loader-2 qp-spin" aria-hidden="true" />
+                                : <i className="ti ti-download" aria-hidden="true" />
+                            }
                             PNG
                         </button>
-                        <button className="qp-btn" onClick={downloadSvg} disabled={!hasQr}>
-                            <i className={`ti ${downloading === "svg" ? "ti-loader-2" : "ti-download"}`} aria-hidden="true" />
+                        <button className="qp-export-btn" onClick={downloadSvg} disabled={!hasQr}>
+                            {downloading === "svg"
+                                ? <i className="ti ti-loader-2 qp-spin" aria-hidden="true" />
+                                : <i className="ti ti-download" aria-hidden="true" />
+                            }
                             SVG
                         </button>
-                        <button className="qp-btn" onClick={downloadJpg} disabled={!hasQr}>
-                            <i className={`ti ${downloading === "jpg" ? "ti-loader-2" : "ti-download"}`} aria-hidden="true" />
+                        <button className="qp-export-btn" onClick={downloadJpg} disabled={!hasQr}>
+                            {downloading === "jpg"
+                                ? <i className="ti ti-loader-2 qp-spin" aria-hidden="true" />
+                                : <i className="ti ti-download" aria-hidden="true" />
+                            }
                             JPG
                         </button>
                     </div>
@@ -227,97 +223,106 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 14px;
-          padding: 20px;
-          height: 100%;
+          gap: 12px;
+          padding: 20px 20px 24px;
+          flex: 1;
         }
 
-        .qp-canvas-area {
+        /* Canvas region */
+        .qp-canvas-region {
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 10px;
-          flex: 1;
           width: 100%;
-          justify-content: center;
         }
 
         .qp-canvas-wrap {
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 12px;
+          width: 100%;
+          max-width: 240px;
+          aspect-ratio: 1;
+          border-radius: 14px;
           overflow: hidden;
           border: 0.5px solid var(--border);
-          width: 100%;
-          aspect-ratio: 1;
-          max-width: 260px;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         }
-        .qp-canvas-wrap.empty {
+        .qp-canvas-wrap.qp-empty-state {
           background: var(--bg-surface) !important;
+          box-shadow: none;
         }
 
-        .qp-empty {
+        .qp-placeholder {
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 10px;
-          padding: 24px;
+          padding: 20px;
           text-align: center;
         }
-        .qp-empty-icon {
-          width: 48px; height: 48px;
-          border-radius: 12px;
+        .qp-placeholder-icon {
+          width: 52px; height: 52px;
+          border-radius: 14px;
           background: var(--bg-card);
           border: 0.5px solid var(--border);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 20px;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 22px;
           color: var(--text-disabled);
         }
-        .qp-empty-text {
+        .qp-placeholder-text {
           font-size: 12px;
           color: var(--text-tertiary);
           line-height: 1.5;
           margin: 0;
-          max-width: 150px;
+          max-width: 130px;
           font-family: var(--font-sans);
         }
 
         .qp-canvas {
           max-width: 100%;
           max-height: 100%;
-          height: auto !important;
           width: auto !important;
+          height: auto !important;
           display: block;
         }
 
         .qp-error {
           display: flex;
-          align-items: flex-start;
-          gap: 7px;
+          align-items: center;
+          gap: 6px;
           padding: 9px 12px;
           background: var(--error-bg);
-          border-radius: 7px;
+          border-radius: 8px;
           font-size: 11.5px;
           color: #B91C1C;
           font-family: var(--font-sans);
           line-height: 1.5;
-          max-width: 260px;
-        }
-        .qp-error i { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-        @media (prefers-color-scheme: dark) {
-          .qp-error { color: #F87171; }
-        }
-
-        .qp-data {
           width: 100%;
-          max-width: 260px;
+          max-width: 240px;
+          margin: 0;
+        }
+        .qp-error i { font-size: 14px; flex-shrink: 0; }
+        @media (prefers-color-scheme: dark) { .qp-error { color: #F87171; } }
+
+        /* Data pill */
+        .qp-data-pill {
+          display: flex;
+          align-items: flex-start;
+          gap: 6px;
+          width: 100%;
+          max-width: 240px;
           background: var(--bg-surface);
           border: 0.5px solid var(--border);
-          border-radius: 7px;
+          border-radius: 8px;
           padding: 7px 10px;
+        }
+        .qp-data-pill i {
+          font-size: 12px;
+          color: var(--text-disabled);
+          flex-shrink: 0;
+          margin-top: 1px;
         }
         .qp-data-text {
           font-size: 10.5px;
@@ -325,38 +330,24 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
           color: var(--text-tertiary);
           word-break: break-all;
           line-height: 1.45;
-          display: block;
         }
 
-        .qp-actions {
-          display: flex;
-          flex-direction: column;
-          gap: 7px;
+        /* Primary actions */
+        .qp-primary-actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
           width: 100%;
-          max-width: 260px;
+          max-width: 240px;
         }
 
-        .qp-export-row {
+        .qp-action-btn {
           display: flex;
-          align-items: center;
-          gap: 6px;
-        }
-        .qp-export-label {
-          font-size: 11px;
-          color: var(--text-tertiary);
-          font-family: var(--font-sans);
-          white-space: nowrap;
-          margin-right: 2px;
-        }
-
-        .qp-btn {
-          display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 5px;
-          height: 34px;
-          padding: 0 12px;
-          border-radius: 7px;
+          gap: 6px;
+          height: 38px;
+          border-radius: 8px;
           border: 0.5px solid var(--border);
           background: var(--bg-surface);
           color: var(--text-secondary);
@@ -364,39 +355,97 @@ export default function QrPreview({ data, style, slug, onSave }: QrPreviewProps)
           font-weight: 500;
           font-family: var(--font-sans);
           cursor: pointer;
-          transition: background 0.12s, color 0.12s, border-color 0.12s;
-          flex-shrink: 0;
-          white-space: nowrap;
+          transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.1s;
+          -webkit-tap-highlight-color: transparent;
         }
-        .qp-btn:first-child { width: 100%; }
-        .qp-btn:hover:not(:disabled) { background: var(--border); color: var(--text); }
-        .qp-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .qp-btn i { font-size: 14px; }
+        .qp-action-btn i { font-size: 14px; }
+        .qp-action-btn:hover:not(:disabled) { background: var(--border); color: var(--text); }
+        .qp-action-btn:active:not(:disabled) { transform: scale(0.97); }
+        .qp-action-btn:disabled { opacity: 0.38; cursor: not-allowed; }
 
-        .qp-btn-save {
+        .qp-save-btn.qp-saved {
+          background: var(--brand-light);
+          border-color: var(--brand-border);
+          color: var(--brand-text);
+        }
+
+        /* Export */
+        .qp-export-section {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
           width: 100%;
-          border-color: var(--border);
+          max-width: 240px;
         }
-        .qp-btn-save.saved {
+        .qp-export-label {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 10.5px;
+          font-weight: 600;
+          color: var(--text-tertiary);
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          font-family: var(--font-sans);
+        }
+        .qp-export-label i { font-size: 12px; }
+
+        .qp-export-btns {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 6px;
+        }
+        .qp-export-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          height: 36px;
+          border-radius: 7px;
+          border: 0.5px solid var(--border);
+          background: var(--bg-surface);
+          color: var(--text-secondary);
+          font-size: 12px;
+          font-weight: 500;
+          font-family: var(--font-sans);
+          cursor: pointer;
+          transition: background 0.12s, color 0.12s, transform 0.1s;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .qp-export-btn i { font-size: 13px; }
+        .qp-export-btn:hover:not(:disabled) { background: var(--border); color: var(--text); }
+        .qp-export-btn:active:not(:disabled) { transform: scale(0.96); }
+        .qp-export-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+        .qp-export-primary {
           background: var(--brand-light);
           border-color: var(--brand-border);
           color: var(--brand-text);
         }
+        .qp-export-primary:hover:not(:disabled) { background: var(--brand-border); }
 
-        .qp-btn-primary {
-          background: var(--brand-light);
-          border-color: var(--brand-border);
-          color: var(--brand-text);
-        }
-        .qp-btn-primary:hover:not(:disabled) {
-          background: var(--brand-border);
-        }
+        @keyframes qp-spin { to { transform: rotate(360deg); } }
+        .qp-spin { animation: qp-spin 0.75s linear infinite; }
 
-        @keyframes qp-spin {
-          to { transform: rotate(360deg); }
-        }
-        .qp-btn .ti-loader-2 {
-          animation: qp-spin 0.8s linear infinite;
+        /* ── Mobile sheet layout adjustments ── */
+        @media (max-width: 768px) {
+          .qp-root {
+            padding: 16px 20px 32px;
+          }
+
+          /* On mobile (in sheet) the canvas can be bigger */
+          .qp-canvas-wrap {
+            max-width: min(300px, 75vw);
+          }
+          .qp-data-pill,
+          .qp-primary-actions,
+          .qp-export-section {
+            max-width: min(300px, 75vw);
+          }
+
+          /* Bigger touch targets */
+          .qp-action-btn { height: 44px; font-size: 13px; }
+          .qp-export-btn { height: 40px; font-size: 12.5px; }
         }
       `}</style>
         </>

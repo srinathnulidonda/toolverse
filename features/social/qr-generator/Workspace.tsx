@@ -26,6 +26,7 @@ import TypeInput from "./TypeInput";
 import StylePanel from "./StylePanel";
 import QrPreview from "./QrPreview";
 import HistoryPanel from "./HistoryPanel";
+import PreviewFab from "./PreviewFab";
 
 const TYPES: QrType[] = ["url", "text", "email", "phone", "wifi", "vcard", "sms", "location"];
 
@@ -40,11 +41,17 @@ const DEFAULT_STYLE: QrStyle = {
     transparent: false,
 };
 
+const PANEL_TABS: { id: PanelTab; icon: string; label: string }[] = [
+    { id: "content", icon: "ti-edit", label: "Content" },
+    { id: "style", icon: "ti-palette", label: "Style" },
+    { id: "history", icon: "ti-history", label: "History" },
+];
+
 export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
-    // Type selection
+    // QR type
     const [type, setType] = useState<QrType>("url");
 
-    // Content state per type
+    // Per-type content
     const [url, setUrl] = useState("https://");
     const [text, setText] = useState("");
     const [email, setEmail] = useState<EmailData>({ address: "", subject: "", body: "" });
@@ -54,12 +61,11 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
     const [sms, setSms] = useState<SmsData>({ phone: "", message: "" });
     const [location, setLocation] = useState<LocationData>({ lat: "", lng: "", label: "" });
 
-    // Style
+    // Style + UI
     const [qrStyle, setQrStyle] = useState<QrStyle>(DEFAULT_STYLE);
-
-    // UI state
     const [activeTab, setActiveTab] = useState<PanelTab>("content");
     const [history, setHistory] = useState<HistoryItem[]>([]);
+    const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
 
     // Computed QR data string
     const data = useMemo(() => {
@@ -76,7 +82,7 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
         }
     }, [type, url, text, email, phone, wifi, vcard, sms, location]);
 
-    // Only called when user explicitly clicks "Save to history"
+    // Save to history (explicit — triggered by user clicking "Save" in QrPreview)
     const saveToHistory = useCallback((thumbnail: string) => {
         if (!data) return;
         const label = (() => {
@@ -92,77 +98,65 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
                 default: return data.slice(0, 40);
             }
         })();
-
         setHistory(prev => {
-            // Skip duplicate entries with same data
             if (prev.some(h => h.data === data)) return prev;
-            const newItem: HistoryItem = {
+            return [{
                 id: `${Date.now()}-${Math.random()}`,
-                type,
-                label,
-                data,
-                timestamp: Date.now(),
-                thumbnail,
-            };
-            return [newItem, ...prev].slice(0, 20);
+                type, label, data, timestamp: Date.now(), thumbnail,
+            }, ...prev].slice(0, 20);
         });
     }, [data, type, url, text, email, phone, wifi, vcard, sms, location]);
 
-    // Restore type from history (content must be re-entered manually)
     const handleRestore = useCallback((item: HistoryItem) => {
         setType(item.type);
         setActiveTab("content");
     }, []);
 
-    const handleDeleteHistory = useCallback((id: string) => {
-        setHistory(prev => prev.filter(h => h.id !== id));
-    }, []);
-
-    const handleClearHistory = useCallback(() => {
-        setHistory([]);
-    }, []);
-
     return (
         <>
             <div className="qgw-root">
-                {/* Type selector strip */}
-                <div className="qgw-type-strip" role="tablist" aria-label="QR code type">
-                    {TYPES.map(t => (
-                        <button
-                            key={t}
-                            role="tab"
-                            aria-selected={type === t}
-                            className={`qgw-type-btn${type === t ? " active" : ""}`}
-                            onClick={() => setType(t)}
-                        >
-                            <i className={`ti ${getTypeIcon(t)}`} aria-hidden="true" />
-                            <span>{getTypeLabel(t)}</span>
-                        </button>
-                    ))}
+
+                {/* ── QR type selector strip ── */}
+                <div className="qgw-type-bar" role="tablist" aria-label="QR type">
+                    <div className="qgw-type-scroll">
+                        {TYPES.map(t => (
+                            <button
+                                key={t}
+                                role="tab"
+                                aria-selected={type === t}
+                                className={`qgw-type-btn${type === t ? " active" : ""}`}
+                                onClick={() => setType(t)}
+                            >
+                                <i className={`ti ${getTypeIcon(t)}`} aria-hidden="true" />
+                                <span className="qgw-type-label">{getTypeLabel(t)}</span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                {/* Main workspace */}
+                {/* ── Main two-column workspace (desktop) ── */}
                 <div className="qgw-workspace">
+
                     {/* Left: config panel */}
                     <div className="qgw-config">
-                        {/* Panel tabs */}
-                        <div className="qgw-panel-tabs">
-                            {(["content", "style", "history"] as PanelTab[]).map(tab => (
+                        <div className="qgw-panel-tabs" role="tablist">
+                            {PANEL_TABS.map(tab => (
                                 <button
-                                    key={tab}
-                                    className={`qgw-panel-tab${activeTab === tab ? " active" : ""}`}
-                                    onClick={() => setActiveTab(tab)}
+                                    key={tab.id}
+                                    role="tab"
+                                    aria-selected={activeTab === tab.id}
+                                    className={`qgw-panel-tab${activeTab === tab.id ? " active" : ""}`}
+                                    onClick={() => setActiveTab(tab.id)}
                                 >
-                                    <i className={`ti ${tab === "content" ? "ti-edit" : tab === "style" ? "ti-palette" : "ti-history"}`} aria-hidden="true" />
-                                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                                    {tab === "history" && history.length > 0 && (
-                                        <span className="qgw-panel-badge">{history.length}</span>
+                                    <i className={`ti ${tab.icon}`} aria-hidden="true" />
+                                    <span>{tab.label}</span>
+                                    {tab.id === "history" && history.length > 0 && (
+                                        <span className="qgw-badge">{history.length}</span>
                                     )}
                                 </button>
                             ))}
                         </div>
 
-                        {/* Panel content */}
                         <div className="qgw-panel-body">
                             {activeTab === "content" && (
                                 <TypeInput
@@ -184,20 +178,31 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
                                 <HistoryPanel
                                     items={history}
                                     onRestore={handleRestore}
-                                    onDelete={handleDeleteHistory}
-                                    onClear={handleClearHistory}
+                                    onDelete={id => setHistory(p => p.filter(h => h.id !== id))}
+                                    onClear={() => setHistory([])}
                                 />
                             )}
                         </div>
+
+                        {/* Mobile FAB lives inside config so sticky positioning works */}
+                        <PreviewFab
+                            data={data}
+                            style={qrStyle}
+                            slug={tool.slug}
+                            isOpen={mobilePreviewOpen}
+                            onOpen={() => setMobilePreviewOpen(true)}
+                            onClose={() => setMobilePreviewOpen(false)}
+                            onSave={saveToHistory}
+                        />
                     </div>
 
-                    {/* Right: preview */}
-                    <div className="qgw-preview-pane">
+                    {/* Right: preview (desktop only) */}
+                    <div className="qgw-preview-col">
                         <div className="qgw-preview-header">
-                            <span className="qgw-preview-title">Preview</span>
+                            <span className="qgw-preview-eyebrow">Preview</span>
                             {data && (
-                                <span className="qgw-preview-live">
-                                    <span className="qgw-live-dot" />
+                                <span className="qgw-live-pill">
+                                    <span className="qgw-live-dot" aria-hidden="true" />
                                     Live
                                 </span>
                             )}
@@ -211,19 +216,19 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
                     </div>
                 </div>
 
-                {/* Footer info strip */}
+                {/* ── Footer ── */}
                 <div className="qgw-footer">
                     <div className="qgw-footer-item">
                         <i className="ti ti-lock" aria-hidden="true" />
-                        <span>Generated entirely in your browser — nothing is uploaded</span>
+                        <span>100% browser-side — nothing uploaded</span>
                     </div>
                     <div className="qgw-footer-item">
                         <i className="ti ti-device-mobile" aria-hidden="true" />
-                        <span>Works with all major QR scanners</span>
+                        <span>Works with all major scanners</span>
                     </div>
                     <div className="qgw-footer-item">
                         <i className="ti ti-infinity" aria-hidden="true" />
-                        <span>Free forever, no sign-up required</span>
+                        <span>Free forever</span>
                     </div>
                 </div>
             </div>
@@ -236,23 +241,28 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
           overflow: hidden;
           display: flex;
           flex-direction: column;
+          position: relative;
         }
 
-        .qgw-type-strip {
-          display: flex;
-          padding: 12px 16px 0;
+        /* ── Type bar ── */
+        .qgw-type-bar {
           border-bottom: 0.5px solid var(--border);
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
+          background: var(--bg-card);
         }
-        .qgw-type-strip::-webkit-scrollbar { display: none; }
+        .qgw-type-scroll {
+          display: flex;
+          padding: 0 4px;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+        }
+        .qgw-type-scroll::-webkit-scrollbar { display: none; }
 
         .qgw-type-btn {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 8px 14px;
+          padding: 11px 14px;
           border: none;
           border-bottom: 2px solid transparent;
           background: none;
@@ -263,26 +273,31 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
           cursor: pointer;
           white-space: nowrap;
           margin-bottom: -0.5px;
-          transition: color 0.12s, border-color 0.12s;
+          transition: color 0.15s, border-color 0.15s;
           border-radius: 0;
+          -webkit-tap-highlight-color: transparent;
         }
-        .qgw-type-btn i { font-size: 15px; }
+        .qgw-type-btn i { font-size: 15px; flex-shrink: 0; }
         .qgw-type-btn:hover { color: var(--text-secondary); }
         .qgw-type-btn.active {
           color: var(--brand);
           border-bottom-color: var(--brand);
         }
 
+        /* ── Workspace grid ── */
         .qgw-workspace {
           display: grid;
-          grid-template-columns: 1fr 320px;
-          min-height: 520px;
+          grid-template-columns: 1fr 300px;
+          min-height: 540px;
+          flex: 1;
         }
 
+        /* ── Config panel ── */
         .qgw-config {
           border-right: 0.5px solid var(--border);
           display: flex;
           flex-direction: column;
+          min-width: 0;
         }
 
         .qgw-panel-tabs {
@@ -292,10 +307,12 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
           flex-shrink: 0;
         }
         .qgw-panel-tab {
+          flex: 1;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 6px;
-          padding: 10px 16px;
+          padding: 10px 8px;
           border: none;
           background: none;
           color: var(--text-tertiary);
@@ -303,36 +320,40 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
           font-weight: 500;
           font-family: var(--font-sans);
           cursor: pointer;
-          transition: color 0.12s, background 0.12s;
+          transition: color 0.15s, background 0.15s;
+          -webkit-tap-highlight-color: transparent;
         }
         .qgw-panel-tab i { font-size: 14px; }
         .qgw-panel-tab:hover { color: var(--text-secondary); background: var(--border-faint); }
         .qgw-panel-tab.active {
           color: var(--text);
           background: var(--bg-card);
-          box-shadow: inset 0 -1.5px 0 var(--brand);
+          box-shadow: inset 0 -2px 0 var(--brand);
         }
-        .qgw-panel-badge {
+        .qgw-badge {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          min-width: 18px;
-          height: 18px;
-          padding: 0 5px;
+          min-width: 17px;
+          height: 17px;
+          padding: 0 4px;
           border-radius: 999px;
           background: var(--brand-light);
           color: var(--brand-text);
           font-size: 10px;
           font-weight: 600;
+          line-height: 1;
         }
 
         .qgw-panel-body {
           padding: 20px;
           overflow-y: auto;
           flex: 1;
+          overscroll-behavior: contain;
         }
 
-        .qgw-preview-pane {
+        /* ── Preview column (desktop only) ── */
+        .qgw-preview-col {
           display: flex;
           flex-direction: column;
           background: var(--bg-surface);
@@ -341,72 +362,109 @@ export default function QrGeneratorWorkspace({ tool }: { tool: Tool }) {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 12px 20px 0;
+          padding: 14px 20px 0;
           flex-shrink: 0;
         }
-        .qgw-preview-title {
-          font-size: 11.5px;
-          font-weight: 500;
+        .qgw-preview-eyebrow {
+          font-size: 10.5px;
+          font-weight: 600;
           color: var(--text-tertiary);
           text-transform: uppercase;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.1em;
           font-family: var(--font-sans);
         }
-        .qgw-preview-live {
-          display: flex;
+        .qgw-live-pill {
+          display: inline-flex;
           align-items: center;
           gap: 5px;
+          padding: 3px 9px;
+          border-radius: 999px;
+          background: var(--brand-light);
+          border: 0.5px solid var(--brand-border);
           font-size: 11px;
-          color: var(--brand);
-          font-family: var(--font-sans);
           font-weight: 500;
+          color: var(--brand-text);
+          font-family: var(--font-sans);
         }
         .qgw-live-dot {
-          width: 6px; height: 6px;
+          width: 5px; height: 5px;
           border-radius: 50%;
           background: var(--brand);
-          animation: qgw-pulse 2s infinite;
+          animation: qgw-pulse 2s ease-in-out infinite;
         }
         @keyframes qgw-pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50%       { opacity: 0.5; transform: scale(0.85); }
         }
 
+        /* ── Footer ── */
         .qgw-footer {
           display: flex;
+          align-items: center;
           border-top: 0.5px solid var(--border);
           padding: 10px 20px;
           flex-wrap: wrap;
-          gap: 12px 24px;
+          gap: 10px 24px;
+          background: var(--bg-card);
         }
         .qgw-footer-item {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 5px;
           font-size: 11.5px;
           color: var(--text-tertiary);
           font-family: var(--font-sans);
         }
-        .qgw-footer-item i { font-size: 13px; }
+        .qgw-footer-item i { font-size: 12px; }
 
-        @media (max-width: 900px) {
+        /* ── Tablet ≤ 960px ── */
+        @media (max-width: 960px) {
+          .qgw-workspace { grid-template-columns: 1fr 260px; }
+        }
+
+        /* ── Mobile ≤ 768px ── */
+        @media (max-width: 768px) {
+          .qgw-root { border-radius: 12px; }
+
+          .qgw-type-btn {
+            padding: 10px 12px;
+            font-size: 12.5px;
+            gap: 5px;
+            min-height: 44px;
+          }
+          .qgw-type-btn i { font-size: 16px; }
+
           .qgw-workspace {
             grid-template-columns: 1fr;
             min-height: auto;
           }
-          .qgw-config {
-            border-right: none;
-            border-bottom: 0.5px solid var(--border);
-          }
-          .qgw-preview-pane { min-height: 360px; }
-        }
+          /* Preview col hidden on mobile — PreviewFab handles it */
+          .qgw-preview-col { display: none; }
 
-        @media (max-width: 560px) {
-          .qgw-type-btn span { display: none; }
-          .qgw-type-btn { padding: 8px 12px; }
-          .qgw-panel-body { padding: 16px; }
+          .qgw-config { border-right: none; }
+
+          .qgw-panel-tab {
+            padding: 12px 8px;
+            font-size: 12px;
+            min-height: 44px;
+          }
+          .qgw-panel-body {
+            padding: 16px;
+            padding-bottom: 80px; /* space for sticky FAB */
+          }
+
           .qgw-footer { padding: 10px 16px; }
           .qgw-footer-item:not(:first-child) { display: none; }
+        }
+
+        /* ── Small mobile ≤ 400px ── */
+        @media (max-width: 400px) {
+          .qgw-type-label { display: none; }
+          .qgw-type-btn { padding: 10px; flex: 1; justify-content: center; }
+          .qgw-type-btn i { font-size: 18px; }
+          .qgw-panel-tab span { display: none; }
+          .qgw-panel-tab { padding: 12px; }
+          .qgw-panel-tab i { font-size: 16px; }
         }
       `}</style>
         </>

@@ -4,7 +4,7 @@ import Link from "next/link";
 const categories = [
   { label: "PDF", icon: "ti-file-text", count: 18, href: "/tools/pdf" },
   { label: "Image", icon: "ti-photo", count: 7, href: "/tools/image" },
-  { label: "Developer", icon: "ti-code", count: 9, href: "/tools/developer" },
+  { label: "Developer", icon: "ti-code", count: 9, href: "/tools/dev" },
   { label: "Finance", icon: "ti-calculator", count: 8, href: "/tools/finance" },
   { label: "Social", icon: "ti-qrcode", count: 5, href: "/tools/social" },
   { label: "Resume", icon: "ti-file-cv", count: 4, href: "/tools/resume" },
