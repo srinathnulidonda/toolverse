@@ -216,12 +216,12 @@ export default function Base64Workspace({ tool: _tool }: { tool: Tool }) {
         if (!output) return;
         if (mode === "decode") {
             if (decodeImageInfo) {
-                const bytes = decodeBase64ToBytes(input);
+                const bytes = decodeBase64ToBytes(input) as Uint8Array<ArrayBuffer>;
                 downloadBlob(new Blob([bytes], { type: decodeImageInfo.mime }), `decoded.${decodeImageInfo.ext}`);
                 return;
             }
             if (isBinaryOutput) {
-                const bytes = decodeBase64ToBytes(input);
+                const bytes = decodeBase64ToBytes(input) as Uint8Array<ArrayBuffer>;
                 downloadBlob(new Blob([bytes]), "decoded.bin");
                 return;
             }
