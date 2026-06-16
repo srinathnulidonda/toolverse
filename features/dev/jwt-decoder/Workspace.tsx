@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import type React from "react";
 import type { Tool } from "@/lib/tools";
 
 interface DecodedJWT {
@@ -79,7 +80,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
         setToken(preset.token);
     };
 
-    const renderValue = (value: any): JSX.Element => {
+    const renderValue = (value: any): React.ReactElement => {
         if (value === null) return <em className="jwt-null">null</em>;
         if (value === undefined) return <em className="jwt-undefined">undefined</em>;
         if (typeof value === "boolean") return <span className="jwt-bool">{value.toString()}</span>;
