@@ -18,50 +18,15 @@ export default function HomePage() {
       <Hero />
 
       {/* Dashboard grid section */}
-      <section style={{ background: "var(--bg)", padding: "0 40px 40px" }}>
-        <div className="dashboard-container" style={{
-          maxWidth: "1600px",
-          margin: "0 auto",
-          width: "100%",
-        }}>
-          <div
-            className="dashboard-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-              gap: "20px",
-            }}
-          >
+      <section className="pb-40">
+        <div className="page-container dashboard-container">
+          <div className="dashboard-grid">
             <QuickAccess />
             <BrowseCategories />
             <TodaysTasks />
           </div>
         </div>
       </section>
-
-      <style>{`
-        @media (max-width: 1280px) {
-          .dashboard-container {
-            max-width: 1200px !important;
-          }
-        }
-        @media (max-width: 768px) {
-          .dashboard-grid {
-            grid-template-columns: 1fr !important;
-            gap: 16px !important;
-          }
-        }
-        @media (min-width: 769px) and (max-width: 1080px) {
-          .dashboard-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-        @media (min-width: 1081px) {
-          .dashboard-grid {
-            grid-template-columns: repeat(3, 1fr) !important;
-          }
-        }
-      `}</style>
     </>
   );
 }

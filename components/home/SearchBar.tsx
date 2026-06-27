@@ -64,7 +64,11 @@ export default function SearchBar() {
                     </svg>
                 </span>
 
+                <label htmlFor="search-input" className="sr-only">
+                    Search tools
+                </label>
                 <input
+                    id="search-input"
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
