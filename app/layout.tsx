@@ -20,49 +20,29 @@ export const metadata: Metadata = {
         "resume builder",
         "gst calculator",
         "free online tools",
-        "online tools",
-        "free tools",
-        "productivity tools"
     ],
     metadataBase: new URL(
-        process.env.NEXT_PUBLIC_APP_URL ?? "https://toolverse.app"
+        process.env.NEXT_PUBLIC_APP_URL ?? "https://toolverses.vercel.app"
     ),
     openGraph: {
         type: "website",
         siteName: "Toolverse",
         title: "Toolverse — Free Utility Hub for Everyone",
         description:
-            "Every tool you need daily. PDF · Images · Finance · Dev · Resume — no sign-up ever. All tools run 100% in your browser - your files never leave your device.",
+            "Every tool you need daily. PDF · Images · Finance · Dev · Resume — no sign-up ever.",
         url: "/",
-        images: [
-            {
-                url: "/og-image.png",
-                width: 1200,
-                height: 630,
-                alt: "Toolverse - Free online utilities for PDF, images, finance, development and resume tasks"
-            }
-        ]
     },
     twitter: {
         card: "summary_large_image",
         title: "Toolverse — Free Utility Hub for Everyone",
         description:
-            "Every tool you need daily. PDF · Images · Finance · Dev · Resume — no sign-up ever. All tools run 100% in your browser.",
-        images: ["/twitter-image.png"]
+            "Every tool you need daily. PDF · Images · Finance · Dev · Resume — no sign-up ever.",
     },
     robots: {
         index: true,
         follow: true,
         googleBot: { index: true, follow: true },
     },
-    // Additional SEO enhancements
-    alternates: {
-        canonical: "/",
-        languages: {
-            en: "/",
-            "en-US": "/",
-        }
-    }
 };
 
 export default function RootLayout({
@@ -73,7 +53,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
             <head>
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler-icons-webfont@1.118.0/tabler-icons.min.css" />
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 
                 {/* Favicon - using favicon.png */}
                 <link rel="icon" href="/favicon.png" type="image/png" />
@@ -82,21 +62,14 @@ export default function RootLayout({
                 <link rel="apple-touch-icon" href="/favicon.png" />
 
                 <link rel="manifest" href="/manifest.json" />
-
-                {/* Theme color for mobile browsers */}
-                <meta name="theme-color" content="#145C3C" />
             </head>
             <body>
-                {/* Skip navigation link */}
-                <a href="#main-content" className="skip-link">
-                    Skip to main content
-                </a>
                 {/* Navbar */}
                 <Navbar />
 
                 {/* ── Page content pushed below navbar height (52px) ── */}
                 <div className="layout-content">
-                    <main id="main-content" className="layout-main">{children}</main>
+                    <main className="layout-main">{children}</main>
                     <Footer />
                 </div>
             </body>

@@ -7,7 +7,7 @@ const columns = [
         links: [
             { label: "PDF Tools", href: "/tools/pdf" },
             { label: "Image Tools", href: "/tools/image" },
-            { label: "Developer Tools", href: "/tools/developer" },
+            { label: "Developer Tools", href: "/tools/dev" },
             { label: "Finance Tools", href: "/tools/finance" },
             { label: "Resume Tools", href: "/tools/resume" },
             { label: "Social Tools", href: "/tools/social" },
@@ -17,7 +17,7 @@ const columns = [
         heading: "Quick Links",
         links: [
             { label: "All Tools", href: "/tools" },
-            { label: "All Categories", href: "/categories" },
+            { label: "Categories", href: "/categories" },
             { label: "Popular Tools", href: "/tools?filter=popular" },
             { label: "New Tools", href: "/tools?filter=new" },
         ],
@@ -28,12 +28,14 @@ const columns = [
             { label: "About", href: "/about" },
             { label: "Contact", href: "/contact" },
             { label: "FAQ", href: "/faq" },
+            { label: "Blog", href: "/blog" },
         ],
     },
     {
         heading: "Legal",
         links: [
             { label: "Privacy Policy", href: "/privacy" },
+            { label: "Cookie Policy", href: "/cookies" },
             { label: "Terms of Service", href: "/terms" },
             { label: "Sitemap", href: "/sitemap.xml" },
         ],
@@ -78,12 +80,9 @@ const socials = [
 export default function Footer() {
     return (
         <footer className="footer">
-            {/* page-container centres content and adds horizontal padding */}
             <div className="page-container">
-
-                {/* ── Top ─────────────────────────────────────────────── */}
+                {/* Top section */}
                 <div className="footer-top">
-
                     {/* Brand column */}
                     <div className="footer-brand">
                         <Link
@@ -99,33 +98,33 @@ export default function Footer() {
                         </Link>
 
                         <p className="footer-description">
-                            Fast, private tools for work, study, and everyday productivity.
+                            51 privacy-first tools that run entirely in your browser. No uploads, no accounts, no limits.
                         </p>
 
                         <div className="footer-socials">
-                            {socials.map((s) => (
+                            {socials.map((social) => (
                                 <a
-                                    key={s.label}
-                                    href={s.href}
+                                    key={social.label}
+                                    href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="footer-social"
-                                    aria-label={`Visit our ${s.label} profile (opens in new tab)`}
+                                    aria-label={`Visit our ${social.label} profile (opens in new tab)`}
                                 >
-                                    {s.icon}
-                                    <span className="footer-social-label">{s.label}</span>
+                                    {social.icon}
+                                    <span className="footer-social-label">{social.label}</span>
                                 </a>
                             ))}
                         </div>
                     </div>
 
-                    {/* Link columns — 4-column CSS grid, fills full width */}
+                    {/* Link columns */}
                     <div className="footer-links">
-                        {columns.map((col) => (
-                            <div key={col.heading} className="footer-column">
-                                <p className="footer-column-heading">{col.heading}</p>
+                        {columns.map((column) => (
+                            <div key={column.heading} className="footer-column">
+                                <h3 className="footer-column-heading">{column.heading}</h3>
                                 <ul className="footer-column-links">
-                                    {col.links.map((link) => (
+                                    {column.links.map((link) => (
                                         <li key={link.href}>
                                             <Link href={link.href} className="footer-link">
                                                 {link.label}
@@ -136,19 +135,15 @@ export default function Footer() {
                             </div>
                         ))}
                     </div>
-
                 </div>
-                {/* ── End Top ─────────────────────────────────────────── */}
 
-                {/* ── Bottom bar ──────────────────────────────────────── */}
+                {/* Bottom section */}
                 <div className="footer-bottom">
                     <p className="footer-copyright">
-                        © 2025 Toolverse — Privacy-focused browser tools
+                        © 2025 Toolverse. Built with privacy in mind.
                     </p>
                 </div>
-
             </div>
-            {/* ── End page-container ────────────────────────────────── */}
         </footer>
     );
 }
