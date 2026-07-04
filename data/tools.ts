@@ -17,7 +17,7 @@ export const TOOLS: Tool[] = [
         description: "Reduce PDF file size while preserving quality. No uploads required.",
         category: "pdf",
         icon: "ti-file-zip",
-        href: "/tools/pdf/compress-pdf",
+        href: "/tools/compress-pdf",
         tags: ["compress", "reduce", "optimize", "size"],
     },
     {
@@ -26,7 +26,7 @@ export const TOOLS: Tool[] = [
         description: "Combine multiple PDF files into one document in seconds.",
         category: "pdf",
         icon: "ti-files",
-        href: "/tools/pdf/merge-pdf",
+        href: "/tools/merge-pdf",
         tags: ["merge", "combine", "join", "pdf"],
     },
     {
@@ -35,7 +35,7 @@ export const TOOLS: Tool[] = [
         description: "Extract pages or split a PDF into multiple separate files.",
         category: "pdf",
         icon: "ti-scissors",
-        href: "/tools/pdf/split-pdf",
+        href: "/tools/split-pdf",
         tags: ["split", "extract", "pages", "separate"],
     },
     {
@@ -44,7 +44,7 @@ export const TOOLS: Tool[] = [
         description: "Convert PDF documents to editable Word (.docx) files instantly.",
         category: "pdf",
         icon: "ti-file-word",
-        href: "/tools/pdf/pdf-to-word",
+        href: "/tools/pdf-to-word",
         tags: ["convert", "word", "docx", "editable"],
     },
     {
@@ -53,7 +53,7 @@ export const TOOLS: Tool[] = [
         description: "Convert Word documents to professional PDF files in one click.",
         category: "pdf",
         icon: "ti-file-type-pdf",
-        href: "/tools/pdf/word-to-pdf",
+        href: "/tools/word-to-pdf",
         tags: ["convert", "word", "docx", "pdf"],
     },
     {
@@ -62,7 +62,7 @@ export const TOOLS: Tool[] = [
         description: "Convert each PDF page into a high-quality JPG image.",
         category: "pdf",
         icon: "ti-photo",
-        href: "/tools/pdf/pdf-to-jpg",
+        href: "/tools/pdf-to-jpg",
         tags: ["convert", "image", "jpg", "jpeg"],
     },
     {
@@ -71,7 +71,7 @@ export const TOOLS: Tool[] = [
         description: "Combine one or more JPG images into a single PDF document.",
         category: "pdf",
         icon: "ti-file-plus",
-        href: "/tools/pdf/jpg-to-pdf",
+        href: "/tools/jpg-to-pdf",
         tags: ["convert", "image", "jpg", "create"],
     },
     {
@@ -80,7 +80,7 @@ export const TOOLS: Tool[] = [
         description: "Rotate pages in your PDF to the correct orientation.",
         category: "pdf",
         icon: "ti-rotate",
-        href: "/tools/pdf/rotate-pdf",
+        href: "/tools/rotate-pdf",
         tags: ["rotate", "orientation", "pages"],
     },
 
@@ -91,7 +91,7 @@ export const TOOLS: Tool[] = [
         description: "Compress JPG, PNG, and WebP images without visible quality loss.",
         category: "image",
         icon: "ti-photo-down",
-        href: "/tools/image/image-compress",
+        href: "/tools/image-compress",
         tags: ["compress", "optimize", "jpg", "png", "webp"],
     },
     {
@@ -100,7 +100,7 @@ export const TOOLS: Tool[] = [
         description: "Resize images to exact dimensions while preserving aspect ratio.",
         category: "image",
         icon: "ti-arrow-autofit-content",
-        href: "/tools/image/image-resize",
+        href: "/tools/image-resize",
         tags: ["resize", "dimensions", "scale"],
     },
     {
@@ -109,7 +109,7 @@ export const TOOLS: Tool[] = [
         description: "Convert between JPG, PNG, WebP, AVIF, and GIF formats.",
         category: "image",
         icon: "ti-refresh",
-        href: "/tools/image/image-convert",
+        href: "/tools/image-convert",
         tags: ["convert", "format", "jpg", "png", "webp", "avif"],
     },
     {
@@ -118,7 +118,7 @@ export const TOOLS: Tool[] = [
         description: "Crop images to any size or aspect ratio with a visual editor.",
         category: "image",
         icon: "ti-crop",
-        href: "/tools/image/image-crop",
+        href: "/tools/image-crop",
         tags: ["crop", "trim", "aspect ratio"],
     },
     {
@@ -127,7 +127,7 @@ export const TOOLS: Tool[] = [
         description: "Remove image backgrounds instantly with AI-powered detection.",
         category: "image",
         icon: "ti-eraser",
-        href: "/tools/image/remove-bg",
+        href: "/tools/remove-bg",
         tags: ["background", "remove", "transparent", "ai"],
     },
     {
@@ -136,7 +136,7 @@ export const TOOLS: Tool[] = [
         description: "Encode any image to a Base64 string for use in HTML or CSS.",
         category: "image",
         icon: "ti-binary",
-        href: "/tools/image/image-to-base64",
+        href: "/tools/image-to-base64",
         tags: ["base64", "encode", "data url"],
     },
     {
@@ -145,7 +145,7 @@ export const TOOLS: Tool[] = [
         description: "Generate favicons in all required sizes from a single image.",
         category: "image",
         icon: "ti-star",
-        href: "/tools/image/favicon-generator",
+        href: "/tools/favicon-generator",
         tags: ["favicon", "icon", "browser", "tab"],
     },
 
@@ -156,7 +156,7 @@ export const TOOLS: Tool[] = [
         description: "Format, validate, and minify JSON with syntax highlighting.",
         category: "dev",
         icon: "ti-braces",
-        href: "/tools/dev/json-formatter",
+        href: "/tools/json-formatter",
         tags: ["json", "format", "validate", "minify"],
     },
     {
@@ -165,7 +165,7 @@ export const TOOLS: Tool[] = [
         description: "Validate JSON syntax and structure with detailed error messages.",
         category: "dev",
         icon: "ti-circle-check",
-        href: "/tools/dev/json-validator",
+        href: "/tools/json-validator",
         tags: ["json", "validate", "syntax", "check"],
     },
     {
@@ -174,7 +174,7 @@ export const TOOLS: Tool[] = [
         description: "Minify JSON by removing whitespace and line breaks.",
         category: "dev",
         icon: "ti-file-zip",
-        href: "/tools/dev/json-minifier",
+        href: "/tools/json-minifier",
         tags: ["json", "minify", "compress", "optimize"],
     },
     {
@@ -183,7 +183,7 @@ export const TOOLS: Tool[] = [
         description: "Encode and decode Base64 strings instantly in your browser.",
         category: "dev",
         icon: "ti-binary",
-        href: "/tools/dev/base64",
+        href: "/tools/base64",
         tags: ["base64", "encode", "decode"],
     },
     {
@@ -192,7 +192,7 @@ export const TOOLS: Tool[] = [
         description: "Encode special characters in URLs or decode encoded URL strings.",
         category: "dev",
         icon: "ti-link",
-        href: "/tools/dev/url-encoder",
+        href: "/tools/url-encoder",
         tags: ["url", "encode", "decode", "percent"],
     },
     {
@@ -201,7 +201,7 @@ export const TOOLS: Tool[] = [
         description: "Test regular expressions with live match highlighting and explanations.",
         category: "dev",
         icon: "ti-regex",
-        href: "/tools/dev/regex-tester",
+        href: "/tools/regex-tester",
         tags: ["regex", "regexp", "pattern", "match", "test"],
     },
     {
@@ -210,7 +210,7 @@ export const TOOLS: Tool[] = [
         description: "Decode and inspect JSON Web Tokens with header and payload breakdown.",
         category: "dev",
         icon: "ti-key",
-        href: "/tools/dev/jwt-decoder",
+        href: "/tools/jwt-decoder",
         tags: ["jwt", "token", "decode", "auth"],
     },
     {
@@ -219,7 +219,7 @@ export const TOOLS: Tool[] = [
         description: "Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from text.",
         category: "dev",
         icon: "ti-hash",
-        href: "/tools/dev/hash-generator",
+        href: "/tools/hash-generator",
         tags: ["hash", "md5", "sha", "checksum"],
     },
     {
@@ -228,7 +228,7 @@ export const TOOLS: Tool[] = [
         description: "Convert between Unix timestamps and human-readable dates.",
         category: "dev",
         icon: "ti-clock",
-        href: "/tools/dev/timestamp-converter",
+        href: "/tools/timestamp-converter",
         tags: ["timestamp", "unix", "date", "time", "convert"],
     },
     {
@@ -237,7 +237,7 @@ export const TOOLS: Tool[] = [
         description: "Convert text between camelCase, snake_case, kebab-case, and more.",
         category: "dev",
         icon: "ti-letter-case",
-        href: "/tools/dev/case-converter",
+        href: "/tools/case-converter",
         tags: ["case", "convert", "camel", "snake", "kebab"],
     },
     {
@@ -246,7 +246,7 @@ export const TOOLS: Tool[] = [
         description: "Generate URL-friendly slugs from any text with customizable options.",
         category: "dev",
         icon: "ti-link",
-        href: "/tools/dev/slug-generator",
+        href: "/tools/slug-generator",
         tags: ["slug", "url", "seo", "permalink"],
     },
     {
@@ -255,7 +255,7 @@ export const TOOLS: Tool[] = [
         description: "Compare two text blocks and highlight differences side-by-side.",
         category: "dev",
         icon: "ti-git-compare",
-        href: "/tools/dev/diff-checker",
+        href: "/tools/diff-checker",
         tags: ["diff", "compare", "difference", "merge"],
     },
     {
@@ -264,7 +264,7 @@ export const TOOLS: Tool[] = [
         description: "Convert between HEX, RGB, HSL, and HSB color formats with preview.",
         category: "dev",
         icon: "ti-palette",
-        href: "/tools/dev/color-converter",
+        href: "/tools/color-converter",
         tags: ["color", "hex", "rgb", "hsl", "convert"],
     },
     {
@@ -273,16 +273,16 @@ export const TOOLS: Tool[] = [
         description: "Generate random strings, passwords, and tokens with custom rules.",
         category: "dev",
         icon: "ti-abc",
-        href: "/tools/dev/random-string-generator",
+        href: "/tools/random-string-generator",
         tags: ["random", "string", "password", "generator"],
     },
     {
         slug: "html-formatter",
-        label: "HTML Formatter",
+        label: "HTML Formulator",
         description: "Beautify or minify HTML markup with proper indentation.",
         category: "dev",
         icon: "ti-brand-html5",
-        href: "/tools/dev/html-formatter",
+        href: "/tools/html-formatter",
         tags: ["html", "format", "beautify", "minify"],
     },
     {
@@ -291,7 +291,7 @@ export const TOOLS: Tool[] = [
         description: "Minify and compress CSS code to reduce file size.",
         category: "dev",
         icon: "ti-brand-css3",
-        href: "/tools/dev/css-minifier",
+        href: "/tools/css-minifier",
         tags: ["css", "minify", "compress", "optimize"],
     },
     {
@@ -300,7 +300,7 @@ export const TOOLS: Tool[] = [
         description: "Minify JavaScript files to reduce bundle size.",
         category: "dev",
         icon: "ti-brand-javascript",
-        href: "/tools/dev/js-minifier",
+        href: "/tools/js-minifier",
         tags: ["javascript", "js", "minify", "compress"],
     },
     {
@@ -309,7 +309,7 @@ export const TOOLS: Tool[] = [
         description: "Generate v1, v4, or v5 UUIDs for your projects instantly.",
         category: "dev",
         icon: "ti-fingerprint",
-        href: "/tools/dev/uuid-generator",
+        href: "/tools/uuid-generator",
         tags: ["uuid", "guid", "generate", "unique"],
     },
     {
@@ -318,7 +318,7 @@ export const TOOLS: Tool[] = [
         description: "Generate secure random passwords with customizable options.",
         category: "dev",
         icon: "ti-key",
-        href: "/tools/dev/password-generator",
+        href: "/tools/password-generator",
         tags: ["password", "generate", "secure", "random"],
     },
 
@@ -329,7 +329,7 @@ export const TOOLS: Tool[] = [
         description: "Calculate GST-inclusive or exclusive prices for any tax rate.",
         category: "finance",
         icon: "ti-receipt-tax",
-        href: "/tools/finance/gst-calculator",
+        href: "/tools/gst-calculator",
         tags: ["gst", "tax", "india", "calculate"],
     },
     {
@@ -338,7 +338,7 @@ export const TOOLS: Tool[] = [
         description: "Calculate monthly loan installments with amortization schedule.",
         category: "finance",
         icon: "ti-credit-card",
-        href: "/tools/finance/emi-calculator",
+        href: "/tools/emi-calculator",
         tags: ["emi", "loan", "mortgage", "installment"],
     },
     {
@@ -347,7 +347,7 @@ export const TOOLS: Tool[] = [
         description: "Estimate returns on your Systematic Investment Plan over time.",
         category: "finance",
         icon: "ti-chart-line",
-        href: "/tools/finance/sip-calculator",
+        href: "/tools/sip-calculator",
         tags: ["sip", "investment", "mutual fund", "returns"],
     },
     {
@@ -356,7 +356,7 @@ export const TOOLS: Tool[] = [
         description: "Calculate compound interest with flexible compounding frequencies.",
         category: "finance",
         icon: "ti-trending-up",
-        href: "/tools/finance/compound-interest",
+        href: "/tools/compound-interest",
         tags: ["compound", "interest", "invest", "growth"],
     },
     {
@@ -365,7 +365,7 @@ export const TOOLS: Tool[] = [
         description: "Convert between 170+ currencies with live exchange rates.",
         category: "finance",
         icon: "ti-currency-dollar",
-        href: "/tools/finance/currency-converter",
+        href: "/tools/currency-converter",
         tags: ["currency", "forex", "exchange", "convert"],
     },
     {
@@ -374,7 +374,7 @@ export const TOOLS: Tool[] = [
         description: "Calculate take-home pay after tax deductions and allowances.",
         category: "finance",
         icon: "ti-wallet",
-        href: "/tools/finance/salary-calculator",
+        href: "/tools/salary-calculator",
         tags: ["salary", "pay", "tax", "ctc", "income"],
     },
     {
@@ -383,7 +383,7 @@ export const TOOLS: Tool[] = [
         description: "Find discounted prices, savings amounts, and discount percentages.",
         category: "finance",
         icon: "ti-tag",
-        href: "/tools/finance/discount-calculator",
+        href: "/tools/discount-calculator",
         tags: ["discount", "sale", "percentage", "saving"],
     },
     {
@@ -392,7 +392,7 @@ export const TOOLS: Tool[] = [
         description: "Calculate percentages, percentage change, and percentage of totals.",
         category: "finance",
         icon: "ti-percentage",
-        href: "/tools/finance/percentage-calculator",
+        href: "/tools/percentage-calculator",
         tags: ["percentage", "percent", "ratio", "calculate"],
     },
 
@@ -403,7 +403,7 @@ export const TOOLS: Tool[] = [
         description: "Build a professional resume with ATS-friendly templates and export to PDF.",
         category: "resume",
         icon: "ti-file-cv",
-        href: "/tools/resume/resume-builder",
+        href: "/tools/resume-builder",
         tags: ["resume", "cv", "build", "template", "ats"],
     },
     {
@@ -412,7 +412,7 @@ export const TOOLS: Tool[] = [
         description: "Analyze your resume for ATS compatibility and get actionable suggestions.",
         category: "resume",
         icon: "ti-checkup-list",
-        href: "/tools/resume/resume-checker",
+        href: "/tools/resume-checker",
         tags: ["ats", "check", "analyze", "score", "resume"],
     },
     {
@@ -421,7 +421,7 @@ export const TOOLS: Tool[] = [
         description: "Write a compelling cover letter with guided prompts and templates.",
         category: "resume",
         icon: "ti-mail",
-        href: "/tools/resume/cover-letter",
+        href: "/tools/cover-letter",
         tags: ["cover letter", "job", "application", "template"],
     },
     {
@@ -430,7 +430,7 @@ export const TOOLS: Tool[] = [
         description: "Generate a professional LinkedIn About section that gets noticed.",
         category: "resume",
         icon: "ti-brand-linkedin",
-        href: "/tools/resume/linkedin-summary",
+        href: "/tools/linkedin-summary",
         tags: ["linkedin", "summary", "about", "profile"],
     },
 
@@ -441,7 +441,7 @@ export const TOOLS: Tool[] = [
         description: "Generate custom QR codes for URLs, text, WiFi, and vCards.",
         category: "social",
         icon: "ti-qrcode",
-        href: "/tools/social/qr-generator",
+        href: "/tools/qr-generator",
         tags: ["qr", "qrcode", "barcode", "generate"],
     },
     {
@@ -450,7 +450,7 @@ export const TOOLS: Tool[] = [
         description: "Preview how your page looks when shared on social media platforms.",
         category: "social",
         icon: "ti-eye",
-        href: "/tools/social/og-preview",
+        href: "/tools/og-preview",
         tags: ["og", "opengraph", "social", "preview", "meta"],
     },
     {
@@ -459,7 +459,7 @@ export const TOOLS: Tool[] = [
         description: "Generate SEO meta tags, Open Graph, and Twitter Card markup.",
         category: "social",
         icon: "ti-tags",
-        href: "/tools/social/meta-tag-generator",
+        href: "/tools/meta-tag-generator",
         tags: ["meta", "seo", "opengraph", "twitter", "tags"],
     },
     {
@@ -468,7 +468,7 @@ export const TOOLS: Tool[] = [
         description: "Generate relevant hashtags for Instagram, Twitter, and LinkedIn.",
         category: "social",
         icon: "ti-hash",
-        href: "/tools/social/hashtag-generator",
+        href: "/tools/hashtag-generator",
         tags: ["hashtag", "instagram", "twitter", "social"],
     },
     {
@@ -477,7 +477,7 @@ export const TOOLS: Tool[] = [
         description: "Create beautiful tweet screenshot cards to share across platforms.",
         category: "social",
         icon: "ti-brand-twitter",
-        href: "/tools/social/tweet-generator",
+        href: "/tools/tweet-generator",
         tags: ["tweet", "twitter", "card", "screenshot", "share"],
     },
 ];

@@ -33,16 +33,37 @@ function escapeHtml(str: string) {
 
 function highlightJson(json: string) {
     const escaped = escapeHtml(json);
-    return escaped.replace(
-        /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g,
-        (match) => {
-            let cls = "jf-number";
-            if (/^"/.test(match)) cls = /:\s*$/.test(match) ? "jf-key" : "jf-string";
-            else if (/true|false/.test(match)) cls = "jf-boolean";
-            else if (match === "null") cls = "jf-null";
-            return `<span class="${cls}">${match}</span>`;
+    const elements: Array<React.ReactNode> = [];
+    let lastIndex = 0;
+    const regex = /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)/g;
+    let match;
+    while ((match = regex.exec(escaped)) !== null) {
+        // Add text before the match
+        if (match.index > lastIndex) {
+            elements.push(escaped.substring(lastIndex, match.index));
         }
-    );
+
+        // Determine the class for the matched token
+        let cls = "jf-number";
+        if (/^"/.test(match[0])) {
+            cls = /:\s*$/.test(match[0]) ? "jf-key" : "jf-string";
+        } else if (/true|false/.test(match[0])) {
+            cls = "jf-boolean";
+        } else if (match[0] === "null") {
+            cls = "jf-null";
+        }
+
+        // Add the matched token as a span element
+        elements.push(<span key={match.index} className={cls}>{match[0]}</span>);
+        lastIndex = regex.lastIndex;
+    }
+
+    // Add remaining text after the last match
+    if (lastIndex < escaped.length) {
+        elements.push(escaped.substring(lastIndex));
+    }
+
+    return elements;
 }
 
 function fmtSize(str: string) {
@@ -514,8 +535,9 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                                         <pre
                                             className="jf-output"
                                             aria-label="Formatted JSON output"
-                                            dangerouslySetInnerHTML={{ __html: highlighted }}
-                                        />
+                                        >
+                                            {highlighted}
+                                        </pre>
                                     )}
                                 </>
                             )}

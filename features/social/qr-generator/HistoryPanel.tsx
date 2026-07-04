@@ -58,7 +58,7 @@ export default function HistoryPanel({ items, onRestore, onDelete, onClear }: Hi
                         <div key={item.id} className="hp-item">
                             <div className="hp-thumb">
                                 {item.thumbnail ? (
-                                    <img src={item.thumbnail} alt="" width={36} height={36} />
+                                    <img src={item.thumbnail} alt={item.label ? `${item.label} preview` : "QR code preview"} width={36} height={36} />
                                 ) : (
                                     <i className={`ti ${getTypeIcon(item.type)}`} aria-hidden="true" />
                                 )}
@@ -193,6 +193,6 @@ export default function HistoryPanel({ items, onRestore, onDelete, onClear }: Hi
           .hp-delete:hover { color: #F87171; border-color: #7F1D1D; }
         }
       `}</style>
-        </>
-    );
+            </>
+        );
 }

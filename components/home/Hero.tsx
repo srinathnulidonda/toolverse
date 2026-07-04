@@ -6,7 +6,7 @@ const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-ser
 
 export default function Hero() {
     return (
-        <section style={{
+        <section className="hero-section" style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -75,7 +75,7 @@ export default function Hero() {
 
             <style>{`
                 @media (max-width: 480px) {
-                    section { padding: 16px 20px 36px !important; }
+                    .hero-section { padding: 16px 20px 36px !important; }
                     .hero-eyebrow { font-size: 10px !important; letter-spacing: 0.2px !important; margin-bottom: 10px !important; }
                     .hero-body { font-size: 12px !important; line-height: 1.6 !important; margin-bottom: 20px !important; }
                 }

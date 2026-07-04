@@ -5,9 +5,24 @@ import { useState, useMemo, useCallback } from "react";
 import type React from "react";
 import type { Tool } from "@/lib/tools";
 
+interface JwtHeader {
+    [key: string]: unknown;
+    alg?: string;
+    typ?: string;
+}
+
+interface JwtPayload {
+    [key: string]: unknown;
+    sub?: string;
+    name?: string;
+    iat?: number;
+    exp?: number;
+    nbf?: number;
+}
+
 interface DecodedJWT {
-    header: any;
-    payload: any;
+    header: JwtHeader | null;
+    payload: JwtPayload | null;
     signature: string;
     valid: boolean;
     error?: string;
@@ -34,8 +49,8 @@ function decodeJWT(token: string): DecodedJWT {
             return { header: null, payload: null, signature: "", valid: false, error: "Invalid JWT format. Expected 3 parts separated by dots." };
         }
 
-        const header = JSON.parse(base64UrlDecode(parts[0]));
-        const payload = JSON.parse(base64UrlDecode(parts[1]));
+        const header = JSON.parse(base64UrlDecode(parts[0])) as JwtHeader;
+        const payload = JSON.parse(base64UrlDecode(parts[1])) as JwtPayload;
         const signature = parts[2];
 
         return { header, payload, signature, valid: true };
@@ -80,7 +95,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
         setToken(preset.token);
     };
 
-    const renderValue = (value: any): React.ReactElement => {
+    const renderValue = (value: unknown): React.ReactElement => {
         if (value === null) return <em className="jwt-null">null</em>;
         if (value === undefined) return <em className="jwt-undefined">undefined</em>;
         if (typeof value === "boolean") return <span className="jwt-bool">{value.toString()}</span>;
@@ -185,7 +200,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
                                 </div>
                                 <div className="jwt-card">
                                     <div className="jwt-grid">
-                                        {Object.entries(decoded.header).map(([key, value]) => (
+                                        {Object.entries(decoded.header!).map(([key, value]) => (
                                             <div key={key} className="jwt-row">
                                                 <span className="jwt-key">{key}</span>
                                                 <span className="jwt-value">{renderValue(value)}</span>
@@ -212,7 +227,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
                                 </div>
                                 <div className="jwt-card">
                                     <div className="jwt-grid">
-                                        {Object.entries(decoded.payload).map(([key, value]) => (
+                                        {Object.entries(decoded.payload!).map(([key, value]) => (
                                             <div key={key} className="jwt-row">
                                                 <span className="jwt-key">
                                                     {key}

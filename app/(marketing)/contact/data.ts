@@ -28,7 +28,6 @@ export const contactMethods = [
 ];
 
 export const quickLinks = [
-    { label: "Documentation", href: "/docs", icon: "ti-book" },
     { label: "Feature Requests", href: "/feedback", icon: "ti-bulb" },
     { label: "Status Page", href: "/status", icon: "ti-activity" },
     { label: "Community", href: "/community", icon: "ti-users" },

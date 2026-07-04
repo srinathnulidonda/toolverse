@@ -15,7 +15,7 @@
   --border-faint: #F0F0EC;
   --text: #1C1C18;
   --text-secondary: #6B6A62;
-  --tertiary: #A8A79E;
+  --text-tertiary: #A8A79E;
   --text-disabled: #D1D0C8;
   --brand: #145C3C;
   --brand-hover: #1F7A52;
@@ -499,16 +499,6 @@ button {
 
 .hover\:underline:hover {
   text-decoration: underline;
-}
-
-@media (prefers-color-scheme: dark) {
-  .hover\:bg-brand-hover:hover {
-    background-color: var(--brand-hover);
-  }
-
-  .hover\:text-brand:hover {
-    color: var(--brand);
-  }
 }
 
 @media (max-width: 768px) {

@@ -1,3 +1,4 @@
+// features/dev/json-formatter/JsonStats.tsx
 "use client";
 
 type StatsProps = {

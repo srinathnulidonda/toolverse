@@ -8,7 +8,7 @@ import type {
     LocationData,
 } from "./types";
 
-export function escapeWifi(v: string) {
+export function escapeWifi(v: string): string {
     return v.replace(/([\\;,:"])/g, "\\$1");
 }
 

@@ -4,14 +4,15 @@
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { TOOLS } from "@/lib/tools";
+import useLocalStorage from "@/lib/useLocalStorage";
 
 const DEFAULT_SLUGS = [
-    "compress-pdf",
-    "merge-pdf",
-    "image-compress",
-    "qr-generator",
-    "json-formatter",
-    "resume-builder",
+  "compress-pdf",
+  "merge-pdf",
+  "image-compress",
+  "qr-generator",
+  "json-formatter",
+  "resume-builder",
 ];
 
 const RECENT_KEY = "tv:recents";
@@ -19,112 +20,103 @@ const PINNED_KEY = "tv:pins";
 const MAX_ITEMS = 6;
 
 export default function QuickAccess() {
-    const [pinned, setPinned] = useState<string[]>([]);
-    const [recent, setRecent] = useState<string[]>([]);
+  const [pinned, setPinned] = useLocalStorage<string[]>(PINNED_KEY, []);
+  const [recent, setRecent] = useLocalStorage<string[]>(RECENT_KEY, []);
 
-    useEffect(() => {
-        try {
-            const p = JSON.parse(localStorage.getItem(PINNED_KEY) ?? "[]");
-            const r = JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]");
-            if (Array.isArray(p)) setPinned(p);
-            if (Array.isArray(r)) setRecent(r);
-        } catch { /* ignore corrupted storage */ }
-    }, []);
+  const togglePin = useCallback((slug: string) => {
+    setPinned((prev) => {
+      const next = prev.includes(slug)
+        ? prev.filter((s) => s !== slug)
+        : [slug, ...prev].slice(0, MAX_ITEMS);
+      return next;
+    });
+  }, []);
 
-    const togglePin = useCallback((slug: string) => {
-        setPinned((prev) => {
-            const next = prev.includes(slug)
-                ? prev.filter((s) => s !== slug)
-                : [slug, ...prev].slice(0, MAX_ITEMS);
-            try { localStorage.setItem(PINNED_KEY, JSON.stringify(next)); } catch { }
-            return next;
-        });
-    }, []);
+  const recordVisit = useCallback((slug: string) => {
+    setRecent((prev) => {
+      const next = [slug, ...prev.filter((s) => s !== slug)].slice(0, MAX_ITEMS);
+      return next;
+    });
+  }, []);
 
-    const recordVisit = useCallback((slug: string) => {
-        setRecent((prev) => {
-            const next = [slug, ...prev.filter((s) => s !== slug)].slice(0, MAX_ITEMS);
-            try { localStorage.setItem(RECENT_KEY, JSON.stringify(next)); } catch { }
-            return next;
-        });
-    }, []);
+  const clearRecent = useCallback(() => {
+    setRecent([]);
+  }, []);
 
-    const clearRecent = useCallback(() => {
-        setRecent([]);
-        try { localStorage.removeItem(RECENT_KEY); } catch { }
-    }, []);
+  // Build ordered, deduplicated list using real TOOLS data (correct hrefs)
+  const order = [...pinned, ...recent, ...DEFAULT_SLUGS];
+  const seen = new Set<string>();
+  const items: typeof TOOLS = [];
+  for (const slug of order) {
+    if (seen.has(slug)) continue;
+    const tool = TOOLS.find((t) => t.slug === slug);
+    if (!tool) continue;
+    seen.add(slug);
+    items.push(tool);
+    if (items.length >= MAX_ITEMS) break;
+  }
 
-    // Build ordered, deduplicated list using real TOOLS data (correct hrefs)
-    const order = [...pinned, ...recent, ...DEFAULT_SLUGS];
-    const seen = new Set<string>();
-    const items: typeof TOOLS = [];
-    for (const slug of order) {
-        if (seen.has(slug)) continue;
-        const tool = TOOLS.find((t) => t.slug === slug);
-        if (!tool) continue;
-        seen.add(slug);
-        items.push(tool);
-        if (items.length >= MAX_ITEMS) break;
-    }
+  return (
+    <>
+      <div className="qa-card">
+        {/* Header */}
+        <div className="qa-header">
+          <span className="qa-label">Quick access</span>
+          {recent.length > 0 && (
+            <button onClick={clearRecent} className="qa-clear-btn">
+              <i className="ti ti-x" aria-hidden="true" />
+              Clear recents
+            </button>
+          )}
+        </div>
 
-    return (
-        <>
-            <div className="qa-card">
+        <div className="qa-divider" />
 
-                {/* Header */}
-                <div className="qa-header">
-                    <span className="qa-label">Quick access</span>
-                    {recent.length > 0 && (
-                        <button onClick={clearRecent} className="qa-clear-btn">
-                            <i className="ti ti-x" aria-hidden="true" />
-                            Clear recents
-                        </button>
-                    )}
-                </div>
+        {/* Tool list */}
+        <ul className="qa-list">
+          {items.map((item) => {
+            const isPinned = pinned.includes(item.slug);
+            const isRecent = !isPinned && recent.includes(item.slug);
 
-                <div className="qa-divider" />
+            return (
+              <li key={item.slug}>
+                <Link
+                  href={item.href}
+                  className="qa-item"
+                  onClick={() => recordVisit(item.slug)}
+                >
+                  <span className="qa-icon">
+                    <i className={`ti ${item.icon}`} aria-hidden="true" />
+                  </span>
 
-                {/* Tool list */}
-                <ul className="qa-list">
-                    {items.map((item) => {
-                        const isPinned = pinned.includes(item.slug);
-                        const isRecent = !isPinned && recent.includes(item.slug);
+                  <span className="qa-name">{item.label}</span>
 
-                        return (
-                            <li key={item.slug}>
-                                <Link
-                                    href={item.href}
-                                    className="qa-item"
-                                    onClick={() => recordVisit(item.slug)}
-                                >
-                                    <span className="qa-icon">
-                                        <i className={`ti ${item.icon}`} aria-hidden="true" />
-                                    </span>
+                  {isRecent && (
+                    <span className="qa-badge" aria-label="Recently used">
+                      recent
+                    </span>
+                  )}
 
-                                    <span className="qa-name">{item.label}</span>
+                  <button
+                    className={`qa-pin${isPinned ? " pinned" : ""}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      togglePin(item.slug);
+                    }}
+                    aria-label={isPinned ? `Unpin ${item.label}` : `Pin ${item.label}`}
+                    aria-pressed={isPinned}
+                  >
+                    <i className={`ti ${isPinned ? "ti-star-filled" : "ti-star"}`} aria-hidden="true" />
+                  </button>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-                                    {isRecent && (
-                                        <span className="qa-badge" aria-label="Recently used">
-                                            recent
-                                        </span>
-                                    )}
-
-                                    <button
-                                        className={`qa-pin${isPinned ? " pinned" : ""}`}
-                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); togglePin(item.slug); }}
-                                        aria-label={isPinned ? `Unpin ${item.label}` : `Pin ${item.label}`}
-                                        aria-pressed={isPinned}
-                                    >
-                                        <i className={`ti ${isPinned ? "ti-star-filled" : "ti-star"}`} aria-hidden="true" />
-                                    </button>
-                                </Link>
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
-
-            <style>{`
+      <style>{`
         .qa-card {
           background: var(--bg-card);
           border: 0.5px solid var(--border);
@@ -260,6 +252,6 @@ export default function QuickAccess() {
           background: var(--border);
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

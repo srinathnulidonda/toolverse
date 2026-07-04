@@ -1,160 +1,203 @@
 // features/dev/case-converter/Workspace.tsx
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useCallback } from "react";
 import type { Tool } from "@/lib/tools";
+import { type CaseType, CASE_FORMATS } from "./utils";
+import CasePreview from "./CasePreview";
+import CaseBatch from "./CaseBatch";
+import CaseHistory from "./CaseHistory";
+import CaseAnalyzer from "./CaseAnalyzer";
+import { useCaseStore } from "./caseStore";
 
-type CaseType = "camel" | "pascal" | "snake" | "kebab" | "constant" | "title" | "sentence" | "lower" | "upper";
-
-const CASES: { id: CaseType; label: string; icon: string; example: string }[] = [
-    { id: "camel", label: "camelCase", icon: "ti-letter-case", example: "helloWorldExample" },
-    { id: "pascal", label: "PascalCase", icon: "ti-letter-case-upper", example: "HelloWorldExample" },
-    { id: "snake", label: "snake_case", icon: "ti-underline", example: "hello_world_example" },
-    { id: "kebab", label: "kebab-case", icon: "ti-minus", example: "hello-world-example" },
-    { id: "constant", label: "CONSTANT_CASE", icon: "ti-text-size", example: "HELLO_WORLD_EXAMPLE" },
-    { id: "title", label: "Title Case", icon: "ti-alphabet-latin", example: "Hello World Example" },
-    { id: "sentence", label: "Sentence case", icon: "ti-dots", example: "Hello world example" },
-    { id: "lower", label: "lowercase", icon: "ti-letter-a", example: "hello world example" },
-    { id: "upper", label: "UPPERCASE", icon: "ti-letter-b", example: "HELLO WORLD EXAMPLE" },
-];
-
-function convertCase(text: string, caseType: CaseType): string {
-    if (!text) return "";
-
-    // Normalize: split by spaces, underscores, hyphens, or camelCase boundaries
-    const words = text
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
-        .replace(/[_-]+/g, " ")
-        .toLowerCase()
-        .split(/\s+/)
-        .filter(Boolean);
-
-    switch (caseType) {
-        case "camel":
-            return words.map((w, i) => i === 0 ? w : w.charAt(0).toUpperCase() + w.slice(1)).join("");
-        case "pascal":
-            return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("");
-        case "snake":
-            return words.join("_");
-        case "kebab":
-            return words.join("-");
-        case "constant":
-            return words.join("_").toUpperCase();
-        case "title":
-            return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
-        case "sentence":
-            const sentence = words.join(" ");
-            return sentence.charAt(0).toUpperCase() + sentence.slice(1);
-        case "lower":
-            return words.join(" ");
-        case "upper":
-            return words.join(" ").toUpperCase();
-        default:
-            return text;
-    }
-}
+type ViewTab = "single" | "batch" | "analyze" | "history";
 
 export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
+    const [viewTab, setViewTab] = useState<ViewTab>("single");
     const [input, setInput] = useState("");
-    const [copiedKey, setCopiedKey] = useState("");
+    const [selectedCases, setSelectedCases] = useState<CaseType[]>([
+        "camel",
+        "pascal",
+        "snake",
+        "kebab",
+    ]);
+    const [autoDetect, setAutoDetect] = useState(true);
+    const [preserveNumbers, setPreserveNumbers] = useState(true);
+    const [preserveAcronyms, setPreserveAcronyms] = useState(false);
+    const [customDelimiter, setCustomDelimiter] = useState("");
 
-    const results = useMemo(() => {
-        if (!input.trim()) return [];
-        return CASES.map((c) => ({
-            ...c,
-            converted: convertCase(input, c.id),
-        }));
-    }, [input]);
+    const { history, addToHistory, clearHistory } = useCaseStore();
 
-    const copy = useCallback(async (text: string, key: string) => {
-        await navigator.clipboard.writeText(text);
-        setCopiedKey(key);
-        setTimeout(() => setCopiedKey(""), 1800);
+    const handleConvert = useCallback(
+        (text: string, caseType: CaseType, result: string) => {
+            addToHistory({
+                id: Date.now().toString(),
+                input: text,
+                fromCase: "auto",
+                toCase: caseType,
+                output: result,
+                timestamp: Date.now(),
+            });
+        },
+        [addToHistory]
+    );
+
+    const handleClear = useCallback(() => {
+        setInput("");
     }, []);
+
+    const VIEW_TABS = [
+        { id: "single" as const, label: "Single", icon: "ti-letter-case" },
+        { id: "batch" as const, label: "Batch", icon: "ti-files" },
+        { id: "analyze" as const, label: "Analyze", icon: "ti-chart-dots" },
+        { id: "history" as const, label: "History", icon: "ti-history" },
+    ];
 
     return (
         <>
             <div className="cc-root">
-                <div className="cc-cmd">
-                    <div className="cc-cmd-title">
-                        <i className="ti ti-letter-case" />
-                        Case Converter
+                {/* ── Top Chrome ── */}
+                <div className="cc-chrome">
+                    <div className="cc-chrome-left">
+                        <div className="cc-title">
+                            <i className="ti ti-letter-case" />
+                            Case Converter
+                        </div>
+                        {input && viewTab === "single" && (
+                            <span className="cc-input-badge">
+                                {input.length} chars
+                            </span>
+                        )}
                     </div>
-                    {results.length > 0 && (
-                        <span className="cc-count">
-                            <i className="ti ti-check" />
-                            {results.length} formats
-                        </span>
-                    )}
+
+                    <div className="cc-chrome-right">
+                        <button
+                            type="button"
+                            className="cc-btn"
+                            onClick={handleClear}
+                            disabled={!input}
+                        >
+                            <i className="ti ti-trash" />
+                            <span className="cc-label">Clear</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div className="cc-body">
-                    <div className="cc-section">
-                        <div className="cc-section-header">
-                            <div className="cc-section-title">
-                                <i className="ti ti-pencil" />
-                                Input Text
-                            </div>
-                            {input && (
-                                <button className="cc-icon-btn" onClick={() => setInput("")} title="Clear">
-                                    <i className="ti ti-x" />
-                                </button>
-                            )}
+                {/* ── View Tabs ── */}
+                <div className="cc-tabs-bar">
+                    <nav className="cc-tabs" role="tablist">
+                        {VIEW_TABS.map((tab) => (
+                            <button
+                                key={tab.id}
+                                type="button"
+                                role="tab"
+                                className={`cc-tab${viewTab === tab.id ? " active" : ""}`}
+                                onClick={() => setViewTab(tab.id)}
+                                aria-selected={viewTab === tab.id}
+                            >
+                                <i className={`ti ${tab.icon}`} />
+                                {tab.label}
+                                {tab.id === "history" && history.length > 0 && (
+                                    <span className="cc-badge">{history.length}</span>
+                                )}
+                            </button>
+                        ))}
+                    </nav>
+                </div>
+
+                {/* ── Options Bar (Single view only) ── */}
+                {viewTab === "single" && (
+                    <div className="cc-options-bar">
+                        <div className="cc-options-group">
+                            <span className="cc-options-label">Quick Formats:</span>
+                            {CASE_FORMATS.slice(0, 6).map((format) => (
+                                <label key={format.id} className="cc-checkbox">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedCases.includes(format.id)}
+                                        onChange={(e) => {
+                                            if (e.target.checked) {
+                                                setSelectedCases([...selectedCases, format.id]);
+                                            } else {
+                                                setSelectedCases(
+                                                    selectedCases.filter((c) => c !== format.id)
+                                                );
+                                            }
+                                        }}
+                                    />
+                                    <span className="cc-checkbox-label">{format.label}</span>
+                                </label>
+                            ))}
                         </div>
-                        <textarea
-                            className="cc-input"
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Enter text to convert case..."
-                            rows={4}
+
+                        <div className="cc-options-divider" />
+
+                        <label className="cc-toggle">
+                            <input
+                                type="checkbox"
+                                checked={preserveNumbers}
+                                onChange={(e) => setPreserveNumbers(e.target.checked)}
+                            />
+                            <span className="cc-toggle-track">
+                                <span className="cc-toggle-thumb" />
+                            </span>
+                            <span className="cc-toggle-label">Preserve numbers</span>
+                        </label>
+
+                        <label className="cc-toggle">
+                            <input
+                                type="checkbox"
+                                checked={preserveAcronyms}
+                                onChange={(e) => setPreserveAcronyms(e.target.checked)}
+                            />
+                            <span className="cc-toggle-track">
+                                <span className="cc-toggle-thumb" />
+                            </span>
+                            <span className="cc-toggle-label">Preserve acronyms</span>
+                        </label>
+                    </div>
+                )}
+
+                {/* ── Tab Content ── */}
+                <div className="cc-tab-content">
+                    {viewTab === "single" && (
+                        <CasePreview
+                            input={input}
+                            onInputChange={setInput}
+                            selectedCases={selectedCases}
+                            preserveNumbers={preserveNumbers}
+                            preserveAcronyms={preserveAcronyms}
+                            onConvert={handleConvert}
                         />
-                    </div>
-
-                    {!input && (
-                        <div className="cc-empty">
-                            <div className="cc-empty-icon">
-                                <i className="ti ti-letter-case" />
-                            </div>
-                            <p className="cc-empty-title">Convert Text Case</p>
-                            <p className="cc-empty-desc">
-                                Convert text between camelCase, snake_case, kebab-case, and more
-                            </p>
-                        </div>
                     )}
 
-                    {results.length > 0 && (
-                        <div className="cc-section">
-                            <div className="cc-section-header">
-                                <div className="cc-section-title">
-                                    <i className="ti ti-sparkles" />
-                                    Converted Cases
-                                </div>
-                            </div>
-                            <div className="cc-results">
-                                {results.map((r) => (
-                                    <div key={r.id} className="cc-result">
-                                        <div className="cc-result-header">
-                                            <div className="cc-result-info">
-                                                <i className={`ti ${r.icon}`} />
-                                                <span className="cc-result-label">{r.label}</span>
-                                                <span className="cc-result-example">{r.example}</span>
-                                            </div>
-                                            <button
-                                                className={`cc-copy-btn${copiedKey === r.id ? " --done" : ""}`}
-                                                onClick={() => copy(r.converted, r.id)}
-                                            >
-                                                <i className={`ti ${copiedKey === r.id ? "ti-check" : "ti-copy"}`} />
-                                                {copiedKey === r.id ? "Copied" : "Copy"}
-                                            </button>
-                                        </div>
-                                        <div className="cc-result-value">{r.converted}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                    {viewTab === "batch" && (
+                        <CaseBatch
+                            preserveNumbers={preserveNumbers}
+                            preserveAcronyms={preserveAcronyms}
+                            onComplete={(count) => {
+                                // Could show a toast notification
+                            }}
+                        />
+                    )}
+
+                    {viewTab === "analyze" && (
+                        <CaseAnalyzer input={input} onInputChange={setInput} />
+                    )}
+
+                    {viewTab === "history" && (
+                        <CaseHistory
+                            history={history}
+                            onClear={clearHistory}
+                            onRestore={(entry) => {
+                                setInput(entry.input);
+                                setViewTab("single");
+                            }}
+                        />
                     )}
                 </div>
 
+                {/* ── Footer ── */}
                 <div className="cc-footer">
                     <i className="ti ti-shield-lock" />
                     <span>Everything runs in your browser — no data ever leaves this page.</span>
@@ -162,248 +205,319 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
             </div>
 
             <style jsx>{`
-                /* Same structure as previous tools - apply design tokens */
                 .cc-root {
                     --cc-radius-sm: 6px;
                     --cc-radius-md: 8px;
+                    --cc-radius-lg: 12px;
                     --cc-radius-xl: 16px;
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
                     border-radius: var(--cc-radius-xl);
-                    display: flex;
-                    flex-direction: column;
                     overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 600px;
                 }
 
-                .cc-cmd {
+                /* ── Chrome ── */
+                .cc-chrome {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding: 12px 14px;
-                    background: var(--bg-surface);
+                    gap: 12px;
+                    padding: 12px 16px;
                     border-bottom: 0.5px solid var(--border);
-                }
-
-                .cc-cmd-title {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    font-size: 13px;
-                    font-weight: 600;
-                    color: var(--text);
-                }
-
-                .cc-count {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 5px;
-                    height: 26px;
-                    padding: 0 10px;
-                    border-radius: 99px;
-                    background: var(--brand-light);
-                    color: var(--brand);
-                    border: 0.5px solid var(--brand-border);
-                    font-size: 11px;
-                    font-weight: 600;
-                }
-
-                .cc-body {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 16px;
-                    padding: 16px;
-                }
-
-                .cc-section {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                }
-
-                .cc-section-header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-
-                .cc-section-title {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    font-size: 11px;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    letter-spacing: 0.08em;
-                    color: var(--text-tertiary);
-                }
-
-                .cc-icon-btn {
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 5px;
-                    border: none;
-                    background: transparent;
-                    color: var(--text-disabled);
-                    cursor: pointer;
-                    transition: all 0.1s;
-                }
-
-                .cc-icon-btn:hover {
                     background: var(--bg-surface);
-                    color: var(--text);
+                    flex-wrap: wrap;
                 }
 
-                .cc-input {
-                    width: 100%;
-                    padding: 12px 14px;
-                    background: var(--bg-card);
-                    border: 0.5px solid var(--border);
-                    border-radius: var(--cc-radius-md);
-                    font-family: var(--font-mono);
-                    font-size: 13px;
-                    color: var(--text);
-                    resize: vertical;
-                }
-
-                .cc-input:focus {
-                    outline: none;
-                    border-color: var(--brand-border);
-                }
-
-                .cc-empty {
+                .cc-chrome-left,
+                .cc-chrome-right {
                     display: flex;
-                    flex-direction: column;
                     align-items: center;
-                    padding: 60px 24px;
                     gap: 10px;
-                    text-align: center;
                 }
 
-                .cc-empty-icon {
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 12px;
-                    background: var(--bg-surface);
-                    border: 0.5px solid var(--border);
+                .cc-title {
                     display: flex;
                     align-items: center;
-                    justify-content: center;
-                    font-size: 22px;
-                    color: var(--text-disabled);
-                    margin-bottom: 6px;
-                }
-
-                .cc-empty-title {
+                    gap: 8px;
                     font-size: 14px;
                     font-weight: 600;
                     color: var(--text);
-                    margin: 0;
                 }
 
-                .cc-empty-desc {
-                    font-size: 12px;
-                    color: var(--text-tertiary);
-                    margin: 0;
-                    max-width: 340px;
-                }
-
-                .cc-results {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                }
-
-                .cc-result {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 8px;
-                    padding: 12px 14px;
-                    background: var(--bg-card);
-                    border: 0.5px solid var(--border);
-                    border-radius: var(--cc-radius-md);
-                }
-
-                .cc-result-header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                }
-
-                .cc-result-info {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-
-                .cc-result-info i {
+                .cc-title i {
                     font-size: 16px;
                     color: var(--brand);
                 }
 
-                .cc-result-label {
-                    font-size: 12px;
-                    font-weight: 600;
-                    color: var(--text);
+                .cc-input-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    height: 22px;
+                    padding: 0 8px;
+                    border-radius: 99px;
+                    background: var(--bg-card);
+                    border: 0.5px solid var(--border);
+                    color: var(--text-tertiary);
+                    font-size: 11px;
+                    font-weight: 500;
                 }
 
-                .cc-result-example {
-                    font-size: 10px;
-                    color: var(--text-disabled);
-                    font-family: var(--font-mono);
-                }
-
-                .cc-copy-btn {
+                .cc-btn {
                     display: inline-flex;
                     align-items: center;
                     gap: 5px;
-                    height: 24px;
-                    padding: 0 9px;
+                    height: 30px;
+                    padding: 0 12px;
                     border-radius: var(--cc-radius-md);
                     border: 0.5px solid var(--border);
-                    background: var(--bg-surface);
+                    background: var(--bg-card);
                     color: var(--text-secondary);
-                    font-size: 11px;
+                    font-size: 12px;
                     font-weight: 500;
                     cursor: pointer;
                     transition: all 0.12s;
                 }
 
-                .cc-copy-btn:hover {
-                    background: var(--bg-card);
-                }
-
-                .cc-copy-btn.--done {
-                    background: var(--brand-light);
-                    color: var(--brand);
-                    border-color: var(--brand-border);
-                }
-
-                .cc-result-value {
-                    font-family: var(--font-mono);
+                .cc-btn i {
                     font-size: 13px;
-                    color: var(--text);
-                    padding: 10px 12px;
-                    background: var(--bg-surface);
-                    border-radius: var(--cc-radius-sm);
                 }
 
+                .cc-btn:hover:not(:disabled) {
+                    background: var(--bg-surface);
+                    color: var(--text);
+                }
+
+                .cc-btn:disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed;
+                }
+
+                /* ── Tabs ── */
+                .cc-tabs-bar {
+                    border-bottom: 0.5px solid var(--border);
+                    background: var(--bg-surface);
+                }
+
+                .cc-tabs {
+                    display: flex;
+                    padding: 0 16px;
+                }
+
+                .cc-tab {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    height: 40px;
+                    padding: 0 16px;
+                    border: none;
+                    background: transparent;
+                    color: var(--text-tertiary);
+                    font-size: 12.5px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    position: relative;
+                    transition: color 0.12s;
+                }
+
+                .cc-tab i {
+                    font-size: 14px;
+                }
+
+                .cc-tab:hover {
+                    color: var(--text);
+                }
+
+                .cc-tab.active {
+                    color: var(--text);
+                }
+
+                .cc-tab.active::after {
+                    content: "";
+                    position: absolute;
+                    bottom: 0;
+                    left: 12px;
+                    right: 12px;
+                    height: 2px;
+                    background: var(--brand);
+                    border-radius: 2px 2px 0 0;
+                }
+
+                .cc-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 18px;
+                    height: 18px;
+                    padding: 0 5px;
+                    border-radius: 99px;
+                    background: var(--brand-light);
+                    color: var(--brand-text);
+                    font-size: 10px;
+                    font-weight: 600;
+                }
+
+                /* ── Options Bar ── */
+                .cc-options-bar {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    padding: 12px 16px;
+                    border-bottom: 0.5px solid var(--border-faint);
+                    background: var(--bg-surface);
+                    flex-wrap: wrap;
+                }
+
+                .cc-options-group {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    flex-wrap: wrap;
+                }
+
+                .cc-options-label {
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: var(--text-tertiary);
+                    text-transform: uppercase;
+                    letter-spacing: 0.06em;
+                }
+
+                .cc-checkbox {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    cursor: pointer;
+                    user-select: none;
+                }
+
+                .cc-checkbox input {
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 4px;
+                    border: 0.5px solid var(--border);
+                    cursor: pointer;
+                    accent-color: var(--brand);
+                }
+
+                .cc-checkbox-label {
+                    font-size: 12px;
+                    color: var(--text-secondary);
+                    font-weight: 500;
+                }
+
+                .cc-options-divider {
+                    width: 1px;
+                    height: 20px;
+                    background: var(--border);
+                }
+
+                .cc-toggle {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 7px;
+                    cursor: pointer;
+                    user-select: none;
+                }
+
+                .cc-toggle input {
+                    position: absolute;
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+
+                .cc-toggle-track {
+                    width: 32px;
+                    height: 18px;
+                    background: var(--border);
+                    border-radius: 99px;
+                    position: relative;
+                    transition: background 0.15s;
+                    flex-shrink: 0;
+                }
+
+                .cc-toggle input:checked + .cc-toggle-track {
+                    background: var(--brand);
+                }
+
+                .cc-toggle-thumb {
+                    position: absolute;
+                    top: 2px;
+                    left: 2px;
+                    width: 14px;
+                    height: 14px;
+                    background: white;
+                    border-radius: 50%;
+                    transition: transform 0.15s;
+                }
+
+                .cc-toggle input:checked + .cc-toggle-track .cc-toggle-thumb {
+                    transform: translateX(14px);
+                }
+
+                .cc-toggle-label {
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: var(--text-secondary);
+                }
+
+                /* ── Tab Content ── */
+                .cc-tab-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 0;
+                    overflow: hidden;
+                }
+
+                /* ── Footer ── */
                 .cc-footer {
                     display: flex;
                     align-items: center;
                     gap: 7px;
-                    padding: 9px 14px;
-                    background: var(--bg-surface);
+                    padding: 10px 16px;
                     border-top: 0.5px solid var(--border);
+                    background: var(--bg-surface);
                     font-size: 11px;
                     color: var(--text-disabled);
                 }
 
+                .cc-footer i {
+                    font-size: 13px;
+                }
+
+                /* ── Responsive ── */
+                .cc-label {
+                    display: inline;
+                }
+
                 @media (max-width: 768px) {
-                    .cc-body {
-                        padding: 12px;
+                    .cc-label {
+                        display: none;
                     }
-                    .cc-empty {
-                        padding: 40px 20px;
+
+                    .cc-chrome {
+                        padding: 10px 12px;
+                    }
+
+                    .cc-options-bar {
+                        padding: 10px 12px;
+                    }
+
+                    .cc-options-group {
+                        gap: 8px;
+                    }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .cc-btn,
+                    .cc-tab,
+                    .cc-toggle-track,
+                    .cc-toggle-thumb {
+                        transition: none;
                     }
                 }
             `}</style>

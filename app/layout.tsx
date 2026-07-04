@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import FooterConditional from "@/components/layout/FooterConditional";
 
 export const metadata: Metadata = {
     title: {
@@ -53,7 +53,10 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
             <head>
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+                <link
+                    rel="stylesheet"
+                    href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css"
+                />
 
                 {/* Favicon - using favicon.png */}
                 <link rel="icon" href="/favicon.png" type="image/png" />
@@ -64,13 +67,16 @@ export default function RootLayout({
                 <link rel="manifest" href="/manifest.json" />
             </head>
             <body>
+                <a href="#main-content" className="skip-link">Skip to main content</a>
                 {/* Navbar */}
                 <Navbar />
 
                 {/* ── Page content pushed below navbar height (52px) ── */}
                 <div className="layout-content">
-                    <main className="layout-main">{children}</main>
-                    <Footer />
+                    <main id="main-content" className="layout-main">{children}</main>
+                    <footer>
+                        <FooterConditional />
+                    </footer>
                 </div>
             </body>
         </html>

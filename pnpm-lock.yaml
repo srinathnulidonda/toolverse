@@ -17,6 +17,12 @@ importers:
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
+      lucide:
+        specifier: ^1.22.0
+        version: 1.22.0
+      lucide-react:
+        specifier: ^1.22.0
+        version: 1.22.0(react@18.2.0)
       next:
         specifier: 16.2.7
         version: 16.2.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -857,6 +863,14 @@ packages:
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
+
+  lucide-react@1.22.0:
+    resolution: {integrity: sha512-c9o3l0PiNcgOQDW4F31BEYHudE7kgxVt3o30qMl36ZPwTxXlGB4QnLilhERvVM4uh/pl5MDyY1/gzZSYcHDtBg==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  lucide@1.22.0:
+    resolution: {integrity: sha512-QRkKyfF6X4jwzMfBIgx46GsSz0PUQnIKkX9Rg5anXMVJmIO89DAhkKzUfwg+2c4KJGi+VT9Dks77J1NFnjU4Vg==}
 
   lz-string@1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
@@ -1799,6 +1813,12 @@ snapshots:
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
+
+  lucide-react@1.22.0(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+
+  lucide@1.22.0: {}
 
   lz-string@1.5.0: {}
 

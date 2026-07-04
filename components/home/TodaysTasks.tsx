@@ -1,7 +1,8 @@
 // components/home/TodaysTasks.tsx
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
 
 // Types
 
@@ -38,7 +39,7 @@ function getDateLabel(): string {
 // Main component
 
 export default function TodaysTasks() {
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const [tasks, setTasks] = useLocalStorage<Task[]>(TASKS_KEY, []);
     const [input, setInput] = useState("");
     const [priority, setPriority] = useState<Priority>("medium");
     const [mounted, setMounted] = useState(false);
@@ -46,18 +47,6 @@ export default function TodaysTasks() {
 
     const inputRef = useRef<HTMLInputElement>(null);
     const pickerRef = useRef<HTMLDivElement>(null);
-
-    // Hydrate 
-    useEffect(() => {
-        setMounted(true);
-        try {
-            const raw = localStorage.getItem(TASKS_KEY);
-            if (raw) {
-                const parsed = JSON.parse(raw);
-                if (Array.isArray(parsed)) setTasks(parsed);
-            }
-        } catch { /* silent */ }
-    }, []);
 
     // Close picker on outside click
     useEffect(() => {
@@ -82,17 +71,13 @@ export default function TodaysTasks() {
         return () => document.removeEventListener("keydown", handler);
     }, []);
 
-    const persist = useCallback((next: Task[]) => {
-        setTasks(next);
-        try { localStorage.setItem(TASKS_KEY, JSON.stringify(next)); } catch { }
-    }, []);
-
+    
     // Actions
     function add(e: React.FormEvent) {
         e.preventDefault();
         const text = input.trim();
         if (!text) { inputRef.current?.focus(); return; }
-        persist([
+        setTasks([
             {
                 id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
                 text,
@@ -106,9 +91,9 @@ export default function TodaysTasks() {
         inputRef.current?.focus();
     }
 
-    const toggle = (id: string) => persist(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-    const remove = (id: string) => persist(tasks.filter(t => t.id !== id));
-    const clearDone = () => persist(tasks.filter(t => !t.completed));
+    const toggle = (id: string) => setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+    const remove = (id: string) => setTasks(tasks.filter(t => t.id !== id));
+    const clearDone = () => setTasks(tasks.filter(t => !t.completed));
 
     // Derived
     const total = tasks.length;
