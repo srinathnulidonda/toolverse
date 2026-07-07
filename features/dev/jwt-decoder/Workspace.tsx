@@ -1,301 +1,351 @@
 // features/dev/jwt-decoder/Workspace.tsx
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import type React from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
+import { parseJWT, formatDuration, formatTimestamp } from "./jwtParser";
+import type { DecodedToken, ParseError } from "./jwtParser";
+import TokenVisualizer from "./TokenVisualizer";
+import SecurityAnalyzer from "./SecurityAnalyzer";
+import ClaimsExplorer from "./ClaimsExplorer";
 
-interface JwtHeader {
-    [key: string]: unknown;
-    alg?: string;
-    typ?: string;
-}
+type ViewTab = 'decoded' | 'visualizer' | 'security' | 'raw';
 
-interface JwtPayload {
-    [key: string]: unknown;
-    sub?: string;
-    name?: string;
-    iat?: number;
-    exp?: number;
-    nbf?: number;
-}
-
-interface DecodedJWT {
-    header: JwtHeader | null;
-    payload: JwtPayload | null;
-    signature: string;
-    valid: boolean;
-    error?: string;
-}
-
-const SAMPLE_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE3MzQ1Njc4OTB9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-const PRESETS = [
-    { id: "standard", label: "Standard JWT", token: SAMPLE_JWT },
-    { id: "auth", label: "Auth Token", token: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDUiLCJlbWFpbCI6InVzZXJAZXhhbXBsZS5jb20iLCJyb2xlcyI6WyJ1c2VyIiwiYWRtaW4iXSwiaWF0IjoxNjkwMDAwMDAwLCJleHAiOjE2OTAwMDM2MDB9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ" },
+const SAMPLE_TOKENS = [
+    {
+        id: 'standard',
+        label: 'Standard JWT',
+        token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE3MzQ1Njc4OTB9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+    },
+    {
+        id: 'auth',
+        label: 'Auth Token',
+        token: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyMzQ1In0.eyJpc3MiOiJodHRwczovL2F1dGgudG9vbHZlcnNlLmFwcCIsInN1YiI6InVzZXJfMTIzNDUiLCJhdWQiOiJ0b29sdmVyc2UtYXBpIiwiZXhwIjoxNzM0NTY3ODkwLCJuYmYiOjE3MzQ1NjQyOTAsImlhdCI6MTczNDU2NDI5MCwianRpIjoiYWJjZGVmMTIzNDU2IiwiZW1haWwiOiJ1c2VyQGV4YW1wbGUuY29tIiwicm9sZXMiOlsidXNlciIsImFkbWluIl0sInBlcm1pc3Npb25zIjpbInJlYWQiLCJ3cml0ZSJdfQ.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ',
+    },
+    {
+        id: 'openid',
+        label: 'OpenID Connect',
+        token: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJzdWIiOiIxMDk2OTQxMzE1MDk3MTY5Njg2NzQiLCJhenAiOiJ5b3VyLWNsaWVudC1pZC5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6InlvdXItY2xpZW50LWlkLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJqb2huZG9lQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJuYW1lIjoiSm9obiBEb2UiLCJwaWN0dXJlIjoiaHR0cHM6Ly9leGFtcGxlLmNvbS9hdmF0YXIuanBnIiwiZ2l2ZW5fbmFtZSI6IkpvaG4iLCJmYW1pbHlfbmFtZSI6IkRvZSIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNzM0NTY0MjkwLCJleHAiOjE3MzQ1Njc4OTB9.signature',
+    },
 ];
 
-function base64UrlDecode(str: string): string {
-    let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
-    const pad = base64.length % 4;
-    if (pad) base64 += "=".repeat(4 - pad);
-    return decodeURIComponent(escape(atob(base64)));
-}
-
-function decodeJWT(token: string): DecodedJWT {
-    try {
-        const parts = token.trim().split(".");
-        if (parts.length !== 3) {
-            return { header: null, payload: null, signature: "", valid: false, error: "Invalid JWT format. Expected 3 parts separated by dots." };
-        }
-
-        const header = JSON.parse(base64UrlDecode(parts[0])) as JwtHeader;
-        const payload = JSON.parse(base64UrlDecode(parts[1])) as JwtPayload;
-        const signature = parts[2];
-
-        return { header, payload, signature, valid: true };
-    } catch (e: any) {
-        return { header: null, payload: null, signature: "", valid: false, error: e.message };
-    }
-}
-
-function formatTimestamp(timestamp: number): string {
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
-    });
-}
-
 export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
-    const [token, setToken] = useState("");
-    const [copiedKey, setCopiedKey] = useState("");
+    const [input, setInput] = useState('');
+    const [viewTab, setViewTab] = useState<ViewTab>('decoded');
+    const [copiedKey, setCopiedKey] = useState('');
+    const [showPresets, setShowPresets] = useState(false);
+    const presetsRef = useRef<HTMLDivElement>(null);
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    const decoded = useMemo(() => {
-        if (!token.trim()) return null;
-        return decodeJWT(token);
-    }, [token]);
+    // Parse JWT
+    const parseResult = useMemo(() => {
+        if (!input.trim()) return null;
+        return parseJWT(input);
+    }, [input]);
 
-    const isExpired = useMemo(() => {
-        if (!decoded?.valid || !decoded.payload?.exp) return null;
-        return Date.now() / 1000 > decoded.payload.exp;
-    }, [decoded]);
+    const decodedToken = parseResult?.success ? parseResult.token : null;
+    const parseError = parseResult?.success === false ? parseResult.error : null;
 
-    const copy = useCallback(async (text: string, key: string) => {
-        await navigator.clipboard.writeText(text);
-        setCopiedKey(key);
-        setTimeout(() => setCopiedKey(""), 1800);
+    // Copy handler
+    const handleCopy = useCallback(async (text: string, key: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedKey(key);
+            setTimeout(() => setCopiedKey(''), 1800);
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
     }, []);
 
-    const loadPreset = (preset: typeof PRESETS[0]) => {
-        setToken(preset.token);
-    };
+    // Load preset
+    const loadPreset = useCallback((token: string) => {
+        setInput(token);
+        setShowPresets(false);
+        setViewTab('decoded');
+    }, []);
 
-    const renderValue = (value: unknown): React.ReactElement => {
-        if (value === null) return <em className="jwt-null">null</em>;
-        if (value === undefined) return <em className="jwt-undefined">undefined</em>;
-        if (typeof value === "boolean") return <span className="jwt-bool">{value.toString()}</span>;
-        if (typeof value === "number") return <span className="jwt-num">{value}</span>;
-        if (typeof value === "string") return <span className="jwt-str">"{value}"</span>;
-        if (Array.isArray(value)) return <span className="jwt-arr">[{value.length} items]</span>;
-        if (typeof value === "object") return <span className="jwt-obj">{"{…}"}</span>;
-        return <span>{String(value)}</span>;
-    };
+    // Clear all
+    const handleClear = useCallback(() => {
+        setInput('');
+        setCopiedKey('');
+        setViewTab('decoded');
+        textareaRef.current?.focus();
+    }, []);
+
+    // Click outside handler for presets
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (presetsRef.current && !presetsRef.current.contains(e.target as Node)) {
+                setShowPresets(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     return (
         <>
-            <div className="jwt-root">
-                {/* Command Bar */}
-                <div className="jwt-cmd">
-                    <div className="jwt-cmd-left">
-                        <span className="jwt-cmd-label">Examples</span>
-                        {PRESETS.map((p) => (
-                            <button key={p.id} className="jwt-preset-btn" onClick={() => loadPreset(p)}>
-                                <i className="ti ti-key" />
-                                <span className="jwt-preset-label">{p.label}</span>
+            <div className="jwtw-root" role="main" aria-label="JWT Decoder">
+                {/* Top Bar */}
+                <div className="jwtw-chrome">
+                    <div className="jwtw-chrome-left">
+                        <div className="jwtw-presets" ref={presetsRef}>
+                            <button
+                                className="jwtw-presets-trigger"
+                                onClick={() => setShowPresets(!showPresets)}
+                                aria-haspopup="menu"
+                                aria-expanded={showPresets}
+                            >
+                                <i className="ti ti-wand" />
+                                <span>Examples</span>
+                                <i className={`ti ti-chevron-down jwtw-chevron${showPresets ? ' open' : ''}`} />
                             </button>
-                        ))}
-                    </div>
-                    {decoded?.valid && (
-                        <div className="jwt-cmd-right">
-                            {isExpired !== null && (
-                                <span className={`jwt-badge ${isExpired ? "jwt-badge--error" : "jwt-badge--success"}`}>
-                                    <i className={`ti ${isExpired ? "ti-alert-circle" : "ti-circle-check"}`} />
-                                    {isExpired ? "Expired" : "Valid"}
-                                </span>
+                            {showPresets && (
+                                <div className="jwtw-presets-menu" role="menu">
+                                    {SAMPLE_TOKENS.map((preset) => (
+                                        <button
+                                            key={preset.id}
+                                            className="jwtw-preset-item"
+                                            onClick={() => loadPreset(preset.token)}
+                                            role="menuitem"
+                                        >
+                                            <i className="ti ti-key" />
+                                            <span>{preset.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
                             )}
                         </div>
-                    )}
-                </div>
 
-                <div className="jwt-body">
-                    {/* Token Input */}
-                    <div className="jwt-section">
-                        <div className="jwt-section-header">
-                            <div className="jwt-section-title">
-                                <i className="ti ti-lock" />
-                                JWT Token
-                            </div>
-                            <div className="jwt-section-actions">
-                                {token && (
-                                    <>
-                                        <span className="jwt-len">{token.length} chars</span>
-                                        <button className="jwt-icon-btn" onClick={() => setToken("")} title="Clear">
-                                            <i className="ti ti-x" />
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                        <textarea
-                            className="jwt-input"
-                            value={token}
-                            onChange={(e) => setToken(e.target.value)}
-                            placeholder="Paste your JWT token here..."
-                            spellCheck={false}
-                            rows={4}
-                        />
-                        {decoded?.error && (
-                            <div className="jwt-error">
-                                <i className="ti ti-alert-triangle" />
-                                {decoded.error}
-                            </div>
+                        {input && (
+                            <button
+                                className="jwtw-icon-btn"
+                                onClick={handleClear}
+                                title="Clear all"
+                            >
+                                <i className="ti ti-trash" />
+                                <span className="jwtw-btn-label">Clear</span>
+                            </button>
                         )}
                     </div>
 
-                    {/* Empty State */}
-                    {!token && (
-                        <div className="jwt-empty">
-                            <div className="jwt-empty-icon">
-                                <i className="ti ti-key" />
-                            </div>
-                            <p className="jwt-empty-title">Decode JSON Web Tokens</p>
-                            <p className="jwt-empty-desc">
-                                Paste a JWT above or try an example to see its header, payload, and signature
-                            </p>
+                    <div className="jwtw-chrome-right">
+                        {decodedToken && (
+                            <>
+                                {/* Status Badge */}
+                                {decodedToken.metadata.isExpired && (
+                                    <div className="jwtw-badge jwtw-badge--error">
+                                        <i className="ti ti-alert-circle" />
+                                        Expired
+                                    </div>
+                                )}
+                                {!decodedToken.metadata.isExpired && decodedToken.metadata.isNotYetValid && (
+                                    <div className="jwtw-badge jwtw-badge--warning">
+                                        <i className="ti ti-clock" />
+                                        Not Yet Valid
+                                    </div>
+                                )}
+                                {!decodedToken.metadata.isExpired && !decodedToken.metadata.isNotYetValid && decodedToken.decoded.payload.exp && (
+                                    <div className="jwtw-badge jwtw-badge--success">
+                                        <i className="ti ti-circle-check" />
+                                        Valid
+                                    </div>
+                                )}
+
+                                {/* Copy & Download */}
+                                <button
+                                    className={`jwtw-action-btn${copiedKey === 'full-token' ? ' copied' : ''}`}
+                                    onClick={() => handleCopy(decodedToken.raw, 'full-token')}
+                                >
+                                    <i className={`ti ${copiedKey === 'full-token' ? 'ti-check' : 'ti-copy'}`} />
+                                    <span>{copiedKey === 'full-token' ? 'Copied' : 'Copy Token'}</span>
+                                </button>
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                {/* Input Section */}
+                <div className="jwtw-input-section">
+                    <div className="jwtw-input-header">
+                        <div className="jwtw-input-label">
+                            <i className="ti ti-lock" />
+                            JWT Token
                         </div>
-                    )}
-
-                    {/* Decoded Sections */}
-                    {decoded?.valid && (
-                        <>
-                            {/* Header */}
-                            <div className="jwt-section">
-                                <div className="jwt-section-header">
-                                    <div className="jwt-section-title">
-                                        <i className="ti ti-file-description" />
-                                        Header
-                                    </div>
-                                    <button
-                                        className={`jwt-copy-btn${copiedKey === "header" ? " --done" : ""}`}
-                                        onClick={() => copy(JSON.stringify(decoded.header, null, 2), "header")}
-                                    >
-                                        <i className={`ti ${copiedKey === "header" ? "ti-check" : "ti-copy"}`} />
-                                        {copiedKey === "header" ? "Copied" : "Copy"}
-                                    </button>
-                                </div>
-                                <div className="jwt-card">
-                                    <div className="jwt-grid">
-                                        {Object.entries(decoded.header!).map(([key, value]) => (
-                                            <div key={key} className="jwt-row">
-                                                <span className="jwt-key">{key}</span>
-                                                <span className="jwt-value">{renderValue(value)}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+                        {input && (
+                            <div className="jwtw-input-meta">
+                                <span className="jwtw-input-length">{input.length} characters</span>
                             </div>
-
-                            {/* Payload */}
-                            <div className="jwt-section">
-                                <div className="jwt-section-header">
-                                    <div className="jwt-section-title">
-                                        <i className="ti ti-package" />
-                                        Payload
-                                    </div>
-                                    <button
-                                        className={`jwt-copy-btn${copiedKey === "payload" ? " --done" : ""}`}
-                                        onClick={() => copy(JSON.stringify(decoded.payload, null, 2), "payload")}
-                                    >
-                                        <i className={`ti ${copiedKey === "payload" ? "ti-check" : "ti-copy"}`} />
-                                        {copiedKey === "payload" ? "Copied" : "Copy"}
-                                    </button>
-                                </div>
-                                <div className="jwt-card">
-                                    <div className="jwt-grid">
-                                        {Object.entries(decoded.payload!).map(([key, value]) => (
-                                            <div key={key} className="jwt-row">
-                                                <span className="jwt-key">
-                                                    {key}
-                                                    {(key === "iat" || key === "exp" || key === "nbf") && (
-                                                        <span className="jwt-hint">
-                                                            {key === "iat" && "Issued At"}
-                                                            {key === "exp" && "Expires"}
-                                                            {key === "nbf" && "Not Before"}
-                                                        </span>
-                                                    )}
-                                                </span>
-                                                <span className="jwt-value">
-                                                    {renderValue(value)}
-                                                    {(key === "iat" || key === "exp" || key === "nbf") && typeof value === "number" && (
-                                                        <span className="jwt-timestamp">{formatTimestamp(value)}</span>
-                                                    )}
-                                                </span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+                        )}
+                    </div>
+                    <textarea
+                        ref={textareaRef}
+                        className="jwtw-input"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Paste your JWT token here... (with or without Bearer prefix)"
+                        spellCheck={false}
+                        autoCorrect="off"
+                        autoCapitalize="off"
+                        rows={5}
+                        aria-label="JWT token input"
+                        aria-invalid={!!parseError}
+                    />
+                    {parseError && (
+                        <div className="jwtw-error" role="alert">
+                            <i className="ti ti-alert-triangle" />
+                            <div>
+                                <strong>{parseError.message}</strong>
+                                {parseError.details && <p>{parseError.details}</p>}
                             </div>
-
-                            {/* Signature */}
-                            <div className="jwt-section">
-                                <div className="jwt-section-header">
-                                    <div className="jwt-section-title">
-                                        <i className="ti ti-shield-check" />
-                                        Signature
-                                    </div>
-                                    <button
-                                        className={`jwt-copy-btn${copiedKey === "signature" ? " --done" : ""}`}
-                                        onClick={() => copy(decoded.signature, "signature")}
-                                    >
-                                        <i className={`ti ${copiedKey === "signature" ? "ti-check" : "ti-copy"}`} />
-                                        {copiedKey === "signature" ? "Copied" : "Copy"}
-                                    </button>
-                                </div>
-                                <div className="jwt-signature">
-                                    {decoded.signature}
-                                </div>
-                            </div>
-                        </>
+                        </div>
                     )}
                 </div>
 
+                {/* Empty State */}
+                {!input && (
+                    <div className="jwtw-empty">
+                        <div className="jwtw-empty-icon">
+                            <i className="ti ti-key" />
+                        </div>
+                        <h3 className="jwtw-empty-title">Decode & Analyze JWT Tokens</h3>
+                        <p className="jwtw-empty-desc">
+                            Paste a JWT token above to decode its header, payload, and signature.
+                            View security analysis, visualizations, and detailed claim information.
+                        </p>
+                        <button
+                            className="jwtw-empty-btn"
+                            onClick={() => loadPreset(SAMPLE_TOKENS[0].token)}
+                        >
+                            <i className="ti ti-wand" />
+                            Try an example
+                        </button>
+                    </div>
+                )}
+
+                {/* Content Tabs */}
+                {decodedToken && (
+                    <>
+                        <nav className="jwtw-tabs" role="tablist" aria-label="Token views">
+                            {[
+                                { id: 'decoded' as const, label: 'Claims', icon: 'ti-list-details' },
+                                { id: 'visualizer' as const, label: 'Visualizer', icon: 'ti-chart-pie' },
+                                { id: 'security' as const, label: 'Security', icon: 'ti-shield-check' },
+                                { id: 'raw' as const, label: 'Raw JSON', icon: 'ti-code' },
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={viewTab === tab.id}
+                                    aria-controls={`jwtw-panel-${tab.id}`}
+                                    className={`jwtw-tab${viewTab === tab.id ? ' active' : ''}`}
+                                    onClick={() => setViewTab(tab.id)}
+                                >
+                                    <i className={`ti ${tab.icon}`} />
+                                    <span>{tab.label}</span>
+                                </button>
+                            ))}
+                        </nav>
+
+                        <div className="jwtw-content">
+                            {/* Claims Explorer */}
+                            {viewTab === 'decoded' && (
+                                <div role="tabpanel" id="jwtw-panel-decoded">
+                                    <ClaimsExplorer
+                                        header={decodedToken.decoded.header}
+                                        payload={decodedToken.decoded.payload}
+                                        onCopy={handleCopy}
+                                        copiedKey={copiedKey}
+                                    />
+                                </div>
+                            )}
+
+                            {/* Visualizer */}
+                            {viewTab === 'visualizer' && (
+                                <div role="tabpanel" id="jwtw-panel-visualizer" className="jwtw-panel">
+                                    <TokenVisualizer token={decodedToken} />
+                                </div>
+                            )}
+
+                            {/* Security Analyzer */}
+                            {viewTab === 'security' && (
+                                <div role="tabpanel" id="jwtw-panel-security" className="jwtw-panel">
+                                    <SecurityAnalyzer token={decodedToken} />
+                                </div>
+                            )}
+
+                            {/* Raw JSON */}
+                            {viewTab === 'raw' && (
+                                <div role="tabpanel" id="jwtw-panel-raw" className="jwtw-panel jwtw-raw">
+                                    <div className="jwtw-raw-section">
+                                        <div className="jwtw-raw-header">
+                                            <span>Header</span>
+                                            <button
+                                                className={`jwtw-copy-btn-sm${copiedKey === 'raw-header' ? ' copied' : ''}`}
+                                                onClick={() => handleCopy(JSON.stringify(decodedToken.decoded.header, null, 2), 'raw-header')}
+                                            >
+                                                <i className={`ti ${copiedKey === 'raw-header' ? 'ti-check' : 'ti-copy'}`} />
+                                            </button>
+                                        </div>
+                                        <pre className="jwtw-raw-code">
+                                            {JSON.stringify(decodedToken.decoded.header, null, 2)}
+                                        </pre>
+                                    </div>
+                                    <div className="jwtw-raw-section">
+                                        <div className="jwtw-raw-header">
+                                            <span>Payload</span>
+                                            <button
+                                                className={`jwtw-copy-btn-sm${copiedKey === 'raw-payload' ? ' copied' : ''}`}
+                                                onClick={() => handleCopy(JSON.stringify(decodedToken.decoded.payload, null, 2), 'raw-payload')}
+                                            >
+                                                <i className={`ti ${copiedKey === 'raw-payload' ? 'ti-check' : 'ti-copy'}`} />
+                                            </button>
+                                        </div>
+                                        <pre className="jwtw-raw-code">
+                                            {JSON.stringify(decodedToken.decoded.payload, null, 2)}
+                                        </pre>
+                                    </div>
+                                    <div className="jwtw-raw-section">
+                                        <div className="jwtw-raw-header">
+                                            <span>Signature</span>
+                                            <button
+                                                className={`jwtw-copy-btn-sm${copiedKey === 'raw-sig' ? ' copied' : ''}`}
+                                                onClick={() => handleCopy(decodedToken.parts.signature, 'raw-sig')}
+                                            >
+                                                <i className={`ti ${copiedKey === 'raw-sig' ? 'ti-check' : 'ti-copy'}`} />
+                                            </button>
+                                        </div>
+                                        <pre className="jwtw-raw-code jwtw-raw-sig">
+                                            {decodedToken.parts.signature}
+                                        </pre>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                )}
+
                 {/* Footer */}
-                <div className="jwt-footer">
+                <div className="jwtw-footer">
                     <i className="ti ti-shield-lock" />
-                    <span>Everything runs in your browser — your tokens never leave this page.</span>
+                    <span>All processing happens in your browser — tokens are never sent to any server</span>
                 </div>
             </div>
 
             <style jsx>{`
-                .jwt-root {
-                    --jwt-radius-sm: 6px;
-                    --jwt-radius-md: 8px;
-                    --jwt-radius-lg: 12px;
-                    --jwt-radius-xl: 16px;
+                .jwtw-root {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
-                    border-radius: var(--jwt-radius-xl);
+                    border-radius: var(--radius-xl);
                     display: flex;
                     flex-direction: column;
                     overflow: hidden;
+                    min-height: 600px;
                 }
 
-                .jwt-cmd {
+                /* Chrome/Top Bar */
+                .jwtw-chrome {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
@@ -306,116 +356,226 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
                     flex-wrap: wrap;
                 }
 
-                .jwt-cmd-left {
+                .jwtw-chrome-left,
+                .jwtw-chrome-right {
                     display: flex;
                     align-items: center;
-                    gap: 6px;
+                    gap: 8px;
                     flex-wrap: wrap;
                 }
 
-                .jwt-cmd-right {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
+                /* Presets Dropdown */
+                .jwtw-presets {
+                    position: relative;
                 }
 
-                .jwt-cmd-label {
-                    font-size: 10px;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    letter-spacing: 0.09em;
-                    color: var(--text-disabled);
-                    margin-right: 4px;
-                }
-
-                .jwt-preset-btn {
+                .jwtw-presets-trigger {
                     display: inline-flex;
                     align-items: center;
-                    gap: 4px;
-                    height: 28px;
-                    padding: 0 10px;
-                    border-radius: var(--jwt-radius-md);
+                    gap: 6px;
+                    height: 32px;
+                    padding: 0 12px;
+                    border-radius: var(--radius-md);
                     border: 0.5px solid var(--border);
                     background: var(--bg-card);
                     color: var(--text-secondary);
                     font-size: 12px;
                     font-weight: 500;
+                    font-family: var(--font-sans);
                     cursor: pointer;
                     transition: all 0.12s;
                 }
 
-                .jwt-preset-btn:hover {
-                    background: var(--brand-light);
-                    color: var(--brand);
+                .jwtw-presets-trigger:hover {
+                    background: var(--bg-surface);
+                    color: var(--text);
                     border-color: var(--brand-border);
                 }
 
-                .jwt-preset-btn i {
-                    font-size: 13px;
+                .jwtw-presets-trigger i {
+                    font-size: 14px;
                 }
 
-                .jwt-badge {
+                .jwtw-chevron {
+                    transition: transform 0.2s;
+                    font-size: 12px !important;
+                }
+
+                .jwtw-chevron.open {
+                    transform: rotate(180deg);
+                }
+
+                .jwtw-presets-menu {
+                    position: absolute;
+                    top: calc(100% + 6px);
+                    left: 0;
+                    min-width: 200px;
+                    background: var(--bg-card);
+                    border: 0.5px solid var(--border);
+                    border-radius: var(--radius-lg);
+                    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                    overflow: hidden;
+                    z-index: 100;
+                }
+
+                .jwtw-preset-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    width: 100%;
+                    padding: 10px 14px;
+                    border: none;
+                    background: transparent;
+                    color: var(--text-secondary);
+                    font-size: 13px;
+                    font-family: var(--font-sans);
+                    cursor: pointer;
+                    transition: background 0.12s;
+                    text-align: left;
+                }
+
+                .jwtw-preset-item:hover {
+                    background: var(--bg-surface);
+                    color: var(--text);
+                }
+
+                .jwtw-preset-item i {
+                    font-size: 14px;
+                    color: var(--text-tertiary);
+                }
+
+                /* Icon Button */
+                .jwtw-icon-btn {
                     display: inline-flex;
                     align-items: center;
                     gap: 5px;
-                    height: 26px;
+                    height: 32px;
+                    padding: 0 12px;
+                    border-radius: var(--radius-md);
+                    border: 0.5px solid var(--border);
+                    background: transparent;
+                    color: var(--text-secondary);
+                    font-size: 12px;
+                    font-weight: 500;
+                    font-family: var(--font-sans);
+                    cursor: pointer;
+                    transition: all 0.12s;
+                }
+
+                .jwtw-icon-btn:hover {
+                    background: var(--error-bg);
+                    color: #DC2626;
+                    border-color: #FCA5A5;
+                }
+
+                .jwtw-icon-btn i {
+                    font-size: 14px;
+                }
+
+                /* Badges */
+                .jwtw-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    height: 28px;
                     padding: 0 10px;
                     border-radius: 99px;
                     border: 0.5px solid;
                     font-size: 11px;
                     font-weight: 600;
+                    font-family: var(--font-sans);
                 }
 
-                .jwt-badge--success {
-                    background: #f0fdf4;
+                .jwtw-badge i {
+                    font-size: 12px;
+                }
+
+                .jwtw-badge--success {
+                    background: #F0FDF4;
                     color: #166534;
-                    border-color: #bbf7d0;
+                    border-color: #BBF7D0;
                 }
 
-                .jwt-badge--error {
-                    background: #fef2f2;
-                    color: #991b1b;
-                    border-color: #fecaca;
+                .jwtw-badge--error {
+                    background: #FEF2F2;
+                    color: #991B1B;
+                    border-color: #FECACA;
+                }
+
+                .jwtw-badge--warning {
+                    background: #FFFBEB;
+                    color: #92400E;
+                    border-color: #FDE68A;
                 }
 
                 @media (prefers-color-scheme: dark) {
-                    .jwt-badge--success {
-                        background: #052e16;
-                        color: #4ade80;
+                    .jwtw-badge--success {
+                        background: #052E16;
+                        color: #4ADE80;
                         border-color: #166534;
                     }
-                    .jwt-badge--error {
-                        background: #1c0a0a;
-                        color: #f87171;
-                        border-color: #7f1d1d;
+                    .jwtw-badge--error {
+                        background: #1C0A0A;
+                        color: #F87171;
+                        border-color: #7F1D1D;
+                    }
+                    .jwtw-badge--warning {
+                        background: #1E1A08;
+                        color: #FCD34D;
+                        border-color: #78350F;
                     }
                 }
 
-                .jwt-badge i {
+                /* Action Button */
+                .jwtw-action-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    height: 32px;
+                    padding: 0 14px;
+                    border-radius: var(--radius-md);
+                    border: 0.5px solid var(--border);
+                    background: var(--bg-card);
+                    color: var(--text-secondary);
+                    font-size: 12px;
+                    font-weight: 500;
+                    font-family: var(--font-sans);
+                    cursor: pointer;
+                    transition: all 0.12s;
+                }
+
+                .jwtw-action-btn:hover {
+                    background: var(--bg-surface);
+                    color: var(--text);
+                }
+
+                .jwtw-action-btn.copied {
+                    background: var(--brand-light);
+                    color: var(--brand);
+                    border-color: var(--brand-border);
+                }
+
+                .jwtw-action-btn i {
                     font-size: 13px;
                 }
 
-                .jwt-body {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 16px;
-                    padding: 16px;
-                }
-
-                .jwt-section {
+                /* Input Section */
+                .jwtw-input-section {
                     display: flex;
                     flex-direction: column;
                     gap: 8px;
+                    padding: 16px;
+                    border-bottom: 0.5px solid var(--border-faint);
                 }
 
-                .jwt-section-header {
+                .jwtw-input-header {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    gap: 8px;
+                    gap: 12px;
                 }
 
-                .jwt-section-title {
+                .jwtw-input-label {
                     display: flex;
                     align-items: center;
                     gap: 6px;
@@ -426,315 +586,328 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
                     color: var(--text-tertiary);
                 }
 
-                .jwt-section-title i {
-                    font-size: 14px;
+                .jwtw-input-label i {
+                    font-size: 13px;
                 }
 
-                .jwt-section-actions {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                }
-
-                .jwt-len {
-                    font-size: 10px;
+                .jwtw-input-meta {
+                    font-size: 11px;
                     color: var(--text-disabled);
                     font-family: var(--font-mono);
                 }
 
-                .jwt-icon-btn {
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 5px;
-                    border: none;
-                    background: transparent;
-                    color: var(--text-disabled);
-                    font-size: 13px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.1s;
-                }
-
-                .jwt-icon-btn:hover {
-                    background: var(--bg-surface);
-                    color: var(--text);
-                }
-
-                .jwt-input {
+                .jwtw-input {
                     width: 100%;
                     padding: 12px 14px;
-                    background: var(--bg-card);
+                    background: var(--bg-surface);
                     border: 0.5px solid var(--border);
-                    border-radius: var(--jwt-radius-md);
+                    border-radius: var(--radius-md);
                     font-family: var(--font-mono);
-                    font-size: 13px;
-                    line-height: 1.6;
+                    font-size: 12.5px;
+                    line-height: 1.65;
                     color: var(--text);
                     resize: vertical;
+                    min-height: 100px;
                     transition: border-color 0.12s;
                 }
 
-                .jwt-input:focus {
+                .jwtw-input:focus {
                     outline: none;
-                    border-color: var(--brand-border);
+                    border-color: var(--brand);
                 }
 
-                .jwt-input::placeholder {
+                .jwtw-input::placeholder {
                     color: var(--text-disabled);
                 }
 
-                .jwt-error {
+                /* Error */
+                .jwtw-error {
                     display: flex;
                     align-items: flex-start;
-                    gap: 7px;
-                    padding: 10px 12px;
-                    background: #fef2f2;
-                    border: 0.5px solid #fecaca;
-                    border-radius: var(--jwt-radius-md);
-                    color: #991b1b;
+                    gap: 8px;
+                    padding: 12px 14px;
+                    background: var(--error-bg);
+                    border: 0.5px solid #FECACA;
+                    border-radius: var(--radius-md);
+                    color: #991B1B;
                     font-size: 12px;
-                    line-height: 1.5;
                 }
 
                 @media (prefers-color-scheme: dark) {
-                    .jwt-error {
-                        background: #1c0a0a;
-                        border-color: #7f1d1d;
-                        color: #f87171;
+                    .jwtw-error {
+                        border-color: #7F1D1D;
+                        color: #F87171;
                     }
                 }
 
-                .jwt-error i {
-                    font-size: 14px;
+                .jwtw-error i {
+                    font-size: 15px;
                     flex-shrink: 0;
                     margin-top: 1px;
                 }
 
-                .jwt-empty {
+                .jwtw-error strong {
+                    display: block;
+                    font-weight: 600;
+                    margin-bottom: 4px;
+                }
+
+                .jwtw-error p {
+                    margin: 0;
+                    font-size: 11px;
+                    font-family: var(--font-mono);
+                }
+
+                /* Empty State */
+                .jwtw-empty {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    padding: 60px 24px;
-                    gap: 10px;
+                    padding: 80px 24px;
+                    gap: 12px;
                     text-align: center;
+                    flex: 1;
                 }
 
-                .jwt-empty-icon {
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 12px;
+                .jwtw-empty-icon {
+                    width: 64px;
+                    height: 64px;
+                    border-radius: 16px;
                     background: var(--bg-surface);
                     border: 0.5px solid var(--border);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 22px;
+                    font-size: 28px;
                     color: var(--text-disabled);
-                    margin-bottom: 6px;
+                    margin-bottom: 8px;
                 }
 
-                .jwt-empty-title {
-                    font-size: 14px;
+                .jwtw-empty-title {
+                    font-size: 16px;
                     font-weight: 600;
                     color: var(--text);
                     margin: 0;
                 }
 
-                .jwt-empty-desc {
-                    font-size: 12px;
+                .jwtw-empty-desc {
+                    font-size: 13px;
                     color: var(--text-tertiary);
-                    margin: 0;
-                    max-width: 320px;
+                    max-width: 420px;
                     line-height: 1.6;
+                    margin: 0;
                 }
 
-                .jwt-copy-btn {
+                .jwtw-empty-btn {
                     display: inline-flex;
                     align-items: center;
-                    gap: 5px;
-                    height: 26px;
-                    padding: 0 10px;
-                    border-radius: var(--jwt-radius-md);
-                    border: 0.5px solid var(--border);
-                    background: var(--bg-card);
-                    color: var(--text-secondary);
-                    font-size: 11px;
+                    gap: 6px;
+                    height: 36px;
+                    padding: 0 18px;
+                    margin-top: 8px;
+                    border-radius: var(--radius-md);
+                    border: none;
+                    background: var(--brand);
+                    color: white;
+                    font-size: 13px;
                     font-weight: 500;
+                    font-family: var(--font-sans);
                     cursor: pointer;
                     transition: all 0.12s;
                 }
 
-                .jwt-copy-btn:hover {
+                .jwtw-empty-btn:hover {
+                    background: var(--brand-hover);
+                    transform: translateY(-1px);
+                }
+
+                .jwtw-empty-btn i {
+                    font-size: 15px;
+                }
+
+                /* Tabs */
+                .jwtw-tabs {
+                    display: flex;
+                    gap: 0;
+                    padding: 0 16px;
+                    border-bottom: 0.5px solid var(--border);
+                    background: var(--bg-surface);
+                }
+
+                .jwtw-tab {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    height: 44px;
+                    padding: 0 16px;
+                    border: none;
+                    background: transparent;
+                    color: var(--text-tertiary);
+                    font-size: 12px;
+                    font-weight: 500;
+                    font-family: var(--font-sans);
+                    cursor: pointer;
+                    position: relative;
+                    transition: color 0.12s;
+                    white-space: nowrap;
+                }
+
+                .jwtw-tab:hover {
+                    color: var(--text);
+                }
+
+                .jwtw-tab.active {
+                    color: var(--text);
+                }
+
+                .jwtw-tab.active::after {
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 12px;
+                    right: 12px;
+                    height: 2px;
+                    background: var(--brand);
+                    border-radius: 2px 2px 0 0;
+                }
+
+                .jwtw-tab i {
+                    font-size: 14px;
+                }
+
+                /* Content */
+                .jwtw-content {
+                    flex: 1;
+                    min-height: 0;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .jwtw-panel {
+                    flex: 1;
+                    overflow: auto;
+                }
+
+                /* Raw JSON Panel */
+                .jwtw-raw {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 16px;
+                    padding: 16px;
+                }
+
+                .jwtw-raw-section {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+
+                .jwtw-raw-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    font-size: 11px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.08em;
+                    color: var(--text-tertiary);
+                }
+
+                .jwtw-copy-btn-sm {
+                    width: 24px;
+                    height: 24px;
+                    border: 0.5px solid var(--border);
+                    background: transparent;
+                    color: var(--text-disabled);
+                    cursor: pointer;
+                    border-radius: var(--radius-sm);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.12s;
+                }
+
+                .jwtw-copy-btn-sm:hover {
                     background: var(--bg-surface);
                     color: var(--text);
                 }
 
-                .jwt-copy-btn.--done {
+                .jwtw-copy-btn-sm.copied {
                     background: var(--brand-light);
                     color: var(--brand);
                     border-color: var(--brand-border);
                 }
 
-                .jwt-copy-btn i {
+                .jwtw-copy-btn-sm i {
                     font-size: 12px;
                 }
 
-                .jwt-card {
-                    background: var(--bg-card);
-                    border: 0.5px solid var(--border);
-                    border-radius: var(--jwt-radius-md);
-                    overflow: hidden;
-                }
-
-                .jwt-grid {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .jwt-row {
-                    display: grid;
-                    grid-template-columns: 140px 1fr;
-                    gap: 16px;
-                    padding: 12px 14px;
-                    border-bottom: 0.5px solid var(--border);
-                    transition: background 0.1s;
-                }
-
-                .jwt-row:last-child {
-                    border-bottom: none;
-                }
-
-                .jwt-row:hover {
-                    background: var(--bg-surface);
-                }
-
-                .jwt-key {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 2px;
-                    font-family: var(--font-mono);
-                    font-size: 12px;
-                    font-weight: 600;
-                    color: var(--text-secondary);
-                }
-
-                .jwt-hint {
-                    font-family: var(--font-sans);
-                    font-size: 10px;
-                    font-weight: 500;
-                    color: var(--text-disabled);
-                    text-transform: uppercase;
-                    letter-spacing: 0.04em;
-                }
-
-                .jwt-value {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-                    font-family: var(--font-mono);
-                    font-size: 12px;
-                    color: var(--text);
-                    word-break: break-all;
-                }
-
-                .jwt-timestamp {
-                    font-size: 11px;
-                    color: var(--text-tertiary);
-                    font-weight: 500;
-                }
-
-                .jwt-null,
-                .jwt-undefined {
-                    color: var(--text-disabled);
-                    font-style: normal;
-                }
-
-                .jwt-bool {
-                    color: #d97706;
-                }
-
-                .jwt-num {
-                    color: #059669;
-                }
-
-                .jwt-str {
-                    color: var(--brand);
-                }
-
-                .jwt-arr,
-                .jwt-obj {
-                    color: var(--text-tertiary);
-                }
-
-                @media (prefers-color-scheme: dark) {
-                    .jwt-bool {
-                        color: #fbbf24;
-                    }
-                    .jwt-num {
-                        color: #34d399;
-                    }
-                }
-
-                .jwt-signature {
+                .jwtw-raw-code {
+                    margin: 0;
                     padding: 14px 16px;
-                    background: var(--bg-card);
+                    background: var(--bg-surface);
                     border: 0.5px solid var(--border);
-                    border-radius: var(--jwt-radius-md);
+                    border-radius: var(--radius-md);
                     font-family: var(--font-mono);
                     font-size: 12px;
+                    line-height: 1.7;
                     color: var(--text);
-                    word-break: break-all;
-                    line-height: 1.6;
+                    overflow-x: auto;
+                    white-space: pre;
                 }
 
-                .jwt-footer {
+                .jwtw-raw-sig {
+                    word-break: break-all;
+                    white-space: pre-wrap;
+                }
+
+                /* Footer */
+                .jwtw-footer {
                     display: flex;
                     align-items: center;
                     gap: 7px;
-                    padding: 9px 14px;
+                    padding: 10px 16px;
                     background: var(--bg-surface);
                     border-top: 0.5px solid var(--border);
                     font-size: 11px;
                     color: var(--text-disabled);
+                    font-family: var(--font-sans);
                 }
 
-                .jwt-footer i {
+                .jwtw-footer i {
                     font-size: 13px;
                 }
 
+                /* Responsive */
                 @media (max-width: 768px) {
-                    .jwt-cmd {
-                        padding: 10px 12px;
-                    }
-
-                    .jwt-cmd-label {
+                    .jwtw-btn-label {
                         display: none;
                     }
 
-                    .jwt-preset-label {
+                    .jwtw-tabs {
+                        overflow-x: auto;
+                        scrollbar-width: none;
+                    }
+
+                    .jwtw-tabs::-webkit-scrollbar {
                         display: none;
                     }
 
-                    .jwt-preset-btn {
-                        padding: 0 8px;
-                        min-width: 32px;
-                        justify-content: center;
+                    .jwtw-tab {
+                        padding: 0 12px;
                     }
 
-                    .jwt-body {
-                        padding: 12px;
+                    .jwtw-empty {
+                        padding: 60px 20px;
                     }
+                }
 
-                    .jwt-row {
-                        grid-template-columns: 1fr;
-                        gap: 8px;
-                    }
-
-                    .jwt-empty {
-                        padding: 40px 20px;
+                @media (prefers-reduced-motion: reduce) {
+                    * {
+                        transition: none !important;
                     }
                 }
             `}</style>

@@ -95,7 +95,7 @@ export default function ColorHistory({ history, onClear, onRestore }: ColorHisto
                     overflow: hidden;
                 }
 
-                /* ── Header ── */
+                /*  Header  */
                 .ch-header {
                     display: flex;
                     align-items: center;
@@ -169,7 +169,7 @@ export default function ColorHistory({ history, onClear, onRestore }: ColorHisto
                     }
                 }
 
-                /* ── List ── */
+                /*  List  */
                 .ch-list {
                     flex: 1;
                     overflow: auto;
@@ -262,7 +262,7 @@ export default function ColorHistory({ history, onClear, onRestore }: ColorHisto
                     border-color: var(--brand-border);
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .ch-empty {
                     flex: 1;
                     display: flex;
@@ -303,7 +303,7 @@ export default function ColorHistory({ history, onClear, onRestore }: ColorHisto
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .ch-list {
                         padding: 12px;

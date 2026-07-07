@@ -56,7 +56,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
     return (
         <>
             <div className="cc-root">
-                {/* ── Top Chrome ── */}
+                {/*  Top Chrome  */}
                 <div className="cc-chrome">
                     <div className="cc-chrome-left">
                         <div className="cc-title">
@@ -83,7 +83,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     </div>
                 </div>
 
-                {/* ── View Tabs ── */}
+                {/*  View Tabs  */}
                 <div className="cc-tabs-bar">
                     <nav className="cc-tabs" role="tablist">
                         {VIEW_TABS.map((tab) => (
@@ -105,7 +105,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     </nav>
                 </div>
 
-                {/* ── Options Bar (Single view only) ── */}
+                {/*  Options Bar (Single view only)  */}
                 {viewTab === "single" && (
                     <div className="cc-options-bar">
                         <div className="cc-options-group">
@@ -158,7 +158,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     </div>
                 )}
 
-                {/* ── Tab Content ── */}
+                {/*  Tab Content  */}
                 <div className="cc-tab-content">
                     {viewTab === "single" && (
                         <CasePreview
@@ -197,7 +197,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     )}
                 </div>
 
-                {/* ── Footer ── */}
+                {/*  Footer  */}
                 <div className="cc-footer">
                     <i className="ti ti-shield-lock" />
                     <span>Everything runs in your browser — no data ever leaves this page.</span>
@@ -219,7 +219,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     min-height: 600px;
                 }
 
-                /* ── Chrome ── */
+                /*  Chrome  */
                 .cc-chrome {
                     display: flex;
                     align-items: center;
@@ -295,7 +295,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     cursor: not-allowed;
                 }
 
-                /* ── Tabs ── */
+                /*  Tabs  */
                 .cc-tabs-bar {
                     border-bottom: 0.5px solid var(--border);
                     background: var(--bg-surface);
@@ -359,7 +359,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     font-weight: 600;
                 }
 
-                /* ── Options Bar ── */
+                /*  Options Bar  */
                 .cc-options-bar {
                     display: flex;
                     align-items: center;
@@ -464,7 +464,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     color: var(--text-secondary);
                 }
 
-                /* ── Tab Content ── */
+                /*  Tab Content  */
                 .cc-tab-content {
                     flex: 1;
                     display: flex;
@@ -473,7 +473,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     overflow: hidden;
                 }
 
-                /* ── Footer ── */
+                /*  Footer  */
                 .cc-footer {
                     display: flex;
                     align-items: center;
@@ -489,7 +489,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                     font-size: 13px;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 .cc-label {
                     display: inline;
                 }

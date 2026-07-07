@@ -87,7 +87,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
     return (
         <>
             <div className="cpal-root">
-                {/* ── Palette Type Selector ── */}
+                {/*  Palette Type Selector  */}
                 <div className="cpal-selector">
                     <div className="cpal-selector-header">
                         <div className="cpal-selector-label">
@@ -113,7 +113,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
                     </div>
                 </div>
 
-                {/* ── Palette Display ── */}
+                {/*  Palette Display  */}
                 <div className="cpal-display">
                     <div className="cpal-colors">
                         {palette.map((color, idx) => (
@@ -163,7 +163,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
                     </div>
                 </div>
 
-                {/* ── Export Options ── */}
+                {/*  Export Options  */}
                 <div className="cpal-export">
                     <div className="cpal-export-header">
                         <i className="ti ti-download" />
@@ -228,7 +228,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
                     overflow: auto;
                 }
 
-                /* ── Selector ── */
+                /*  Selector  */
                 .cpal-selector {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -304,7 +304,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
                     border-color: var(--brand-border);
                 }
 
-                /* ── Display ── */
+                /*  Display  */
                 .cpal-display {
                     flex: 1;
                     background: var(--bg-card);
@@ -406,7 +406,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
                     border-color: var(--brand-border);
                 }
 
-                /* ── Export ── */
+                /*  Export  */
                 .cpal-export {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -464,7 +464,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
                     border-color: var(--brand-border);
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .cpal-root {
                         padding: 12px;

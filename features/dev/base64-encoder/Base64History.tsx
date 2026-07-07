@@ -1,7 +1,7 @@
 // features/dev/base64-encoder/Base64History.tsx
 "use client";
 
-import { formatBytes } from "./utils";
+import { formatBytes } from "@/utils";
 import * as store from "./base64Store";
 
 interface Base64HistoryProps {
@@ -125,7 +125,7 @@ export default function Base64History({ history, onClear, onRestore }: Base64His
                     overflow: hidden;
                 }
 
-                /* ── Header ── */
+                /*  Header  */
                 .bh-header {
                     display: flex;
                     align-items: center;
@@ -199,7 +199,7 @@ export default function Base64History({ history, onClear, onRestore }: Base64His
                     }
                 }
 
-                /* ── List ── */
+                /*  List  */
                 .bh-list {
                     flex: 1;
                     overflow: auto;
@@ -341,7 +341,7 @@ export default function Base64History({ history, onClear, onRestore }: Base64His
                     font-weight: 500;
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .bh-empty {
                     flex: 1;
                     display: flex;
@@ -382,7 +382,7 @@ export default function Base64History({ history, onClear, onRestore }: Base64His
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .bh-list {
                         padding: 10px;

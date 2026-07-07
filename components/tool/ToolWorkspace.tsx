@@ -3,6 +3,10 @@ import type { ComponentType } from "react";
 import type { Tool } from "@/lib/tools";
 import JsonFormatterWorkspace from "@/features/dev/json-formatter/Workspace";
 import QrGeneratorWorkspace from "@/features/social/qr-generator/Workspace";
+import OgPreviewWorkspace from "@/features/social/og-preview/Workspace";
+import MetaTagGeneratorWorkspace from "@/features/social/meta-tag-generator/Workspace";
+import HashtagGeneratorWorkspace from "@/features/social/hashtag-generator/Workspace";
+import TweetGeneratorWorkspace from "@/features/social/tweet-generator/Workspace";
 import Base64Workspace from "@/features/dev/base64-encoder/Workspace";
 import UrlEncoderWorkspace from "@/features/dev/url-encoder/Workspace";
 import UuidGeneratorWorkspace from "@/features/dev/uuid-generator/Workspace";
@@ -27,15 +31,14 @@ type ToolWorkspaceProps = {
 };
 
 const WORKSPACES: Record<string, ComponentType<{ tool: Tool }>> = {
-  // Existing tools
+  // Developer tools
   "json-formatter": JsonFormatterWorkspace,
-  "qr-generator": QrGeneratorWorkspace,
+  "json-validator": JSONValidatorWorkspace,
+  "json-minifier": JSONMinifierWorkspace,
   "base64": Base64Workspace,
   "url-encoder": UrlEncoderWorkspace,
   "uuid-generator": UuidGeneratorWorkspace,
   "password-generator": PasswordGeneratorWorkspace,
-
-  // Developer tools
   "regex-tester": RegexTesterWorkspace,
   "jwt-decoder": JwtDecoderWorkspace,
   "hash-generator": HashGeneratorWorkspace,
@@ -45,11 +48,16 @@ const WORKSPACES: Record<string, ComponentType<{ tool: Tool }>> = {
   "diff-checker": DiffCheckerWorkspace,
   "random-string-generator": RandomStringGeneratorWorkspace,
   "color-converter": ColorConverterWorkspace,
-  "json-validator": JSONValidatorWorkspace,
-  "json-minifier": JSONMinifierWorkspace,
   "html-formatter": HTMLFormatterWorkspace,
   "css-minifier": CSSMinifierWorkspace,
   "js-minifier": JSMinifierWorkspace,
+
+  // Social tools
+  "qr-generator": QrGeneratorWorkspace,
+  "og-preview": OgPreviewWorkspace,
+  "meta-tag-generator": MetaTagGeneratorWorkspace,
+  "hashtag-generator": HashtagGeneratorWorkspace,
+  "tweet-generator": TweetGeneratorWorkspace,
 };
 
 export default function ToolWorkspace({ tool }: ToolWorkspaceProps) {
@@ -73,63 +81,56 @@ export default function ToolWorkspace({ tool }: ToolWorkspaceProps) {
       </div>
 
       <style>{`
-                .tw-root {
-                    background: var(--bg-card);
-                    border: 0.5px solid var(--border);
-                    border-radius: var(--radius-xl);
-                    min-height: 480px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .tw-placeholder {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    text-align: center;
-                    padding: 48px 32px;
-                    gap: 12px;
-                }
-
-                .tw-icon {
-                    width: 56px;
-                    height: 56px;
-                    border-radius: 16px;
-                    background: var(--bg-surface);
-                    border: 0.5px solid var(--border);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 24px;
-                    color: var(--text-secondary);
-                    margin-bottom: 4px;
-                }
-
-                .tw-title {
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: var(--text);
-                    font-family: var(--font-sans);
-                    margin: 0;
-                    letter-spacing: -0.3px;
-                }
-
-                .tw-desc {
-                    font-size: 13px;
-                    color: var(--text-secondary);
-                    font-family: var(--font-sans);
-                    margin: 0;
-                    line-height: 1.6;
-                    max-width: 320px;
-                }
-
-                @media (max-width: 768px) {
-                    .tw-root {
-                        min-height: 360px;
-                    }
-                }
-            `}</style>
+        .tw-root {
+          background: var(--bg-card);
+          border: 0.5px solid var(--border);
+          border-radius: var(--radius-xl);
+          min-height: 480px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .tw-placeholder {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          padding: 48px 32px;
+          gap: 12px;
+        }
+        .tw-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 16px;
+          background: var(--bg-surface);
+          border: 0.5px solid var(--border);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          color: var(--text-secondary);
+          margin-bottom: 4px;
+        }
+        .tw-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--text);
+          font-family: var(--font-sans);
+          margin: 0;
+          letter-spacing: -0.3px;
+        }
+        .tw-desc {
+          font-size: 13px;
+          color: var(--text-secondary);
+          font-family: var(--font-sans);
+          margin: 0;
+          line-height: 1.6;
+          max-width: 320px;
+        }
+        @media (max-width: 768px) {
+          .tw-root { min-height: 360px; }
+        }
+      `}</style>
     </>
   );
 }

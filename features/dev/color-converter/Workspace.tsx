@@ -57,7 +57,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
     return (
         <>
             <div className="cc-root">
-                {/* ── Top Chrome ── */}
+                {/*  Top Chrome  */}
                 <div className="cc-chrome">
                     <div className="cc-chrome-left">
                         <div className="cc-title">
@@ -88,7 +88,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     </div>
                 </div>
 
-                {/* ── View Tabs ── */}
+                {/*  View Tabs  */}
                 <div className="cc-tabs-bar">
                     <nav className="cc-tabs" role="tablist">
                         {VIEW_TABS.map((tab) => (
@@ -110,7 +110,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     </nav>
                 </div>
 
-                {/* ── Tab Content ── */}
+                {/*  Tab Content  */}
                 <div className="cc-tab-content">
                     {viewTab === "convert" && (
                         <ColorPreview
@@ -145,7 +145,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     )}
                 </div>
 
-                {/* ── Footer ── */}
+                {/*  Footer  */}
                 <div className="cc-footer">
                     <i className="ti ti-shield-lock" />
                     <span>Everything runs in your browser — no data ever leaves this page.</span>
@@ -167,7 +167,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     min-height: 600px;
                 }
 
-                /* ── Chrome ── */
+                /*  Chrome  */
                 .cc-chrome {
                     display: flex;
                     align-items: center;
@@ -243,7 +243,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
                 }
 
-                /* ── Tabs ── */
+                /*  Tabs  */
                 .cc-tabs-bar {
                     border-bottom: 0.5px solid var(--border);
                     background: var(--bg-surface);
@@ -307,7 +307,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     font-weight: 600;
                 }
 
-                /* ── Tab Content ── */
+                /*  Tab Content  */
                 .cc-tab-content {
                     flex: 1;
                     display: flex;
@@ -316,7 +316,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     overflow: hidden;
                 }
 
-                /* ── Footer ── */
+                /*  Footer  */
                 .cc-footer {
                     display: flex;
                     align-items: center;
@@ -332,7 +332,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     font-size: 13px;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .cc-chrome {
                         padding: 10px 12px;

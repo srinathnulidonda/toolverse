@@ -64,7 +64,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
     return (
         <>
             <div className="cs-root">
-                {/* ── Controls ── */}
+                {/*  Controls  */}
                 <div className="cs-controls">
                     <div className="cs-type-selector">
                         {TYPES.map((type) => (
@@ -104,7 +104,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     </div>
                 </div>
 
-                {/* ── Color Grid ── */}
+                {/*  Color Grid  */}
                 <div className="cs-display">
                     <div className="cs-display-header">
                         <div className="cs-display-label">
@@ -167,7 +167,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     </div>
                 </div>
 
-                {/* ── CSS Export ── */}
+                {/*  CSS Export  */}
                 <div className="cs-export">
                     <div className="cs-export-header">
                         <i className="ti ti-file-code" />
@@ -204,7 +204,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     overflow: auto;
                 }
 
-                /* ── Controls ── */
+                /*  Controls  */
                 .cs-controls {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -336,7 +336,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     padding: 0 2px;
                 }
 
-                /* ── Display ── */
+                /*  Display  */
                 .cs-display {
                     flex: 1;
                     background: var(--bg-card);
@@ -485,7 +485,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     border-color: var(--brand-border);
                 }
 
-                /* ── Export ── */
+                /*  Export  */
                 .cs-export {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -551,7 +551,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     color: var(--brand-text);
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .cs-root {
                         padding: 12px;

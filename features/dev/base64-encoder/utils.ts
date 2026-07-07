@@ -240,12 +240,8 @@ export function wrapLines(b64: string, width = 76): string {
     return lines.join("\n");
 }
 
-export function formatBytes(n: number): string {
-    if (n < 1024) return `${n} B`;
-    if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
-    if (n < 1024 * 1024 * 1024) return `${(n / 1024 / 1024).toFixed(2)} MB`;
-    return `${(n / 1024 / 1024 / 1024).toFixed(2)} GB`;
-}
+// Import shared utilities
+import { formatBytes, copyToClipboard, downloadBlob } from '@/utils';
 
 /*  Detection  */
 
@@ -295,7 +291,6 @@ export function extensionForMime(mime: string): string {
         "image/png": "png",
         "image/gif": "gif",
         "image/webp": "webp",
-        "image/svg+xml": "svg",
         "application/pdf": "pdf",
         "application/zip": "zip",
         "text/plain": "txt",
@@ -307,14 +302,6 @@ export function extensionForMime(mime: string): string {
 
 /*  File I/O  */
 
-export function downloadBlob(blob: Blob, filename: string) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-}
 
 export async function readFileAsBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {

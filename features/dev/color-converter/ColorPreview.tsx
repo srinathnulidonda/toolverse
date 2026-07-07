@@ -52,7 +52,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
     return (
         <>
             <div className="cp-root">
-                {/* ── Input Section ── */}
+                {/*  Input Section  */}
                 <div className="cp-input-section">
                     <div className="cp-input-row">
                         <div className="cp-picker-group">
@@ -88,7 +88,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
 
                 {colorData ? (
                     <div className="cp-content">
-                        {/* ── Preview Card ── */}
+                        {/*  Preview Card  */}
                         <div className="cp-preview-card">
                             <div
                                 className="cp-preview-swatch"
@@ -101,7 +101,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                             </div>
                         </div>
 
-                        {/* ── Format Cards ── */}
+                        {/*  Format Cards  */}
                         <div className="cp-formats">
                             {/* HEX */}
                             <div className="cp-format-card">
@@ -259,7 +259,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                             </div>
                         </div>
 
-                        {/* ── Accessibility Section ── */}
+                        {/*  Accessibility Section  */}
                         <div className="cp-section">
                             <div className="cp-section-header">
                                 <i className="ti ti-accessible" />
@@ -342,7 +342,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     overflow: auto;
                 }
 
-                /* ── Input Section ── */
+                /*  Input Section  */
                 .cp-input-section {
                     display: flex;
                     flex-direction: column;
@@ -443,14 +443,14 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     flex-shrink: 0;
                 }
 
-                /* ── Content ── */
+                /*  Content  */
                 .cp-content {
                     display: flex;
                     flex-direction: column;
                     gap: 16px;
                 }
 
-                /* ── Preview Card ── */
+                /*  Preview Card  */
                 .cp-preview-card {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -492,7 +492,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
                 }
 
-                /* ── Formats ── */
+                /*  Formats  */
                 .cp-formats {
                     display: flex;
                     flex-direction: column;
@@ -650,7 +650,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     font-weight: 600;
                 }
 
-                /* ── Section ── */
+                /*  Section  */
                 .cp-section {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -676,7 +676,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     font-size: 12px;
                 }
 
-                /* ── Accessibility ── */
+                /*  Accessibility  */
                 .cp-contrast-grid {
                     display: grid;
                     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -764,7 +764,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     }
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .cp-empty {
                     flex: 1;
                     display: flex;
@@ -805,7 +805,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .cp-root {
                         padding: 12px;

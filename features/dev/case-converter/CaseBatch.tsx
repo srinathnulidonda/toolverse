@@ -122,7 +122,7 @@ export default function CaseBatch({
     return (
         <>
             <div className="cb-root">
-                {/* ── Input Section ── */}
+                {/*  Input Section  */}
                 <div className="cb-section">
                     <div className="cb-section-header">
                         <div className="cb-section-label">
@@ -175,7 +175,7 @@ export default function CaseBatch({
                     </div>
                 </div>
 
-                {/* ── Format Selection ── */}
+                {/*  Format Selection  */}
                 <div className="cb-format-section">
                     <div className="cb-format-header">
                         <span className="cb-format-label">Output Formats:</span>
@@ -202,7 +202,7 @@ export default function CaseBatch({
                     </div>
                 </div>
 
-                {/* ── Results Table ── */}
+                {/*  Results Table  */}
                 {items.length > 0 && (
                     <div className="cb-results-section">
                         <div className="cb-results-header">
@@ -290,7 +290,7 @@ export default function CaseBatch({
                     </div>
                 )}
 
-                {/* ── Empty State ── */}
+                {/*  Empty State  */}
                 {items.length === 0 && !batchInput && (
                     <div className="cb-empty">
                         <div className="cb-empty-icon">
@@ -315,7 +315,7 @@ export default function CaseBatch({
                     overflow: auto;
                 }
 
-                /* ── Section ── */
+                /*  Section  */
                 .cb-section {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -455,7 +455,7 @@ export default function CaseBatch({
                     font-weight: 500;
                 }
 
-                /* ── Format Selection ── */
+                /*  Format Selection  */
                 .cb-format-section {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -513,7 +513,7 @@ export default function CaseBatch({
                     font-family: var(--font-mono);
                 }
 
-                /* ── Results Section ── */
+                /*  Results Section  */
                 .cb-results-section {
                     flex: 1;
                     display: flex;
@@ -684,7 +684,7 @@ export default function CaseBatch({
                     border-color: var(--brand-border);
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .cb-empty {
                     flex: 1;
                     display: flex;
@@ -725,7 +725,7 @@ export default function CaseBatch({
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .cb-root {
                         padding: 12px;

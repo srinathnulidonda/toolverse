@@ -28,7 +28,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
     return (
         <>
             <div className="ca-root">
-                {/* ── Input Section ── */}
+                {/*  Input Section  */}
                 <div className="ca-input-section">
                     <div className="ca-input-header">
                         <div className="ca-input-label">
@@ -55,7 +55,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     />
                 </div>
 
-                {/* ── Analysis Results ── */}
+                {/*  Analysis Results  */}
                 {analysis ? (
                     <div className="ca-content">
                         {/* Detection Card */}
@@ -241,7 +241,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     overflow: auto;
                 }
 
-                /* ── Input Section ── */
+                /*  Input Section  */
                 .ca-input-section {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -311,7 +311,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     font-family: var(--font-sans);
                 }
 
-                /* ── Content ── */
+                /*  Content  */
                 .ca-content {
                     display: flex;
                     flex-direction: column;
@@ -350,7 +350,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     gap: 14px;
                 }
 
-                /* ── Detection ── */
+                /*  Detection  */
                 .ca-detection {
                     display: flex;
                     flex-direction: column;
@@ -406,7 +406,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     opacity: 0.8;
                 }
 
-                /* ── Suggestions ── */
+                /*  Suggestions  */
                 .ca-suggestions {
                     padding: 12px;
                     background: #EFF6FF;
@@ -470,7 +470,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     left: 0;
                 }
 
-                /* ── Statistics ── */
+                /*  Statistics  */
                 .ca-stats-grid {
                     display: grid;
                     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -525,7 +525,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     letter-spacing: 0.06em;
                 }
 
-                /* ── Words ── */
+                /*  Words  */
                 .ca-words {
                     display: flex;
                     flex-direction: column;
@@ -569,7 +569,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     font-family: var(--font-mono);
                 }
 
-                /* ── Variables ── */
+                /*  Variables  */
                 .ca-variables {
                     display: flex;
                     flex-direction: column;
@@ -635,7 +635,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     border-color: var(--brand-border);
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .ca-empty {
                     flex: 1;
                     display: flex;
@@ -676,7 +676,7 @@ export default function CaseAnalyzer({ input, onInputChange }: CaseAnalyzerProps
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .ca-root {
                         padding: 12px;

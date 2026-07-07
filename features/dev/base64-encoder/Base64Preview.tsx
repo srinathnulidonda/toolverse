@@ -2,7 +2,8 @@
 "use client";
 
 import React, { useMemo, useEffect, useState } from "react";
-import { detectMime, extensionForMime, formatBytes, looksBinary, readFileAsBase64 } from "./utils";
+import { detectMime, extensionForMime, looksBinary, readFileAsBase64 } from "./utils";
+import { formatBytes } from "@/utils";
 import type { Mode, InputSource } from "./utils";
 
 interface Base64PreviewProps {
@@ -72,7 +73,7 @@ export default function Base64Preview({
     return (
         <>
             <div className="bp-root">
-                {/* ── Mobile Switcher ── */}
+                {/*  Mobile Switcher  */}
                 <div className="bp-mobile-tabs">
                     <button
                         type="button"
@@ -93,7 +94,7 @@ export default function Base64Preview({
                     </button>
                 </div>
 
-                {/* ── Panels ── */}
+                {/*  Panels  */}
                 <div className="bp-panels">
                     {/* Input Panel */}
                     <div className={`bp-panel${mobileView === "input" ? " mobile-visible" : " mobile-hidden"}`}>
@@ -284,7 +285,7 @@ export default function Base64Preview({
                     </div>
                 </div>
 
-                {/* ── Status Bar ── */}
+                {/*  Status Bar  */}
                 {hasContent && (
                     <div className="bp-status">
                         <div className="bp-status-badges">
@@ -335,7 +336,7 @@ export default function Base64Preview({
                     overflow: hidden;
                 }
 
-                /* ── Mobile Tabs ── */
+                /*  Mobile Tabs  */
                 .bp-mobile-tabs {
                     display: none;
                     border-bottom: 0.5px solid var(--border);
@@ -384,7 +385,7 @@ export default function Base64Preview({
                     background: var(--brand);
                 }
 
-                /* ── Panels ── */
+                /*  Panels  */
                 .bp-panels {
                     flex: 1;
                     display: grid;
@@ -455,7 +456,7 @@ export default function Base64Preview({
                     overflow: hidden;
                 }
 
-                /* ── Divider ── */
+                /*  Divider  */
                 .bp-divider {
                     width: 1px;
                     background: var(--border);
@@ -478,7 +479,7 @@ export default function Base64Preview({
                     font-size: 12px;
                 }
 
-                /* ── Textarea ── */
+                /*  Textarea  */
                 .bp-textarea {
                     flex: 1;
                     margin: 0;
@@ -498,7 +499,7 @@ export default function Base64Preview({
                     color: var(--text-disabled);
                 }
 
-                /* ── Output ── */
+                /*  Output  */
                 .bp-output {
                     flex: 1;
                     margin: 0;
@@ -514,7 +515,7 @@ export default function Base64Preview({
                     word-break: break-all;
                 }
 
-                /* ── Dropzone ── */
+                /*  Dropzone  */
                 .bp-dropzone {
                     flex: 1;
                     display: flex;
@@ -578,7 +579,7 @@ export default function Base64Preview({
                     margin: 0;
                 }
 
-                /* ── File Card ── */
+                /*  File Card  */
                 .bp-file-card {
                     display: flex;
                     align-items: center;
@@ -652,7 +653,7 @@ export default function Base64Preview({
                     color: var(--text);
                 }
 
-                /* ── Preview ── */
+                /*  Preview  */
                 .bp-preview {
                     padding: 14px;
                     border-bottom: 0.5px solid var(--border-faint);
@@ -679,7 +680,7 @@ export default function Base64Preview({
                     font-family: var(--font-mono);
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .bp-empty {
                     flex: 1;
                     display: flex;
@@ -719,7 +720,7 @@ export default function Base64Preview({
                     max-width: 300px;
                 }
 
-                /* ── Binary Message ── */
+                /*  Binary Message  */
                 .bp-binary-msg {
                     flex: 1;
                     display: flex;
@@ -759,7 +760,7 @@ export default function Base64Preview({
                     max-width: 300px;
                 }
 
-                /* ── Error Bar ── */
+                /*  Error Bar  */
                 .bp-error-bar {
                     display: flex;
                     gap: 10px;
@@ -801,7 +802,7 @@ export default function Base64Preview({
                     color: var(--text-secondary);
                 }
 
-                /* ── Status Bar ── */
+                /*  Status Bar  */
                 .bp-status {
                     display: flex;
                     align-items: center;
@@ -898,7 +899,7 @@ export default function Base64Preview({
                     color: var(--text-disabled);
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .bp-mobile-tabs {
                         display: flex;

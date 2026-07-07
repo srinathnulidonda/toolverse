@@ -101,7 +101,7 @@ export default function CaseHistory({ history, onClear, onRestore }: CaseHistory
                     overflow: hidden;
                 }
 
-                /* ── Header ── */
+                /*  Header  */
                 .ch-header {
                     display: flex;
                     align-items: center;
@@ -175,7 +175,7 @@ export default function CaseHistory({ history, onClear, onRestore }: CaseHistory
                     }
                 }
 
-                /* ── List ── */
+                /*  List  */
                 .ch-list {
                     flex: 1;
                     overflow: auto;
@@ -301,7 +301,7 @@ export default function CaseHistory({ history, onClear, onRestore }: CaseHistory
                     line-height: 1.6;
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .ch-empty {
                     flex: 1;
                     display: flex;
@@ -342,7 +342,7 @@ export default function CaseHistory({ history, onClear, onRestore }: CaseHistory
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .ch-list {
                         padding: 12px;

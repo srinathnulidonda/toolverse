@@ -88,6 +88,45 @@ export default function PrivacyPage() {
         document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
+    // Safely convert HTML string to React elements for supported tags
+    function parseHtmlToElements(text: string): React.ReactNode {
+        // Handle line breaks
+        if (text.includes('<br />')) {
+            const parts = text.split('<br />');
+            return parts.map((part, index) => [
+                parseHtmlToElements(part),
+                index < parts.length - 1 && <br key={`br-${index}`} />
+            ]).flat();
+        }
+
+        // Handle strong tags
+        if (text.includes('<strong>') && text.includes('</strong>')) {
+            const parts = text.split(/(<\/?strong>)/g);
+            return parts.map((part, index) => {
+                if (part === '<strong>') {
+                    return <strong key={`strong-open-${index}`}></strong>;
+                }
+                if (part === '</strong>') {
+                    return null;
+                }
+                return parseHtmlToElements(part); // Recursively handle nested tags
+            }).flat();
+        }
+
+        // If no special tags, return escaped text
+        return escapeHtml(text);
+    }
+
+    // Helper function to escape HTML text content
+    function escapeHtml(text: string): string {
+        return text
+            .replace(/&/g, '&')
+            .replace(/</g, '<')
+            .replace(/>/g, '>')
+            .replace(/"/g, '"')
+            .replace(/'/g, '&#039;');
+    }
+
     return (
         <div className={styles.privacyPage}>
             <section className={styles.privacyHero}>
@@ -192,7 +231,9 @@ export default function PrivacyPage() {
                                     </div>
                                     <div className={styles.privacySectionContent}>
                                         {section.content.split("\n\n").map((para, i) => (
-                                            <p key={i} dangerouslySetInnerHTML={{ __html: para }} />
+                                            <p key={i}>
+                                                {parseHtmlToElements(para)}
+                                            </p>
                                         ))}
                                     </div>
                                 </section>

@@ -3,8 +3,8 @@
 > Free, privacy-first utility hub. PDF · Images · Finance · Dev · Social · Resume  
 > No sign-up · No uploads · Files stay in your browser · Forever free
 
-**Live:** `toolsversee.vercel.app` → [Link](https://toolsversee.vercel.app/)  
-**Docs:** `toolsversee.vercel.app/docs` or separate — see below  
+**Live:** `toolverse.vercel.app` → [Link](https://toolverse.vercel.app/)  
+**Docs:** `toolverse.vercel.app/docs` or separate — see below  
 **Status:** Phase 1 in progress — Compress PDF live, 5 more tools shipping soon
 
 ---
@@ -42,12 +42,12 @@ Full architecture, tool list, database schema, API design, SEO strategy, monetiz
 ```bash
 git clone <repo-url>
 cd toolverse
-npm install
-cp .env.example .env.local
-# fill in all values (see Environment below)
-npm run dev
+pnpm install
+# No .env.example file; create .env.local based on the Environment vars below
+pnpm dev
 # → http://localhost:3000
 ```
+Note: Create a `.env.local` file in the root and fill in the variables as described in the Environment section below.
 
 ---
 

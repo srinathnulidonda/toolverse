@@ -139,7 +139,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
     return (
         <>
             <div className="b64-root">
-                {/* ── Top Chrome ── */}
+                {/*  Top Chrome  */}
                 <div className="b64-chrome">
                     <div className="b64-chrome-left">
                         <div className="b64-pill-group">
@@ -239,7 +239,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     </div>
                 </div>
 
-                {/* ── View Tabs ── */}
+                {/*  View Tabs  */}
                 <div className="b64-tabs-bar">
                     <nav className="b64-tabs" role="tablist">
                         {VIEW_TABS.map((tab) => (
@@ -261,7 +261,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     </nav>
                 </div>
 
-                {/* ── Options Bar (Single view only) ── */}
+                {/*  Options Bar (Single view only)  */}
                 {viewTab === "single" && (
                     <div className="b64-options-bar">
                         <label className="b64-toggle">
@@ -332,7 +332,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     </div>
                 )}
 
-                {/* ── Tab Content ── */}
+                {/*  Tab Content  */}
                 <div className="b64-tab-content">
                     {viewTab === "single" && (
                         <Base64Preview
@@ -379,7 +379,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     )}
                 </div>
 
-                {/* ── Footer ── */}
+                {/*  Footer  */}
                 <div className="b64-footer">
                     <i className="ti ti-shield-lock" />
                     <span>Everything runs in your browser — no data ever leaves this page.</span>
@@ -401,7 +401,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     min-height: 600px;
                 }
 
-                /* ── Chrome ── */
+                /*  Chrome  */
                 .b64-chrome {
                     display: flex;
                     align-items: center;
@@ -542,7 +542,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     border-color: var(--brand-border);
                 }
 
-                /* ── Tabs Bar ── */
+                /*  Tabs Bar  */
                 .b64-tabs-bar {
                     border-bottom: 0.5px solid var(--border);
                     background: var(--bg-surface);
@@ -606,7 +606,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     font-weight: 600;
                 }
 
-                /* ── Options Bar ── */
+                /*  Options Bar  */
                 .b64-options-bar {
                     display: flex;
                     align-items: center;
@@ -696,7 +696,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     border-color: var(--brand-border);
                 }
 
-                /* ── Tab Content ── */
+                /*  Tab Content  */
                 .b64-tab-content {
                     flex: 1;
                     display: flex;
@@ -705,7 +705,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     overflow: hidden;
                 }
 
-                /* ── Footer ── */
+                /*  Footer  */
                 .b64-footer {
                     display: flex;
                     align-items: center;
@@ -721,7 +721,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                     font-size: 13px;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 .b64-label {
                     display: inline;
                 }

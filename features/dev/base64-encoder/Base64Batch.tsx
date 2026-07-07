@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { encodeBase64, decodeBase64, formatBytes, type Mode, type EncodingOptions } from "./utils";
+import { encodeBase64, decodeBase64, type Mode, type EncodingOptions } from "./utils";
+import { formatBytes } from "@/utils";
 
 interface BatchItem {
     id: string;
@@ -131,7 +132,7 @@ export default function Base64Batch({ mode, options, onComplete }: Base64BatchPr
     return (
         <>
             <div className="bb-root">
-                {/* ── Input Section ── */}
+                {/*  Input Section  */}
                 <div className="bb-section">
                     <div className="bb-section-header">
                         <div className="bb-section-label">
@@ -187,7 +188,7 @@ export default function Base64Batch({ mode, options, onComplete }: Base64BatchPr
                     </div>
                 </div>
 
-                {/* ── Results Section ── */}
+                {/*  Results Section  */}
                 {items.length > 0 && (
                     <div className="bb-section">
                         <div className="bb-section-header">
@@ -292,7 +293,7 @@ export default function Base64Batch({ mode, options, onComplete }: Base64BatchPr
                     </div>
                 )}
 
-                {/* ── Empty State ── */}
+                {/*  Empty State  */}
                 {items.length === 0 && !batchInput && (
                     <div className="bb-empty">
                         <div className="bb-empty-icon">
@@ -316,7 +317,7 @@ export default function Base64Batch({ mode, options, onComplete }: Base64BatchPr
                     overflow: auto;
                 }
 
-                /* ── Section ── */
+                /*  Section  */
                 .bb-section {
                     display: flex;
                     flex-direction: column;
@@ -462,7 +463,7 @@ export default function Base64Batch({ mode, options, onComplete }: Base64BatchPr
                     color: white;
                 }
 
-                /* ── Textarea ── */
+                /*  Textarea  */
                 .bb-textarea {
                     width: 100%;
                     padding: 12px 14px;
@@ -501,7 +502,7 @@ export default function Base64Batch({ mode, options, onComplete }: Base64BatchPr
                     font-weight: 500;
                 }
 
-                /* ── Results ── */
+                /*  Results  */
                 .bb-results {
                     display: flex;
                     flex-direction: column;
@@ -670,7 +671,7 @@ export default function Base64Batch({ mode, options, onComplete }: Base64BatchPr
                     flex-shrink: 0;
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .bb-empty {
                     flex: 1;
                     display: flex;
@@ -711,7 +712,7 @@ export default function Base64Batch({ mode, options, onComplete }: Base64BatchPr
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .bb-root {
                         padding: 12px;

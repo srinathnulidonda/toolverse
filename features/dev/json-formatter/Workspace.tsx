@@ -261,7 +261,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
         <>
             <div className="jf-root" role="main" aria-label="JSON Formatter">
 
-                {/* ── Top Chrome ── */}
+                {/*  Top Chrome  */}
                 <div className="jf-chrome">
 
                     {/* Left: Mode + Indent controls */}
@@ -377,7 +377,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                     </div>
                 </div>
 
-                {/* ── Mobile panel switcher ── */}
+                {/*  Mobile panel switcher  */}
                 <div className="jf-mobile-tabs" role="tablist" aria-label="Panel selector">
                     <button
                         type="button"
@@ -407,7 +407,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                     </button>
                 </div>
 
-                {/* ── Smart parse hint ── */}
+                {/*  Smart parse hint  */}
                 {validJson && parseResult.hint && (
                     <div className="jf-hint" role="status">
                         <i className="ti ti-sparkles" aria-hidden="true" />
@@ -421,7 +421,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                     </div>
                 )}
 
-                {/* ── Main panels ── */}
+                {/*  Main panels  */}
                 <div className="jf-body">
 
                     {/* Input Panel */}
@@ -617,7 +617,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                     </div>
                 </div>
 
-                {/* ── Mobile bottom action bar ── */}
+                {/*  Mobile bottom action bar  */}
                 <div className="jf-mobile-actions" role="toolbar" aria-label="Output actions">
                     <button
                         type="button"
@@ -692,7 +692,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
             </div>
 
             <style>{`
-        /* ─── Root ─── */
+        /*  Root  */
         .jf-root {
           background: var(--bg-card);
           border: 0.5px solid var(--border);
@@ -703,7 +703,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           min-height: 580px;
         }
 
-        /* ─── Top Chrome ─── */
+        /*  Top Chrome  */
         .jf-chrome {
           display: flex;
           align-items: center;
@@ -851,7 +851,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
         }
         .jf-action-label { display: inline; }
 
-        /* ─── Mobile panel switcher ─── */
+        /*  Mobile panel switcher  */
         .jf-mobile-tabs {
           display: none;
           border-bottom: 0.5px solid var(--border);
@@ -910,7 +910,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           border-radius: 99px;
         }
 
-        /* ─── Hint bars ─── */
+        /*  Hint bars  */
         .jf-hint {
           display: flex;
           align-items: center;
@@ -938,7 +938,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           font-family: var(--font-mono);
         }
 
-        /* ─── Body (panels) ─── */
+        /*  Body (panels)  */
         .jf-body {
           display: grid;
           grid-template-columns: 1fr 0.5px 1fr;
@@ -957,7 +957,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           overflow: hidden;
         }
 
-        /* ─── Panel headers ─── */
+        /*  Panel headers  */
         .jf-panel-header {
           display: flex;
           align-items: center;
@@ -1054,7 +1054,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           font-family: var(--font-sans);
         }
 
-        /* ─── Tab content area ─── */
+        /*  Tab content area  */
         .jf-tab-content {
           flex: 1;
           display: flex;
@@ -1063,7 +1063,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           overflow: hidden;
         }
 
-        /* ─── Textarea ─── */
+        /*  Textarea  */
         .jf-textarea-wrap {
           position: relative;
           flex: 1;
@@ -1112,7 +1112,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
         }
         .jf-hint-kw { color: var(--text-secondary); }
 
-        /* ─── Output pre ─── */
+        /*  Output pre  */
         .jf-output {
           flex: 1;
           margin: 0;
@@ -1138,7 +1138,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           .jf-boolean { color: #FDBA74; }
         }
 
-        /* ─── Error bar ─── */
+        /*  Error bar  */
         .jf-error-bar {
           display: flex;
           gap: 10px;
@@ -1185,7 +1185,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           margin-top: 2px;
         }
 
-        /* ─── Empty state ─── */
+        /*  Empty state  */
         .jf-empty {
           flex: 1;
           display: flex;
@@ -1200,7 +1200,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
         .jf-empty i { font-size: 20px; }
         .jf-empty p { font-size: 12.5px; margin: 0; text-align: center; }
 
-        /* ─── Diff view ─── */
+        /*  Diff view  */
         .jf-diff-wrapper {
           display: flex;
           flex-direction: column;
@@ -1246,7 +1246,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           min-height: 0;
         }
 
-        /* ─── Mobile bottom actions ─── */
+        /*  Mobile bottom actions  */
         .jf-mobile-actions {
           display: none;
           border-top: 0.5px solid var(--border);
@@ -1336,7 +1336,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           margin: 4px 0;
         }
 
-        /* ─── Responsive breakpoints ─── */
+        /*  Responsive breakpoints  */
         @media (max-width: 900px) {
           .jf-indent-group,
           .jf-export-row { display: none; }
@@ -1375,7 +1375,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           .jf-tabs .jf-tab span:not(.jf-tab i) { display: none; }
         }
 
-        /* ─── Focus rings (accessibility) ─── */
+        /*  Focus rings (accessibility)  */
         .jf-pill:focus-visible,
         .jf-icon-btn:focus-visible,
         .jf-action-btn:focus-visible,

@@ -2,8 +2,9 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { decodeBase64, detectMime, formatBytes, normalizeBase64, type EncodingOptions } from "./utils";
+import { decodeBase64, detectMime, normalizeBase64, type EncodingOptions } from "./utils";
 import type { Mode } from "./utils";
+import { formatBytes } from "@/utils";
 
 interface Base64CompareProps {
     mode: Mode;
@@ -74,7 +75,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
     return (
         <>
             <div className="bc-root">
-                {/* ── Comparison Controls ── */}
+                {/*  Comparison Controls  */}
                 <div className="bc-controls">
                     <div className="bc-mode-group">
                         <button
@@ -117,7 +118,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     </div>
                 </div>
 
-                {/* ── Comparison Result ── */}
+                {/*  Comparison Result  */}
                 {comparison && (
                     <div className="bc-result">
                         {comparison.identical ? (
@@ -196,7 +197,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     </div>
                 )}
 
-                {/* ── Side-by-Side Inputs ── */}
+                {/*  Side-by-Side Inputs  */}
                 <div className="bc-inputs">
                     <div className="bc-input-panel">
                         <div className="bc-input-header">
@@ -283,7 +284,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     </div>
                 </div>
 
-                {/* ── Empty State ── */}
+                {/*  Empty State  */}
                 {!leftInput && !rightInput && (
                     <div className="bc-empty">
                         <div className="bc-empty-icon">
@@ -307,7 +308,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     overflow: auto;
                 }
 
-                /* ── Controls ── */
+                /*  Controls  */
                 .bc-controls {
                     display: flex;
                     align-items: center;
@@ -394,7 +395,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     cursor: not-allowed;
                 }
 
-                /* ── Result ── */
+                /*  Result  */
                 .bc-result {
                     display: flex;
                     flex-direction: column;
@@ -500,7 +501,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     }
                 }
 
-                /* ── Details ── */
+                /*  Details  */
                 .bc-details {
                     padding: 14px;
                     background: var(--bg-card);
@@ -579,7 +580,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     }
                 }
 
-                /* ── Inputs ── */
+                /*  Inputs  */
                 .bc-inputs {
                     display: grid;
                     grid-template-columns: 1fr auto 1fr;
@@ -724,7 +725,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     color: var(--text-tertiary);
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .bc-empty {
                     flex: 1;
                     display: flex;
@@ -765,7 +766,7 @@ export default function Base64Compare({ mode, options }: Base64CompareProps) {
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 900px) {
                     .bc-inputs {
                         grid-template-columns: 1fr;

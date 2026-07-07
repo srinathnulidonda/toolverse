@@ -53,7 +53,7 @@ export default function CasePreview({
     return (
         <>
             <div className="cp-root">
-                {/* ── Input Section ── */}
+                {/*  Input Section  */}
                 <div className="cp-input-section">
                     <div className="cp-input-header">
                         <div className="cp-input-label">
@@ -80,7 +80,7 @@ export default function CasePreview({
                     />
                 </div>
 
-                {/* ── Results Section ── */}
+                {/*  Results Section  */}
                 {results.length === 0 && !input ? (
                     <div className="cp-empty">
                         <div className="cp-empty-icon">
@@ -138,7 +138,7 @@ export default function CasePreview({
                     overflow: auto;
                 }
 
-                /* ── Input Section ── */
+                /*  Input Section  */
                 .cp-input-section {
                     background: var(--bg-card);
                     border: 0.5px solid var(--border);
@@ -208,7 +208,7 @@ export default function CasePreview({
                     font-family: var(--font-sans);
                 }
 
-                /* ── Results Section ── */
+                /*  Results Section  */
                 .cp-results-section {
                     flex: 1;
                     display: flex;
@@ -366,7 +366,7 @@ export default function CasePreview({
                     font-family: var(--font-mono);
                 }
 
-                /* ── Empty State ── */
+                /*  Empty State  */
                 .cp-empty {
                     flex: 1;
                     display: flex;
@@ -407,7 +407,7 @@ export default function CasePreview({
                     line-height: 1.6;
                 }
 
-                /* ── Responsive ── */
+                /*  Responsive  */
                 @media (max-width: 768px) {
                     .cp-root {
                         padding: 12px;

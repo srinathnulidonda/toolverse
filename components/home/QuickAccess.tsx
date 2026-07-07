@@ -20,8 +20,14 @@ const PINNED_KEY = "tv:pins";
 const MAX_ITEMS = 6;
 
 export default function QuickAccess() {
+  const [mounted, setMounted] = useState(false);
   const [pinned, setPinned] = useLocalStorage<string[]>(PINNED_KEY, []);
   const [recent, setRecent] = useLocalStorage<string[]>(RECENT_KEY, []);
+
+  // Prevent hydration mismatch by only showing localStorage-dependent content after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const togglePin = useCallback((slug: string) => {
     setPinned((prev) => {
@@ -30,21 +36,25 @@ export default function QuickAccess() {
         : [slug, ...prev].slice(0, MAX_ITEMS);
       return next;
     });
-  }, []);
+  }, [setPinned]);
 
   const recordVisit = useCallback((slug: string) => {
     setRecent((prev) => {
       const next = [slug, ...prev.filter((s) => s !== slug)].slice(0, MAX_ITEMS);
       return next;
     });
-  }, []);
+  }, [setRecent]);
 
   const clearRecent = useCallback(() => {
     setRecent([]);
-  }, []);
+  }, [setRecent]);
+
+  // Use localStorage values only after mount to prevent hydration mismatch
+  const effectivePinned = mounted ? pinned : [];
+  const effectiveRecent = mounted ? recent : [];
 
   // Build ordered, deduplicated list using real TOOLS data (correct hrefs)
-  const order = [...pinned, ...recent, ...DEFAULT_SLUGS];
+  const order = [...effectivePinned, ...effectiveRecent, ...DEFAULT_SLUGS];
   const seen = new Set<string>();
   const items: typeof TOOLS = [];
   for (const slug of order) {
@@ -62,7 +72,8 @@ export default function QuickAccess() {
         {/* Header */}
         <div className="qa-header">
           <span className="qa-label">Quick access</span>
-          {recent.length > 0 && (
+          {/* Only show clear button after mount to prevent hydration mismatch */}
+          {effectiveRecent.length > 0 && (
             <button onClick={clearRecent} className="qa-clear-btn">
               <i className="ti ti-x" aria-hidden="true" />
               Clear recents
@@ -75,8 +86,8 @@ export default function QuickAccess() {
         {/* Tool list */}
         <ul className="qa-list">
           {items.map((item) => {
-            const isPinned = pinned.includes(item.slug);
-            const isRecent = !isPinned && recent.includes(item.slug);
+            const isPinned = effectivePinned.includes(item.slug);
+            const isRecent = !isPinned && effectiveRecent.includes(item.slug);
 
             return (
               <li key={item.slug}>
@@ -91,6 +102,7 @@ export default function QuickAccess() {
 
                   <span className="qa-name">{item.label}</span>
 
+                  {/* Only show recent badge after mount to prevent hydration mismatch */}
                   {isRecent && (
                     <span className="qa-badge" aria-label="Recently used">
                       recent
