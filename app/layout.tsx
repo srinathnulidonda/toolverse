@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import FooterConditional from "@/components/layout/FooterConditional";
+import FloatingWidget from "@/components/widgets/FloatingWidget";
 
 export const metadata: Metadata = {
     title: {
@@ -68,6 +69,7 @@ export default function RootLayout({
             </head>
             <body>
                 <a href="#main-content" className="skip-link">Skip to main content</a>
+                
                 {/* Navbar */}
                 <Navbar />
 
@@ -78,6 +80,9 @@ export default function RootLayout({
                         <FooterConditional />
                     </footer>
                 </div>
+
+                {/* 🚀 Floating Widget - Tasks & Notes available on all pages */}
+                <FloatingWidget />
             </body>
         </html>
     );

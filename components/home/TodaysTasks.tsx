@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from "react";
 import useLocalStorage from "@/lib/useLocalStorage";
 
 // Types
-
 type Priority = "high" | "medium" | "low";
 
 type Task = {
@@ -17,7 +16,6 @@ type Task = {
 };
 
 // Constants 
-
 const TASKS_KEY = "tv:tasks-v2";
 
 const PRIORITY_META: Record<Priority, { color: string; label: string }> = {
@@ -28,16 +26,7 @@ const PRIORITY_META: Record<Priority, { color: string; label: string }> = {
 
 const PRIORITY_ORDER: Priority[] = ["high", "medium", "low"];
 
-function getDateLabel(): string {
-    return new Date().toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "short",
-        day: "numeric",
-    });
-}
-
 // Main component
-
 export default function TodaysTasks() {
     const [tasks, setTasks] = useLocalStorage<Task[]>(TASKS_KEY, []);
     const [input, setInput] = useState("");
@@ -47,6 +36,10 @@ export default function TodaysTasks() {
 
     const inputRef = useRef<HTMLInputElement>(null);
     const pickerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Close picker on outside click
     useEffect(() => {
@@ -71,7 +64,6 @@ export default function TodaysTasks() {
         return () => document.removeEventListener("keydown", handler);
     }, []);
 
-    
     // Actions
     function add(e: React.FormEvent) {
         e.preventDefault();
@@ -108,18 +100,25 @@ export default function TodaysTasks() {
 
     const circumference = 2 * Math.PI * 11;
 
+    const getDateLabel = () => {
+        return new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "short",
+            day: "numeric",
+        });
+    };
+
     return (
         <>
             <div className="td-card">
-
                 {/* ── Header  */}
                 <div className="td-header">
                     <div className="td-header-left">
                         <span className="td-label">Today</span>
-                        {mounted && <span className="td-date">{getDateLabel()}</span>}
+                        <span className="td-date">{mounted ? getDateLabel() : ""}</span>
                     </div>
 
-                    {total > 0 && (
+                    {mounted && total > 0 && (
                         <div className="td-progress">
                             <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
                                 <circle
@@ -161,7 +160,6 @@ export default function TodaysTasks() {
 
                 {/* Add row */}
                 <form className="td-add-row" onSubmit={add} autoComplete="off">
-
                     {/* Priority picker */}
                     <div ref={pickerRef} className="td-picker-wrap">
                         <button
@@ -223,7 +221,6 @@ export default function TodaysTasks() {
 
                 {/* Task list */}
                 <div className="td-tasks-scroll">
-
                     {/* Empty state */}
                     {total === 0 && (
                         <div className="td-empty">
@@ -235,9 +232,7 @@ export default function TodaysTasks() {
                             </svg>
                             <span>No tasks yet</span>
                             <span className="td-empty-hint">
-                                Press{" "}
-                                <kbd>/</kbd>
-                                {" "}to start
+                                Press <kbd>/</kbd> to start
                             </span>
                         </div>
                     )}
@@ -302,7 +297,6 @@ export default function TodaysTasks() {
           min-height: 300px;
         }
 
-        /* Header */
         .td-header {
           display: flex;
           align-items: center;
@@ -327,6 +321,7 @@ export default function TodaysTasks() {
           font-size: 11px;
           color: var(--text-tertiary);
           font-family: var(--font-sans);
+          min-height: 16px;
         }
         .td-progress {
           display: flex;
@@ -350,7 +345,6 @@ export default function TodaysTasks() {
           flex-shrink: 0;
         }
 
-        /* Add row */
         .td-add-row {
           display: flex;
           align-items: center;
@@ -454,7 +448,6 @@ export default function TodaysTasks() {
         }
         .td-submit.active:hover { background: var(--brand-hover); }
 
-        /* Task scroll area */
         .td-tasks-scroll {
           flex: 1;
           overflow-y: auto;
@@ -468,7 +461,6 @@ export default function TodaysTasks() {
           border-radius: 2px;
         }
 
-        /* Empty state */
         .td-empty {
           display: flex;
           flex-direction: column;
@@ -492,7 +484,6 @@ export default function TodaysTasks() {
           font-family: var(--font-mono);
         }
 
-        /* All done */
         .td-all-done {
           display: flex;
           align-items: center;
@@ -504,14 +495,12 @@ export default function TodaysTasks() {
           font-weight: 500;
         }
 
-        /* Separator */
         .td-sep {
           height: 0.5px;
           background: var(--border);
           margin: 2px 14px;
         }
 
-        /* Footer */
         .td-footer {
           display: flex;
           align-items: center;
@@ -543,7 +532,6 @@ export default function TodaysTasks() {
 }
 
 // Task row 
-
 function TaskRow({
     task,
     onToggle,
@@ -558,7 +546,6 @@ function TaskRow({
     return (
         <>
             <div className="td-row">
-                {/* Checkbox */}
                 <button
                     className={`td-check${task.completed ? " done" : ""}`}
                     onClick={() => onToggle(task.id)}
@@ -572,7 +559,6 @@ function TaskRow({
                     )}
                 </button>
 
-                {/* Priority dot — only on incomplete tasks */}
                 {!task.completed && (
                     <span
                         className="td-row-dot"
@@ -581,7 +567,6 @@ function TaskRow({
                     />
                 )}
 
-                {/* Text */}
                 <span
                     className={`td-row-text${task.completed ? " done" : ""}`}
                     onClick={() => onToggle(task.id)}
@@ -589,7 +574,6 @@ function TaskRow({
                     {task.text}
                 </span>
 
-                {/* Remove */}
                 <button
                     className="td-row-del"
                     onClick={() => onRemove(task.id)}
