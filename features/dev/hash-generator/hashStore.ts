@@ -1,5 +1,6 @@
 // features/dev/hash-generator/hashStore.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
 import type { HashResult, HashAlgorithm, HashFormat } from "./hashEngine";
 
 export interface HashHistoryEntry {
@@ -30,58 +31,111 @@ export interface HashSettings {
 const STORAGE_KEYS = {
     history: "hash-generator-history",
     settings: "hash-generator-settings",
-    favorites: "hash-generator-favorites",
 } as const;
 
-const DEFAULT_SETTINGS: HashSettings = {
-    defaultAlgorithms: ["SHA256", "SHA512"],
-    defaultFormat: "hex",
-    autoSave: true,
-    showDeprecatedAlgorithms: false,
-    enableSalt: false,
-    defaultSalt: "",
-    enablePepper: false,
-    defaultPepper: "",
-    maxHistoryItems: 100,
-};
+const MAX_HISTORY_ITEMS = 100;
 
-function loadFromStorage<T>(key: string, defaultValue: T): T {
-    if (typeof window === "undefined") return defaultValue;
-    try {
-        const item = localStorage.getItem(key);
-        return item ? JSON.parse(item) : defaultValue;
-    } catch {
-        return defaultValue;
-    }
+// Storage wrappers
+interface HistoryStorage {
+    v: number;
+    data: HashHistoryEntry[];
+}
+interface SettingsStorage {
+    v: number;
+    data: HashSettings;
 }
 
-function saveToStorage<T>(key: string, value: T): void {
-    if (typeof window === "undefined") return;
-    try {
-        localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-        // Silent fail for quota exceeded
+// Validation functions
+function validateHistory(raw: HistoryStorage | null): HashHistoryEntry[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
+        return [];
     }
+    const valid: HashHistoryEntry[] = [];
+    for (const item of raw.data) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.timestamp === "number" &&
+            typeof item.input === "string" &&
+            (item.inputType === "text" || item.inputType === "file") &&
+            (item.fileName === undefined || typeof item.fileName === "string") &&
+            (item.fileSize === undefined || typeof item.fileSize === "number") &&
+            Array.isArray(item.results) &&
+            item.results.every(r =>
+                r &&
+                typeof r === "object" &&
+                typeof r.algorithm === "string" &&
+                typeof r.hash === "string" &&
+                typeof r.executionTime === "number"
+            ) &&
+            Array.isArray(item.tags) &&
+            item.tags.every(t => typeof t === "string") &&
+            typeof item.isFavorite === "boolean"
+        ) {
+            valid.push(item as HashHistoryEntry);
+        }
+    }
+    if (valid.length > MAX_HISTORY_ITEMS) {
+        return valid.slice(0, MAX_HISTORY_ITEMS);
+    }
+    return valid;
+}
+
+function validateSettings(raw: SettingsStorage | null): HashSettings {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw)) {
+        return {
+            defaultAlgorithms: ["SHA256", "SHA512"],
+            defaultFormat: "hex",
+            autoSave: true,
+            showDeprecatedAlgorithms: false,
+            enableSalt: false,
+            defaultSalt: "",
+            enablePepper: false,
+            defaultPepper: "",
+            maxHistoryItems: 100,
+        };
+    }
+    // We could validate the settings object, but for simplicity we'll just return the data.
+    // In a real scenario, we would define the shape of HashSettings and validate accordingly.
+    return raw.data;
 }
 
 export function useHashStore() {
-    const [history, setHistory] = useState<HashHistoryEntry[]>([]);
-    const [settings, setSettings] = useState<HashSettings>(DEFAULT_SETTINGS);
-    
-    useEffect(() => {
-        setHistory(loadFromStorage(STORAGE_KEYS.history, []));
-        setSettings(loadFromStorage(STORAGE_KEYS.settings, DEFAULT_SETTINGS));
-    }, []);
+    const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(
+        STORAGE_KEYS.history,
+        { v: 1, data: [] }
+    );
+    const [settingsRaw, setSettingsRaw] = useLocalStorage<SettingsStorage>(
+        STORAGE_KEYS.settings,
+        { v: 1, data: {
+            defaultAlgorithms: ["SHA256", "SHA512"],
+            defaultFormat: "hex",
+            autoSave: true,
+            showDeprecatedAlgorithms: false,
+            enableSalt: false,
+            defaultSalt: "",
+            enablePepper: false,
+            defaultPepper: "",
+            maxHistoryItems: 100,
+        } }
+    );
 
+    const history = useMemo(() => validateHistory(historyRaw), [historyRaw]);
+    const settings = useMemo(() => validateSettings(settingsRaw), [settingsRaw]);
+
+    // Sync back to storage if validation changes the data
     useEffect(() => {
-        if (history.length > 0) {
-            saveToStorage(STORAGE_KEYS.history, history);
+        if (!JSON_equal(history, historyRaw?.data)) {
+            setHistoryRaw({ v: 1, data: history });
         }
-    }, [history]);
+    }, [history, historyRaw]);
 
     useEffect(() => {
-        saveToStorage(STORAGE_KEYS.settings, settings);
-    }, [settings]);
+        if (!JSON_equal(settings, settingsRaw?.data)) {
+            setSettingsRaw({ v: 1, data: settings });
+        }
+    }, [settings, settingsRaw]);
 
     const addToHistory = (entry: Omit<HashHistoryEntry, "id" | "timestamp">) => {
         if (!settings.autoSave) return;
@@ -92,52 +146,59 @@ export function useHashStore() {
             timestamp: Date.now(),
         };
 
-        setHistory(prev => {
+        setHistoryRaw((prev) => {
             // Check for duplicate
-            const isDuplicate = prev.some(item => 
-                item.input === newEntry.input && 
+            const isDuplicate = (prev?.data ?? []).some(item =>
+                item.input === newEntry.input &&
                 JSON.stringify(item.results.map(r => r.algorithm)) === JSON.stringify(newEntry.results.map(r => r.algorithm))
             );
 
             if (isDuplicate) return prev;
 
-            return [newEntry, ...prev].slice(0, settings.maxHistoryItems);
+            const newData = [...(prev?.data ?? []), newEntry].slice(0, settings.maxHistoryItems);
+            return { v: 1, data: newData };
         });
-
-        return newEntry.id;
     };
 
     const removeFromHistory = (id: string) => {
-        setHistory(prev => prev.filter(item => item.id !== id));
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter(item => item.id !== id)
+        }));
     };
 
     const clearHistory = () => {
-        setHistory([]);
-        localStorage.removeItem(STORAGE_KEYS.history);
+        setHistoryRaw({ v: 1, data: [] });
     };
 
     const toggleFavorite = (id: string) => {
-        setHistory(prev => prev.map(item => 
-            item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
-        ));
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).map(item =>
+                item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+            )
+        }));
     };
 
     const updateEntry = (id: string, updates: Partial<HashHistoryEntry>) => {
-        setHistory(prev => prev.map(item => 
-            item.id === id ? { ...item, ...updates } : item
-        ));
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).map(item =>
+                item.id === id ? { ...item, ...updates } : item
+            )
+        }));
     };
 
     const searchHistory = (query: string): HashHistoryEntry[] => {
         if (!query.trim()) return history;
-        
+
         const lowerQuery = query.toLowerCase();
         return history.filter(entry =>
             entry.input.toLowerCase().includes(lowerQuery) ||
             entry.fileName?.toLowerCase().includes(lowerQuery) ||
             entry.note?.toLowerCase().includes(lowerQuery) ||
             entry.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
-            entry.results.some(result => 
+            entry.results.some(result =>
                 result.hash.toLowerCase().includes(lowerQuery) ||
                 result.algorithm.toLowerCase().includes(lowerQuery)
             )
@@ -161,7 +222,7 @@ export function useHashStore() {
             });
             return acc;
         }, {} as Record<string, number>);
-        
+
         const totalProcessingTime = history.reduce((acc, entry) => {
             return acc + entry.results.reduce((sum, result) => sum + result.executionTime, 0);
         }, 0);
@@ -179,12 +240,24 @@ export function useHashStore() {
     };
 
     const updateSettings = (newSettings: Partial<HashSettings>) => {
-        setSettings(prev => ({ ...prev, ...newSettings }));
+        setSettingsRaw((prev) => ({
+            v: 1,
+            data: { ...(prev?.data ?? {}), ...newSettings }
+        }));
     };
 
     const resetSettings = () => {
-        setSettings(DEFAULT_SETTINGS);
-        saveToStorage(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
+        setSettingsRaw({ v: 1, data: {
+            defaultAlgorithms: ["SHA256", "SHA512"],
+            defaultFormat: "hex",
+            autoSave: true,
+            showDeprecatedAlgorithms: false,
+            enableSalt: false,
+            defaultSalt: "",
+            enablePepper: false,
+            defaultPepper: "",
+            maxHistoryItems: 100,
+        } });
     };
 
     const exportHistory = (format: "json" | "csv") => {
@@ -201,8 +274,8 @@ export function useHashStore() {
                 entry.isFavorite ? "Yes" : "No",
                 entry.note || ""
             ]);
-            
-            return [headers, ...rows].map(row => 
+
+            return [headers, ...rows].map(row =>
                 row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")
             ).join("\n");
         }
@@ -224,4 +297,13 @@ export function useHashStore() {
         resetSettings,
         exportHistory,
     };
+}
+
+// Helper for deep equality (since we don't have lodash)
+function JSON_equal(a: any, b: any): boolean {
+    try {
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return a === b;
+    }
 }

@@ -1,6 +1,6 @@
 // features/dev/random-string-generator/stringStore.ts
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
 import type { GeneratorOptions, GeneratedString } from "./utils";
 
 const HISTORY_KEY = "rsg-history";
@@ -8,143 +8,139 @@ const FAVORITES_KEY = "rsg-favorites";
 const MAX_HISTORY = 100;
 const MAX_FAVORITES = 50;
 
-// Validate that an object matches GeneratedString structure
-function isValidGeneratedString(obj: any): obj is GeneratedString {
-    return (
-        obj &&
-        typeof obj === "object" &&
-        typeof obj.id === "string" &&
-        typeof obj.value === "string" &&
-        typeof obj.timestamp === "number" &&
-        typeof obj.options === "object" &&
-        typeof obj.entropy === "number" &&
-        typeof obj.strength === "string"
-    );
+// Storage wrappers
+interface HistoryStorage {
+    v: number;
+    data: GeneratedString[];
+}
+interface FavoritesStorage {
+    v: number;
+    data: string[];
 }
 
-// Load from localStorage with validation
-const loadHistory = (): GeneratedString[] => {
-    if (typeof window === "undefined") return [];
-    try {
-        const stored = localStorage.getItem(HISTORY_KEY);
-        if (!stored) return [];
-        
-        const parsed = JSON.parse(stored);
-        if (!Array.isArray(parsed)) return [];
-        
-        // Filter out invalid entries
-        return parsed.filter(isValidGeneratedString);
-    } catch (err) {
-        console.warn("Failed to load history:", err);
+// Validation functions
+function validateHistory(raw: HistoryStorage | null): GeneratedString[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
         return [];
     }
-};
-
-const saveHistory = (history: GeneratedString[]) => {
-    if (typeof window === "undefined") return;
-    try {
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-    } catch (err) {
-        console.warn("Failed to save history:", err);
+    const valid: GeneratedString[] = [];
+    for (const item of raw.data) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.value === "string" &&
+            typeof item.timestamp === "number" &&
+            typeof item.options === "object" &&
+            typeof item.entropy === "number" &&
+            typeof item.strength === "string"
+        ) {
+            valid.push(item as GeneratedString);
+        }
     }
-};
+    if (valid.length > MAX_HISTORY) {
+        return valid.slice(0, MAX_HISTORY);
+    }
+    return valid;
+}
 
-const loadFavorites = (): string[] => {
-    if (typeof window === "undefined") return [];
-    try {
-        const stored = localStorage.getItem(FAVORITES_KEY);
-        if (!stored) return [];
-        
-        const parsed = JSON.parse(stored);
-        if (!Array.isArray(parsed)) return [];
-        
-        // Ensure all items are strings
-        return parsed.filter(item => typeof item === "string");
-    } catch (err) {
-        console.warn("Failed to load favorites:", err);
+function validateFavorites(raw: FavoritesStorage | null): string[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
         return [];
     }
-};
-
-const saveFavorites = (favorites: string[]) => {
-    if (typeof window === "undefined") return;
-    try {
-        localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-    } catch (err) {
-        console.warn("Failed to save favorites:", err);
+    const valid: string[] = [];
+    for (const item of raw.data) {
+        if (typeof item === "string") {
+            valid.push(item);
+        }
     }
-};
+    if (valid.length > MAX_FAVORITES) {
+        return valid.slice(0, MAX_FAVORITES);
+    }
+    return valid;
+}
 
 export function useStringStore() {
-    const [history, setHistory] = useState<GeneratedString[]>([]);
-    const [favorites, setFavorites] = useState<string[]>([]);
+    const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(
+        HISTORY_KEY,
+        { v: 1, data: [] }
+    );
+    const [favoritesRaw, setFavoritesRaw] = useLocalStorage<FavoritesStorage>(
+        FAVORITES_KEY,
+        { v: 1, data: [] }
+    );
 
-    // Load on mount
-    useEffect(() => {
-        setHistory(loadHistory());
-        setFavorites(loadFavorites());
-    }, []);
+    const history = useMemo(() => validateHistory(historyRaw), [historyRaw]);
+    const favorites = useMemo(() => validateFavorites(favoritesRaw), [favoritesRaw]);
 
-    // Save history whenever it changes
+    // Sync back to storage if validation changes the data
     useEffect(() => {
-        if (history.length > 0) {
-            saveHistory(history);
+        if (!JSON_equal(history, historyRaw?.data)) {
+            setHistoryRaw({ v: 1, data: history });
         }
-    }, [history]);
+    }, [history, historyRaw]);
 
-    // Save favorites whenever they change
     useEffect(() => {
-        if (favorites.length > 0) {
-            saveFavorites(favorites);
+        if (!JSON_equal(favorites, favoritesRaw?.data)) {
+            setFavoritesRaw({ v: 1, data: favorites });
         }
-    }, [favorites]);
+    }, [favorites, favoritesRaw]);
 
     const addToHistory = (entry: GeneratedString) => {
         // Validate entry before adding
-        if (!isValidGeneratedString(entry)) {
+        if (
+            !entry ||
+            typeof entry !== "object" ||
+            typeof entry.id !== "string" ||
+            typeof entry.value !== "string" ||
+            typeof entry.timestamp !== "number" ||
+            typeof entry.options !== "object" ||
+            typeof entry.entropy !== "number" ||
+            typeof entry.strength !== "string"
+        ) {
             console.warn("Invalid history entry:", entry);
             return;
         }
 
-        setHistory(prev => {
+        setHistoryRaw((prev) => {
             // Don't add exact duplicates
-            const duplicate = prev.find(h => h.value === entry.value);
+            const duplicate = (prev?.data ?? []).find(h => h.value === entry.value);
             if (duplicate) return prev;
 
-            const newHistory = [entry, ...prev].slice(0, MAX_HISTORY);
-            return newHistory;
+            const newHistory = [...(prev?.data ?? []), entry].slice(0, MAX_HISTORY);
+            return { v: 1, data: newHistory };
         });
     };
 
     const clearHistory = () => {
-        setHistory([]);
-        if (typeof window !== "undefined") {
-            localStorage.removeItem(HISTORY_KEY);
-        }
+        setHistoryRaw({ v: 1, data: [] });
     };
 
     const removeFromHistory = (id: string) => {
-        setHistory(prev => prev.filter(h => h.id !== id));
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter(h => h.id !== id)
+        }));
     };
 
     const addToFavorites = (value: string) => {
         if (typeof value !== "string") return;
-        
-        setFavorites(prev => {
-            if (prev.includes(value)) return prev;
-            return [value, ...prev].slice(0, MAX_FAVORITES);
-        });
+
+        setFavoritesRaw((prev) => ({
+            v: 1,
+            data: [...(new Set([...(prev?.data ?? []), value]))].slice(0, MAX_FAVORITES)
+        }));
     };
 
     const removeFromFavorites = (value: string) => {
-        setFavorites(prev => prev.filter(f => f !== value));
+        setFavoritesRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter(f => f !== value)
+        }));
     };
 
     const clearFavorites = () => {
-        setFavorites([]);
-        if (typeof window !== "undefined") {
-            localStorage.removeItem(FAVORITES_KEY);
-        }
+        setFavoritesRaw({ v: 1, data: [] });
     };
 
     const isFavorite = (value: string) => favorites.includes(value);
@@ -160,4 +156,13 @@ export function useStringStore() {
         clearFavorites,
         isFavorite,
     };
+}
+
+// Helper for deep equality (since we don't have lodash)
+function JSON_equal(a: any, b: any): boolean {
+    try {
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return a === b;
+    }
 }

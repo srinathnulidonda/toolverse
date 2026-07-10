@@ -1,5 +1,6 @@
 // features/dev/color-converter/colorStore.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
 
 export interface HistoryEntry {
     id: string;
@@ -11,70 +12,88 @@ export interface HistoryEntry {
 const STORAGE_KEY = "color-converter-history";
 const MAX_HISTORY_ITEMS = 50;
 
-// Helper functions for localStorage
-const loadHistory = (): HistoryEntry[] => {
-    if (typeof window === "undefined") return [];
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
-    } catch {
+interface HistoryEntryStorage {
+    v: number;
+    data: HistoryEntry[];
+}
+
+function validateHistory(raw: HistoryEntryStorage | null): HistoryEntry[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
         return [];
     }
-};
-
-const saveHistory = (history: HistoryEntry[]) => {
-    if (typeof window === "undefined") return;
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-    } catch {
-        // Silent fail
+    const version = raw.v;
+    const dataArray = raw.data;
+    const valid: HistoryEntry[] = [];
+    for (const item of dataArray) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.color === "string" &&
+            typeof item.format === "string" &&
+            typeof item.timestamp === "number"
+        ) {
+            valid.push(item as HistoryEntry);
+        }
     }
-};
+    if (valid.length > MAX_HISTORY_ITEMS) {
+        return valid.slice(0, MAX_HISTORY_ITEMS);
+    }
+    return valid;
+}
 
 export function useColorStore() {
-    const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const [rawHistory, setRawHistory] = useLocalStorage<HistoryEntryStorage>(
+        STORAGE_KEY,
+        { v: 1, data: [] }
+    );
 
-    // Load from localStorage on mount
-    useEffect(() => {
-        setHistory(loadHistory());
-    }, []);
+    const history = useMemo(() => validateHistory(rawHistory), [rawHistory]);
 
-    // Save to localStorage whenever history changes
     useEffect(() => {
-        if (history.length > 0) {
-            saveHistory(history);
+        if (!JSON_equal(history, rawHistory?.data)) {
+            setRawHistory({ v: 1, data: history });
         }
-    }, [history]);
+    }, [history, rawHistory]);
 
     const addToHistory = (entry: HistoryEntry) => {
-        setHistory((prev) => {
-            // Don't add duplicates (same color within last 5 items)
-            const recentDuplicate = prev
+        setRawHistory((prev) => {
+            const recentDuplicate = (prev?.data ?? [])
                 .slice(0, 5)
                 .find((h) => h.color.toLowerCase() === entry.color.toLowerCase());
-
             if (recentDuplicate) return prev;
 
-            const newHistory = [entry, ...prev].slice(0, MAX_HISTORY_ITEMS);
-            return newHistory;
+            const newData = [...(prev?.data ?? []), entry].slice(
+                0,
+                MAX_HISTORY_ITEMS
+            );
+            return { v: 1, data: newData };
         });
     };
 
     const clearHistory = () => {
-        setHistory([]);
-        if (typeof window !== "undefined") {
-            localStorage.removeItem(STORAGE_KEY);
-        }
+        setRawHistory({ v: 1, data: [] });
     };
 
     const removeFromHistory = (id: string) => {
-        setHistory((prev) => prev.filter((h) => h.id !== id));
+        setRawHistory((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter((h) => h.id !== id)
+        }));
     };
 
     return {
         history,
         addToHistory,
         clearHistory,
-        removeFromHistory,
+        removeFromHistory
     };
+}
+
+function JSON_equal(a: any, b: any): boolean {
+    try {
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return a === b;
+    }
 }

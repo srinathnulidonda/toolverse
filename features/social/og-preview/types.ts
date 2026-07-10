@@ -45,13 +45,14 @@ export interface MetaData {
   articleAuthor: string;
   articleSection: string;
   articlePublishedTime: string;
+  articleModifiedTime: string;
 
   // Video/Audio
   videoUrl: string;
   videoType: string;
   videoWidth: string;
   videoHeight: string;
-  audiUrl: string;
+  audioUrl: string;
   audioType: string;
 
   // Image metadata

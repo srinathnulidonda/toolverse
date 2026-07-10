@@ -1,6 +1,6 @@
 // features/dev/uuid-generator/uuidStore.ts
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
 import type { UuidVersion, UuidFormat, UuidCase } from "./utils";
 
 export interface HistoryEntry {
@@ -19,70 +19,102 @@ const STORAGE_KEY = "uuid-generator-history";
 const MAX_HISTORY_ENTRIES = 50;
 const MAX_UUIDS_PER_ENTRY = 100;
 
-function loadHistory(): HistoryEntry[] {
-    if (typeof window === "undefined") return [];
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
-    } catch {
-        return [];
-    }
+// Storage wrapper
+interface HistoryStorage {
+    v: number;
+    data: HistoryEntry[];
 }
 
-function saveHistory(history: HistoryEntry[]) {
-    if (typeof window === "undefined") return;
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-    } catch {
-        // Silent fail - localStorage might be full
+// Validation function
+function validateHistory(raw: HistoryStorage | null): HistoryEntry[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
+        return [];
     }
+    const valid: HistoryEntry[] = [];
+    for (const item of raw.data) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            Array.isArray(item.uuids) &&
+            item.uuids.every(uuid => typeof uuid === "string") &&
+            typeof item.version === "string" && // UuidVersion is a union, trust it
+            typeof item.format === "string" && // UuidFormat is a union, trust it
+            typeof item.case === "string" && // UuidCase is a union, trust it
+            typeof item.count === "number" &&
+            typeof item.timestamp === "number" &&
+            (item.namespace === undefined || typeof item.namespace === "string") &&
+            (item.name === undefined || typeof item.name === "string")
+        ) {
+            // Limit UUIDs stored per entry
+            const limitedUuids = item.uuids.slice(0, MAX_UUIDS_PER_ENTRY);
+            valid.push({
+                ...item,
+                uuids: limitedUuids
+            } as HistoryEntry);
+        }
+    }
+    if (valid.length > MAX_HISTORY_ENTRIES) {
+        return valid.slice(0, MAX_HISTORY_ENTRIES);
+    }
+    return valid;
 }
 
 export function useUuidStore() {
-    const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(
+        STORAGE_KEY,
+        { v: 1, data: [] }
+    );
 
-    useEffect(() => {
-        setHistory(loadHistory());
-    }, []);
+    const history = useMemo(() => validateHistory(historyRaw), [historyRaw]);
 
+    // Sync back to storage if validation changes the data
     useEffect(() => {
-        if (history.length > 0) {
-            saveHistory(history);
+        if (!JSON_equal(history, historyRaw?.data)) {
+            setHistoryRaw({ v: 1, data: history });
         }
-    }, [history]);
+    }, [history, historyRaw]);
 
     const addToHistory = (entry: Omit<HistoryEntry, "id" | "timestamp">) => {
-        setHistory((prev) => {
+        setHistoryRaw((prev) => {
             // Limit UUIDs stored per entry
             const limitedUuids = entry.uuids.slice(0, MAX_UUIDS_PER_ENTRY);
-            
             const newEntry: HistoryEntry = {
                 ...entry,
                 uuids: limitedUuids,
                 id: Date.now().toString(),
                 timestamp: Date.now(),
             };
-            
-            const newHistory = [newEntry, ...prev].slice(0, MAX_HISTORY_ENTRIES);
-            return newHistory;
+
+            const newHistory = [...(prev?.data ?? []), newEntry].slice(0, MAX_HISTORY_ENTRIES);
+            return { v: 1, data: newHistory };
         });
     };
 
     const clearHistory = () => {
-        setHistory([]);
-        if (typeof window !== "undefined") {
-            localStorage.removeItem(STORAGE_KEY);
-        }
+        setHistoryRaw({ v: 1, data: [] });
     };
 
     const removeFromHistory = (id: string) => {
-        setHistory((prev) => prev.filter((h) => h.id !== id));
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter(h => h.id !== id)
+        }));
     };
 
     return {
         history,
         addToHistory,
         clearHistory,
-        removeFromHistory,
+        removeFromHistory
     };
+}
+
+// Helper for deep equality (since we don't have lodash)
+function JSON_equal(a: any, b: any): boolean {
+    try {
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return a === b;
+    }
 }

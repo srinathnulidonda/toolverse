@@ -1,9 +1,8 @@
 // features/social/meta-tag-generator/Workspace.tsx
 "use client";
 
-import { useState, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
-import type { MetaTags, HistoryItem, Template } from "./types";
+import { useMetaTagGeneratorStore } from "./store";
 import BasicSeoForm from "./BasicSeoForm";
 import SocialMetaForm from "./SocialMetaForm";
 import AdvancedMetaForm from "./AdvancedMetaForm";
@@ -26,120 +25,49 @@ const TABS: { id: TabId; icon: string; label: string; group: "input" | "output" 
   { id: "history", icon: "ti-history", label: "History", group: "output" },
 ];
 
-const DEFAULT_TAGS: MetaTags = {
-  title: "",
-  description: "",
-  keywords: "",
-  author: "",
-  viewport: "width=device-width, initial-scale=1",
-  charset: "UTF-8",
-  language: "en",
-  canonical: "",
-  baseUrl: "",
-  robots: "index, follow",
-  googlebot: "",
-  bingbot: "",
-  ogType: "website",
-  ogTitle: "",
-  ogDescription: "",
-  ogImage: "",
-  ogImageAlt: "",
-  ogImageWidth: "1200",
-  ogImageHeight: "630",
-  ogUrl: "",
-  ogSiteName: "",
-  ogLocale: "en_US",
-  twitterCard: "summary_large_image",
-  twitterSite: "",
-  twitterCreator: "",
-  twitterTitle: "",
-  twitterDescription: "",
-  twitterImage: "",
-  twitterImageAlt: "",
-  articlePublishedTime: "",
-  articleModifiedTime: "",
-  articleAuthor: "",
-  articleSection: "",
-  articleTag: "",
-  themeColor: "",
-  msapplicationTileColor: "",
-  appleMobileWebAppCapable: "",
-  appleMobileWebAppStatusBarStyle: "default",
-  appleMobileWebAppTitle: "",
-  favicon: "",
-  appleTouchIcon: "",
-  icon32: "",
-  icon16: "",
-  enableSchema: false,
-  schemaType: "Article",
-  schemaData: {},
-};
-
 export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
-  const [tags, setTags] = useState<MetaTags>(DEFAULT_TAGS);
-  const [activeTab, setActiveTab] = useState<TabId>("basic");
-  const [history, setHistory] = useState<HistoryItem[]>([]);
-  const [mobileOutputOpen, setMobileOutputOpen] = useState(false);
-
-  // Load history
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("meta-tag-generator-history");
-      if (saved) setHistory(JSON.parse(saved));
-    } catch (e) {
-      console.error("Failed to load history:", e);
-    }
-  }, []);
-
-  // Save history
-  useEffect(() => {
-    try {
-      localStorage.setItem("meta-tag-generator-history", JSON.stringify(history));
-    } catch (e) {
-      console.error("Failed to save history:", e);
-    }
-  }, [history]);
-
-  const handleSaveToHistory = () => {
-    if (!tags.title && !tags.description) return;
-
-    const item: HistoryItem = {
-      id: `${Date.now()}-${Math.random()}`,
-      title: tags.title,
-      description: tags.description,
-      timestamp: Date.now(),
-      tags,
-    };
-
-    setHistory((prev) => [item, ...prev].slice(0, 15));
-  };
-
-  const handleRestoreFromHistory = (item: HistoryItem) => {
-    setTags(item.tags);
-    setActiveTab("basic");
-  };
-
-  const handleTemplateSelect = (template: Template) => {
-    setTags(template.tags);
-    setActiveTab("basic");
-  };
-
-  const handleReset = () => {
-    if (confirm("Reset all fields? This will clear your current work.")) {
-      setTags(DEFAULT_TAGS);
-    }
-  };
+  const {
+    tags,
+    setTags,
+    activeTab,
+    setActiveTab,
+    mobileOutputOpen,
+    setMobileOutputOpen,
+    history,
+    setHistory,
+    handleSaveToHistory,
+    handleRestoreFromHistory,
+    handleTemplateSelect,
+    handleReset,
+  } = useMetaTagGeneratorStore();
 
   const inputTabs = TABS.filter((t) => t.group === "input");
   const outputTabs = TABS.filter((t) => t.group === "output");
-
   const isOutputTab = outputTabs.some((t) => t.id === activeTab);
+
+  const handleResetWithConfirm = () => {
+    if (confirm("Reset all fields? This will clear your current work.")) {
+      handleReset();
+    }
+  };
+
+  const handleClearHistory = () => {
+    if (confirm("Clear all history?")) {
+      setHistory({ v: 1, data: [] });
+    }
+  };
+
+  const handleDeleteHistory = (id: string) => {
+    setHistory(prev => ({
+      v: 1,
+      data: (prev?.data || []).filter(i => i.id !== id)
+    }));
+  };
 
   return (
     <>
       <div className="mtg-root">
         <div className="mtg-workspace">
-          {/* Left Panel - Configuration */}
           <div className="mtg-left-panel">
             <div className="mtg-tabs-container">
               <div className="mtg-tabs-group">
@@ -162,18 +90,10 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
             </div>
 
             <div className="mtg-content">
-              {activeTab === "basic" && (
-                <BasicSeoForm tags={tags} onChange={setTags} />
-              )}
-              {activeTab === "social" && (
-                <SocialMetaForm tags={tags} onChange={setTags} />
-              )}
-              {activeTab === "advanced" && (
-                <AdvancedMetaForm tags={tags} onChange={setTags} />
-              )}
-              {activeTab === "templates" && (
-                <Templates onSelect={handleTemplateSelect} />
-              )}
+              {activeTab === "basic" && <BasicSeoForm tags={tags} onChange={setTags} />}
+              {activeTab === "social" && <SocialMetaForm tags={tags} onChange={setTags} />}
+              {activeTab === "advanced" && <AdvancedMetaForm tags={tags} onChange={setTags} />}
+              {activeTab === "templates" && <Templates onSelect={handleTemplateSelect} />}
             </div>
 
             <div className="mtg-actions">
@@ -181,21 +101,17 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
                 <i className="ti ti-device-floppy" aria-hidden="true" />
                 Save
               </button>
-              <button className="mtg-action-btn mtg-reset-btn" onClick={handleReset}>
+              <button className="mtg-action-btn mtg-reset-btn" onClick={handleResetWithConfirm}>
                 <i className="ti ti-refresh" aria-hidden="true" />
                 Reset
               </button>
-              <button
-                className="mtg-action-btn mtg-mobile-output-btn"
-                onClick={() => setMobileOutputOpen(true)}
-              >
+              <button className="mtg-action-btn mtg-mobile-output-btn" onClick={() => setMobileOutputOpen(true)}>
                 <i className="ti ti-eye" aria-hidden="true" />
                 View Output
               </button>
             </div>
           </div>
 
-          {/* Right Panel - Output */}
           <div className="mtg-right-panel">
             <div className="mtg-tabs-container">
               <div className="mtg-tabs-group">
@@ -228,10 +144,8 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
                 <HistoryPanel
                   items={history}
                   onRestore={handleRestoreFromHistory}
-                  onDelete={(id) => setHistory((h) => h.filter((i) => i.id !== id))}
-                  onClear={() => {
-                    if (confirm("Clear all history?")) setHistory([]);
-                  }}
+                  onDelete={handleDeleteHistory}
+                  onClear={handleClearHistory}
                 />
               )}
               {!isOutputTab && (
@@ -243,14 +157,9 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           </div>
         </div>
 
-        {/* Mobile Output Modal */}
         {mobileOutputOpen && (
           <>
-            <div
-              className="mtg-mobile-backdrop"
-              onClick={() => setMobileOutputOpen(false)}
-              aria-hidden="true"
-            />
+            <div className="mtg-mobile-backdrop" onClick={() => setMobileOutputOpen(false)} aria-hidden="true" />
             <div className="mtg-mobile-modal">
               <div className="mtg-mobile-modal-header">
                 <div className="mtg-mobile-tabs">
@@ -264,10 +173,7 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
                     </button>
                   ))}
                 </div>
-                <button
-                  className="mtg-mobile-close"
-                  onClick={() => setMobileOutputOpen(false)}
-                >
+                <button className="mtg-mobile-close" onClick={() => setMobileOutputOpen(false)}>
                   <i className="ti ti-x" aria-hidden="true" />
                 </button>
               </div>
@@ -279,10 +185,8 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
                   <HistoryPanel
                     items={history}
                     onRestore={handleRestoreFromHistory}
-                    onDelete={(id) => setHistory((h) => h.filter((i) => i.id !== id))}
-                    onClear={() => {
-                      if (confirm("Clear all history?")) setHistory([]);
-                    }}
+                    onDelete={handleDeleteHistory}
+                    onClear={handleClearHistory}
                   />
                 )}
                 {!isOutputTab && <SeoPreview tags={tags} />}
@@ -291,7 +195,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           </>
         )}
 
-        {/* Footer */}
         <div className="mtg-footer">
           <div className="mtg-footer-item">
             <i className="ti ti-lock" aria-hidden="true" />
@@ -314,15 +217,12 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           flex-direction: column;
           gap: 16px;
         }
-
         .mtg-workspace {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 16px;
           min-height: 720px;
         }
-
-        /* ═══════════════════ PANELS ═══════════════════ */
         .mtg-left-panel,
         .mtg-right-panel {
           display: flex;
@@ -332,17 +232,14 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           border-radius: 14px;
           overflow: hidden;
         }
-
         .mtg-tabs-container {
           background: var(--bg-surface);
           border-bottom: 0.5px solid var(--border);
         }
-
         .mtg-tabs-group {
           display: flex;
           flex-direction: column;
         }
-
         .mtg-tabs-group-label {
           font-size: 10px;
           font-weight: 700;
@@ -351,7 +248,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           letter-spacing: 0.08em;
           padding: 10px 16px 4px;
         }
-
         .mtg-tabs {
           display: flex;
           overflow-x: auto;
@@ -359,7 +255,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           padding: 0 8px 4px;
         }
         .mtg-tabs::-webkit-scrollbar { display: none; }
-
         .mtg-tab {
           display: flex;
           align-items: center;
@@ -384,7 +279,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           border-bottom-color: var(--brand);
           background: var(--bg-card);
         }
-
         .mtg-badge {
           display: inline-flex;
           align-items: center;
@@ -398,19 +292,15 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           font-size: 9.5px;
           font-weight: 700;
         }
-
         .mtg-content {
           flex: 1;
           overflow-y: auto;
           padding: 20px;
           overscroll-behavior: contain;
         }
-
         .mtg-output-placeholder {
           opacity: 0.6;
         }
-
-        /* ═══════════════════ ACTIONS ═══════════════════ */
         .mtg-actions {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -443,8 +333,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
         }
         .mtg-save-btn:hover { background: var(--brand); color: white; }
         .mtg-mobile-output-btn { display: none; }
-
-        /* ═══════════════════ FOOTER ═══════════════════ */
         .mtg-footer {
           display: flex;
           align-items: center;
@@ -464,40 +352,31 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
           color: var(--text-tertiary);
         }
         .mtg-footer-item i { font-size: 13px; }
-
-        /* ═══════════════════ MOBILE MODAL ═══════════════════ */
         .mtg-mobile-backdrop {
           display: none;
         }
         .mtg-mobile-modal {
           display: none;
         }
-
-        /* ═══════════════════ TABLET ≤ 1100px ═══════════════════ */
         @media (max-width: 1100px) {
           .mtg-workspace {
             grid-template-columns: 1fr 380px;
           }
         }
-
-        /* ═══════════════════ MOBILE ≤ 900px ═══════════════════ */
         @media (max-width: 900px) {
           .mtg-workspace {
             grid-template-columns: 1fr;
             min-height: auto;
           }
-
           .mtg-right-panel {
             display: none;
           }
-
           .mtg-actions {
             grid-template-columns: 1fr 1fr 1fr;
           }
           .mtg-mobile-output-btn {
             display: flex;
           }
-
           .mtg-tab span {
             display: none;
           }
@@ -505,8 +384,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
             padding: 10px;
           }
           .mtg-tab i { font-size: 17px; }
-
-          /* Mobile modal */
           .mtg-mobile-backdrop {
             display: block;
             position: fixed;
@@ -574,7 +451,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
             overflow-y: auto;
             padding: 20px;
           }
-
           @keyframes mtg-fade-in {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -583,7 +459,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
           }
-
           .mtg-footer {
             flex-direction: column;
             gap: 8px;
@@ -592,7 +467,6 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
             display: none;
           }
         }
-
         @media (max-width: 480px) {
           .mtg-content {
             padding: 16px;

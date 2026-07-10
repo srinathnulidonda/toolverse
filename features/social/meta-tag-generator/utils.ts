@@ -1,11 +1,9 @@
 // features/social/meta-tag-generator/utils.ts
-
-import type { MetaTags, ValidationIssue, ExportFormat, SchemaType } from "./types";
+import type { MetaTags, ValidationIssue, ExportFormat } from "./types";
 
 export function validateMetaTags(tags: MetaTags): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
 
-  // Title validation
   if (!tags.title) {
     issues.push({
       field: "title",
@@ -29,7 +27,6 @@ export function validateMetaTags(tags: MetaTags): ValidationIssue[] {
     });
   }
 
-  // Description validation
   if (!tags.description) {
     issues.push({
       field: "description",
@@ -53,7 +50,6 @@ export function validateMetaTags(tags: MetaTags): ValidationIssue[] {
     });
   }
 
-  // Canonical URL
   if (!tags.canonical) {
     issues.push({
       field: "canonical",
@@ -74,7 +70,6 @@ export function validateMetaTags(tags: MetaTags): ValidationIssue[] {
     }
   }
 
-  // Open Graph image
   if (!tags.ogImage) {
     issues.push({
       field: "ogImage",
@@ -84,7 +79,6 @@ export function validateMetaTags(tags: MetaTags): ValidationIssue[] {
     });
   }
 
-  // Keywords
   if (tags.keywords && tags.keywords.split(",").length > 10) {
     issues.push({
       field: "keywords",
@@ -98,22 +92,12 @@ export function validateMetaTags(tags: MetaTags): ValidationIssue[] {
 }
 
 export function generateMetaTagsCode(tags: MetaTags, format: ExportFormat): string {
-  const lines: string[] = [];
-
-  if (format === "html") {
-    return generateHTML(tags);
-  } else if (format === "jsx") {
-    return generateJSX(tags);
-  } else if (format === "nextjs") {
-    return generateNextJS(tags);
-  } else if (format === "gatsby") {
-    return generateGatsby(tags);
-  } else if (format === "vue") {
-    return generateVue(tags);
-  } else if (format === "json") {
-    return generateJSON(tags);
-  }
-
+  if (format === "html") return generateHTML(tags);
+  if (format === "jsx") return generateJSX(tags);
+  if (format === "nextjs") return generateNextJS(tags);
+  if (format === "gatsby") return generateGatsby(tags);
+  if (format === "vue") return generateVue(tags);
+  if (format === "json") return generateJSON(tags);
   return "";
 }
 
@@ -209,9 +193,8 @@ function generateHTML(tags: MetaTags): string {
 }
 
 function generateJSX(tags: MetaTags): string {
-  const html = generateHTML(tags);
-  return html
-    .replace(/<!--(.*?)-->/g, (match, content) => `{/* ${content.trim()} */}`)
+  return generateHTML(tags)
+    .replace(/<!--(.*?)-->/g, (_, content) => `{/* ${content.trim()} */}`)
     .replace(/charset=/g, 'charSet=')
     .replace(/http-equiv=/g, 'httpEquiv=')
     .replace(/content-language/g, 'contentLanguage');
@@ -406,16 +389,52 @@ function generateSchemaData(tags: MetaTags): any {
         url: tags.ogUrl || tags.canonical,
       };
 
+    case "VideoObject":
+      return {
+        ...baseSchema,
+        name: tags.title,
+        description: tags.description,
+        thumbnailUrl: tags.ogImage,
+        uploadDate: tags.articlePublishedTime,
+      };
+
+    case "Recipe":
+      return {
+        ...baseSchema,
+        name: tags.title,
+        description: tags.description,
+        image: tags.ogImage,
+        author: {
+          "@type": "Person",
+          name: tags.author,
+        },
+      };
+
+    case "Event":
+      return {
+        ...baseSchema,
+        name: tags.title,
+        description: tags.description,
+        image: tags.ogImage,
+        startDate: tags.articlePublishedTime,
+      };
+
     default:
       return baseSchema;
   }
 }
 
+const escapeMap: Record<string, string> = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+};
+
 function escapeHtml(text: string): string {
   if (!text) return "";
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
+  return text.replace(/[&<>"']/g, (char) => escapeMap[char] || char);
 }
 
 export function getCharCountColor(count: number, max: number, recommended: number): string {
@@ -427,44 +446,26 @@ export function getCharCountColor(count: number, max: number, recommended: numbe
 
 export function getSEOScore(tags: MetaTags): number {
   let score = 0;
-  const maxScore = 100;
 
-  // Title (20 points)
   if (tags.title) {
     score += 10;
     if (tags.title.length >= 30 && tags.title.length <= 60) score += 10;
   }
 
-  // Description (20 points)
   if (tags.description) {
     score += 10;
     if (tags.description.length >= 120 && tags.description.length <= 160) score += 10;
   }
 
-  // Canonical URL (10 points)
   if (tags.canonical) score += 10;
-
-  // OG Image (15 points)
   if (tags.ogImage) score += 15;
-
-  // Keywords (10 points)
   if (tags.keywords) score += 10;
-
-  // Robots (5 points)
   if (tags.robots) score += 5;
-
-  // Twitter card (10 points)
   if (tags.twitterCard) score += 10;
-
-  // Author (5 points)
   if (tags.author) score += 5;
-
-  // OG tags (10 points)
   if (tags.ogTitle || tags.ogDescription) score += 5;
   if (tags.ogUrl && tags.ogSiteName) score += 5;
-
-  // Schema (5 points)
   if (tags.enableSchema) score += 5;
 
-  return Math.min(score, maxScore);
+  return Math.min(score, 100);
 }

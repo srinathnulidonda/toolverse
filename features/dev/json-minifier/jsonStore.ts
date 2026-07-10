@@ -1,5 +1,6 @@
 // features/dev/json-minifier/jsonStore.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
 import type { ProcessResult, ProcessOptions } from "./jsonEngine";
 
 export interface JSONHistoryEntry {
@@ -29,88 +30,167 @@ const STORAGE_KEYS = {
     settings: "json-processor-settings",
 } as const;
 
-const DEFAULT_SETTINGS: JSONSettings = {
-    defaultOptions: {
-        mode: "minify",
-        indentStyle: "2-spaces",
-        sortKeys: false,
-        sortOrder: "asc",
-        removeNulls: false,
-        removeEmptyStrings: false,
-        removeEmptyArrays: false,
-        removeEmptyObjects: false,
-        escapedUnicode: false,
-    },
-    autoSave: true,
-    showAnalysis: true,
-    showIssues: true,
-    fontSize: "md",
-    wordWrap: true,
-    maxHistoryItems: 50,
-};
+const MAX_HISTORY_ITEMS = 50;
 
-function loadFromStorage<T>(key: string, fallback: T): T {
-    if (typeof window === "undefined") return fallback;
-    try {
-        const raw = localStorage.getItem(key);
-        return raw ? JSON.parse(raw) : fallback;
-    } catch { return fallback; }
+// Storage wrappers
+interface HistoryStorage {
+    v: number;
+    data: JSONHistoryEntry[];
+}
+interface SettingsStorage {
+    v: number;
+    data: JSONSettings;
 }
 
-function saveToStorage<T>(key: string, value: T): void {
-    if (typeof window === "undefined") return;
-    try { localStorage.setItem(key, JSON.stringify(value)); }
-    catch { /* quota exceeded */ }
+// Validation functions
+function validateHistory(raw: HistoryStorage | null): JSONHistoryEntry[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
+        return [];
+    }
+    const valid: JSONHistoryEntry[] = [];
+    for (const item of raw.data) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.timestamp === "number" &&
+            typeof item.title === "string" &&
+            typeof item.input === "string" &&
+            item.result &&
+            typeof item.result === "object" &&
+            item.options &&
+            typeof item.options === "object" &&
+            Array.isArray(item.tags) &&
+            typeof item.isFavorite === "boolean"
+        ) {
+            valid.push(item as JSONHistoryEntry);
+        }
+    }
+    if (valid.length > MAX_HISTORY_ITEMS) {
+        return valid.slice(0, MAX_HISTORY_ITEMS);
+    }
+    return valid;
+}
+
+function validateSettings(raw: SettingsStorage | null): JSONSettings {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw)) {
+        return {
+            defaultOptions: {
+                mode: "minify",
+                indentStyle: "2-spaces",
+                sortKeys: false,
+                sortOrder: "asc",
+                removeNulls: false,
+                removeEmptyStrings: false,
+                removeEmptyArrays: false,
+                removeEmptyObjects: false,
+                escapedUnicode: false,
+            },
+            autoSave: true,
+            showAnalysis: true,
+            showIssues: true,
+            fontSize: "md",
+            wordWrap: true,
+            maxHistoryItems: 50,
+        };
+    }
+    // We could validate the settings object, but for simplicity we'll just return the data.
+    // In a real scenario, we would define the shape of JSONSettings and validate accordingly.
+    return raw.data;
 }
 
 export function useJSONStore() {
-    const [history,  setHistory]  = useState<JSONHistoryEntry[]>([]);
-    const [settings, setSettings] = useState<JSONSettings>(DEFAULT_SETTINGS);
+    const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(
+        STORAGE_KEYS.history,
+        { v: 1, data: [] }
+    );
+    const [settingsRaw, setSettingsRaw] = useLocalStorage<SettingsStorage>(
+        STORAGE_KEYS.settings,
+        { v: 1, data: {
+            defaultOptions: {
+                mode: "minify",
+                indentStyle: "2-spaces",
+                sortKeys: false,
+                sortOrder: "asc",
+                removeNulls: false,
+                removeEmptyStrings: false,
+                removeEmptyArrays: false,
+                removeEmptyObjects: false,
+                escapedUnicode: false,
+            },
+            autoSave: true,
+            showAnalysis: true,
+            showIssues: true,
+            fontSize: "md",
+            wordWrap: true,
+            maxHistoryItems: 50,
+        } }
+    );
+
+    const history = useMemo(() => validateHistory(historyRaw), [historyRaw]);
+    const settings = useMemo(() => validateSettings(settingsRaw), [settingsRaw]);
+
+    // Sync back to storage if validation changes the data
+    useEffect(() => {
+        if (!JSON_equal(history, historyRaw?.data)) {
+            setHistoryRaw({ v: 1, data: history });
+        }
+    }, [history, historyRaw]);
 
     useEffect(() => {
-        setHistory(loadFromStorage(STORAGE_KEYS.history, []));
-        setSettings(loadFromStorage(STORAGE_KEYS.settings, DEFAULT_SETTINGS));
-    }, []);
-
-    useEffect(() => {
-        if (history.length > 0) saveToStorage(STORAGE_KEYS.history, history);
-    }, [history]);
-
-    useEffect(() => {
-        saveToStorage(STORAGE_KEYS.settings, settings);
-    }, [settings]);
+        if (!JSON_equal(settings, settingsRaw?.data)) {
+            setSettingsRaw({ v: 1, data: settings });
+        }
+    }, [settings, settingsRaw]);
 
     const addToHistory = (entry: Omit<JSONHistoryEntry, "id" | "timestamp">) => {
+        // Note: autoSave is now part of settings, but we still respect it.
         if (!settings.autoSave) return;
+
         const newEntry: JSONHistoryEntry = {
             ...entry,
             id: `json_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             timestamp: Date.now(),
         };
-        setHistory(prev => {
-            const isDup = prev.slice(0, 5).some(e => e.input === newEntry.input);
-            if (isDup) return prev;
-            return [newEntry, ...prev].slice(0, settings.maxHistoryItems);
+
+        setHistoryRaw((prev) => {
+            // Check for recent duplicate
+            const isDuplicate = (prev?.data ?? []).slice(0, 5).some(e => e.input === newEntry.input);
+            if (isDuplicate) return prev;
+
+            const newData = [...(prev?.data ?? []), newEntry].slice(0, settings.maxHistoryItems);
+            return { v: 1, data: newData };
         });
-        return newEntry.id;
     };
 
-    const removeFromHistory = (id: string) =>
-        setHistory(prev => prev.filter(e => e.id !== id));
+    const removeFromHistory = (id: string) => {
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter(e => e.id !== id)
+        }));
+    };
 
     const clearHistory = () => {
-        setHistory([]);
-        localStorage.removeItem(STORAGE_KEYS.history);
+        setHistoryRaw({ v: 1, data: [] });
     };
 
-    const toggleFavorite = (id: string) =>
-        setHistory(prev => prev.map(e => e.id === id ? { ...e, isFavorite: !e.isFavorite } : e));
+    const toggleFavorite = (id: string) => {
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).map(e => e.id === id ? { ...e, isFavorite: !e.isFavorite } : e)
+        }));
+    };
 
-    const updateEntry = (id: string, updates: Partial<JSONHistoryEntry>) =>
-        setHistory(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e));
+    const updateEntry = (id: string, updates: Partial<JSONHistoryEntry>) => {
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).map(e => e.id === id ? { ...e, ...updates } : e)
+        }));
+    };
 
     const searchHistory = (query: string): JSONHistoryEntry[] => {
         if (!query.trim()) return history;
+
         const q = query.toLowerCase();
         return history.filter(e =>
             e.title.toLowerCase().includes(q) ||
@@ -123,10 +203,10 @@ export function useJSONStore() {
     const getFavorites = () => history.filter(e => e.isFavorite);
 
     const getStatistics = () => {
-        const totalEntries  = history.length;
+        const totalEntries = history.length;
         const favoriteCount = getFavorites().length;
-        const totalSavings  = history.reduce((acc, e) => acc + e.result.stats.savings, 0);
-        const modeUsage     = history.reduce((acc, e) => {
+        const totalSavings = history.reduce((acc, e) => acc + e.result.stats.savings, 0);
+        const modeUsage = history.reduce((acc, e) => {
             acc[e.options.mode] = (acc[e.options.mode] || 0) + 1;
             return acc;
         }, {} as Record<string, number>);
@@ -140,16 +220,39 @@ export function useJSONStore() {
         };
     };
 
-    const updateSettings = (updates: Partial<JSONSettings>) =>
-        setSettings(prev => ({ ...prev, ...updates }));
+    const updateSettings = (updates: Partial<JSONSettings>) => {
+        setSettingsRaw((prev) => ({
+            v: 1,
+            data: { ...(prev?.data ?? {}), ...updates }
+        }));
+    };
 
     const resetSettings = () => {
-        setSettings(DEFAULT_SETTINGS);
-        saveToStorage(STORAGE_KEYS.settings, DEFAULT_SETTINGS);
+        setSettingsRaw({ v: 1, data: {
+            defaultOptions: {
+                mode: "minify",
+                indentStyle: "2-spaces",
+                sortKeys: false,
+                sortOrder: "asc",
+                removeNulls: false,
+                removeEmptyStrings: false,
+                removeEmptyArrays: false,
+                removeEmptyObjects: false,
+                escapedUnicode: false,
+            },
+            autoSave: true,
+            showAnalysis: true,
+            showIssues: true,
+            fontSize: "md",
+            wordWrap: true,
+            maxHistoryItems: 50,
+        } });
     };
 
     const exportHistory = (format: "json" | "csv") => {
-        if (format === "json") return JSON.stringify(history, null, 2);
+        if (format === "json") {
+            return JSON.stringify(history, null, 2);
+        }
         const headers = ["Timestamp", "Title", "Mode", "Original", "Processed", "Savings", "Favorite"];
         const rows = history.map(e => [
             new Date(e.timestamp).toISOString(),
@@ -172,4 +275,13 @@ export function useJSONStore() {
         getFavorites, getStatistics,
         updateSettings, resetSettings, exportHistory,
     };
+}
+
+// Helper for deep equality (since we don't have lodash)
+function JSON_equal(a: any, b: any): boolean {
+    try {
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return a === b;
+    }
 }

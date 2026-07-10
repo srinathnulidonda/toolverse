@@ -1,6 +1,6 @@
 // features/dev/regex-tester/regexStore.ts
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
 import type { RegexPattern, RegexFlags, TestCase } from "./utils";
 
 const STORAGE_KEY_PATTERNS = "regex-patterns";
@@ -16,48 +16,89 @@ export interface HistoryEntry {
     timestamp: number;
 }
 
-const loadFromStorage = <T,>(key: string, defaultValue: T): T => {
-    if (typeof window === "undefined") return defaultValue;
-    try {
-        const stored = localStorage.getItem(key);
-        return stored ? JSON.parse(stored) : defaultValue;
-    } catch {
-        return defaultValue;
-    }
-};
+// Storage wrappers
+interface PatternsStorage {
+    v: number;
+    data: RegexPattern[];
+}
+interface HistoryStorage {
+    v: number;
+    data: HistoryEntry[];
+}
 
-const saveToStorage = <T,>(key: string, value: T): void => {
-    if (typeof window === "undefined") return;
-    try {
-        localStorage.setItem(key, JSON.stringify(value));
-    } catch {
-        // Silent fail
+// Validation functions
+function validatePatterns(raw: PatternsStorage | null): RegexPattern[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
+        return [];
     }
-};
+    const valid: RegexPattern[] = [];
+    for (const item of raw.data) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.pattern === "string" &&
+            typeof item.flags === "object" &&
+            typeof item.createdAt === "number" &&
+            typeof item.updatedAt === "number" &&
+            typeof item.favorite === "boolean"
+        ) {
+            valid.push(item as RegexPattern);
+        }
+    }
+    return valid;
+}
+
+function validateHistory(raw: HistoryStorage | null): HistoryEntry[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
+        return [];
+    }
+    const valid: HistoryEntry[] = [];
+    for (const item of raw.data) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.pattern === "string" &&
+            typeof item.flags === "object" &&
+            typeof item.testString === "string" &&
+            typeof item.matchCount === "number" &&
+            typeof item.timestamp === "number"
+        ) {
+            valid.push(item as HistoryEntry);
+        }
+    }
+    if (valid.length > MAX_HISTORY) {
+        return valid.slice(0, MAX_HISTORY);
+    }
+    return valid;
+}
 
 export function useRegexStore() {
-    const [patterns, setPatterns] = useState<RegexPattern[]>([]);
-    const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const [patternsRaw, setPatternsRaw] = useLocalStorage<PatternsStorage>(
+        STORAGE_KEY_PATTERNS,
+        { v: 1, data: [] }
+    );
+    const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(
+        STORAGE_KEY_HISTORY,
+        { v: 1, data: [] }
+    );
 
-    // Load from storage on mount
-    useEffect(() => {
-        setPatterns(loadFromStorage(STORAGE_KEY_PATTERNS, []));
-        setHistory(loadFromStorage(STORAGE_KEY_HISTORY, []));
-    }, []);
+    const patterns = useMemo(() => validatePatterns(patternsRaw), [patternsRaw]);
+    const history = useMemo(() => validateHistory(historyRaw), [historyRaw]);
 
-    // Save patterns to storage
+    // Sync back to storage if validation changes the data
     useEffect(() => {
-        if (patterns.length > 0) {
-            saveToStorage(STORAGE_KEY_PATTERNS, patterns);
+        if (!JSON_equal(patterns, patternsRaw?.data)) {
+            setPatternsRaw({ v: 1, data: patterns });
         }
-    }, [patterns]);
+    }, [patterns, patternsRaw]);
 
-    // Save history to storage
     useEffect(() => {
-        if (history.length > 0) {
-            saveToStorage(STORAGE_KEY_HISTORY, history);
+        if (!JSON_equal(history, historyRaw?.data)) {
+            setHistoryRaw({ v: 1, data: history });
         }
-    }, [history]);
+    }, [history, historyRaw]);
 
     const savePattern = (pattern: Omit<RegexPattern, "id" | "createdAt" | "updatedAt">) => {
         const newPattern: RegexPattern = {
@@ -67,30 +108,36 @@ export function useRegexStore() {
             updatedAt: Date.now(),
         };
 
-        setPatterns((prev) => [newPattern, ...prev]);
+        setPatternsRaw((prev) => ({
+            v: 1,
+            data: [...(prev?.data ?? []), newPattern]
+        }));
         return newPattern;
     };
 
     const updatePattern = (id: string, updates: Partial<RegexPattern>) => {
-        setPatterns((prev) =>
-            prev.map((p) =>
-                p.id === id
-                    ? { ...p, ...updates, updatedAt: Date.now() }
-                    : p
+        setPatternsRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).map(p =>
+                p.id === id ? { ...p, ...updates, updatedAt: Date.now() } : p
             )
-        );
+        }));
     };
 
     const deletePattern = (id: string) => {
-        setPatterns((prev) => prev.filter((p) => p.id !== id));
+        setPatternsRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter(p => p.id !== id)
+        }));
     };
 
     const toggleFavorite = (id: string) => {
-        setPatterns((prev) =>
-            prev.map((p) =>
+        setPatternsRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).map(p =>
                 p.id === id ? { ...p, favorite: !p.favorite } : p
             )
-        );
+        }));
     };
 
     const addToHistory = (entry: Omit<HistoryEntry, "id" | "timestamp">) => {
@@ -100,31 +147,35 @@ export function useRegexStore() {
             timestamp: Date.now(),
         };
 
-        setHistory((prev) => {
+        setHistoryRaw((prev) => {
             // Don't add duplicates (same pattern and test string)
-            const isDuplicate = prev.some(
-                (h) => h.pattern === entry.pattern && h.testString === entry.testString
+            const isDuplicate = (prev?.data ?? []).some(
+                h => h.pattern === entry.pattern && h.testString === entry.testString
             );
 
             if (isDuplicate) return prev;
 
-            return [newEntry, ...prev].slice(0, MAX_HISTORY);
+            const newHistory = [...(prev?.data ?? []), newEntry].slice(0, MAX_HISTORY);
+            return { v: 1, data: newHistory };
         });
     };
 
     const clearHistory = () => {
-        setHistory([]);
-        if (typeof window !== "undefined") {
-            localStorage.removeItem(STORAGE_KEY_HISTORY);
-        }
+        setHistoryRaw({ v: 1, data: [] });
     };
 
     const deleteHistoryEntry = (id: string) => {
-        setHistory((prev) => prev.filter((h) => h.id !== id));
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter(h => h.id !== id)
+        }));
     };
 
     const importPatterns = (newPatterns: RegexPattern[]) => {
-        setPatterns((prev) => [...newPatterns, ...prev]);
+        setPatternsRaw((prev) => ({
+            v: 1,
+            data: [...newPatterns, ...(prev?.data ?? [])]
+        }));
     };
 
     const exportPatterns = (): string => {
@@ -144,4 +195,13 @@ export function useRegexStore() {
         importPatterns,
         exportPatterns,
     };
+}
+
+// Helper for deep equality (since we don't have lodash)
+function JSON_equal(a: any, b: any): boolean {
+    try {
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return a === b;
+    }
 }

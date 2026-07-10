@@ -384,7 +384,6 @@ export default function Templates({ onSelect }: TemplatesProps) {
           flex-direction: column;
           gap: 20px;
         }
-
         .tpl-intro {
           display: flex;
           gap: 14px;
@@ -418,13 +417,11 @@ export default function Templates({ onSelect }: TemplatesProps) {
           margin: 0;
           line-height: 1.5;
         }
-
         .tpl-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
           gap: 12px;
         }
-
         .tpl-card {
           display: flex;
           flex-direction: column;
@@ -442,7 +439,6 @@ export default function Templates({ onSelect }: TemplatesProps) {
           transform: translateY(-2px);
           box-shadow: 0 6px 16px rgba(0,0,0,0.08);
         }
-
         .tpl-card-top {
           display: flex;
           align-items: center;
@@ -466,7 +462,6 @@ export default function Templates({ onSelect }: TemplatesProps) {
           border-color: var(--brand-border);
           color: var(--brand-text);
         }
-
         .tpl-category {
           font-size: 10px;
           font-weight: 600;
@@ -477,21 +472,18 @@ export default function Templates({ onSelect }: TemplatesProps) {
           background: var(--bg-surface);
           border-radius: 4px;
         }
-
         .tpl-name {
           font-size: 13.5px;
           font-weight: 600;
           color: var(--text);
           line-height: 1.3;
         }
-
         .tpl-desc {
           font-size: 11.5px;
           color: var(--text-tertiary);
           line-height: 1.5;
           flex: 1;
         }
-
         .tpl-use-btn {
           display: flex;
           align-items: center;
@@ -508,7 +500,6 @@ export default function Templates({ onSelect }: TemplatesProps) {
         .tpl-card:hover .tpl-use-btn i {
           transform: translateX(3px);
         }
-
         @media (max-width: 600px) {
           .tpl-grid {
             grid-template-columns: 1fr;

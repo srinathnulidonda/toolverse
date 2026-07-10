@@ -1,6 +1,7 @@
 // features/dev/base64-encoder/base64Store.ts
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Mode, EncodingOptions } from "./utils";
+import useLocalStorage from "@/lib/useLocalStorage";
 
 export interface HistoryEntry {
     id: string;
@@ -14,64 +15,76 @@ export interface HistoryEntry {
 const STORAGE_KEY = "base64-history";
 const MAX_HISTORY_ITEMS = 50;
 
-// Helper functions for localStorage
-const loadHistory = (): HistoryEntry[] => {
-    if (typeof window === "undefined") return [];
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
-    } catch {
-        return [];
+// Validation function for history array
+function validateHistory(raw: HistoryEntry[] | null): HistoryEntry[] {
+    if (!Array.isArray(raw)) return [];
+    const valid: HistoryEntry[] = [];
+    for (const item of raw) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.mode === "string" &&
+            typeof item.input === "string" &&
+            typeof item.output === "string" &&
+            typeof item.timestamp === "number" &&
+            typeof item.options === "object" &&
+            item.options !== null
+        ) {
+            // Optionally deeper validation of options if needed
+            valid.push(item as HistoryEntry);
+        }
     }
-};
-
-const saveHistory = (history: HistoryEntry[]) => {
-    if (typeof window === "undefined") return;
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-    } catch {
-        // Silent fail
+    // Limit to max items (keeping most recent)
+    if (valid.length > MAX_HISTORY_ITEMS) {
+        return valid.slice(0, MAX_HISTORY_ITEMS);
     }
-};
+    return valid;
+}
 
 export function useBase64Store() {
-    const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const [rawHistory, setRawHistory] = useLocalStorage<HistoryEntry[]>(
+        STORAGE_KEY,
+        []
+    );
 
-    // Load from localStorage on mount
-    useEffect(() => {
-        setHistory(loadHistory());
-    }, []);
+    const history = useMemo(() => validateHistory(rawHistory), [rawHistory]);
 
-    // Save to localStorage whenever history changes
+    // Ensure that if validation changes the array, we sync back to storage
     useEffect(() => {
-        if (history.length > 0) {
-            saveHistory(history);
+        if (!JSON_equal(history, rawHistory)) {
+            setRawHistory(history);
         }
-    }, [history]);
+    }, [history, rawHistory]);
+
+    // Note: The above effect will run after render; we could also rely on the
+    // setter below to always store validated data, but this ensures that
+    // if validation logic changes, we update storage accordingly.
 
     const addToHistory = (entry: HistoryEntry) => {
-        setHistory((prev) => {
+        setRawHistory((prev) => {
             // Don't add duplicates (same input/output within last 5 items)
-            const recentDuplicate = prev.slice(0, 5).find(
+            const recentDuplicate = (prev ?? []).slice(0, 5).find(
                 (h) => h.input === entry.input && h.output === entry.output
             );
-
             if (recentDuplicate) return prev;
 
-            const newHistory = [entry, ...prev].slice(0, MAX_HISTORY_ITEMS);
+            const newHistory = [...(prev ?? []), entry].slice(
+                0,
+                MAX_HISTORY_ITEMS
+            );
             return newHistory;
         });
     };
 
     const clearHistory = () => {
-        setHistory([]);
-        if (typeof window !== "undefined") {
-            localStorage.removeItem(STORAGE_KEY);
-        }
+        setRawHistory([]);
     };
 
     const removeFromHistory = (id: string) => {
-        setHistory((prev) => prev.filter((h) => h.id !== id));
+        setRawHistory((prev) =>
+            (prev ?? []).filter((h) => h.id !== id)
+        );
     };
 
     return {
@@ -80,4 +93,13 @@ export function useBase64Store() {
         clearHistory,
         removeFromHistory,
     };
+}
+
+// Helper for deep equality (since we don't have lodash)
+function JSON_equal(a: any, b: any): boolean {
+    try {
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return a === b;
+    }
 }

@@ -647,19 +647,19 @@ export default function FloatingWidget() {
           width: 56px;
           height: 56px;
           border-radius: 50%;
-          background: var(--text);
+          background: var(--bg-card);
           border: none;
           cursor: grab;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: var(--bg);
+          color: var(--text);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
           touch-action: none;
         }
         .fw-fab:hover {
-          background: var(--text-secondary);
+          background: var(--bg-surface);
           transform: scale(1.05);
           box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.12);
         }

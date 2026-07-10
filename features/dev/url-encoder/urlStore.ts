@@ -1,6 +1,6 @@
 // features/dev/url-encoder/urlStore.ts
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
 import type { Mode, EncodingOptions } from "./utils";
 
 export interface HistoryEntry {
@@ -15,60 +15,77 @@ export interface HistoryEntry {
 const STORAGE_KEY = "url-encoder-history";
 const MAX_HISTORY = 50;
 
-function loadHistory(): HistoryEntry[] {
-    if (typeof window === "undefined") return [];
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : [];
-    } catch {
-        return [];
-    }
+// Storage wrapper
+interface HistoryStorage {
+    v: number;
+    data: HistoryEntry[];
 }
 
-function saveHistory(history: HistoryEntry[]) {
-    if (typeof window === "undefined") return;
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-    } catch {
-        // Silent fail
+// Validation function
+function validateHistory(raw: HistoryStorage | null): HistoryEntry[] {
+    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
+        return [];
     }
+    const valid: HistoryEntry[] = [];
+    for (const item of raw.data) {
+        if (
+            item &&
+            typeof item === "object" &&
+            typeof item.id === "string" &&
+            typeof item.mode === "string" && // Mode is a union type, but we trust it
+            typeof item.input === "string" &&
+            typeof item.output === "string" &&
+            typeof item.timestamp === "number" &&
+            item.options &&
+            typeof item.options === "object"
+        ) {
+            valid.push(item as HistoryEntry);
+        }
+    }
+    if (valid.length > MAX_HISTORY) {
+        return valid.slice(0, MAX_HISTORY);
+    }
+    return valid;
 }
 
 export function useUrlStore() {
-    const [history, setHistory] = useState<HistoryEntry[]>([]);
+    const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(
+        STORAGE_KEY,
+        { v: 1, data: [] }
+    );
 
-    useEffect(() => {
-        setHistory(loadHistory());
-    }, []);
+    const history = useMemo(() => validateHistory(historyRaw), [historyRaw]);
 
+    // Sync back to storage if validation changes the data
     useEffect(() => {
-        if (history.length > 0) {
-            saveHistory(history);
+        if (!JSON_equal(history, historyRaw?.data)) {
+            setHistoryRaw({ v: 1, data: history });
         }
-    }, [history]);
+    }, [history, historyRaw]);
 
     const addToHistory = (entry: HistoryEntry) => {
-        setHistory(prev => {
+        setHistoryRaw((prev) => {
             // Check for recent duplicates
-            const isDuplicate = prev.slice(0, 5).some(
+            const isDuplicate = (prev?.data ?? []).slice(0, 5).some(
                 h => h.input === entry.input && h.output === entry.output
             );
-            
+
             if (isDuplicate) return prev;
-            
-            return [entry, ...prev].slice(0, MAX_HISTORY);
+
+            const newHistory = [...(prev?.data ?? []), entry].slice(0, MAX_HISTORY);
+            return { v: 1, data: newHistory };
         });
     };
 
     const clearHistory = () => {
-        setHistory([]);
-        if (typeof window !== "undefined") {
-            localStorage.removeItem(STORAGE_KEY);
-        }
+        setHistoryRaw({ v: 1, data: [] });
     };
 
     const removeEntry = (id: string) => {
-        setHistory(prev => prev.filter(h => h.id !== id));
+        setHistoryRaw((prev) => ({
+            v: 1,
+            data: (prev?.data ?? []).filter(h => h.id !== id)
+        }));
     };
 
     return {
@@ -77,4 +94,13 @@ export function useUrlStore() {
         clearHistory,
         removeEntry
     };
+}
+
+// Helper for deep equality (since we don't have lodash)
+function JSON_equal(a: any, b: any): boolean {
+    try {
+        return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+        return a === b;
+    }
 }
