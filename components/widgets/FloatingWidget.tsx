@@ -1,93 +1,375 @@
 // components/widgets/FloatingWidget.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import useLocalStorage from "@/lib/useLocalStorage";
 import WidgetTasks from "./WidgetTasks";
 import WidgetNotes from "./WidgetNotes";
-import { Task, Note, TASKS_STORAGE_KEY, NOTES_STORAGE_KEY } from "./widgetTypes";
+import { Task, Note, Priority, TASKS_STORAGE_KEY, NOTES_STORAGE_KEY, TASKS_DRAFT_KEY, NOTES_DRAFT_KEY, cleanTasks, cleanNotes } from "./widgetTypes";
 
 type ViewMode = "minimized" | "expanded" | "full";
 type ActiveTab = "tasks" | "notes";
+type Filter = "all" | "active" | "completed";
 
 const WIDGET_POSITION_KEY = "tv:widget-position";
 const ACTIVE_TAB_KEY = "tv:active-tab";
+
+const MAX_PANEL_HEIGHT = 620;
+const MAX_PANEL_WIDTH = 400;
+const DRAG_THRESHOLD = 4;
+
+interface TasksDraft {
+  input: string;
+  priority: Priority;
+  showPicker: boolean;
+  search: string;
+  filter: Filter;
+  showCompleted: boolean;
+}
+
+interface NotesDraft {
+  activeNote: string | null;
+  title: string;
+  content: string;
+  composerOpen: boolean;
+  search: string;
+}
+
+const DEFAULT_TASKS_DRAFT: TasksDraft = {
+  input: "",
+  priority: "medium",
+  showPicker: false,
+  search: "",
+  filter: "all",
+  showCompleted: true,
+};
+
+const DEFAULT_NOTES_DRAFT: NotesDraft = {
+  activeNote: null,
+  title: "",
+  content: "",
+  composerOpen: false,
+  search: "",
+};
 
 export default function FloatingWidget() {
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("minimized");
   const [activeTab, setActiveTab] = useLocalStorage<ActiveTab>(ACTIVE_TAB_KEY, "tasks");
-  const [position, setPosition] = useLocalStorage(WIDGET_POSITION_KEY, {
+  
+  const [persistedPosition, setPersistedPosition] = useLocalStorage(WIDGET_POSITION_KEY, {
     bottom: 24,
     right: 24,
   });
+  
+  const [livePosition, setLivePosition] = useState(persistedPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
-  const [tasks, setTasks] = useLocalStorage<Task[]>(TASKS_STORAGE_KEY, []);
-  const [notes, setNotes] = useLocalStorage<Note[]>(NOTES_STORAGE_KEY, []);
+  const [rawTasks, setRawTasks] = useLocalStorage<Task[]>(TASKS_STORAGE_KEY, []);
+  const [rawNotes, setRawNotes] = useLocalStorage<Note[]>(NOTES_STORAGE_KEY, []);
+  
+  const tasks = useMemo(() => cleanTasks(rawTasks), [rawTasks]);
+  const notes = useMemo(() => cleanNotes(rawNotes), [rawNotes]);
+  
+  const setTasks = (value: Task[] | ((prev: Task[]) => Task[])) => setRawTasks(value);
+  const setNotes = (value: Note[] | ((prev: Note[]) => Note[])) => setRawNotes(value);
+
+  const [notesDraft, setNotesDraft] = useLocalStorage<NotesDraft>(NOTES_DRAFT_KEY, DEFAULT_NOTES_DRAFT);
+  const [tasksDraft, setTasksDraft] = useLocalStorage<TasksDraft>(TASKS_DRAFT_KEY, DEFAULT_TASKS_DRAFT);
 
   const widgetRef = useRef<HTMLDivElement>(null);
+  const hasDraggedRef = useRef(false);
+  const startPosRef = useRef({ x: 0, y: 0 });
+  
+  const livePositionRef = useRef(livePosition);
+  const isDraggingRef = useRef(isDragging);
+  
+  useEffect(() => {
+    livePositionRef.current = livePosition;
+  }, [livePosition]);
+  
+  useEffect(() => {
+    isDraggingRef.current = isDragging;
+  }, [isDragging]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setViewMode((prev) => (prev === "minimized" ? "expanded" : "minimized"));
+    if (mounted && !isDragging) {
+      setLivePosition(persistedPosition);
+    }
+  }, [mounted, persistedPosition, isDragging]);
+
+  const clampPosition = (pos: { bottom: number; right: number }, currentViewMode: ViewMode = viewMode) => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    const maxHeight = currentViewMode === "expanded" ? MAX_PANEL_HEIGHT : 100;
+    const maxWidth = currentViewMode === "expanded" ? MAX_PANEL_WIDTH : 100;
+    
+    if (viewportWidth < MAX_PANEL_WIDTH + 20) {
+      return {
+        bottom: Math.max(10, Math.min(pos.bottom, viewportHeight - maxHeight)),
+        right: 10,
+      };
+    }
+    
+    return {
+      bottom: Math.max(10, Math.min(pos.bottom, viewportHeight - maxHeight)),
+      right: Math.max(10, Math.min(pos.right, viewportWidth - maxWidth)),
+    };
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      const clamped = clampPosition(persistedPosition);
+      setPersistedPosition(clamped);
+      if (!isDraggingRef.current) {
+        setLivePosition(clamped);
       }
-      if (e.key === "Escape") {
-        setViewMode((prev) => (prev === "full" ? "expanded" : prev === "expanded" ? "minimized" : prev));
+    };
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
+    
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
+    };
+  }, [persistedPosition, setPersistedPosition, viewMode]);
+
+  useEffect(() => {
+    if (viewMode === "expanded") {
+      const clampedForExpanded = clampPosition(livePositionRef.current, "expanded");
+      setLivePosition(clampedForExpanded);
+      if (!isDraggingRef.current) {
+        setPersistedPosition(clampedForExpanded);
+      }
+    }
+  }, [viewMode, setPersistedPosition]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isTyping = target.tagName === "INPUT" || 
+                       target.tagName === "TEXTAREA" || 
+                       target.isContentEditable;
+
+      if ((e.metaKey || e.ctrlKey) && e.key === "k" && !isTyping) {
+        e.preventDefault();
+        setViewMode((prev) => {
+          if (prev === "minimized") return "expanded";
+          if (prev === "expanded") return "full";
+          return "minimized";
+        });
+      }
+      
+      if (e.key === "Escape" && !isTyping) {
+        setViewMode((prev) => {
+          if (prev === "full") return "expanded";
+          if (prev === "expanded") return "minimized";
+          return prev;
+        });
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, []);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (viewMode === "minimized") {
-      setIsDragging(true);
-      const rect = widgetRef.current?.getBoundingClientRect();
-      if (rect) {
-        setDragOffset({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  useEffect(() => {
+    if (viewMode !== "full") return;
+
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const originalOverflow = document.body.style.overflow;
+    
+    document.body.style.overflow = "hidden";
+    
+    setTimeout(() => {
+      widgetRef.current?.querySelector<HTMLElement>("button:not(:disabled), input, [tabindex]:not([tabindex='-1'])")?.focus();
+    }, 100);
+
+    const trapFocus = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      
+      const modal = widgetRef.current?.querySelector(".fw-full-panel");
+      if (!modal) return;
+
+      const focusable = Array.from(modal.querySelectorAll<HTMLElement>(
+        'button, input, textarea, [tabindex]:not([tabindex="-1"])'
+      )).filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
+      
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last?.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
       }
+    };
+
+    document.addEventListener("keydown", trapFocus);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.removeEventListener("keydown", trapFocus);
+      previouslyFocused?.focus();
+    };
+  }, [viewMode]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    hasDraggedRef.current = false;
+    startPosRef.current = { x: e.clientX, y: e.clientY };
+    
+    const rect = widgetRef.current?.getBoundingClientRect();
+    if (rect) {
+      setDragOffset({ 
+        x: rect.right - e.clientX, 
+        y: rect.bottom - e.clientY 
+      });
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setIsDragging(true);
+    hasDraggedRef.current = false;
+    startPosRef.current = { x: touch.clientX, y: touch.clientY };
+    
+    const rect = widgetRef.current?.getBoundingClientRect();
+    if (rect) {
+      setDragOffset({ 
+        x: rect.right - touch.clientX, 
+        y: rect.bottom - touch.clientY 
+      });
     }
   };
 
   useEffect(() => {
     if (!isDragging) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const newBottom = window.innerHeight - e.clientY - dragOffset.y;
-      const newRight = window.innerWidth - e.clientX - dragOffset.x;
-      setPosition({
-        bottom: Math.max(10, Math.min(newBottom, window.innerHeight - 100)),
-        right: Math.max(10, Math.min(newRight, window.innerWidth - 100)),
-      });
+    const clamp = (clientX: number, clientY: number) => {
+      const dx = clientX - startPosRef.current.x;
+      const dy = clientY - startPosRef.current.y;
+      
+      if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
+        hasDraggedRef.current = true;
+      }
+
+      const newBottom = window.innerHeight - clientY - dragOffset.y;
+      const newRight = window.innerWidth - clientX - dragOffset.x;
+      
+      setLivePosition(clampPosition({ bottom: newBottom, right: newRight }));
     };
 
-    const handleMouseUp = () => setIsDragging(false);
+    const handleMouseMove = (e: MouseEvent) => clamp(e.clientX, e.clientY);
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      clamp(touch.clientX, touch.clientY);
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      setPersistedPosition(livePositionRef.current);
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+      setPersistedPosition(livePositionRef.current);
+    };
 
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    document.addEventListener("touchend", handleTouchEnd);
+    
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isDragging, dragOffset, setPosition]);
+  }, [isDragging, dragOffset, setPersistedPosition, viewMode]);
+
+  const handleDragKeyDown = (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 40 : 10;
+    let newPos = { ...livePosition };
+
+    switch (e.key) {
+      case "ArrowLeft":
+        e.preventDefault();
+        newPos.right += step;
+        break;
+      case "ArrowRight":
+        e.preventDefault();
+        newPos.right -= step;
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        newPos.bottom += step;
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        newPos.bottom -= step;
+        break;
+      default:
+        return;
+    }
+
+    const clamped = clampPosition(newPos);
+    setLivePosition(clamped);
+    setPersistedPosition(clamped);
+  };
 
   if (!mounted) return null;
 
   const pendingCount = tasks.filter((t) => !t.completed).length;
 
+  const renderWidgetContent = () => {
+    if (activeTab === "tasks") {
+      return (
+        <WidgetTasks 
+          variant={viewMode === "full" ? "full" : "compact"}
+          tasks={tasks} 
+          setTasks={setTasks}
+          draft={tasksDraft}
+          setDraft={setTasksDraft}
+          onExpand={() => setViewMode("full")}
+        />
+      );
+    } else {
+      return (
+        <WidgetNotes 
+          variant={viewMode === "full" ? "full" : "compact"}
+          notes={notes} 
+          setNotes={setNotes}
+          draft={notesDraft}
+          setDraft={setNotesDraft}
+          onExpand={() => setViewMode("full")}
+        />
+      );
+    }
+  };
+
   if (viewMode === "full") {
     return createPortal(
       <div className="fw-overlay" onClick={() => setViewMode("expanded")}>
-        <div className="fw-full-panel" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+        <div 
+          ref={widgetRef}
+          className="fw-full-panel" 
+          onClick={(e) => e.stopPropagation()} 
+          role="dialog" 
+          aria-modal="true"
+        >
           <div className="fw-full-header">
             <div className="fw-tab-track">
               <button className={`fw-tab ${activeTab === "tasks" ? "active" : ""}`} onClick={() => setActiveTab("tasks")}>
@@ -107,11 +389,7 @@ export default function FloatingWidget() {
             </div>
           </div>
           <div className="fw-full-content">
-            {activeTab === "tasks" ? (
-              <WidgetTasks variant="full" tasks={tasks} setTasks={setTasks} />
-            ) : (
-              <WidgetNotes variant="full" notes={notes} setNotes={setNotes} />
-            )}
+            {renderWidgetContent()}
           </div>
         </div>
 
@@ -289,23 +567,46 @@ export default function FloatingWidget() {
     <div
       ref={widgetRef}
       className={`fw-root ${isDragging ? "dragging" : ""}`}
-      style={{ position: "fixed", bottom: `${position.bottom}px`, right: `${position.right}px`, zIndex: 9999 }}
+      style={{ 
+        position: "fixed", 
+        bottom: `${livePosition.bottom}px`, 
+        right: `${livePosition.right}px`, 
+        zIndex: 9999 
+      }}
     >
       {viewMode === "minimized" && (
         <button
           className="fw-fab"
           onMouseDown={handleMouseDown}
-          onClick={() => !isDragging && setViewMode("expanded")}
+          onTouchStart={handleTouchStart}
+          onClick={() => {
+            if (!hasDraggedRef.current) {
+              setViewMode("expanded");
+            }
+          }}
           aria-label="Open widget"
         >
           {activeTab === "tasks" ? <TasksTabIcon size={20} /> : <NotesTabIcon size={20} />}
-          {pendingCount > 0 && <span className="fw-badge">{pendingCount > 9 ? "9+" : pendingCount}</span>}
+          {pendingCount > 0 && (
+            <span className="fw-badge">{pendingCount > 9 ? "9+" : pendingCount}</span>
+          )}
         </button>
       )}
 
       {viewMode === "expanded" && (
         <div className="fw-panel">
           <div className="fw-header">
+            <button
+              className="fw-drag-handle" 
+              onMouseDown={handleMouseDown}
+              onTouchStart={handleTouchStart}
+              onKeyDown={handleDragKeyDown}
+              tabIndex={0}
+              role="button"
+              aria-label="Drag to move (use arrow keys)"
+            >
+              <DragHandleIcon />
+            </button>
             <div className="fw-tab-track">
               <button className={`fw-tab ${activeTab === "tasks" ? "active" : ""}`} onClick={() => setActiveTab("tasks")}>
                 <TasksTabIcon /> Tasks
@@ -325,11 +626,7 @@ export default function FloatingWidget() {
           </div>
 
           <div className="fw-content">
-            {activeTab === "tasks" ? (
-              <WidgetTasks variant="compact" tasks={tasks} setTasks={setTasks} onExpand={() => setViewMode("full")} />
-            ) : (
-              <WidgetNotes variant="compact" notes={notes} setNotes={setNotes} onExpand={() => setViewMode("full")} />
-            )}
+            {renderWidgetContent()}
           </div>
         </div>
       )}
@@ -341,8 +638,10 @@ export default function FloatingWidget() {
         .fw-root.dragging {
           cursor: grabbing;
         }
+        .fw-root.dragging * {
+          cursor: grabbing !important;
+        }
 
-        /* FAB */
         .fw-fab {
           position: relative;
           width: 56px;
@@ -357,6 +656,7 @@ export default function FloatingWidget() {
           color: var(--bg);
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          touch-action: none;
         }
         .fw-fab:hover {
           background: var(--text-secondary);
@@ -386,7 +686,6 @@ export default function FloatingWidget() {
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
-        /* Mobile responsive FAB */
         @media (max-width: 768px) {
           .fw-fab {
             width: 48px;
@@ -427,7 +726,6 @@ export default function FloatingWidget() {
           }
         }
 
-        /* Panel */
         .fw-panel {
           width: 380px;
           max-height: 600px;
@@ -452,7 +750,6 @@ export default function FloatingWidget() {
           }
         }
 
-        /* Header */
         .fw-header {
           display: flex;
           align-items: center;
@@ -462,6 +759,35 @@ export default function FloatingWidget() {
           background: var(--bg-surface);
           gap: 8px;
         }
+
+        .fw-drag-handle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 28px;
+          height: 28px;
+          cursor: grab;
+          color: var(--text-tertiary);
+          border-radius: 6px;
+          transition: all 0.15s ease;
+          flex-shrink: 0;
+          touch-action: none;
+          border: none;
+          background: none;
+          padding: 0;
+        }
+        .fw-drag-handle:hover {
+          background: var(--bg-card);
+          color: var(--text);
+        }
+        .fw-drag-handle:focus {
+          outline: 2px solid var(--brand);
+          outline-offset: 2px;
+        }
+        .fw-drag-handle:active {
+          cursor: grabbing;
+        }
+
         .fw-header-actions {
           display: flex;
           align-items: center;
@@ -535,7 +861,6 @@ export default function FloatingWidget() {
           color: #E05252;
         }
 
-        /* Content */
         .fw-content {
           flex: 1;
           overflow: hidden;
@@ -553,7 +878,7 @@ export default function FloatingWidget() {
         @media (max-width: 480px) {
           .fw-panel {
             width: calc(100vw - 24px);
-            max-height: calc(100vh - 120px);
+            max-height: calc(100dvh - 120px);
           }
           .fw-header {
             padding: 9px 10px;
@@ -570,6 +895,10 @@ export default function FloatingWidget() {
             width: 26px;
             height: 26px;
           }
+          .fw-drag-handle {
+            width: 24px;
+            height: 24px;
+          }
         }
       `}</style>
     </div>
@@ -577,8 +906,6 @@ export default function FloatingWidget() {
 
   return createPortal(widget, document.body);
 }
-
-// ── Icons ────────────────────────────────────────────────────────────────
 
 function TasksTabIcon({ size = 14 }: { size?: number }) {
   return (
@@ -625,6 +952,19 @@ function ShrinkIcon() {
       <polyline points="20 10 14 10 14 4" />
       <line x1="14" y1="10" x2="21" y2="3" />
       <line x1="3" y1="21" x2="10" y2="14" />
+    </svg>
+  );
+}
+
+function DragHandleIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="12" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="19" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="12" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="19" r="1" fill="currentColor" stroke="none" />
     </svg>
   );
 }

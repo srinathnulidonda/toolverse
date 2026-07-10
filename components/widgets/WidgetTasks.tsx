@@ -1,7 +1,7 @@
 // components/widgets/WidgetTasks.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import {
   Task,
   Priority,
@@ -15,10 +15,21 @@ import {
 
 type Filter = "all" | "active" | "completed";
 
+interface TasksDraft {
+  input: string;
+  priority: Priority;
+  showPicker: boolean;
+  search: string;
+  filter: Filter;
+  showCompleted: boolean;
+}
+
 interface WidgetTasksProps {
   variant?: WidgetVariant;
   tasks: Task[];
-  setTasks: (tasks: Task[]) => void;
+  setTasks: (tasks: Task[] | ((prev: Task[]) => Task[])) => void;
+  draft: TasksDraft;
+  setDraft: (draft: TasksDraft | ((prev: TasksDraft) => TasksDraft)) => void;
   onExpand?: () => void;
 }
 
@@ -26,16 +37,12 @@ export default function WidgetTasks({
   variant = "compact",
   tasks,
   setTasks,
+  draft,
+  setDraft,
   onExpand,
 }: WidgetTasksProps) {
   const isFull = variant === "full";
-
-  const [input, setInput] = useState("");
-  const [priority, setPriority] = useState<Priority>("medium");
-  const [showPicker, setShowPicker] = useState(false);
-  const [filter, setFilter] = useState<Filter>("all");
-  const [search, setSearch] = useState("");
-  const [showCompleted, setShowCompleted] = useState(true);
+  const { input, priority, showPicker, search, filter, showCompleted } = draft;
 
   const inputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -44,10 +51,15 @@ export default function WidgetTasks({
     inputRef.current?.focus();
   }, []);
 
+  const pickerRefStable = useRef(pickerRef.current);
+  useEffect(() => {
+    pickerRefStable.current = pickerRef.current;
+  });
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-        setShowPicker(false);
+      if (pickerRefStable.current && !pickerRefStable.current.contains(e.target as Node)) {
+        setDraft(d => ({ ...d, showPicker: false }));
       }
     };
     document.addEventListener("mousedown", handler);
@@ -72,23 +84,40 @@ export default function WidgetTasks({
       inputRef.current?.focus();
       return;
     }
+    
     const currentPage = typeof window !== "undefined" ? window.location.pathname : "";
     let context = "";
-    if (currentPage.includes("/tools/")) context = currentPage.split("/").pop() || "";
+    if (currentPage.includes("/tools/")) {
+      const cleanPath = currentPage.replace(/\/$/, "");
+      context = cleanPath.split("/").pop() || "";
+    }
 
-    setTasks([
+    setTasks(prevTasks => [
       { id: uid(), text, completed: false, priority, createdAt: Date.now(), context },
-      ...tasks,
+      ...prevTasks,
     ]);
-    setInput("");
+    
+    setDraft(d => ({ ...d, input: "" }));
     inputRef.current?.focus();
   }
 
   const toggle = (id: string) =>
-    setTasks(tasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
-  const remove = (id: string) => setTasks(tasks.filter((t) => t.id !== id));
-  const clearCompleted = () => setTasks(tasks.filter((t) => !t.completed));
-  const markAllDone = () => setTasks(tasks.map((t) => ({ ...t, completed: true })));
+    setTasks(prevTasks => prevTasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+    
+  const remove = (id: string) => 
+    setTasks(prevTasks => prevTasks.filter((t) => t.id !== id));
+
+  const clearCompleted = () => {
+    const filteredIds = new Set(filtered.filter(t => t.completed).map(t => t.id));
+    setTasks(prevTasks => prevTasks.filter((t) => !filteredIds.has(t.id)));
+  };
+
+  const markAllDone = () => {
+    const filteredIds = new Set(filtered.filter(t => !t.completed).map(t => t.id));
+    setTasks(prevTasks => prevTasks.map((t) => 
+      filteredIds.has(t.id) ? { ...t, completed: true } : t
+    ));
+  };
 
   const total = tasks.length;
   const done = tasks.filter((t) => t.completed).length;
@@ -96,23 +125,35 @@ export default function WidgetTasks({
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   const allDone = total > 0 && done === total;
 
-  const searched = search.trim()
-    ? tasks.filter((t) => t.text.toLowerCase().includes(search.trim().toLowerCase()))
-    : tasks;
+  const searched = useMemo(() => 
+    search.trim()
+      ? tasks.filter((t) => t.text.toLowerCase().includes(search.trim().toLowerCase()))
+      : tasks,
+    [tasks, search]
+  );
 
-  const filtered =
+  const filtered = useMemo(() =>
     filter === "active"
       ? searched.filter((t) => !t.completed)
       : filter === "completed"
       ? searched.filter((t) => t.completed)
-      : searched;
-
-  const activeSorted = PRIORITY_ORDER.flatMap((p) =>
-    filtered.filter((t) => !t.completed && getPriority(t) === p)
+      : searched,
+    [searched, filter]
   );
-  const completedSorted = filtered.filter((t) => t.completed);
 
-  const ringRadius = isFull ? 16 : 11;
+  const activeSorted = useMemo(() => 
+    PRIORITY_ORDER.flatMap((p) =>
+      filtered.filter((t) => !t.completed && getPriority(t) === p)
+    ),
+    [filtered]
+  );
+  
+  const completedSorted = useMemo(() => 
+    filtered.filter((t) => t.completed),
+    [filtered]
+  );
+
+  const ringRadius = isFull ? 14 : 11;
   const circumference = 2 * Math.PI * ringRadius;
   const ringSize = isFull ? 36 : 30;
 
@@ -125,10 +166,12 @@ export default function WidgetTasks({
       ? "No active tasks — you're all caught up"
       : "No tasks yet";
 
+  const showClearAction = filter !== "active" && completedSorted.length > 0;
+  const showMarkAllAction = isFull && filter !== "completed" && activeSorted.length > 0;
+
   return (
     <>
       <div className={`wt-root ${isFull ? "wt-full" : "wt-compact"}`}>
-        {/* Header */}
         <div className="wt-header">
           <div className="wt-header-left">
             {isFull ? <h2 className="wt-title">Tasks</h2> : <span className="wt-eyebrow">Tasks</span>}
@@ -182,20 +225,23 @@ export default function WidgetTasks({
           </div>
         </div>
 
-        {/* Search + filters */}
         {isFull && (
           <div className="wt-toolbar">
             <div className="wt-search-wrap">
               <SearchIcon />
               <input
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => setDraft(d => ({ ...d, search: e.target.value }))}
                 placeholder="Search tasks…"
                 className="wt-search-input"
                 aria-label="Search tasks"
               />
               {search && (
-                <button className="wt-search-clear" onClick={() => setSearch("")} aria-label="Clear search">
+                <button 
+                  className="wt-search-clear" 
+                  onClick={() => setDraft(d => ({ ...d, search: "" }))}
+                  aria-label="Clear search"
+                >
                   ×
                 </button>
               )}
@@ -206,7 +252,7 @@ export default function WidgetTasks({
                 role="tab"
                 aria-selected={filter === "all"}
                 className={filter === "all" ? "active" : ""}
-                onClick={() => setFilter("all")}
+                onClick={() => setDraft(d => ({ ...d, filter: "all" }))}
               >
                 All <span className="wt-filter-count">{total}</span>
               </button>
@@ -214,7 +260,7 @@ export default function WidgetTasks({
                 role="tab"
                 aria-selected={filter === "active"}
                 className={filter === "active" ? "active" : ""}
-                onClick={() => setFilter("active")}
+                onClick={() => setDraft(d => ({ ...d, filter: "active" }))}
               >
                 Active <span className="wt-filter-count">{activeCount}</span>
               </button>
@@ -222,7 +268,7 @@ export default function WidgetTasks({
                 role="tab"
                 aria-selected={filter === "completed"}
                 className={filter === "completed" ? "active" : ""}
-                onClick={() => setFilter("completed")}
+                onClick={() => setDraft(d => ({ ...d, filter: "completed" }))}
               >
                 Done <span className="wt-filter-count">{done}</span>
               </button>
@@ -232,14 +278,13 @@ export default function WidgetTasks({
 
         <div className="wt-divider" />
 
-        {/* Add row */}
         {filter !== "completed" && (
           <form className="wt-add-row" onSubmit={add} autoComplete="off">
             <div ref={pickerRef} className="wt-picker-wrap">
               <button
                 type="button"
                 className="wt-priority-btn"
-                onClick={() => setShowPicker((p) => !p)}
+                onClick={() => setDraft(d => ({ ...d, showPicker: !d.showPicker }))}
                 aria-label={`Priority: ${priority}`}
               >
                 <span className="wt-dot" style={{ background: PRIORITY_META[priority].color }} />
@@ -255,8 +300,7 @@ export default function WidgetTasks({
                       aria-selected={priority === p}
                       className={`wt-picker-opt${priority === p ? " sel" : ""}`}
                       onClick={() => {
-                        setPriority(p);
-                        setShowPicker(false);
+                        setDraft(d => ({ ...d, priority: p, showPicker: false }));
                       }}
                     >
                       <span
@@ -280,7 +324,7 @@ export default function WidgetTasks({
               ref={inputRef}
               type="text"
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => setDraft(d => ({ ...d, input: e.target.value }))}
               placeholder={isFull ? "Add a task and press Enter…" : "Add a task…"}
               maxLength={120}
               className="wt-input"
@@ -294,7 +338,6 @@ export default function WidgetTasks({
 
         <div className="wt-divider" />
 
-        {/* List */}
         <div className="wt-scroll">
           {filtered.length === 0 && (
             <div className="wt-empty">
@@ -321,7 +364,6 @@ export default function WidgetTasks({
             </div>
           )}
 
-          {/* Active tasks */}
           {filter !== "completed" &&
             (isFull
               ? PRIORITY_ORDER.map((p) => {
@@ -344,12 +386,14 @@ export default function WidgetTasks({
                   <TaskRow key={task.id} task={task} onToggle={toggle} onRemove={remove} />
                 )))}
 
-          {/* Completed tasks */}
           {completedSorted.length > 0 && filter !== "active" && (
             <>
               {isFull ? (
                 <div className="wt-completed-section">
-                  <button className="wt-completed-toggle" onClick={() => setShowCompleted((s) => !s)}>
+                  <button 
+                    className="wt-completed-toggle" 
+                    onClick={() => setDraft(d => ({ ...d, showCompleted: !d.showCompleted }))}
+                  >
                     <ChevronIcon open={showCompleted} />
                     Completed
                     <span className="wt-group-count">{completedSorted.length}</span>
@@ -371,24 +415,26 @@ export default function WidgetTasks({
           )}
         </div>
 
-        {/* Footer */}
-        {(done > 0 || (isFull && activeCount > 0)) && (
+        {(showClearAction || showMarkAllAction) && (
           <>
             <div className="wt-divider" />
             <div className="wt-footer">
               <span className="wt-footer-label">
-                {done} completed{isFull ? ` · ${activeCount} active` : ""}
+                {isFull && search.trim() 
+                  ? `${filtered.length} of ${total} shown`
+                  : `${done} completed${isFull ? ` · ${activeCount} active` : ""}`
+                }
               </span>
               <div className="wt-footer-actions">
-                {isFull && activeCount > 0 && (
+                {showMarkAllAction && (
                   <button onClick={markAllDone} className="wt-footer-btn">
-                    Mark all done
+                    {search.trim() || filter !== "all" ? "Mark shown as done" : "Mark all done"}
                   </button>
                 )}
-                {done > 0 && (
+                {showClearAction && (
                   <button onClick={clearCompleted} className="wt-footer-btn wt-clear-btn">
                     <TrashIcon />
-                    Clear done
+                    {search.trim() || filter !== "all" ? "Clear shown" : "Clear done"}
                   </button>
                 )}
               </div>
@@ -603,6 +649,12 @@ export default function WidgetTasks({
         }
         .wt-footer-btn:hover { color: var(--text); }
 
+        @media (hover: none) {
+          .wt-row-del {
+            opacity: 1 !important;
+          }
+        }
+
         @media (max-width: 640px) {
           .wt-toolbar { flex-direction: column; align-items: stretch; }
           .wt-filter-tabs { justify-content: space-between; }
@@ -611,8 +663,6 @@ export default function WidgetTasks({
     </>
   );
 }
-
-// ── Task row ──────────────────────────────────────────────────────────────
 
 function TaskRow({
   task,
@@ -725,12 +775,17 @@ function TaskRow({
         }
         .wt-row-del:hover { color: #E05252; background: var(--error-bg); }
         .wt-row-del:active { transform: scale(0.9); }
+        .wt-row-del:focus-visible { opacity: 1; }
+
+        @media (hover: none) {
+          .wt-row-del {
+            opacity: 1;
+          }
+        }
       `}</style>
     </>
   );
 }
-
-// ── Icons ────────────────────────────────────────────────────────────────
 
 function ExpandIcon() {
   return (

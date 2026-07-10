@@ -1,20 +1,28 @@
 // components/widgets/WidgetNotes.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import {
   Note,
-  NoteColor,
   WidgetVariant,
-  NOTE_COLORS,
   timeAgo,
   uid,
 } from "./widgetTypes";
 
+interface NotesDraft {
+  activeNote: string | null;
+  title: string;
+  content: string;
+  composerOpen: boolean;
+  search: string;
+}
+
 interface WidgetNotesProps {
   variant?: WidgetVariant;
   notes: Note[];
-  setNotes: (notes: Note[]) => void;
+  setNotes: (notes: Note[] | ((prev: Note[]) => Note[])) => void;
+  draft: NotesDraft;
+  setDraft: (draft: NotesDraft | ((prev: NotesDraft) => NotesDraft)) => void;
   onExpand?: () => void;
 }
 
@@ -22,16 +30,12 @@ export default function WidgetNotes({
   variant = "compact",
   notes,
   setNotes,
+  draft,
+  setDraft,
   onExpand,
 }: WidgetNotesProps) {
   const isFull = variant === "full";
-
-  const [activeNote, setActiveNote] = useState<string | null>(null);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [color, setColor] = useState<NoteColor>("default");
-  const [search, setSearch] = useState("");
-  const [composerOpen, setComposerOpen] = useState(!isFull);
+  const { activeNote, title, content, composerOpen, search } = draft;
 
   const titleRef = useRef<HTMLInputElement>(null);
 
@@ -40,11 +44,13 @@ export default function WidgetNotes({
   }, [composerOpen, activeNote]);
 
   const resetEditor = () => {
-    setTitle("");
-    setContent("");
-    setColor("default");
-    setActiveNote(null);
-    if (isFull) setComposerOpen(false);
+    setDraft(d => ({
+      ...d,
+      activeNote: null,
+      title: "",
+      content: "",
+      composerOpen: isFull ? false : true,
+    }));
   };
 
   const createNote = () => {
@@ -53,21 +59,45 @@ export default function WidgetNotes({
       id: uid(),
       title: title.trim(),
       content: content.trim(),
-      color,
       pinned: false,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
-    setNotes([newNote, ...notes]);
+    setNotes(prevNotes => [newNote, ...prevNotes]);
     resetEditor();
     titleRef.current?.focus();
   };
 
   const updateNote = (id: string) => {
-    setNotes(
-      notes.map((n) =>
+    const isEmpty = !title.trim() && !content.trim();
+    
+    const existingNote = notes.find(n => n.id === id);
+    
+    if (!existingNote) {
+      alert("This note was deleted in another window. Your changes cannot be saved.");
+      resetEditor();
+      return;
+    }
+    
+    if (isEmpty) {
+      const hadContent = existingNote.title || existingNote.content;
+      
+      if (hadContent) {
+        const confirmed = window.confirm("Delete this note? This action cannot be undone.");
+        if (!confirmed) {
+          resetEditor();
+          return;
+        }
+      }
+      
+      deleteNote(id);
+      return;
+    }
+    
+    setNotes(prevNotes =>
+      prevNotes.map((n) =>
         n.id === id
-          ? { ...n, title: title.trim(), content: content.trim(), color, updatedAt: Date.now() }
+          ? { ...n, title: title.trim(), content: content.trim(), updatedAt: Date.now() }
           : n
       )
     );
@@ -75,41 +105,49 @@ export default function WidgetNotes({
   };
 
   const deleteNote = (id: string) => {
-    setNotes(notes.filter((n) => n.id !== id));
+    setNotes(prevNotes => prevNotes.filter((n) => n.id !== id));
     if (activeNote === id) resetEditor();
   };
 
   const togglePin = (id: string) =>
-    setNotes(notes.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n)));
+    setNotes(prevNotes => prevNotes.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n)));
 
   const editNote = (note: Note) => {
-    setActiveNote(note.id);
-    setTitle(note.title);
-    setContent(note.content);
-    setColor(note.color);
-    setComposerOpen(true);
+    setDraft(d => ({
+      ...d,
+      activeNote: note.id,
+      title: note.title,
+      content: note.content,
+      composerOpen: true,
+    }));
   };
 
   const handleSave = () => (activeNote ? updateNote(activeNote) : createNote());
-  const handleCancel = () => resetEditor();
+  
+  const handleCancel = (e?: React.KeyboardEvent) => {
+    if (e) e.stopPropagation();
+    resetEditor();
+  };
 
   const hasContent = title.trim().length > 0 || content.trim().length > 0;
 
-  const searched = search.trim()
-    ? notes.filter(
-        (n) =>
-          n.title.toLowerCase().includes(search.trim().toLowerCase()) ||
-          n.content.toLowerCase().includes(search.trim().toLowerCase())
-      )
-    : notes;
+  const searched = useMemo(() =>
+    search.trim()
+      ? notes.filter(
+          (n) =>
+            n.title.toLowerCase().includes(search.trim().toLowerCase()) ||
+            n.content.toLowerCase().includes(search.trim().toLowerCase())
+        )
+      : notes,
+    [notes, search]
+  );
 
-  const pinned = searched.filter((n) => n.pinned);
-  const others = searched.filter((n) => !n.pinned);
+  const pinned = useMemo(() => searched.filter((n) => n.pinned), [searched]);
+  const others = useMemo(() => searched.filter((n) => !n.pinned), [searched]);
 
   return (
     <>
       <div className={`wn-root ${isFull ? "wn-full" : "wn-compact"}`}>
-        {/* Header */}
         <div className="wn-header">
           <div className="wn-header-left">
             {isFull ? <h2 className="wn-title">Notes</h2> : <span className="wn-eyebrow">Notes</span>}
@@ -126,26 +164,25 @@ export default function WidgetNotes({
           )}
         </div>
 
-        {/* Toolbar */}
         {isFull && (
           <div className="wn-toolbar">
             <div className="wn-search-wrap">
               <SearchIcon />
               <input
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => setDraft(d => ({ ...d, search: e.target.value }))}
                 placeholder="Search notes…"
                 className="wn-search-input"
                 aria-label="Search notes"
               />
               {search && (
-                <button className="wn-search-clear" onClick={() => setSearch("")} aria-label="Clear search">
+                <button className="wn-search-clear" onClick={() => setDraft(d => ({ ...d, search: "" }))} aria-label="Clear search">
                   ×
                 </button>
               )}
             </div>
             {!composerOpen && (
-              <button className="wn-new-btn" onClick={() => setComposerOpen(true)}>
+              <button className="wn-new-btn" onClick={() => setDraft(d => ({ ...d, composerOpen: true }))}>
                 <PlusIcon /> New note
               </button>
             )}
@@ -153,48 +190,37 @@ export default function WidgetNotes({
         )}
 
         <div className="wn-body">
-          {/* Composer */}
           {(!isFull || composerOpen) && (
-            <div className={`wn-editor wn-color-${color}`}>
+            <div className="wn-editor">
               <input
                 ref={titleRef}
                 type="text"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => setDraft(d => ({ ...d, title: e.target.value }))}
                 placeholder="Title"
                 className="wn-title-input"
                 maxLength={100}
-                onKeyDown={(e) => e.key === "Escape" && handleCancel()}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") handleCancel(e);
+                }}
               />
               <textarea
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e) => setDraft(d => ({ ...d, content: e.target.value }))}
                 placeholder="Take a note…"
                 className="wn-content-input"
                 rows={isFull ? 4 : 3}
                 maxLength={500}
                 onKeyDown={(e) => {
-                  if (e.key === "Escape") handleCancel();
-                  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") handleSave();
+                  if (e.key === "Escape") handleCancel(e);
+                  if ((e.metaKey || e.ctrlKey) && e.key === "Enter" && hasContent) handleSave();
                 }}
               />
 
-              <div className="wn-colors">
-                {NOTE_COLORS.map((c) => (
-                  <button
-                    key={c.value}
-                    className={`wn-color-btn wn-color-${c.value}${color === c.value ? " active" : ""}`}
-                    onClick={() => setColor(c.value)}
-                    aria-label={c.label}
-                    title={c.label}
-                  />
-                ))}
-              </div>
-
-              {(hasContent || isFull) && (
+              {(hasContent || composerOpen || isFull) && (
                 <div className="wn-actions">
-                  {(activeNote || isFull) && (
-                    <button className="wn-cancel-btn" onClick={handleCancel}>
+                  {(activeNote || composerOpen || isFull) && (
+                    <button className="wn-cancel-btn" onClick={() => handleCancel()}>
                       Cancel
                     </button>
                   )}
@@ -208,7 +234,6 @@ export default function WidgetNotes({
 
           {(!isFull || composerOpen) && <div className="wn-divider" />}
 
-          {/* Notes */}
           {isFull ? (
             <div className="wn-grid-scroll">
               {searched.length === 0 && (
@@ -405,12 +430,12 @@ export default function WidgetNotes({
           border-radius: 2px;
         }
 
-        /* Editor */
         .wn-editor {
           padding: ${isFull ? "0 22px 14px" : "0 12px 12px"};
           margin: ${isFull ? "0 22px 12px" : "0 12px 12px"};
           border-radius: 10px;
           border: 0.5px solid var(--border);
+          background: var(--bg-surface);
           transition: all 0.2s ease;
         }
         .wn-title-input {
@@ -442,79 +467,6 @@ export default function WidgetNotes({
         }
         .wn-content-input::placeholder {
           color: var(--text-disabled);
-        }
-
-        .wn-colors {
-          display: flex;
-          gap: 7px;
-          padding: 6px 12px 8px;
-          flex-wrap: wrap;
-        }
-        .wn-color-btn {
-          width: 22px;
-          height: 22px;
-          border-radius: 50%;
-          border: 2px solid transparent;
-          transition: all 0.15s ease;
-          cursor: pointer;
-          padding: 0;
-        }
-        .wn-color-btn:hover {
-          transform: scale(1.15);
-        }
-        .wn-color-btn:active {
-          transform: scale(1.05);
-        }
-        .wn-color-btn.active {
-          border-color: var(--text);
-          transform: scale(1.2);
-          box-shadow: 0 0 0 2px var(--bg-card);
-        }
-        .wn-color-default {
-          background: var(--bg-card);
-          border-color: var(--border);
-        }
-        .wn-color-default.active {
-          border-color: var(--text);
-        }
-        .wn-color-yellow {
-          background: #FFF9C4;
-        }
-        .wn-color-green {
-          background: #C8E6C9;
-        }
-        .wn-color-blue {
-          background: #BBDEFB;
-        }
-        .wn-color-pink {
-          background: #F8BBD0;
-        }
-        .wn-color-purple {
-          background: #E1BEE7;
-        }
-
-        .wn-editor.wn-color-default {
-          background: var(--bg-surface);
-        }
-        .wn-editor.wn-color-yellow {
-          background: #FFFDE7;
-          border-color: rgba(255, 235, 59, 0.3);
-        }
-        .wn-editor.wn-color-green {
-          background: #F1F8E9;
-          border-color: rgba(139, 195, 74, 0.3);
-        }
-        .wn-editor.wn-color-blue {
-          background: #E3F2FD;
-          border-color: rgba(33, 150, 243, 0.3);
-        }
-        .wn-editor.wn-color-pink {
-          background: #FCE4EC;
-          border-color: rgba(233, 30, 99, 0.3);
-        }
-        .wn-editor.wn-color-purple {
-          background: #F3E5F5;
-          border-color: rgba(156, 39, 176, 0.3);
         }
 
         .wn-actions {
@@ -573,7 +525,6 @@ export default function WidgetNotes({
           color: var(--text-disabled);
         }
 
-        /* Compact list */
         .wn-list {
           flex: 1;
           padding: 0 8px 8px;
@@ -587,7 +538,6 @@ export default function WidgetNotes({
           padding: 8px 22px 10px;
         }
 
-        /* Full masonry grid */
         .wn-grid-scroll {
           flex: 1;
           padding: 0 22px 24px;
@@ -606,12 +556,17 @@ export default function WidgetNotes({
             column-count: 3;
           }
         }
+
+        @media (hover: none) {
+          .wn-note-actions,
+          .wnc-delete-btn {
+            opacity: 1 !important;
+          }
+        }
       `}</style>
     </>
   );
 }
-
-// ── Compact list row ────────────────────────────────────────────────────
 
 function NoteRow({
   note,
@@ -624,9 +579,29 @@ function NoteRow({
   onDelete: (id: string) => void;
   onTogglePin: (id: string) => void;
 }) {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const confirmed = window.confirm("Delete this note? This action cannot be undone.");
+    if (confirmed) onDelete(note.id);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onEdit(note);
+    }
+  };
+
   return (
     <>
-      <div className={`wn-note wn-color-${note.color}`} onClick={() => onEdit(note)}>
+      <div 
+        className="wn-note" 
+        onClick={() => onEdit(note)}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="button"
+        aria-label={`Edit note: ${note.title || note.content.substring(0, 50)}`}
+      >
         {note.pinned && (
           <span className="wn-pin-badge">
             <PinIcon filled />
@@ -647,10 +622,7 @@ function NoteRow({
           </button>
           <button
             className="wn-note-icon-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(note.id);
-            }}
+            onClick={handleDelete}
             aria-label="Delete note"
           >
             <TrashIcon />
@@ -667,40 +639,22 @@ function NoteRow({
           margin: 0 4px 10px;
           cursor: pointer;
           transition: all 0.2s ease;
+          background: var(--bg-card);
         }
-        .wn-note:hover {
+        .wn-note:hover,
+        .wn-note:focus-visible {
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
           transform: translateY(-1px);
+          outline: none;
+        }
+        .wn-note:focus-visible {
+          outline: 2px solid var(--brand);
+          outline-offset: 2px;
         }
         .wn-note:active {
           transform: translateY(0);
         }
-        .wn-note:hover .wn-note-actions {
-          opacity: 1;
-        }
-        .wn-note.wn-color-default {
-          background: var(--bg-card);
-        }
-        .wn-note.wn-color-yellow {
-          background: #FFF9C4;
-          border-color: rgba(255, 235, 59, 0.3);
-        }
-        .wn-note.wn-color-green {
-          background: #C8E6C9;
-          border-color: rgba(139, 195, 74, 0.3);
-        }
-        .wn-note.wn-color-blue {
-          background: #BBDEFB;
-          border-color: rgba(33, 150, 243, 0.3);
-        }
-        .wn-note.wn-color-pink {
-          background: #F8BBD0;
-          border-color: rgba(233, 30, 99, 0.3);
-        }
-        .wn-note.wn-color-purple {
-          background: #E1BEE7;
-          border-color: rgba(156, 39, 176, 0.3);
-        }
+        .wn-note:hover .wn-note-actions { opacity: 1; }
         .wn-note-title {
           font-size: 13px;
           font-weight: 600;
@@ -758,12 +712,19 @@ function NoteRow({
         .wn-note-icon-btn:active {
           transform: scale(0.95);
         }
+        .wn-note-icon-btn:focus-visible {
+          outline: 2px solid var(--brand);
+        }
+
+        @media (hover: none) {
+          .wn-note-actions {
+            opacity: 1;
+          }
+        }
       `}</style>
     </>
   );
 }
-
-// ── Full-view masonry card ──────────────────────────────────────────────
 
 function NoteCard({
   note,
@@ -776,9 +737,29 @@ function NoteCard({
   onDelete: (id: string) => void;
   onTogglePin: (id: string) => void;
 }) {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const confirmed = window.confirm("Delete this note? This action cannot be undone.");
+    if (confirmed) onDelete(note.id);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onEdit(note);
+    }
+  };
+
   return (
     <>
-      <div className={`wnc-card wnc-color-${note.color}`} onClick={() => onEdit(note)}>
+      <div 
+        className="wnc-card" 
+        onClick={() => onEdit(note)}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="button"
+        aria-label={`Edit note: ${note.title || note.content.substring(0, 50)}`}
+      >
         <div className="wnc-top">
           {note.title && <div className="wnc-title">{note.title}</div>}
           <button
@@ -797,10 +778,7 @@ function NoteCard({
           <span className="wnc-time">{timeAgo(note.updatedAt)}</span>
           <button
             className="wnc-delete-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(note.id);
-            }}
+            onClick={handleDelete}
             aria-label="Delete note"
           >
             <TrashIcon />
@@ -817,40 +795,22 @@ function NoteCard({
           border-radius: 10px;
           cursor: pointer;
           transition: all 0.2s ease;
+          background: var(--bg-card);
         }
-        .wnc-card:hover {
+        .wnc-card:hover,
+        .wnc-card:focus-visible {
           box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
           transform: translateY(-2px);
+          outline: none;
+        }
+        .wnc-card:focus-visible {
+          outline: 2px solid var(--brand);
+          outline-offset: 2px;
         }
         .wnc-card:active {
           transform: translateY(-1px);
         }
-        .wnc-card:hover .wnc-delete-btn {
-          opacity: 1;
-        }
-        .wnc-color-default {
-          background: var(--bg-card);
-        }
-        .wnc-color-yellow {
-          background: #FFF9C4;
-          border-color: rgba(255, 235, 59, 0.3);
-        }
-        .wnc-color-green {
-          background: #C8E6C9;
-          border-color: rgba(139, 195, 74, 0.3);
-        }
-        .wnc-color-blue {
-          background: #BBDEFB;
-          border-color: rgba(33, 150, 243, 0.3);
-        }
-        .wnc-color-pink {
-          background: #F8BBD0;
-          border-color: rgba(233, 30, 99, 0.3);
-        }
-        .wnc-color-purple {
-          background: #E1BEE7;
-          border-color: rgba(156, 39, 176, 0.3);
-        }
+        .wnc-card:hover .wnc-delete-btn { opacity: 1; }
 
         .wnc-top {
           display: flex;
@@ -886,6 +846,9 @@ function NoteCard({
         }
         .wnc-pin-btn:active {
           transform: scale(0.95);
+        }
+        .wnc-pin-btn:focus-visible {
+          outline: 2px solid var(--brand);
         }
 
         .wnc-content {
@@ -930,12 +893,20 @@ function NoteCard({
         .wnc-delete-btn:active {
           transform: scale(0.95);
         }
+        .wnc-delete-btn:focus-visible {
+          outline: 2px solid var(--brand);
+          opacity: 1;
+        }
+
+        @media (hover: none) {
+          .wnc-delete-btn {
+            opacity: 1;
+          }
+        }
       `}</style>
     </>
   );
 }
-
-// ── Icons ────────────────────────────────────────────────────────────────
 
 function ExpandIcon() {
   return (

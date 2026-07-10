@@ -3,32 +3,15 @@
 
 import { useEffect, useState, useRef } from "react";
 import useLocalStorage from "@/lib/useLocalStorage";
+import { Task, Priority, TASKS_STORAGE_KEY, PRIORITY_META, PRIORITY_ORDER, getPriority, cleanTasks, uid } from "@/components/widgets/widgetTypes";
 
-// Types
-type Priority = "high" | "medium" | "low";
-
-type Task = {
-    id: string;
-    text: string;
-    completed: boolean;
-    priority: Priority;
-    createdAt: number;
-};
-
-// Constants 
-const TASKS_KEY = "tv:tasks-v2";
-
-const PRIORITY_META: Record<Priority, { color: string; label: string }> = {
-    high: { color: "#E05252", label: "High" },
-    medium: { color: "#E0943A", label: "Medium" },
-    low: { color: "#4CAF82", label: "Low" },
-};
-
-const PRIORITY_ORDER: Priority[] = ["high", "medium", "low"];
-
-// Main component
 export default function TodaysTasks() {
-    const [tasks, setTasks] = useLocalStorage<Task[]>(TASKS_KEY, []);
+    const [rawTasks, setRawTasks] = useLocalStorage<Task[]>(TASKS_STORAGE_KEY, []);
+    const tasks = cleanTasks(rawTasks);
+    const setTasks = (value: Task[] | ((prev: Task[]) => Task[])) => {
+        setRawTasks(value);
+    };
+    
     const [input, setInput] = useState("");
     const [priority, setPriority] = useState<Priority>("medium");
     const [mounted, setMounted] = useState(false);
@@ -41,8 +24,9 @@ export default function TodaysTasks() {
         setMounted(true);
     }, []);
 
-    // Close picker on outside click
     useEffect(() => {
+        if (!mounted) return;
+        
         const handler = (e: MouseEvent) => {
             if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
                 setShowPicker(false);
@@ -50,10 +34,11 @@ export default function TodaysTasks() {
         };
         document.addEventListener("mousedown", handler);
         return () => document.removeEventListener("mousedown", handler);
-    }, []);
+    }, [mounted]);
 
-    // / shortcut focuses input
     useEffect(() => {
+        if (!mounted) return;
+        
         const handler = (e: KeyboardEvent) => {
             if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
                 e.preventDefault();
@@ -62,39 +47,58 @@ export default function TodaysTasks() {
         };
         document.addEventListener("keydown", handler);
         return () => document.removeEventListener("keydown", handler);
-    }, []);
+    }, [mounted]);
 
-    // Actions
     function add(e: React.FormEvent) {
         e.preventDefault();
         const text = input.trim();
-        if (!text) { inputRef.current?.focus(); return; }
-        setTasks([
-            {
-                id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-                text,
-                completed: false,
-                priority,
-                createdAt: Date.now(),
-            },
-            ...tasks,
-        ]);
+        if (!text) { 
+            inputRef.current?.focus(); 
+            return; 
+        }
+        
+        const currentPage = typeof window !== "undefined" ? window.location.pathname : "";
+        let context = "";
+        if (currentPage.includes("/tools/")) {
+            const cleanPath = currentPage.replace(/\/$/, "");
+            context = cleanPath.split("/").pop() || "";
+        }
+        
+        const newTask: Task = {
+            id: uid(),
+            text,
+            completed: false,
+            priority,
+            createdAt: Date.now(),
+            context,
+        };
+        
+        setTasks(prevTasks => [newTask, ...prevTasks]);
         setInput("");
         inputRef.current?.focus();
     }
 
-    const toggle = (id: string) => setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-    const remove = (id: string) => setTasks(tasks.filter(t => t.id !== id));
-    const clearDone = () => setTasks(tasks.filter(t => !t.completed));
+    const toggle = (id: string) => {
+        setTasks(prevTasks => 
+            prevTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t)
+        );
+    };
 
-    // Derived
+    const remove = (id: string) => {
+        setTasks(prevTasks => prevTasks.filter(t => t.id !== id));
+    };
+
+    const clearDone = () => {
+        setTasks(prevTasks => prevTasks.filter(t => !t.completed));
+    };
+
     const total = tasks.length;
     const done = tasks.filter(t => t.completed).length;
     const pct = total === 0 ? 0 : Math.round((done / total) * 100);
     const allDone = total > 0 && done === total;
 
     const sorted = [
-        ...PRIORITY_ORDER.flatMap(p => tasks.filter(t => !t.completed && t.priority === p)),
+        ...PRIORITY_ORDER.flatMap(p => tasks.filter(t => !t.completed && getPriority(t) === p)),
         ...tasks.filter(t => t.completed),
     ];
 
@@ -108,17 +112,20 @@ export default function TodaysTasks() {
         });
     };
 
+    const showTasks = mounted && total > 0;
+    const showEmptyState = mounted && total === 0;
+    const showProgress = mounted && total > 0;
+
     return (
         <>
             <div className="td-card">
-                {/* ── Header  */}
                 <div className="td-header">
                     <div className="td-header-left">
                         <span className="td-label">Today</span>
                         <span className="td-date">{mounted ? getDateLabel() : ""}</span>
                     </div>
 
-                    {mounted && total > 0 && (
+                    {showProgress && (
                         <div className="td-progress">
                             <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
                                 <circle
@@ -158,9 +165,7 @@ export default function TodaysTasks() {
 
                 <div className="td-divider" />
 
-                {/* Add row */}
                 <form className="td-add-row" onSubmit={add} autoComplete="off">
-                    {/* Priority picker */}
                     <div ref={pickerRef} className="td-picker-wrap">
                         <button
                             type="button"
@@ -185,7 +190,14 @@ export default function TodaysTasks() {
                                         className={`td-picker-opt${priority === p ? " sel" : ""}`}
                                         onClick={() => { setPriority(p); setShowPicker(false); }}
                                     >
-                                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: PRIORITY_META[p].color, flexShrink: 0, display: "block" }} />
+                                        <span style={{ 
+                                            width: 6, 
+                                            height: 6, 
+                                            borderRadius: "50%", 
+                                            background: PRIORITY_META[p].color, 
+                                            flexShrink: 0, 
+                                            display: "block" 
+                                        }} />
                                         {PRIORITY_META[p].label}
                                     </button>
                                 ))}
@@ -193,7 +205,6 @@ export default function TodaysTasks() {
                         )}
                     </div>
 
-                    {/* Text input */}
                     <input
                         ref={inputRef}
                         type="text"
@@ -204,7 +215,6 @@ export default function TodaysTasks() {
                         className="td-input"
                     />
 
-                    {/* Submit */}
                     <button
                         type="submit"
                         className={`td-submit${input.trim() ? " active" : ""}`}
@@ -219,10 +229,8 @@ export default function TodaysTasks() {
 
                 <div className="td-divider" />
 
-                {/* Task list */}
                 <div className="td-tasks-scroll">
-                    {/* Empty state */}
-                    {total === 0 && (
+                    {showEmptyState && (
                         <div className="td-empty">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                 stroke="var(--border)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"
@@ -237,8 +245,7 @@ export default function TodaysTasks() {
                         </div>
                     )}
 
-                    {/* All done banner */}
-                    {allDone && (
+                    {showTasks && allDone && (
                         <div className="td-all-done">
                             <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                                 <circle cx="7" cy="7" r="6.5" fill="var(--brand-light)" stroke="var(--brand)" strokeWidth="0.8" />
@@ -249,8 +256,7 @@ export default function TodaysTasks() {
                         </div>
                     )}
 
-                    {/* Tasks */}
-                    {sorted.map((task, i) => {
+                    {showTasks && sorted.map((task, i) => {
                         const isFirstCompleted =
                             task.completed &&
                             (i === 0 || !sorted[i - 1].completed) &&
@@ -266,8 +272,7 @@ export default function TodaysTasks() {
                     })}
                 </div>
 
-                {/* Footer */}
-                {done > 0 && (
+                {showTasks && done > 0 && (
                     <>
                         <div className="td-divider" />
                         <div className="td-footer">
@@ -531,7 +536,6 @@ export default function TodaysTasks() {
     );
 }
 
-// Task row 
 function TaskRow({
     task,
     onToggle,
@@ -541,7 +545,7 @@ function TaskRow({
     onToggle: (id: string) => void;
     onRemove: (id: string) => void;
 }) {
-    const meta = PRIORITY_META[task.priority];
+    const meta = PRIORITY_META[getPriority(task)];
 
     return (
         <>
@@ -573,6 +577,10 @@ function TaskRow({
                 >
                     {task.text}
                 </span>
+
+                {task.context && (
+                    <span className="td-context-tag">{task.context}</span>
+                )}
 
                 <button
                     className="td-row-del"
@@ -644,6 +652,16 @@ function TaskRow({
           color: var(--text-tertiary);
         }
 
+        .td-context-tag {
+          font-size: 10px;
+          color: var(--text-tertiary);
+          background: var(--bg-surface);
+          border: 0.5px solid var(--border);
+          padding: 2px 6px;
+          border-radius: 4px;
+          flex-shrink: 0;
+        }
+
         .td-row-del {
           width: 18px;
           height: 18px;
@@ -665,6 +683,15 @@ function TaskRow({
         .td-row-del:hover {
           color: #E05252;
           background: var(--error-bg);
+        }
+        .td-row-del:focus-visible {
+          opacity: 1;
+        }
+
+        @media (hover: none) {
+          .td-row-del {
+            opacity: 1;
+          }
         }
       `}</style>
         </>

@@ -11,13 +11,10 @@ export type Task = {
   context?: string;
 };
 
-export type NoteColor = "default" | "yellow" | "green" | "blue" | "pink" | "purple";
-
 export type Note = {
   id: string;
   title: string;
   content: string;
-  color: NoteColor;
   pinned: boolean;
   createdAt: number;
   updatedAt: number;
@@ -25,10 +22,10 @@ export type Note = {
 
 export type WidgetVariant = "compact" | "full";
 
-// Storage keys are unchanged from the original widget, so tasks/notes people
-// already have saved in their browser keep working after this upgrade.
 export const TASKS_STORAGE_KEY = "tv:tasks-v3";
 export const NOTES_STORAGE_KEY = "tv:notes-v1";
+export const TASKS_DRAFT_KEY = "tv:tasks-draft";
+export const NOTES_DRAFT_KEY = "tv:notes-draft";
 
 export const PRIORITY_ORDER: Priority[] = ["high", "medium", "low"];
 
@@ -38,27 +35,10 @@ export const PRIORITY_META: Record<Priority, { color: string; label: string }> =
   low: { color: "#4CAF82", label: "Low" },
 };
 
-export const NOTE_COLORS: {
-  value: NoteColor;
-  label: string;
-  swatch: string;
-  cardBg: string;
-  editorBg: string;
-}[] = [
-  { value: "default", label: "Default", swatch: "var(--bg-card)", cardBg: "var(--bg-card)", editorBg: "var(--bg-surface)" },
-  { value: "yellow", label: "Yellow", swatch: "#FFF9C4", cardBg: "#FFF9C4", editorBg: "#FFFDE7" },
-  { value: "green", label: "Green", swatch: "#C8E6C9", cardBg: "#C8E6C9", editorBg: "#F1F8E9" },
-  { value: "blue", label: "Blue", swatch: "#BBDEFB", cardBg: "#BBDEFB", editorBg: "#E3F2FD" },
-  { value: "pink", label: "Pink", swatch: "#F8BBD0", cardBg: "#F8BBD0", editorBg: "#FCE4EC" },
-  { value: "purple", label: "Purple", swatch: "#E1BEE7", cardBg: "#E1BEE7", editorBg: "#F3E5F5" },
-];
-
-/** A task's priority, defaulting older stored records saved before this field existed. */
 export function getPriority(task: Task): Priority {
   return task.priority ?? "medium";
 }
 
-/** Compact "time ago" label — "Just now", "12m ago", "3h ago", "5d ago", or a short date. */
 export function timeAgo(timestamp: number): string {
   const diff = Date.now() - timestamp;
   const min = Math.floor(diff / 60000);
@@ -72,5 +52,65 @@ export function timeAgo(timestamp: number): string {
 }
 
 export function uid(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+}
+
+export function validateTask(task: any): task is Task {
+  return (
+    task &&
+    typeof task.id === 'string' &&
+    typeof task.text === 'string' &&
+    typeof task.completed === 'boolean' &&
+    typeof task.createdAt === 'number' &&
+    (task.priority === undefined || PRIORITY_ORDER.includes(task.priority)) &&
+    (task.context === undefined || typeof task.context === 'string')
+  );
+}
+
+export function validateNote(note: any): note is Note {
+  return (
+    note &&
+    typeof note.id === 'string' &&
+    typeof note.title === 'string' &&
+    typeof note.content === 'string' &&
+    typeof note.pinned === 'boolean' &&
+    typeof note.createdAt === 'number' &&
+    typeof note.updatedAt === 'number'
+  );
+}
+
+export function cleanTasks(tasks: any[]): Task[] {
+  if (!Array.isArray(tasks)) {
+    console.warn('cleanTasks: expected array, got', typeof tasks);
+    return [];
+  }
+  
+  const cleaned = tasks.filter(validateTask).map(task => ({
+    ...task,
+    priority: getPriority(task),
+  }));
+  
+  if (cleaned.length < tasks.length) {
+    console.warn(`cleanTasks: dropped ${tasks.length - cleaned.length} invalid task(s)`);
+  }
+  
+  return cleaned;
+}
+
+export function cleanNotes(notes: any[]): Note[] {
+  if (!Array.isArray(notes)) {
+    console.warn('cleanNotes: expected array, got', typeof notes);
+    return [];
+  }
+  
+  const cleaned = notes.filter(validateNote);
+  
+  if (cleaned.length < notes.length) {
+    console.warn(`cleanNotes: dropped ${notes.length - cleaned.length} invalid note(s)`);
+  }
+  
+  return cleaned;
 }
