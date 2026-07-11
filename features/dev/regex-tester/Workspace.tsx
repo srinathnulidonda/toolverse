@@ -299,7 +299,7 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
                                         type="text"
                                         className="rxt-form-input"
                                         value={saveForm.name}
-                                        onChange={(e) => setSaveForm({ ...saveForm, name: e.target.value })}
+                                        onChange={(e) => setSaveForm(prev => ({ ...prev, name: e.target.value }))}
                                         placeholder="e.g., Email Validator"
                                         autoFocus
                                     />
@@ -313,7 +313,7 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
                                         id="pattern-desc"
                                         className="rxt-form-textarea"
                                         value={saveForm.description}
-                                        onChange={(e) => setSaveForm({ ...saveForm, description: e.target.value })}
+                                        onChange={(e) => setSaveForm(prev => ({ ...prev, description: e.target.value }))}
                                         placeholder="Describe what this pattern does..."
                                         rows={3}
                                     />
@@ -327,7 +327,7 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
                                         id="pattern-category"
                                         className="rxt-form-select"
                                         value={saveForm.category}
-                                        onChange={(e) => setSaveForm({ ...saveForm, category: e.target.value as any })}
+                                        onChange={(e) => setSaveForm(prev => ({ ...prev, category: e.target.value as any }))}
                                     >
                                         <option value="validation">Validation</option>
                                         <option value="extraction">Extraction</option>
@@ -348,7 +348,7 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
                                         type="text"
                                         className="rxt-form-input"
                                         value={saveForm.tags}
-                                        onChange={(e) => setSaveForm({ ...saveForm, tags: e.target.value })}
+                                        onChange={(e) => setSaveForm(prev => ({ ...prev, tags: e.target.value }))}
                                         placeholder="e.g., email, validation, contact"
                                     />
                                 </div>

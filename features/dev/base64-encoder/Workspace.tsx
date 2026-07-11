@@ -268,7 +268,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                             <input
                                 type="checkbox"
                                 checked={options.urlSafe}
-                                onChange={(e) => setOptions({ ...options, urlSafe: e.target.checked })}
+                                onChange={(e) => setOptions(prev => ({ ...prev, urlSafe: e.target.checked }))}
                             />
                             <span className="b64-toggle-track">
                                 <span className="b64-toggle-thumb" />
@@ -281,7 +281,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                                 <input
                                     type="checkbox"
                                     checked={options.wrapLines}
-                                    onChange={(e) => setOptions({ ...options, wrapLines: e.target.checked })}
+                                    onChange={(e) => setOptions(prev => ({ ...prev, wrapLines: e.target.checked }))}
                                 />
                                 <span className="b64-toggle-track">
                                     <span className="b64-toggle-thumb" />
@@ -295,7 +295,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                                 <input
                                     type="checkbox"
                                     checked={options.asDataUri}
-                                    onChange={(e) => setOptions({ ...options, asDataUri: e.target.checked })}
+                                    onChange={(e) => setOptions(prev => ({ ...prev, asDataUri: e.target.checked }))}
                                 />
                                 <span className="b64-toggle-track">
                                     <span className="b64-toggle-thumb" />
@@ -308,7 +308,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                             <input
                                 type="checkbox"
                                 checked={options.padding}
-                                onChange={(e) => setOptions({ ...options, padding: e.target.checked })}
+                                onChange={(e) => setOptions(prev => ({ ...prev, padding: e.target.checked }))}
                             />
                             <span className="b64-toggle-track">
                                 <span className="b64-toggle-thumb" />
@@ -321,7 +321,7 @@ export default function Base64Workspace({ tool }: { tool: Tool }) {
                             <select
                                 className="b64-select"
                                 value={options.charset}
-                                onChange={(e) => setOptions({ ...options, charset: e.target.value as any })}
+                                onChange={(e) => setOptions(prev => ({ ...prev, charset: e.target.value as any }))}
                             >
                                 <option value="UTF-8">UTF-8</option>
                                 <option value="UTF-16">UTF-16</option>

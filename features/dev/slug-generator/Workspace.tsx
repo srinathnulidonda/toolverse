@@ -262,7 +262,7 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                                             <input
                                                 type="checkbox"
                                                 checked={options.removeSpecial}
-                                                onChange={(e) => setOptions({ ...options, removeSpecial: e.target.checked })}
+                                                onChange={(e) => setOptions(prev => ({ ...prev, removeSpecial: e.target.checked }))}
                                             />
                                             <span className="sg-toggle-track">
                                                 <span className="sg-toggle-thumb" />
@@ -273,7 +273,7 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                                             <input
                                                 type="checkbox"
                                                 checked={options.removeDiacritics}
-                                                onChange={(e) => setOptions({ ...options, removeDiacritics: e.target.checked })}
+                                                onChange={(e) => setOptions(prev => ({ ...prev, removeDiacritics: e.target.checked }))}
                                             />
                                             <span className="sg-toggle-track">
                                                 <span className="sg-toggle-thumb" />
@@ -284,7 +284,7 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                                             <input
                                                 type="checkbox"
                                                 checked={options.removeStopWords}
-                                                onChange={(e) => setOptions({ ...options, removeStopWords: e.target.checked })}
+                                                onChange={(e) => setOptions(prev => ({ ...prev, removeStopWords: e.target.checked }))}
                                             />
                                             <span className="sg-toggle-track">
                                                 <span className="sg-toggle-thumb" />
@@ -295,7 +295,7 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                                             <input
                                                 type="checkbox"
                                                 checked={!options.preserveNumbers}
-                                                onChange={(e) => setOptions({ ...options, preserveNumbers: !e.target.checked })}
+                                                onChange={(e) => setOptions(prev => ({ ...prev, preserveNumbers: !e.target.checked }))}
                                             />
                                             <span className="sg-toggle-track">
                                                 <span className="sg-toggle-thumb" />
@@ -321,7 +321,7 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                                                     <input
                                                         type="checkbox"
                                                         checked={options.smartTruncate}
-                                                        onChange={(e) => setOptions({ ...options, smartTruncate: e.target.checked })}
+                                                        onChange={(e) => setOptions(prev => ({ ...prev, smartTruncate: e.target.checked }))}
                                                     />
                                                     <span className="sg-toggle-track">
                                                         <span className="sg-toggle-thumb" />

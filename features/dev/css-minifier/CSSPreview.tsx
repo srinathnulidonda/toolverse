@@ -73,7 +73,7 @@ export default function CSSPreview({ onProcess }: CSSPreviewProps) {
                             type="checkbox"
                             checked={options.removeComments}
                             onChange={(e) =>
-                                setOptions({ ...options, removeComments: e.target.checked })
+                                setOptions(prev => ({ ...prev, removeComments: e.target.checked }))
                             }
                         />
                         <span className="cp-toggle-track">
@@ -87,7 +87,7 @@ export default function CSSPreview({ onProcess }: CSSPreviewProps) {
                             type="checkbox"
                             checked={options.preserveImportant}
                             onChange={(e) =>
-                                setOptions({ ...options, preserveImportant: e.target.checked })
+                                setOptions(prev => ({ ...prev, preserveImportant: e.target.checked }))
                             }
                             disabled={!options.removeComments}
                         />
@@ -102,7 +102,7 @@ export default function CSSPreview({ onProcess }: CSSPreviewProps) {
                             type="checkbox"
                             checked={options.removeLastSemicolon}
                             onChange={(e) =>
-                                setOptions({ ...options, removeLastSemicolon: e.target.checked })
+                                setOptions(prev => ({ ...prev, removeLastSemicolon: e.target.checked }))
                             }
                         />
                         <span className="cp-toggle-track">

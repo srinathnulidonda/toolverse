@@ -252,7 +252,7 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
                                     <input
                                         type="checkbox"
                                         checked={options.use24Hour}
-                                        onChange={(e) => setOptions({ ...options, use24Hour: e.target.checked })}
+                                        onChange={(e) => setOptions(prev => ({ ...prev, use24Hour: e.target.checked }))}
                                     />
                                     <span className="tcv-toggle-track">
                                         <span className="tcv-toggle-thumb" />

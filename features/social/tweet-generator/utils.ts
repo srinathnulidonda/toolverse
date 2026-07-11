@@ -212,10 +212,10 @@ export function highlightTextEntities(text: string, theme: TweetTheme): string {
 // Helper function to escape HTML entities
 function escapeHtml(text: string): string {
   return text
-    .replace(/&/g, "&")
-    .replace(/</g, "<")
-    .replace(/>/g, ">")
-    .replace(/"/g, '"')
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
 

@@ -187,7 +187,7 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
                                             key={m.id}
                                             type="button"
                                             className={`uew-pill${options.method === m.id ? " active" : ""}`}
-                                            onClick={() => setOptions({ ...options, method: m.id })}
+                                            onClick={() => setOptions(prev => ({ ...prev, method: m.id }))}
                                             title={m.desc}
                                         >
                                             <i className={`ti ${m.icon}`} />
@@ -280,7 +280,7 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
                                 type="button"
                                 className={`uew-method-card${options.method === m.id ? " active" : ""}`}
                                 onClick={() => {
-                                    setOptions({ ...options, method: m.id });
+                                    setOptions(prev => ({ ...prev, method: m.id }));
                                     setShowMethodInfo(false);
                                 }}
                             >
@@ -327,7 +327,7 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
                                 <input
                                     type="checkbox"
                                     checked={options.spaceAsPlus}
-                                    onChange={(e) => setOptions({ ...options, spaceAsPlus: e.target.checked })}
+                                    onChange={(e) => setOptions(prev => ({ ...prev, spaceAsPlus: e.target.checked }))}
                                 />
                                 <span className="uew-toggle-track">
                                     <span className="uew-toggle-thumb" />
@@ -341,7 +341,7 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
                                 <input
                                     type="checkbox"
                                     checked={options.spaceAsPlus}
-                                    onChange={(e) => setOptions({ ...options, spaceAsPlus: e.target.checked })}
+                                    onChange={(e) => setOptions(prev => ({ ...prev, spaceAsPlus: e.target.checked }))}
                                 />
                                 <span className="uew-toggle-track">
                                     <span className="uew-toggle-thumb" />
