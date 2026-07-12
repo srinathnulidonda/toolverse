@@ -108,7 +108,7 @@ export default function OgPreviewWorkspace({ tool }: { tool: Tool }) {
   };
 
   const handleTemplateSelect = (template: Template) => {
-    setMeta({ ...meta, ...template.data });
+    setMeta((prev: MetaData) => ({ ...prev, ...template.data }));
     setActiveTab("input");
   };
 

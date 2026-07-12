@@ -5,14 +5,14 @@ import type { QrType, WifiData, EmailData, VCardData, SmsData, LocationData } fr
 
 type TypeInputProps = {
     type: QrType;
-    url: string; setUrl: (v: string) => void;
-    text: string; setText: (v: string) => void;
-    email: EmailData; setEmail: (v: EmailData) => void;
-    phone: string; setPhone: (v: string) => void;
-    wifi: WifiData; setWifi: (v: WifiData) => void;
-    vcard: VCardData; setVcard: (v: VCardData) => void;
-    sms: SmsData; setSms: (v: SmsData) => void;
-    location: LocationData; setLocation: (v: LocationData) => void;
+    url: string; setUrl: (v: string | ((prev: string) => string)) => void;
+    text: string; setText: (v: string | ((prev: string) => string)) => void;
+    email: EmailData; setEmail: (v: EmailData | ((prev: EmailData) => EmailData)) => void;
+    phone: string; setPhone: (v: string | ((prev: string) => string)) => void;
+    wifi: WifiData; setWifi: (v: WifiData | ((prev: WifiData) => WifiData)) => void;
+    vcard: VCardData; setVcard: (v: VCardData | ((prev: VCardData) => VCardData)) => void;
+    sms: SmsData; setSms: (v: SmsData | ((prev: SmsData) => SmsData)) => void;
+    location: LocationData; setLocation: (v: LocationData | ((prev: LocationData) => LocationData)) => void;
 };
 
 export default function TypeInput(props: TypeInputProps) {
@@ -61,19 +61,19 @@ export default function TypeInput(props: TypeInputProps) {
                         <div className="ti-field">
                             <label className="ti-label" htmlFor="ti-email-addr">Email address</label>
                             <input id="ti-email-addr" type="email" className="ti-input"
-                                value={email.address} onChange={e => setEmail({ ...email, address: e.target.value })}
+                                value={email.address} onChange={e => setEmail((prev: EmailData) => ({ ...prev, address: e.target.value }))}
                                 placeholder="name@example.com" />
                         </div>
                         <div className="ti-field">
                             <label className="ti-label" htmlFor="ti-email-sub">Subject <span className="ti-optional">optional</span></label>
                             <input id="ti-email-sub" type="text" className="ti-input"
-                                value={email.subject} onChange={e => setEmail({ ...email, subject: e.target.value })}
+                                value={email.subject} onChange={e => setEmail((prev: EmailData) => ({ ...prev, subject: e.target.value }))}
                                 placeholder="Hello!" />
                         </div>
                         <div className="ti-field">
                             <label className="ti-label" htmlFor="ti-email-body">Message <span className="ti-optional">optional</span></label>
                             <textarea id="ti-email-body" className="ti-textarea"
-                                value={email.body} onChange={e => setEmail({ ...email, body: e.target.value })}
+                                value={email.body} onChange={e => setEmail((prev: EmailData) => ({ ...prev, body: e.target.value }))}
                                 placeholder="Hi there..." rows={3} />
                         </div>
                     </>
@@ -94,7 +94,7 @@ export default function TypeInput(props: TypeInputProps) {
                         <div className="ti-field">
                             <label className="ti-label" htmlFor="ti-ssid">Network name (SSID)</label>
                             <input id="ti-ssid" type="text" className="ti-input"
-                                value={wifi.ssid} onChange={e => setWifi({ ...wifi, ssid: e.target.value })}
+                                value={wifi.ssid} onChange={e => setWifi((prev: WifiData) => ({ ...prev, ssid: e.target.value }))}
                                 placeholder="My Network" />
                         </div>
                         <div className="ti-row">
@@ -102,7 +102,7 @@ export default function TypeInput(props: TypeInputProps) {
                                 <label className="ti-label" htmlFor="ti-enc">Security type</label>
                                 <select id="ti-enc" className="ti-select"
                                     value={wifi.encryption}
-                                    onChange={e => setWifi({ ...wifi, encryption: e.target.value as any })}>
+                                    onChange={e => setWifi((prev: WifiData) => ({ ...prev, encryption: e.target.value as any }))}>
                                     <option value="WPA">WPA / WPA2</option>
                                     <option value="WEP">WEP</option>
                                     <option value="nopass">None</option>
@@ -116,7 +116,7 @@ export default function TypeInput(props: TypeInputProps) {
                                         role="switch"
                                         aria-checked={wifi.hidden}
                                         className={`ti-toggle ${wifi.hidden ? "on" : ""}`}
-                                        onClick={() => setWifi({ ...wifi, hidden: !wifi.hidden })}
+                                        onClick={() => setWifi((prev: WifiData) => ({ ...prev, hidden: !prev.hidden }))}
                                     >
                                         <span className="ti-toggle-thumb" />
                                     </button>
@@ -127,7 +127,7 @@ export default function TypeInput(props: TypeInputProps) {
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-pass">Password</label>
                                 <input id="ti-pass" type="text" className="ti-input"
-                                    value={wifi.password} onChange={e => setWifi({ ...wifi, password: e.target.value })}
+                                    value={wifi.password} onChange={e => setWifi(prev => ({ ...prev, password: e.target.value }))}
                                     placeholder="Wi-Fi password" autoComplete="off" />
                             </div>
                         )}
@@ -140,13 +140,13 @@ export default function TypeInput(props: TypeInputProps) {
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-fn">First name</label>
                                 <input id="ti-fn" type="text" className="ti-input"
-                                    value={vcard.firstName} onChange={e => setVcard({ ...vcard, firstName: e.target.value })}
+                                    value={vcard.firstName} onChange={e => setVcard(prev => ({ ...prev, firstName: e.target.value }))}
                                     placeholder="Jane" />
                             </div>
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-ln">Last name</label>
                                 <input id="ti-ln" type="text" className="ti-input"
-                                    value={vcard.lastName} onChange={e => setVcard({ ...vcard, lastName: e.target.value })}
+                                    value={vcard.lastName} onChange={e => setVcard(prev => ({ ...prev, lastName: e.target.value }))}
                                     placeholder="Smith" />
                             </div>
                         </div>
@@ -154,13 +154,13 @@ export default function TypeInput(props: TypeInputProps) {
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-vc-phone">Phone</label>
                                 <input id="ti-vc-phone" type="tel" className="ti-input"
-                                    value={vcard.phone} onChange={e => setVcard({ ...vcard, phone: e.target.value })}
+                                    value={vcard.phone} onChange={e => setVcard(prev => ({ ...prev, phone: e.target.value }))}
                                     placeholder="+1 555 000 1234" />
                             </div>
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-vc-email">Email</label>
                                 <input id="ti-vc-email" type="email" className="ti-input"
-                                    value={vcard.email} onChange={e => setVcard({ ...vcard, email: e.target.value })}
+                                    value={vcard.email} onChange={e => setVcard(prev => ({ ...prev, email: e.target.value }))}
                                     placeholder="jane@example.com" />
                             </div>
                         </div>
@@ -168,20 +168,20 @@ export default function TypeInput(props: TypeInputProps) {
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-company">Company <span className="ti-optional">optional</span></label>
                                 <input id="ti-company" type="text" className="ti-input"
-                                    value={vcard.company} onChange={e => setVcard({ ...vcard, company: e.target.value })}
+                                    value={vcard.company} onChange={e => setVcard(prev => ({ ...prev, company: e.target.value }))}
                                     placeholder="Acme Corp" />
                             </div>
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-title">Job title <span className="ti-optional">optional</span></label>
                                 <input id="ti-title" type="text" className="ti-input"
-                                    value={vcard.title} onChange={e => setVcard({ ...vcard, title: e.target.value })}
+                                    value={vcard.title} onChange={e => setVcard(prev => ({ ...prev, title: e.target.value }))}
                                     placeholder="Designer" />
                             </div>
                         </div>
                         <div className="ti-field">
                             <label className="ti-label" htmlFor="ti-vc-web">Website <span className="ti-optional">optional</span></label>
                             <input id="ti-vc-web" type="url" className="ti-input"
-                                value={vcard.website} onChange={e => setVcard({ ...vcard, website: e.target.value })}
+                                value={vcard.website} onChange={e => setVcard(prev => ({ ...prev, website: e.target.value }))}
                                 placeholder="https://janesmith.com" />
                         </div>
                     </>
@@ -192,13 +192,13 @@ export default function TypeInput(props: TypeInputProps) {
                         <div className="ti-field">
                             <label className="ti-label" htmlFor="ti-sms-phone">Phone number</label>
                             <input id="ti-sms-phone" type="tel" className="ti-input"
-                                value={sms.phone} onChange={e => setSms({ ...sms, phone: e.target.value })}
+                                value={sms.phone} onChange={e => setSms(prev => ({ ...prev, phone: e.target.value }))}
                                 placeholder="+1 555 000 1234" />
                         </div>
                         <div className="ti-field">
                             <label className="ti-label" htmlFor="ti-sms-msg">Message <span className="ti-optional">optional</span></label>
                             <textarea id="ti-sms-msg" className="ti-textarea"
-                                value={sms.message} onChange={e => setSms({ ...sms, message: e.target.value })}
+                                value={sms.message} onChange={e => setSms(prev => ({ ...prev, message: e.target.value }))}
                                 placeholder="Hey, scan this to text me!" rows={3} />
                         </div>
                     </>
@@ -210,20 +210,20 @@ export default function TypeInput(props: TypeInputProps) {
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-lat">Latitude</label>
                                 <input id="ti-lat" type="text" className="ti-input"
-                                    value={location.lat} onChange={e => setLocation({ ...location, lat: e.target.value })}
+                                    value={location.lat} onChange={e => setLocation(prev => ({ ...prev, lat: e.target.value }))}
                                     placeholder="40.7128" />
                             </div>
                             <div className="ti-field">
                                 <label className="ti-label" htmlFor="ti-lng">Longitude</label>
                                 <input id="ti-lng" type="text" className="ti-input"
-                                    value={location.lng} onChange={e => setLocation({ ...location, lng: e.target.value })}
+                                    value={location.lng} onChange={e => setLocation(prev => ({ ...prev, lng: e.target.value }))}
                                     placeholder="-74.0060" />
                             </div>
                         </div>
                         <div className="ti-field">
                             <label className="ti-label" htmlFor="ti-loc-label">Label <span className="ti-optional">optional</span></label>
                             <input id="ti-loc-label" type="text" className="ti-input"
-                                value={location.label} onChange={e => setLocation({ ...location, label: e.target.value })}
+                                value={location.label} onChange={e => setLocation(prev => ({ ...prev, label: e.target.value }))}
                                 placeholder="Empire State Building" />
                         </div>
                         <span className="ti-hint">Scanning will open the default map app</span>

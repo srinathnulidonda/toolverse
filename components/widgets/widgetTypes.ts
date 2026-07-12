@@ -11,10 +11,18 @@ export type Task = {
   context?: string;
 };
 
+export type ChecklistItem = {
+  id: string;
+  text: string;
+  checked: boolean;
+};
+
 export type Note = {
   id: string;
   title: string;
   content: string;
+  type?: 'note' | 'checklist';
+  items?: ChecklistItem[];
   pinned: boolean;
   createdAt: number;
   updatedAt: number;
@@ -70,6 +78,15 @@ export function validateTask(task: any): task is Task {
   );
 }
 
+export function validateChecklistItem(item: any): item is ChecklistItem {
+  return (
+    item &&
+    typeof item.id === 'string' &&
+    typeof item.text === 'string' &&
+    typeof item.checked === 'boolean'
+  );
+}
+
 export function validateNote(note: any): note is Note {
   return (
     note &&
@@ -78,7 +95,9 @@ export function validateNote(note: any): note is Note {
     typeof note.content === 'string' &&
     typeof note.pinned === 'boolean' &&
     typeof note.createdAt === 'number' &&
-    typeof note.updatedAt === 'number'
+    typeof note.updatedAt === 'number' &&
+    (note.type === undefined || note.type === 'note' || note.type === 'checklist') &&
+    (note.items === undefined || (Array.isArray(note.items) && note.items.every(validateChecklistItem)))
   );
 }
 
@@ -106,7 +125,11 @@ export function cleanNotes(notes: any[]): Note[] {
     return [];
   }
   
-  const cleaned = notes.filter(validateNote);
+  const cleaned = notes.filter(validateNote).map(note => ({
+    ...note,
+    type: note.type || 'note',
+    items: Array.isArray(note.items) ? note.items.filter(validateChecklistItem) : [],
+  }));
   
   if (cleaned.length < notes.length) {
     console.warn(`cleanNotes: dropped ${notes.length - cleaned.length} invalid note(s)`);

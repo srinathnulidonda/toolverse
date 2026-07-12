@@ -1,4 +1,4 @@
-// components/widgets/FloatingWidget.tsx
+//components/widgets/FloatingWidget.tsx
 "use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
@@ -6,7 +6,7 @@ import { createPortal } from "react-dom";
 import useLocalStorage from "@/lib/useLocalStorage";
 import WidgetTasks from "./WidgetTasks";
 import WidgetNotes from "./WidgetNotes";
-import { Task, Note, Priority, TASKS_STORAGE_KEY, NOTES_STORAGE_KEY, TASKS_DRAFT_KEY, NOTES_DRAFT_KEY, cleanTasks, cleanNotes } from "./widgetTypes";
+import { Task, Note, Priority, ChecklistItem, TASKS_STORAGE_KEY, NOTES_STORAGE_KEY, TASKS_DRAFT_KEY, NOTES_DRAFT_KEY, cleanTasks, cleanNotes } from "./widgetTypes";
 
 type ViewMode = "minimized" | "expanded" | "full";
 type ActiveTab = "tasks" | "notes";
@@ -15,8 +15,8 @@ type Filter = "all" | "active" | "completed";
 const WIDGET_POSITION_KEY = "tv:widget-position";
 const ACTIVE_TAB_KEY = "tv:active-tab";
 
-const MAX_PANEL_HEIGHT = 620;
-const MAX_PANEL_WIDTH = 400;
+const MAX_PANEL_HEIGHT = 600; // Match actual CSS
+const MAX_PANEL_WIDTH = 380;  // Match actual CSS
 const DRAG_THRESHOLD = 4;
 
 interface TasksDraft {
@@ -32,8 +32,10 @@ interface NotesDraft {
   activeNote: string | null;
   title: string;
   content: string;
+  type?: 'note' | 'checklist';
+  items?: ChecklistItem[];
   composerOpen: boolean;
-  search: string;
+  showCompleted?: boolean;
 }
 
 const DEFAULT_TASKS_DRAFT: TasksDraft = {
@@ -49,14 +51,16 @@ const DEFAULT_NOTES_DRAFT: NotesDraft = {
   activeNote: null,
   title: "",
   content: "",
+  type: 'note',
+  items: [],
   composerOpen: false,
-  search: "",
+  showCompleted: true,
 };
 
 export default function FloatingWidget() {
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("minimized");
-  const [activeTab, setActiveTab] = useLocalStorage<ActiveTab>(ACTIVE_TAB_KEY, "tasks");
+  const [activeTab, setActiveTab] = useLocalStorage<ActiveTab>(ACTIVE_TAB_KEY, "notes");
   
   const [persistedPosition, setPersistedPosition] = useLocalStorage(WIDGET_POSITION_KEY, {
     bottom: 24,
@@ -104,12 +108,28 @@ export default function FloatingWidget() {
     }
   }, [mounted, persistedPosition, isDragging]);
 
+  // Auto-drop to expanded when switching to tasks while in full mode
+  useEffect(() => {
+    if (viewMode === "full" && activeTab === "tasks") {
+      setViewMode("expanded");
+    }
+  }, [activeTab, viewMode]);
+
   const clampPosition = (pos: { bottom: number; right: number }, currentViewMode: ViewMode = viewMode) => {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     
-    const maxHeight = currentViewMode === "expanded" ? MAX_PANEL_HEIGHT : 100;
-    const maxWidth = currentViewMode === "expanded" ? MAX_PANEL_WIDTH : 100;
+    // Use actual measured panel size on mobile
+    let maxHeight = currentViewMode === "expanded" ? MAX_PANEL_HEIGHT : 100;
+    let maxWidth = currentViewMode === "expanded" ? MAX_PANEL_WIDTH : 100;
+    
+    if (viewportWidth < 768) {
+      maxWidth = Math.min(MAX_PANEL_WIDTH, viewportWidth - 32);
+    }
+    
+    if (viewportHeight < 768) {
+      maxHeight = Math.min(MAX_PANEL_HEIGHT, viewportHeight - 120);
+    }
     
     if (viewportWidth < MAX_PANEL_WIDTH + 20) {
       return {
@@ -152,6 +172,7 @@ export default function FloatingWidget() {
     }
   }, [viewMode, setPersistedPosition]);
 
+  // Tab-aware keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
@@ -163,7 +184,8 @@ export default function FloatingWidget() {
         e.preventDefault();
         setViewMode((prev) => {
           if (prev === "minimized") return "expanded";
-          if (prev === "expanded") return "full";
+          // Don't allow full mode when tasks tab is active
+          if (prev === "expanded" && activeTab === "notes") return "full";
           return "minimized";
         });
       }
@@ -178,7 +200,7 @@ export default function FloatingWidget() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, []);
+  }, [activeTab]); // Add activeTab dependency
 
   useEffect(() => {
     if (viewMode !== "full") return;
@@ -338,12 +360,11 @@ export default function FloatingWidget() {
     if (activeTab === "tasks") {
       return (
         <WidgetTasks 
-          variant={viewMode === "full" ? "full" : "compact"}
           tasks={tasks} 
           setTasks={setTasks}
           draft={tasksDraft}
           setDraft={setTasksDraft}
-          onExpand={() => setViewMode("full")}
+          // No onExpand prop - tasks are always compact
         />
       );
     } else {
@@ -402,8 +423,8 @@ export default function FloatingWidget() {
             align-items: center;
             justify-content: center;
             padding: 20px;
-            background: rgba(10, 10, 8, 0.5);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
             animation: fwFadeIn 0.15s ease;
           }
           .fw-full-panel {
@@ -413,8 +434,8 @@ export default function FloatingWidget() {
             max-height: 680px;
             background: var(--bg-card);
             border: 0.5px solid var(--border);
-            border-radius: 16px;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(255, 255, 255, 0.08);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -426,7 +447,7 @@ export default function FloatingWidget() {
             align-items: center;
             justify-content: space-between;
             padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 0.5px solid var(--border);
             background: var(--bg-surface);
             flex-shrink: 0;
             gap: 12px;
@@ -438,7 +459,7 @@ export default function FloatingWidget() {
             gap: 2px;
             padding: 3px;
             background: var(--bg);
-            border: 1px solid var(--border);
+            border: 0.5px solid var(--border);
             border-radius: 10px;
           }
           .fw-tab {
@@ -466,7 +487,7 @@ export default function FloatingWidget() {
           .fw-tab.active {
             background: var(--bg-card);
             color: var(--text);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
           }
           .fw-tab.active svg {
             opacity: 1;
@@ -482,7 +503,7 @@ export default function FloatingWidget() {
           .fw-icon-btn {
             width: 30px;
             height: 30px;
-            border-radius: 8px;
+            border-radius: 50%;
             border: none;
             background: none;
             color: var(--text-tertiary);
@@ -493,14 +514,14 @@ export default function FloatingWidget() {
             cursor: pointer;
           }
           .fw-icon-btn:hover {
-            background: var(--bg-card);
+            background: rgba(255, 255, 255, 0.08);
             color: var(--text);
           }
           .fw-icon-btn:active {
             transform: scale(0.94);
           }
           .fw-icon-btn-close:hover {
-            background: rgba(224, 82, 82, 0.12);
+            background: rgba(224, 82, 82, 0.15);
             color: #E05252;
           }
 
@@ -616,9 +637,11 @@ export default function FloatingWidget() {
               </button>
             </div>
             <div className="fw-header-actions">
-              <button className="fw-icon-btn" onClick={() => setViewMode("full")} aria-label="Expand to full view" title="Expand">
-                <ExpandIcon />
-              </button>
+              {activeTab === "notes" && ( // Only show expand for notes
+                <button className="fw-icon-btn" onClick={() => setViewMode("full")} aria-label="Expand to full view" title="Expand">
+                  <ExpandIcon />
+                </button>
+              )}
               <button className="fw-icon-btn fw-icon-btn-close" onClick={() => setViewMode("minimized")} aria-label="Close" title="Close">
                 <CloseIcon />
               </button>
@@ -648,20 +671,20 @@ export default function FloatingWidget() {
           height: 56px;
           border-radius: 50%;
           background: var(--bg-card);
-          border: none;
+          border: 0.5px solid var(--border);
           cursor: grab;
           display: flex;
           align-items: center;
           justify-content: center;
           color: var(--text);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
           touch-action: none;
         }
         .fw-fab:hover {
           background: var(--bg-surface);
           transform: scale(1.05);
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.12);
+          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 3px 8px rgba(0, 0, 0, 0.25);
         }
         .fw-fab:active {
           transform: scale(0.98);
@@ -683,18 +706,18 @@ export default function FloatingWidget() {
           justify-content: center;
           border: 2px solid var(--bg);
           line-height: 1;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         @media (max-width: 768px) {
           .fw-fab {
             width: 48px;
             height: 48px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3), 0 2px 5px rgba(0, 0, 0, 0.2);
           }
           .fw-fab:hover {
             transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 5px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
           }
           .fw-fab svg {
             width: 18px;
@@ -732,7 +755,7 @@ export default function FloatingWidget() {
           background: var(--bg-card);
           border: 0.5px solid var(--border);
           border-radius: 12px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(255, 255, 255, 0.05);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.05);
           overflow: hidden;
           display: flex;
           flex-direction: column;
@@ -755,7 +778,7 @@ export default function FloatingWidget() {
           align-items: center;
           justify-content: space-between;
           padding: 10px 12px;
-          border-bottom: 1px solid var(--border);
+          border-bottom: 0.5px solid var(--border);
           background: var(--bg-surface);
           gap: 8px;
         }
@@ -768,7 +791,7 @@ export default function FloatingWidget() {
           height: 28px;
           cursor: grab;
           color: var(--text-tertiary);
-          border-radius: 6px;
+          border-radius: 50%;
           transition: all 0.15s ease;
           flex-shrink: 0;
           touch-action: none;
@@ -777,7 +800,7 @@ export default function FloatingWidget() {
           padding: 0;
         }
         .fw-drag-handle:hover {
-          background: var(--bg-card);
+          background: rgba(255, 255, 255, 0.08);
           color: var(--text);
         }
         .fw-drag-handle:focus {
@@ -800,7 +823,7 @@ export default function FloatingWidget() {
           gap: 2px;
           padding: 2px;
           background: var(--bg);
-          border: 1px solid var(--border);
+          border: 0.5px solid var(--border);
           border-radius: 8px;
         }
         .fw-tab {
@@ -828,7 +851,7 @@ export default function FloatingWidget() {
         .fw-tab.active {
           background: var(--bg-card);
           color: var(--text);
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
         .fw-tab.active svg {
           opacity: 1;
@@ -838,7 +861,7 @@ export default function FloatingWidget() {
         .fw-icon-btn {
           width: 28px;
           height: 28px;
-          border-radius: 7px;
+          border-radius: 50%;
           border: none;
           background: none;
           color: var(--text-tertiary);
@@ -850,14 +873,14 @@ export default function FloatingWidget() {
           flex-shrink: 0;
         }
         .fw-icon-btn:hover {
-          background: var(--bg-card);
+          background: rgba(255, 255, 255, 0.08);
           color: var(--text);
         }
         .fw-icon-btn:active {
           transform: scale(0.94);
         }
         .fw-icon-btn-close:hover {
-          background: rgba(224, 82, 82, 0.12);
+          background: rgba(224, 82, 82, 0.15);
           color: #E05252;
         }
 
