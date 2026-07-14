@@ -25,6 +25,9 @@ import JSONMinifierWorkspace from "@/features/dev/json-minifier/Workspace";
 import HTMLFormatterWorkspace from "@/features/dev/html-formatter/Workspace";
 import CSSMinifierWorkspace from "@/features/dev/css-minifier/Workspace";
 import JSMinifierWorkspace from "@/features/dev/js-minifier/Workspace";
+import GSTCalculatorWorkspace from "@/features/finance/gst-calculator/Workspace";
+import ITCCalculatorWorkspace from "@/features/finance/itc-calculator/Workspace";
+import GSTReconciliationWorkspace from "@/features/finance/gst-reconciliation/Workspace";
 
 type ToolWorkspaceProps = {
   tool: Tool;
@@ -58,6 +61,11 @@ const WORKSPACES: Record<string, ComponentType<{ tool: Tool }>> = {
   "meta-tag-generator": MetaTagGeneratorWorkspace,
   "hashtag-generator": HashtagGeneratorWorkspace,
   "tweet-generator": TweetGeneratorWorkspace,
+
+  // Finance tools
+  "gst-calculator": GSTCalculatorWorkspace,
+  "itc-calculator": ITCCalculatorWorkspace,
+  "gst-reconciliation": GSTReconciliationWorkspace,
 };
 
 export default function ToolWorkspace({ tool }: ToolWorkspaceProps) {
