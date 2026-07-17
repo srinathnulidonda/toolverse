@@ -155,7 +155,13 @@ export default function Breadcrumb({ items, inline = false }: BreadcrumbProps) {
                 <Fragment key={i}>
                   <li className="breadcrumb-separator" aria-hidden="true">
                     <svg width="6" height="10" viewBox="0 0 6 10" fill="none">
-                      <path d="M1 1L5 5L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path
+                        d="M1 1L5 5L1 9"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
                     </svg>
                   </li>
                   <li className="breadcrumb-item">

@@ -12,18 +12,13 @@ type PlatformPreviewProps = {
 
 export default function PlatformPreview({ platform, meta, device }: PlatformPreviewProps) {
   const req = PLATFORM_REQUIREMENTS[platform];
-  
-  const title = (platform === "twitter" && meta.twitterTitle) 
-    ? meta.twitterTitle 
-    : meta.title;
-    
-  const description = (platform === "twitter" && meta.twitterDescription)
-    ? meta.twitterDescription
-    : meta.description;
-    
-  const image = (platform === "twitter" && meta.twitterImage)
-    ? meta.twitterImage
-    : meta.image;
+
+  const title = platform === "twitter" && meta.twitterTitle ? meta.twitterTitle : meta.title;
+
+  const description =
+    platform === "twitter" && meta.twitterDescription ? meta.twitterDescription : meta.description;
+
+  const image = platform === "twitter" && meta.twitterImage ? meta.twitterImage : meta.image;
 
   const displayTitle = truncate(title, req.title.max);
   const displayDescription = truncate(description, req.description.max);
@@ -32,7 +27,7 @@ export default function PlatformPreview({ platform, meta, device }: PlatformPrev
     <>
       <div className={`pp-root pp-${platform} pp-${device}`}>
         {/* Platform-specific previews */}
-        
+
         {platform === "facebook" && (
           <div className="pp-facebook-card">
             {image && (
@@ -41,9 +36,15 @@ export default function PlatformPreview({ platform, meta, device }: PlatformPrev
               </div>
             )}
             <div className="pp-facebook-content">
-              <div className="pp-facebook-domain">{meta.url ? new URL(meta.url).hostname.toUpperCase() : "EXAMPLE.COM"}</div>
-              <div className="pp-facebook-title">{displayTitle || "Your page title will appear here"}</div>
-              <div className="pp-facebook-description">{displayDescription || "Your description will appear here"}</div>
+              <div className="pp-facebook-domain">
+                {meta.url ? new URL(meta.url).hostname.toUpperCase() : "EXAMPLE.COM"}
+              </div>
+              <div className="pp-facebook-title">
+                {displayTitle || "Your page title will appear here"}
+              </div>
+              <div className="pp-facebook-description">
+                {displayDescription || "Your description will appear here"}
+              </div>
             </div>
           </div>
         )}
@@ -55,7 +56,9 @@ export default function PlatformPreview({ platform, meta, device }: PlatformPrev
                 <div className="pp-twitter-content-summary">
                   <div className="pp-twitter-text">
                     <div className="pp-twitter-title">{displayTitle || "Title"}</div>
-                    <div className="pp-twitter-description">{displayDescription || "Description"}</div>
+                    <div className="pp-twitter-description">
+                      {displayDescription || "Description"}
+                    </div>
                     <div className="pp-twitter-domain">
                       {meta.url ? new URL(meta.url).hostname : "example.com"}
                     </div>
@@ -76,7 +79,9 @@ export default function PlatformPreview({ platform, meta, device }: PlatformPrev
                 )}
                 <div className="pp-twitter-content">
                   <div className="pp-twitter-title">{displayTitle || "Title"}</div>
-                  <div className="pp-twitter-description">{displayDescription || "Description"}</div>
+                  <div className="pp-twitter-description">
+                    {displayDescription || "Description"}
+                  </div>
                   <div className="pp-twitter-domain">
                     {meta.url ? new URL(meta.url).hostname : "example.com"}
                   </div>
@@ -124,7 +129,10 @@ export default function PlatformPreview({ platform, meta, device }: PlatformPrev
 
         {platform === "discord" && (
           <div className="pp-discord-card">
-            <div className="pp-discord-accent" style={{ background: meta.themeColor || "#5865F2" }} />
+            <div
+              className="pp-discord-accent"
+              style={{ background: meta.themeColor || "#5865F2" }}
+            />
             <div className="pp-discord-body">
               <div className="pp-discord-content">
                 <div className="pp-discord-site">{meta.siteName || "Website"}</div>
@@ -163,7 +171,9 @@ export default function PlatformPreview({ platform, meta, device }: PlatformPrev
         {platform === "imessage" && (
           <div className="pp-imessage-bubble">
             <div className="pp-imessage-card">
-              <div className="pp-imessage-site">{meta.siteName || new URL(meta.url || "https://example.com").hostname}</div>
+              <div className="pp-imessage-site">
+                {meta.siteName || new URL(meta.url || "https://example.com").hostname}
+              </div>
               {image && (
                 <div className="pp-imessage-image">
                   <img src={image} alt="" />

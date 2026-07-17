@@ -105,7 +105,9 @@ export default function BasicSeoForm({ tags, onChange }: BasicSeoFormProps) {
 
         <div className="bsf-row">
           <div className="bsf-field">
-            <label className="bsf-label" htmlFor="bsf-author">Author</label>
+            <label className="bsf-label" htmlFor="bsf-author">
+              Author
+            </label>
             <input
               id="bsf-author"
               type="text"
@@ -116,7 +118,9 @@ export default function BasicSeoForm({ tags, onChange }: BasicSeoFormProps) {
             />
           </div>
           <div className="bsf-field">
-            <label className="bsf-label" htmlFor="bsf-language">Language</label>
+            <label className="bsf-label" htmlFor="bsf-language">
+              Language
+            </label>
             <select
               id="bsf-language"
               className="bsf-select"
@@ -165,14 +169,14 @@ export default function BasicSeoForm({ tags, onChange }: BasicSeoFormProps) {
               </option>
             ))}
           </select>
-          <span className="bsf-hint">
-            Controls how search engines crawl and index your page.
-          </span>
+          <span className="bsf-hint">Controls how search engines crawl and index your page.</span>
         </div>
 
         <div className="bsf-row">
           <div className="bsf-field">
-            <label className="bsf-label" htmlFor="bsf-viewport">Viewport</label>
+            <label className="bsf-label" htmlFor="bsf-viewport">
+              Viewport
+            </label>
             <input
               id="bsf-viewport"
               type="text"
@@ -183,7 +187,9 @@ export default function BasicSeoForm({ tags, onChange }: BasicSeoFormProps) {
             />
           </div>
           <div className="bsf-field">
-            <label className="bsf-label" htmlFor="bsf-charset">Charset</label>
+            <label className="bsf-label" htmlFor="bsf-charset">
+              Charset
+            </label>
             <select
               id="bsf-charset"
               className="bsf-select"

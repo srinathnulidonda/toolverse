@@ -1,9 +1,13 @@
 // app/(marketing)/about/page.tsx
-"use client";
-
 import Link from "next/link";
 import { stats, values } from "./data";
 import styles from "./About.module.css";
+import { logger } from "@/lib/logger";
+
+export const metadata = {
+  title: "About Toolverse",
+  description: "Learn about Toolverse – your all-in-one developer toolkit.",
+};
 
 export default function AboutPage() {
   return (
@@ -22,7 +26,9 @@ export default function AboutPage() {
               <span className={styles.heroGradientText}>for everyone</span>
             </h1>
             <p className={styles.aboutHeroDescription}>
-              We believe powerful productivity tools shouldn't require creating accounts, uploading files, or compromising privacy. Toolverse processes everything locally in your browser—fast, secure, and free forever.
+              We believe powerful productivity tools shouldn't require creating accounts, uploading
+              files, or compromising privacy. Toolverse processes everything locally in your
+              browser—fast, secure, and free forever.
             </p>
             <div className={styles.aboutHeroActions}>
               <Link href="/tools" className={styles.heroBtnPrimary}>
@@ -93,11 +99,10 @@ export default function AboutPage() {
                 <i className="ti ti-sparkles" />
                 Get Started
               </div>
-              <h2 className={styles.ctaTitle}>
-                Ready to work smarter?
-              </h2>
+              <h2 className={styles.ctaTitle}>Ready to work smarter?</h2>
               <p className={styles.ctaDescription}>
-                No sign-up required. No file uploads. Just powerful tools that work instantly in your browser, completely free.
+                No sign-up required. No file uploads. Just powerful tools that work instantly in
+                your browser, completely free.
               </p>
               <div className={styles.ctaActions}>
                 <Link href="/tools" className={styles.ctaPrimaryButton}>

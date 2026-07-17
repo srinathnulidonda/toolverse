@@ -8,11 +8,7 @@ type ToolSidebarProps = {
   relatedTools: Tool[];
 };
 
-export default function ToolSidebar({
-  tool,
-  category,
-  relatedTools,
-}: ToolSidebarProps) {
+export default function ToolSidebar({ tool, category, relatedTools }: ToolSidebarProps) {
   return (
     <>
       <aside className="ts-root">
@@ -39,8 +35,7 @@ export default function ToolSidebar({
           <div>
             <p className="ts-priv-title">100% private</p>
             <p className="ts-priv-body">
-              Everything runs in your browser. No files are ever uploaded to our
-              servers.
+              Everything runs in your browser. No files are ever uploaded to our servers.
             </p>
           </div>
         </div>
@@ -56,10 +51,7 @@ export default function ToolSidebar({
                     <i className={`ti ${t.icon}`} aria-hidden="true" />
                   </div>
                   <span className="ts-related-name">{t.label}</span>
-                  <i
-                    className="ti ti-chevron-right ts-related-chevron"
-                    aria-hidden="true"
-                  />
+                  <i className="ti ti-chevron-right ts-related-chevron" aria-hidden="true" />
                 </Link>
               ))}
             </div>

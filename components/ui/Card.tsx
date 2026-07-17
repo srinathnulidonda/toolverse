@@ -2,17 +2,17 @@
 import React from "react";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export default function Card({ children, className = "", ...props }: CardProps) {
-    return (
-        <>
-            <div className={`card ${className}`} {...props}>
-                {children}
-            </div>
+  return (
+    <>
+      <div className={`card ${className}`} {...props}>
+        {children}
+      </div>
 
-            <style>{`
+      <style>{`
         .card {
           background: var(--bg-card);
           border: 0.5px solid var(--border);
@@ -25,6 +25,6 @@ export default function Card({ children, className = "", ...props }: CardProps) 
           transform: translateY(-1px);
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

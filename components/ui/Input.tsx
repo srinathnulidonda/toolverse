@@ -2,31 +2,31 @@
 import React from "react";
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
-    title?: string;
-    description?: string;
-    children: React.ReactNode;
+  title?: string;
+  description?: string;
+  children: React.ReactNode;
 }
 
 export default function Section({
-    title,
-    description,
-    children,
-    className = "",
-    ...props
+  title,
+  description,
+  children,
+  className = "",
+  ...props
 }: SectionProps) {
-    return (
-        <>
-            <section className={`section ${className}`} {...props}>
-                {(title || description) && (
-                    <div className="section-header">
-                        {title && <h2 className="section-title">{title}</h2>}
-                        {description && <p className="section-desc">{description}</p>}
-                    </div>
-                )}
-                <div className="section-body">{children}</div>
-            </section>
+  return (
+    <>
+      <section className={`section ${className}`} {...props}>
+        {(title || description) && (
+          <div className="section-header">
+            {title && <h2 className="section-title">{title}</h2>}
+            {description && <p className="section-desc">{description}</p>}
+          </div>
+        )}
+        <div className="section-body">{children}</div>
+      </section>
 
-            <style>{`
+      <style>{`
         .section {
           display: flex;
           flex-direction: column;
@@ -62,6 +62,6 @@ export default function Section({
           gap: 12px;
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

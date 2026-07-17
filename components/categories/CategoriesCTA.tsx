@@ -6,9 +6,7 @@ export default function CategoriesCTA() {
   return (
     <>
       <div className="cat-cta">
-        <p className="cat-cta-text">
-          Can&apos;t find what you&apos;re looking for?
-        </p>
+        <p className="cat-cta-text">Can&apos;t find what you&apos;re looking for?</p>
         <Link href="/tools" className="cat-cta-link">
           <i className="ti ti-layout-grid" aria-hidden="true" />
           View all {TOOLS.length} tools

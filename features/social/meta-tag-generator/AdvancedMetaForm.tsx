@@ -36,7 +36,9 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
           </div>
 
           <div className="amf-field">
-            <label className="amf-label" htmlFor="amf-theme-color">Theme Color</label>
+            <label className="amf-label" htmlFor="amf-theme-color">
+              Theme Color
+            </label>
             <div className="amf-color-row">
               <input
                 type="color"
@@ -56,7 +58,9 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
           </div>
 
           <div className="amf-field">
-            <label className="amf-label" htmlFor="amf-ms-tile">MS Tile Color</label>
+            <label className="amf-label" htmlFor="amf-ms-tile">
+              MS Tile Color
+            </label>
             <div className="amf-color-row">
               <input
                 type="color"
@@ -84,8 +88,7 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
               className={`amf-toggle ${tags.appleMobileWebAppCapable === "yes" ? "on" : ""}`}
               onClick={() =>
                 set({
-                  appleMobileWebAppCapable:
-                    tags.appleMobileWebAppCapable === "yes" ? "" : "yes",
+                  appleMobileWebAppCapable: tags.appleMobileWebAppCapable === "yes" ? "" : "yes",
                 })
               }
             >
@@ -96,7 +99,9 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
           {tags.appleMobileWebAppCapable === "yes" && (
             <>
               <div className="amf-field">
-                <label className="amf-label" htmlFor="amf-status-bar">Status Bar Style</label>
+                <label className="amf-label" htmlFor="amf-status-bar">
+                  Status Bar Style
+                </label>
                 <select
                   id="amf-status-bar"
                   className="amf-select"
@@ -110,7 +115,9 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
               </div>
 
               <div className="amf-field">
-                <label className="amf-label" htmlFor="amf-app-title">App Title</label>
+                <label className="amf-label" htmlFor="amf-app-title">
+                  App Title
+                </label>
                 <input
                   id="amf-app-title"
                   type="text"
@@ -132,7 +139,9 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
           </div>
 
           <div className="amf-field">
-            <label className="amf-label" htmlFor="amf-favicon">Favicon URL</label>
+            <label className="amf-label" htmlFor="amf-favicon">
+              Favicon URL
+            </label>
             <input
               id="amf-favicon"
               type="url"
@@ -145,7 +154,9 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
 
           <div className="amf-row">
             <div className="amf-field">
-              <label className="amf-label" htmlFor="amf-icon16">16x16 Icon</label>
+              <label className="amf-label" htmlFor="amf-icon16">
+                16x16 Icon
+              </label>
               <input
                 id="amf-icon16"
                 type="url"
@@ -156,7 +167,9 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
               />
             </div>
             <div className="amf-field">
-              <label className="amf-label" htmlFor="amf-icon32">32x32 Icon</label>
+              <label className="amf-label" htmlFor="amf-icon32">
+                32x32 Icon
+              </label>
               <input
                 id="amf-icon32"
                 type="url"
@@ -169,7 +182,9 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
           </div>
 
           <div className="amf-field">
-            <label className="amf-label" htmlFor="amf-apple-touch">Apple Touch Icon</label>
+            <label className="amf-label" htmlFor="amf-apple-touch">
+              Apple Touch Icon
+            </label>
             <input
               id="amf-apple-touch"
               type="url"
@@ -219,7 +234,8 @@ export default function AdvancedMetaForm({ tags, onChange }: AdvancedMetaFormPro
               </div>
               <p className="amf-hint">
                 <i className="ti ti-info-circle" aria-hidden="true" />
-                Schema data will be auto-generated based on your title, description, and other meta fields.
+                Schema data will be auto-generated based on your title, description, and other meta
+                fields.
               </p>
             </>
           )}

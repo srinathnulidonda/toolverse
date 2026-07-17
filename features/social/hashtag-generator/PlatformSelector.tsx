@@ -10,7 +10,10 @@ type PlatformSelectorProps = {
 };
 
 export default function PlatformSelector({ selectedPlatform, onChange }: PlatformSelectorProps) {
-  const platforms = Object.entries(PLATFORM_LIMITS) as [Platform, typeof PLATFORM_LIMITS[Platform]][];
+  const platforms = Object.entries(PLATFORM_LIMITS) as [
+    Platform,
+    (typeof PLATFORM_LIMITS)[Platform],
+  ][];
 
   return (
     <>
@@ -44,13 +47,15 @@ export default function PlatformSelector({ selectedPlatform, onChange }: Platfor
             </div>
             <ul className="ps-info-list">
               <li>
-                <strong>Recommended:</strong> {PLATFORM_LIMITS[selectedPlatform].recommended} hashtags
+                <strong>Recommended:</strong> {PLATFORM_LIMITS[selectedPlatform].recommended}{" "}
+                hashtags
               </li>
               <li>
                 <strong>Maximum:</strong> {PLATFORM_LIMITS[selectedPlatform].maxHashtags} hashtags
               </li>
               <li>
-                <strong>Character limit:</strong> {PLATFORM_LIMITS[selectedPlatform].maxCharacters.toLocaleString()}
+                <strong>Character limit:</strong>{" "}
+                {PLATFORM_LIMITS[selectedPlatform].maxCharacters.toLocaleString()}
               </li>
             </ul>
             <p className="ps-info-note">{PLATFORM_LIMITS[selectedPlatform].notes}</p>

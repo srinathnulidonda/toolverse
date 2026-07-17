@@ -1,5 +1,6 @@
 // features/social/hashtag-generator/ExportPanel.tsx
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useState } from "react";
 import type { ExportFormat, Platform } from "./types";
@@ -15,7 +16,12 @@ const FORMATS: { value: ExportFormat; label: string; desc: string; icon: string 
   { value: "space", label: "Space Separated", desc: "#tag1 #tag2 #tag3", icon: "ti-space" },
   { value: "comma", label: "Comma Separated", desc: "#tag1, #tag2, #tag3", icon: "ti-list" },
   { value: "newline", label: "One Per Line", desc: "#tag1\n#tag2\n#tag3", icon: "ti-list-numbers" },
-  { value: "numbered", label: "Numbered List", desc: "1. #tag1\n2. #tag2", icon: "ti-list-numbers" },
+  {
+    value: "numbered",
+    label: "Numbered List",
+    desc: "1. #tag1\n2. #tag2",
+    icon: "ti-list-numbers",
+  },
 ];
 
 const CAPTION_POSITIONS = [
@@ -42,7 +48,7 @@ export default function ExportPanel({ hashtags, platform }: ExportPanelProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      logger.error("Failed to copy:", err);
     }
   };
 
@@ -62,7 +68,7 @@ export default function ExportPanel({ hashtags, platform }: ExportPanelProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      logger.error("Failed to copy:", err);
     }
   };
 
@@ -144,17 +150,12 @@ export default function ExportPanel({ hashtags, platform }: ExportPanelProps) {
               <span
                 className="ep-char-count"
                 style={{
-                  color:
-                    charCount > limit.maxCharacters
-                      ? "#B91C1C"
-                      : "var(--text-tertiary)",
+                  color: charCount > limit.maxCharacters ? "#B91C1C" : "var(--text-tertiary)",
                 }}
               >
                 {charCount} chars
               </span>
-              <span className="ep-tag-count">
-                {hashtags.length} hashtags
-              </span>
+              <span className="ep-tag-count">{hashtags.length} hashtags</span>
             </div>
           </div>
           <div className="ep-output-box">

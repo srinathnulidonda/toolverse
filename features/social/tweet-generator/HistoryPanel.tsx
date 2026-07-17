@@ -18,12 +18,7 @@ function relativeTime(ts: number): string {
   return `${Math.floor(diff / 86_400_000)}d ago`;
 }
 
-export default function HistoryPanel({
-  items,
-  onRestore,
-  onDelete,
-  onClear,
-}: HistoryPanelProps) {
+export default function HistoryPanel({ items, onRestore, onDelete, onClear }: HistoryPanelProps) {
   if (items.length === 0) {
     return (
       <>
@@ -51,12 +46,7 @@ export default function HistoryPanel({
             <div key={item.id} className="hp-item">
               <div className="hp-thumb">
                 {item.thumbnail ? (
-                  <img
-                    src={item.thumbnail}
-                    alt={item.name}
-                    width={64}
-                    height={64}
-                  />
+                  <img src={item.thumbnail} alt={item.name} width={64} height={64} />
                 ) : (
                   <i className="ti ti-message" aria-hidden="true" />
                 )}
@@ -69,10 +59,10 @@ export default function HistoryPanel({
                     {item.style.layout === "single"
                       ? "Single"
                       : item.style.layout === "quote"
-                      ? "Quote"
-                      : item.style.layout === "thread"
-                      ? "Thread"
-                      : "Reply"}
+                        ? "Quote"
+                        : item.style.layout === "thread"
+                          ? "Thread"
+                          : "Reply"}
                   </span>
                   <span className="hp-dot">·</span>
                   <span className="hp-theme">{item.style.theme}</span>
@@ -89,11 +79,7 @@ export default function HistoryPanel({
                 >
                   <i className="ti ti-refresh" aria-hidden="true" />
                 </button>
-                <button
-                  className="hp-delete"
-                  onClick={() => onDelete(item.id)}
-                  title="Delete"
-                >
+                <button className="hp-delete" onClick={() => onDelete(item.id)} title="Delete">
                   <i className="ti ti-trash" aria-hidden="true" />
                 </button>
               </div>

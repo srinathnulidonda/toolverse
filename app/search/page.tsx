@@ -22,10 +22,7 @@ function SearchPage() {
   }, [initialQuery]);
 
   const filtered = useMemo(() => {
-    let list =
-      activeFilter === "all"
-        ? TOOLS
-        : TOOLS.filter((t) => t.category === activeFilter);
+    let list = activeFilter === "all" ? TOOLS : TOOLS.filter((t) => t.category === activeFilter);
 
     if (query.trim()) {
       const q = query.toLowerCase();
@@ -58,13 +55,15 @@ function SearchPage() {
           <div className="sp-header-inner">
             <p className="sp-eyebrow">Search</p>
             <h1 className="sp-title">
-              {query
-                ? <>Results for <span className="sp-title-query">&quot;{query}&quot;</span></>
-                : "Find the right tool"}
+              {query ? (
+                <>
+                  Results for <span className="sp-title-query">&quot;{query}&quot;</span>
+                </>
+              ) : (
+                "Find the right tool"
+              )}
             </h1>
-            <p className="sp-desc">
-              Search across {TOOLS.length} free browser-based tools
-            </p>
+            <p className="sp-desc">Search across {TOOLS.length} free browser-based tools</p>
 
             {/* Search input */}
             <SearchInput query={query} onChange={setQuery} />
@@ -84,8 +83,8 @@ function SearchPage() {
             {/* Results count */}
             {query.trim() && (
               <p className="sp-count">
-                {filtered.length} result{filtered.length !== 1 ? "s" : ""}
-                {" "}for <span className="sp-count-query">&quot;{query}&quot;</span>
+                {filtered.length} result{filtered.length !== 1 ? "s" : ""} for{" "}
+                <span className="sp-count-query">&quot;{query}&quot;</span>
                 {activeFilter !== "all" && (
                   <> in {CATEGORIES.find((c) => c.slug === activeFilter)?.label}</>
                 )}

@@ -1,7 +1,8 @@
 // features/social/tweet-generator/types.ts
 
 export type TweetLayout = "single" | "quote" | "thread" | "reply";
-export type ThemePreset = "twitter-light" | "twitter-dark" | "minimal" | "nord" | "dracula" | "sunset" | "ocean" | "custom";
+export type ThemePreset =
+  "twitter-light" | "twitter-dark" | "minimal" | "nord" | "dracula" | "sunset" | "ocean" | "custom";
 export type ExportFormat = "png" | "jpg" | "svg";
 export type AspectRatio = "1:1" | "16:9" | "4:3" | "9:16" | "custom";
 export type FontFamily = "system" | "inter" | "segoe" | "sf-pro" | "roboto" | "poppins";

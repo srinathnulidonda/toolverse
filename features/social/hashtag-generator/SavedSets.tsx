@@ -20,12 +20,7 @@ function relativeTime(ts: number): string {
   return `${Math.floor(diff / 86_400_000)}d ago`;
 }
 
-export default function SavedSets({
-  sets,
-  onRestore,
-  onDelete,
-  onClear,
-}: SavedSetsProps) {
+export default function SavedSets({ sets, onRestore, onDelete, onClear }: SavedSetsProps) {
   if (sets.length === 0) {
     return (
       <>
@@ -83,18 +78,13 @@ export default function SavedSets({
               <div key={set.id} className="ss-card">
                 <div className="ss-card-header">
                   <div className="ss-card-title-row">
-                    <i
-                      className={`ti ${platformConfig.icon}`}
-                      aria-hidden="true"
-                    />
+                    <i className={`ti ${platformConfig.icon}`} aria-hidden="true" />
                     <span className="ss-card-name">{set.name}</span>
                     <span className="ss-card-time">{relativeTime(set.timestamp)}</span>
                   </div>
                   <div className="ss-card-meta">
                     <span className="ss-card-platform">{platformConfig.label}</span>
-                    <span className="ss-card-tag-count">
-                      {set.hashtags.length} hashtags
-                    </span>
+                    <span className="ss-card-tag-count">{set.hashtags.length} hashtags</span>
                   </div>
                 </div>
 
@@ -105,17 +95,12 @@ export default function SavedSets({
                     </span>
                   ))}
                   {set.hashtags.length > 8 && (
-                    <span className="ss-tag-more">
-                      +{set.hashtags.length - 8} more
-                    </span>
+                    <span className="ss-tag-more">+{set.hashtags.length - 8} more</span>
                   )}
                 </div>
 
                 <div className="ss-card-actions">
-                  <button
-                    className="ss-btn ss-restore-btn"
-                    onClick={() => onRestore(set)}
-                  >
+                  <button className="ss-btn ss-restore-btn" onClick={() => onRestore(set)}>
                     <i className="ti ti-refresh" aria-hidden="true" />
                     Restore
                   </button>
@@ -129,10 +114,7 @@ export default function SavedSets({
                     <i className="ti ti-copy" aria-hidden="true" />
                     Copy
                   </button>
-                  <button
-                    className="ss-btn ss-delete-btn"
-                    onClick={() => onDelete(set.id)}
-                  >
+                  <button className="ss-btn ss-delete-btn" onClick={() => onDelete(set.id)}>
                     <i className="ti ti-trash" aria-hidden="true" />
                   </button>
                 </div>

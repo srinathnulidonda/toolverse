@@ -108,7 +108,8 @@ function generateHTML(tags: MetaTags): string {
   if (tags.charset) lines.push(`<meta charset="${tags.charset}">`);
   if (tags.viewport) lines.push(`<meta name="viewport" content="${tags.viewport}">`);
   if (tags.title) lines.push(`<title>${escapeHtml(tags.title)}</title>`);
-  if (tags.description) lines.push(`<meta name="description" content="${escapeHtml(tags.description)}">`);
+  if (tags.description)
+    lines.push(`<meta name="description" content="${escapeHtml(tags.description)}">`);
   if (tags.keywords) lines.push(`<meta name="keywords" content="${escapeHtml(tags.keywords)}">`);
   if (tags.author) lines.push(`<meta name="author" content="${escapeHtml(tags.author)}">`);
   if (tags.language) lines.push(`<meta http-equiv="content-language" content="${tags.language}">`);
@@ -124,28 +125,40 @@ function generateHTML(tags: MetaTags): string {
 
   lines.push("");
   lines.push("<!-- Open Graph / Facebook -->");
-  lines.push(`<meta property="og:type" content="${tags.ogType || 'website'}">`);
+  lines.push(`<meta property="og:type" content="${tags.ogType || "website"}">`);
   if (tags.ogUrl) lines.push(`<meta property="og:url" content="${escapeHtml(tags.ogUrl)}">`);
-  if (tags.ogTitle || tags.title) lines.push(`<meta property="og:title" content="${escapeHtml(tags.ogTitle || tags.title)}">`);
-  if (tags.ogDescription || tags.description) lines.push(`<meta property="og:description" content="${escapeHtml(tags.ogDescription || tags.description)}">`);
+  if (tags.ogTitle || tags.title)
+    lines.push(`<meta property="og:title" content="${escapeHtml(tags.ogTitle || tags.title)}">`);
+  if (tags.ogDescription || tags.description)
+    lines.push(
+      `<meta property="og:description" content="${escapeHtml(tags.ogDescription || tags.description)}">`
+    );
   if (tags.ogImage) {
     lines.push(`<meta property="og:image" content="${escapeHtml(tags.ogImage)}">`);
-    if (tags.ogImageAlt) lines.push(`<meta property="og:image:alt" content="${escapeHtml(tags.ogImageAlt)}">`);
-    if (tags.ogImageWidth) lines.push(`<meta property="og:image:width" content="${tags.ogImageWidth}">`);
-    if (tags.ogImageHeight) lines.push(`<meta property="og:image:height" content="${tags.ogImageHeight}">`);
+    if (tags.ogImageAlt)
+      lines.push(`<meta property="og:image:alt" content="${escapeHtml(tags.ogImageAlt)}">`);
+    if (tags.ogImageWidth)
+      lines.push(`<meta property="og:image:width" content="${tags.ogImageWidth}">`);
+    if (tags.ogImageHeight)
+      lines.push(`<meta property="og:image:height" content="${tags.ogImageHeight}">`);
   }
-  if (tags.ogSiteName) lines.push(`<meta property="og:site_name" content="${escapeHtml(tags.ogSiteName)}">`);
+  if (tags.ogSiteName)
+    lines.push(`<meta property="og:site_name" content="${escapeHtml(tags.ogSiteName)}">`);
   if (tags.ogLocale) lines.push(`<meta property="og:locale" content="${tags.ogLocale}">`);
 
   if (tags.ogType === "article" && (tags.articlePublishedTime || tags.articleAuthor)) {
     lines.push("");
     lines.push("<!-- Article Meta -->");
-    if (tags.articlePublishedTime) lines.push(`<meta property="article:published_time" content="${tags.articlePublishedTime}">`);
-    if (tags.articleModifiedTime) lines.push(`<meta property="article:modified_time" content="${tags.articleModifiedTime}">`);
-    if (tags.articleAuthor) lines.push(`<meta property="article:author" content="${escapeHtml(tags.articleAuthor)}">`);
-    if (tags.articleSection) lines.push(`<meta property="article:section" content="${escapeHtml(tags.articleSection)}">`);
+    if (tags.articlePublishedTime)
+      lines.push(`<meta property="article:published_time" content="${tags.articlePublishedTime}">`);
+    if (tags.articleModifiedTime)
+      lines.push(`<meta property="article:modified_time" content="${tags.articleModifiedTime}">`);
+    if (tags.articleAuthor)
+      lines.push(`<meta property="article:author" content="${escapeHtml(tags.articleAuthor)}">`);
+    if (tags.articleSection)
+      lines.push(`<meta property="article:section" content="${escapeHtml(tags.articleSection)}">`);
     if (tags.articleTag) {
-      tags.articleTag.split(",").forEach(tag => {
+      tags.articleTag.split(",").forEach((tag) => {
         lines.push(`<meta property="article:tag" content="${escapeHtml(tag.trim())}">`);
       });
     }
@@ -153,32 +166,63 @@ function generateHTML(tags: MetaTags): string {
 
   lines.push("");
   lines.push("<!-- Twitter -->");
-  lines.push(`<meta name="twitter:card" content="${tags.twitterCard || 'summary_large_image'}">`);
+  lines.push(`<meta name="twitter:card" content="${tags.twitterCard || "summary_large_image"}">`);
   if (tags.ogUrl) lines.push(`<meta name="twitter:url" content="${escapeHtml(tags.ogUrl)}">`);
-  if (tags.twitterTitle || tags.title) lines.push(`<meta name="twitter:title" content="${escapeHtml(tags.twitterTitle || tags.title)}">`);
-  if (tags.twitterDescription || tags.description) lines.push(`<meta name="twitter:description" content="${escapeHtml(tags.twitterDescription || tags.description)}">`);
-  if (tags.twitterImage || tags.ogImage) lines.push(`<meta name="twitter:image" content="${escapeHtml(tags.twitterImage || tags.ogImage)}">`);
-  if (tags.twitterImageAlt || tags.ogImageAlt) lines.push(`<meta name="twitter:image:alt" content="${escapeHtml(tags.twitterImageAlt || tags.ogImageAlt)}">`);
-  if (tags.twitterSite) lines.push(`<meta name="twitter:site" content="${escapeHtml(tags.twitterSite)}">`);
-  if (tags.twitterCreator) lines.push(`<meta name="twitter:creator" content="${escapeHtml(tags.twitterCreator)}">`);
+  if (tags.twitterTitle || tags.title)
+    lines.push(
+      `<meta name="twitter:title" content="${escapeHtml(tags.twitterTitle || tags.title)}">`
+    );
+  if (tags.twitterDescription || tags.description)
+    lines.push(
+      `<meta name="twitter:description" content="${escapeHtml(tags.twitterDescription || tags.description)}">`
+    );
+  if (tags.twitterImage || tags.ogImage)
+    lines.push(
+      `<meta name="twitter:image" content="${escapeHtml(tags.twitterImage || tags.ogImage)}">`
+    );
+  if (tags.twitterImageAlt || tags.ogImageAlt)
+    lines.push(
+      `<meta name="twitter:image:alt" content="${escapeHtml(tags.twitterImageAlt || tags.ogImageAlt)}">`
+    );
+  if (tags.twitterSite)
+    lines.push(`<meta name="twitter:site" content="${escapeHtml(tags.twitterSite)}">`);
+  if (tags.twitterCreator)
+    lines.push(`<meta name="twitter:creator" content="${escapeHtml(tags.twitterCreator)}">`);
 
   if (tags.themeColor || tags.appleMobileWebAppCapable) {
     lines.push("");
     lines.push("<!-- Mobile & PWA -->");
     if (tags.themeColor) lines.push(`<meta name="theme-color" content="${tags.themeColor}">`);
-    if (tags.msapplicationTileColor) lines.push(`<meta name="msapplication-TileColor" content="${tags.msapplicationTileColor}">`);
-    if (tags.appleMobileWebAppCapable) lines.push(`<meta name="apple-mobile-web-app-capable" content="${tags.appleMobileWebAppCapable}">`);
-    if (tags.appleMobileWebAppStatusBarStyle) lines.push(`<meta name="apple-mobile-web-app-status-bar-style" content="${tags.appleMobileWebAppStatusBarStyle}">`);
-    if (tags.appleMobileWebAppTitle) lines.push(`<meta name="apple-mobile-web-app-title" content="${escapeHtml(tags.appleMobileWebAppTitle)}">`);
+    if (tags.msapplicationTileColor)
+      lines.push(`<meta name="msapplication-TileColor" content="${tags.msapplicationTileColor}">`);
+    if (tags.appleMobileWebAppCapable)
+      lines.push(
+        `<meta name="apple-mobile-web-app-capable" content="${tags.appleMobileWebAppCapable}">`
+      );
+    if (tags.appleMobileWebAppStatusBarStyle)
+      lines.push(
+        `<meta name="apple-mobile-web-app-status-bar-style" content="${tags.appleMobileWebAppStatusBarStyle}">`
+      );
+    if (tags.appleMobileWebAppTitle)
+      lines.push(
+        `<meta name="apple-mobile-web-app-title" content="${escapeHtml(tags.appleMobileWebAppTitle)}">`
+      );
   }
 
   if (tags.favicon || tags.appleTouchIcon) {
     lines.push("");
     lines.push("<!-- Favicons -->");
     if (tags.favicon) lines.push(`<link rel="icon" href="${escapeHtml(tags.favicon)}">`);
-    if (tags.icon16) lines.push(`<link rel="icon" type="image/png" sizes="16x16" href="${escapeHtml(tags.icon16)}">`);
-    if (tags.icon32) lines.push(`<link rel="icon" type="image/png" sizes="32x32" href="${escapeHtml(tags.icon32)}">`);
-    if (tags.appleTouchIcon) lines.push(`<link rel="apple-touch-icon" href="${escapeHtml(tags.appleTouchIcon)}">`);
+    if (tags.icon16)
+      lines.push(
+        `<link rel="icon" type="image/png" sizes="16x16" href="${escapeHtml(tags.icon16)}">`
+      );
+    if (tags.icon32)
+      lines.push(
+        `<link rel="icon" type="image/png" sizes="32x32" href="${escapeHtml(tags.icon32)}">`
+      );
+    if (tags.appleTouchIcon)
+      lines.push(`<link rel="apple-touch-icon" href="${escapeHtml(tags.appleTouchIcon)}">`);
   }
 
   if (tags.enableSchema && tags.schemaType) {
@@ -195,107 +239,141 @@ function generateHTML(tags: MetaTags): string {
 function generateJSX(tags: MetaTags): string {
   return generateHTML(tags)
     .replace(/<!--(.*?)-->/g, (_, content) => `{/* ${content.trim()} */}`)
-    .replace(/charset=/g, 'charSet=')
-    .replace(/http-equiv=/g, 'httpEquiv=')
-    .replace(/content-language/g, 'contentLanguage');
+    .replace(/charset=/g, "charSet=")
+    .replace(/http-equiv=/g, "httpEquiv=")
+    .replace(/content-language/g, "contentLanguage");
 }
 
 function generateNextJS(tags: MetaTags): string {
   const lines: string[] = [];
-  
+
   lines.push("import Head from 'next/head';");
   lines.push("");
   lines.push("export default function MyPage() {");
   lines.push("  return (");
   lines.push("    <>");
   lines.push("      <Head>");
-  
+
   if (tags.title) lines.push(`        <title>${escapeHtml(tags.title)}</title>`);
-  if (tags.description) lines.push(`        <meta name="description" content="${escapeHtml(tags.description)}" />`);
-  if (tags.keywords) lines.push(`        <meta name="keywords" content="${escapeHtml(tags.keywords)}" />`);
-  if (tags.canonical) lines.push(`        <link rel="canonical" href="${escapeHtml(tags.canonical)}" />`);
+  if (tags.description)
+    lines.push(`        <meta name="description" content="${escapeHtml(tags.description)}" />`);
+  if (tags.keywords)
+    lines.push(`        <meta name="keywords" content="${escapeHtml(tags.keywords)}" />`);
+  if (tags.canonical)
+    lines.push(`        <link rel="canonical" href="${escapeHtml(tags.canonical)}" />`);
   if (tags.viewport) lines.push(`        <meta name="viewport" content="${tags.viewport}" />`);
-  
+
   lines.push("");
   lines.push("        {/* Open Graph */}");
-  if (tags.ogTitle || tags.title) lines.push(`        <meta property="og:title" content="${escapeHtml(tags.ogTitle || tags.title)}" />`);
-  if (tags.ogDescription || tags.description) lines.push(`        <meta property="og:description" content="${escapeHtml(tags.ogDescription || tags.description)}" />`);
-  if (tags.ogImage) lines.push(`        <meta property="og:image" content="${escapeHtml(tags.ogImage)}" />`);
-  if (tags.ogUrl) lines.push(`        <meta property="og:url" content="${escapeHtml(tags.ogUrl)}" />`);
-  
+  if (tags.ogTitle || tags.title)
+    lines.push(
+      `        <meta property="og:title" content="${escapeHtml(tags.ogTitle || tags.title)}" />`
+    );
+  if (tags.ogDescription || tags.description)
+    lines.push(
+      `        <meta property="og:description" content="${escapeHtml(tags.ogDescription || tags.description)}" />`
+    );
+  if (tags.ogImage)
+    lines.push(`        <meta property="og:image" content="${escapeHtml(tags.ogImage)}" />`);
+  if (tags.ogUrl)
+    lines.push(`        <meta property="og:url" content="${escapeHtml(tags.ogUrl)}" />`);
+
   lines.push("");
   lines.push("        {/* Twitter */}");
-  lines.push(`        <meta name="twitter:card" content="${tags.twitterCard || 'summary_large_image'}" />`);
-  if (tags.twitterTitle || tags.title) lines.push(`        <meta name="twitter:title" content="${escapeHtml(tags.twitterTitle || tags.title)}" />`);
-  
+  lines.push(
+    `        <meta name="twitter:card" content="${tags.twitterCard || "summary_large_image"}" />`
+  );
+  if (tags.twitterTitle || tags.title)
+    lines.push(
+      `        <meta name="twitter:title" content="${escapeHtml(tags.twitterTitle || tags.title)}" />`
+    );
+
   if (tags.themeColor) {
     lines.push("");
     lines.push(`        <meta name="theme-color" content="${tags.themeColor}" />`);
   }
-  
+
   lines.push("      </Head>");
   lines.push("");
   lines.push("      {/* Your page content */}");
   lines.push("    </>");
   lines.push("  );");
   lines.push("}");
-  
+
   return lines.join("\n");
 }
 
 function generateGatsby(tags: MetaTags): string {
   const lines: string[] = [];
-  
+
   lines.push("import { Helmet } from 'react-helmet';");
   lines.push("");
   lines.push("export default function MyPage() {");
   lines.push("  return (");
   lines.push("    <>");
   lines.push("      <Helmet>");
-  
+
   if (tags.title) lines.push(`        <title>${escapeHtml(tags.title)}</title>`);
-  if (tags.description) lines.push(`        <meta name="description" content="${escapeHtml(tags.description)}" />`);
-  if (tags.canonical) lines.push(`        <link rel="canonical" href="${escapeHtml(tags.canonical)}" />`);
-  
+  if (tags.description)
+    lines.push(`        <meta name="description" content="${escapeHtml(tags.description)}" />`);
+  if (tags.canonical)
+    lines.push(`        <link rel="canonical" href="${escapeHtml(tags.canonical)}" />`);
+
   lines.push("");
   lines.push("        {/* Open Graph */}");
-  if (tags.ogTitle || tags.title) lines.push(`        <meta property="og:title" content="${escapeHtml(tags.ogTitle || tags.title)}" />`);
-  if (tags.ogImage) lines.push(`        <meta property="og:image" content="${escapeHtml(tags.ogImage)}" />`);
-  
+  if (tags.ogTitle || tags.title)
+    lines.push(
+      `        <meta property="og:title" content="${escapeHtml(tags.ogTitle || tags.title)}" />`
+    );
+  if (tags.ogImage)
+    lines.push(`        <meta property="og:image" content="${escapeHtml(tags.ogImage)}" />`);
+
   lines.push("      </Helmet>");
   lines.push("");
   lines.push("      {/* Your page content */}");
   lines.push("    </>");
   lines.push("  );");
   lines.push("}");
-  
+
   return lines.join("\n");
 }
 
 function generateVue(tags: MetaTags): string {
   const lines: string[] = [];
-  
+
   lines.push("export default {");
   lines.push("  head() {");
   lines.push("    return {");
   if (tags.title) lines.push(`      title: '${escapeHtml(tags.title)}',`);
   lines.push("      meta: [");
-  if (tags.description) lines.push(`        { hid: 'description', name: 'description', content: '${escapeHtml(tags.description)}' },`);
-  if (tags.keywords) lines.push(`        { name: 'keywords', content: '${escapeHtml(tags.keywords)}' },`);
-  
+  if (tags.description)
+    lines.push(
+      `        { hid: 'description', name: 'description', content: '${escapeHtml(tags.description)}' },`
+    );
+  if (tags.keywords)
+    lines.push(`        { name: 'keywords', content: '${escapeHtml(tags.keywords)}' },`);
+
   lines.push("        // Open Graph");
-  if (tags.ogTitle || tags.title) lines.push(`        { property: 'og:title', content: '${escapeHtml(tags.ogTitle || tags.title)}' },`);
-  if (tags.ogDescription || tags.description) lines.push(`        { property: 'og:description', content: '${escapeHtml(tags.ogDescription || tags.description)}' },`);
-  if (tags.ogImage) lines.push(`        { property: 'og:image', content: '${escapeHtml(tags.ogImage)}' },`);
-  
+  if (tags.ogTitle || tags.title)
+    lines.push(
+      `        { property: 'og:title', content: '${escapeHtml(tags.ogTitle || tags.title)}' },`
+    );
+  if (tags.ogDescription || tags.description)
+    lines.push(
+      `        { property: 'og:description', content: '${escapeHtml(tags.ogDescription || tags.description)}' },`
+    );
+  if (tags.ogImage)
+    lines.push(`        { property: 'og:image', content: '${escapeHtml(tags.ogImage)}' },`);
+
   lines.push("      ],");
   lines.push("      link: [");
-  if (tags.canonical) lines.push(`        { rel: 'canonical', href: '${escapeHtml(tags.canonical)}' },`);
+  if (tags.canonical)
+    lines.push(`        { rel: 'canonical', href: '${escapeHtml(tags.canonical)}' },`);
   lines.push("      ]");
   lines.push("    }");
   lines.push("  }");
   lines.push("}");
-  
+
   return lines.join("\n");
 }
 
@@ -325,7 +403,7 @@ function generateJSON(tags: MetaTags): string {
       image: tags.twitterImage || tags.ogImage,
     },
   };
-  
+
   return JSON.stringify(data, null, 2);
 }
 
@@ -425,11 +503,11 @@ function generateSchemaData(tags: MetaTags): any {
 }
 
 const escapeMap: Record<string, string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
 };
 
 function escapeHtml(text: string): string {

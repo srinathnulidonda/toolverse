@@ -1,22 +1,11 @@
 // features/social/meta-tag-generator/types.ts
 
-export type PageType = 
-  | "website" 
-  | "article" 
-  | "product" 
-  | "profile" 
-  | "video" 
-  | "music"
-  | "book";
+export type PageType = "website" | "article" | "product" | "profile" | "video" | "music" | "book";
 
 export type TwitterCardType = "summary" | "summary_large_image" | "app" | "player";
 
-export type RobotsDirective = 
-  | "" 
-  | "index, follow" 
-  | "noindex, follow" 
-  | "index, nofollow" 
-  | "noindex, nofollow";
+export type RobotsDirective =
+  "" | "index, follow" | "noindex, follow" | "index, nofollow" | "noindex, nofollow";
 
 export type SchemaType =
   | "Article"

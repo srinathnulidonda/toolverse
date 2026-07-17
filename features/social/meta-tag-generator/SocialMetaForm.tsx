@@ -50,7 +50,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
 
           <div className="smf-row">
             <div className="smf-field">
-              <label className="smf-label" htmlFor="smf-og-type">Content Type</label>
+              <label className="smf-label" htmlFor="smf-og-type">
+                Content Type
+              </label>
               <select
                 id="smf-og-type"
                 className="smf-select"
@@ -65,7 +67,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
               </select>
             </div>
             <div className="smf-field">
-              <label className="smf-label" htmlFor="smf-og-locale">Locale</label>
+              <label className="smf-label" htmlFor="smf-og-locale">
+                Locale
+              </label>
               <select
                 id="smf-og-locale"
                 className="smf-select"
@@ -112,7 +116,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
           </div>
 
           <div className="smf-field">
-            <label className="smf-label" htmlFor="smf-og-image">OG Image URL</label>
+            <label className="smf-label" htmlFor="smf-og-image">
+              OG Image URL
+            </label>
             <input
               id="smf-og-image"
               type="url"
@@ -123,14 +129,20 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
             />
             {tags.ogImage && (
               <div className="smf-image-preview">
-                <img src={tags.ogImage} alt="" onError={(e) => e.currentTarget.style.display = "none"} />
+                <img
+                  src={tags.ogImage}
+                  alt=""
+                  onError={(e) => (e.currentTarget.style.display = "none")}
+                />
               </div>
             )}
           </div>
 
           <div className="smf-row">
             <div className="smf-field">
-              <label className="smf-label" htmlFor="smf-og-img-w">Image Width</label>
+              <label className="smf-label" htmlFor="smf-og-img-w">
+                Image Width
+              </label>
               <input
                 id="smf-og-img-w"
                 type="number"
@@ -141,7 +153,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
               />
             </div>
             <div className="smf-field">
-              <label className="smf-label" htmlFor="smf-og-img-h">Image Height</label>
+              <label className="smf-label" htmlFor="smf-og-img-h">
+                Image Height
+              </label>
               <input
                 id="smf-og-img-h"
                 type="number"
@@ -154,7 +168,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
           </div>
 
           <div className="smf-field">
-            <label className="smf-label" htmlFor="smf-og-img-alt">Image Alt Text</label>
+            <label className="smf-label" htmlFor="smf-og-img-alt">
+              Image Alt Text
+            </label>
             <input
               id="smf-og-img-alt"
               type="text"
@@ -167,7 +183,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
 
           <div className="smf-row">
             <div className="smf-field">
-              <label className="smf-label" htmlFor="smf-og-url">Page URL</label>
+              <label className="smf-label" htmlFor="smf-og-url">
+                Page URL
+              </label>
               <input
                 id="smf-og-url"
                 type="url"
@@ -178,7 +196,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
               />
             </div>
             <div className="smf-field">
-              <label className="smf-label" htmlFor="smf-og-site">Site Name</label>
+              <label className="smf-label" htmlFor="smf-og-site">
+                Site Name
+              </label>
               <input
                 id="smf-og-site"
                 type="text"
@@ -201,7 +221,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
 
             <div className="smf-row">
               <div className="smf-field">
-                <label className="smf-label" htmlFor="smf-article-published">Published Time</label>
+                <label className="smf-label" htmlFor="smf-article-published">
+                  Published Time
+                </label>
                 <input
                   id="smf-article-published"
                   type="datetime-local"
@@ -211,7 +233,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
                 />
               </div>
               <div className="smf-field">
-                <label className="smf-label" htmlFor="smf-article-modified">Modified Time</label>
+                <label className="smf-label" htmlFor="smf-article-modified">
+                  Modified Time
+                </label>
                 <input
                   id="smf-article-modified"
                   type="datetime-local"
@@ -224,7 +248,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
 
             <div className="smf-row">
               <div className="smf-field">
-                <label className="smf-label" htmlFor="smf-article-author">Author Name</label>
+                <label className="smf-label" htmlFor="smf-article-author">
+                  Author Name
+                </label>
                 <input
                   id="smf-article-author"
                   type="text"
@@ -235,7 +261,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
                 />
               </div>
               <div className="smf-field">
-                <label className="smf-label" htmlFor="smf-article-section">Section</label>
+                <label className="smf-label" htmlFor="smf-article-section">
+                  Section
+                </label>
                 <input
                   id="smf-article-section"
                   type="text"
@@ -290,7 +318,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
 
           <div className="smf-row">
             <div className="smf-field">
-              <label className="smf-label" htmlFor="smf-tw-site">Site @username</label>
+              <label className="smf-label" htmlFor="smf-tw-site">
+                Site @username
+              </label>
               <input
                 id="smf-tw-site"
                 type="text"
@@ -301,7 +331,9 @@ export default function SocialMetaForm({ tags, onChange }: SocialMetaFormProps) 
               />
             </div>
             <div className="smf-field">
-              <label className="smf-label" htmlFor="smf-tw-creator">Creator @username</label>
+              <label className="smf-label" htmlFor="smf-tw-creator">
+                Creator @username
+              </label>
               <input
                 id="smf-tw-creator"
                 type="text"

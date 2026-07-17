@@ -77,9 +77,7 @@ export default function GeneratedHashtags({
             </span>
           </div>
           <div className="gh-reach-info">
-            <span className="gh-reach">
-              Total reach: {formatReach(reachEstimate.totalReach)}
-            </span>
+            <span className="gh-reach">Total reach: {formatReach(reachEstimate.totalReach)}</span>
             <span className={`gh-competition gh-competition-${reachEstimate.competitionLevel}`}>
               {reachEstimate.competitionLevel} competition
             </span>
@@ -132,10 +130,7 @@ export default function GeneratedHashtags({
                   )}
                 </div>
                 <div className="gh-tag-meta">
-                  <span
-                    className="gh-tag-size"
-                    style={{ color: getSizeColor(hashtag.size) }}
-                  >
+                  <span className="gh-tag-size" style={{ color: getSizeColor(hashtag.size) }}>
                     {hashtag.size}
                   </span>
                   <span className="gh-tag-reach">{formatReach(hashtag.estimatedReach)}</span>

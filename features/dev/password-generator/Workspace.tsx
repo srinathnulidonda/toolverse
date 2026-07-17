@@ -5,675 +5,908 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
 
 const CHARSETS = {
-    uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-    lowercase: "abcdefghijklmnopqrstuvwxyz",
-    numbers: "0123456789",
-    symbols: "!@#$%^&*()-_=+[]{}|;:,.<>?",
-    ambiguous: "0O1lI",
+  uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  lowercase: "abcdefghijklmnopqrstuvwxyz",
+  numbers: "0123456789",
+  symbols: "!@#$%^&*()-_=+[]{}|;:,.<>?",
+  ambiguous: "0O1lI",
 };
 
 type CharsetKey = "uppercase" | "lowercase" | "numbers" | "symbols";
 
 interface Config {
-    length: number;
-    uppercase: boolean;
-    lowercase: boolean;
-    numbers: boolean;
-    symbols: boolean;
-    excludeAmbiguous: boolean;
+  length: number;
+  uppercase: boolean;
+  lowercase: boolean;
+  numbers: boolean;
+  symbols: boolean;
+  excludeAmbiguous: boolean;
 }
 
 const DEFAULT: Config = {
-    length: 16,
-    uppercase: true,
-    lowercase: true,
-    numbers: true,
-    symbols: false,
-    excludeAmbiguous: false,
+  length: 16,
+  uppercase: true,
+  lowercase: true,
+  numbers: true,
+  symbols: false,
+  excludeAmbiguous: false,
 };
 
 function buildPool(cfg: Config): string {
-    let p = "";
-    if (cfg.uppercase) p += CHARSETS.uppercase;
-    if (cfg.lowercase) p += CHARSETS.lowercase;
-    if (cfg.numbers) p += CHARSETS.numbers;
-    if (cfg.symbols) p += CHARSETS.symbols;
-    if (cfg.excludeAmbiguous) p = p.split("").filter(c => !CHARSETS.ambiguous.includes(c)).join("");
-    return p;
+  let p = "";
+  if (cfg.uppercase) p += CHARSETS.uppercase;
+  if (cfg.lowercase) p += CHARSETS.lowercase;
+  if (cfg.numbers) p += CHARSETS.numbers;
+  if (cfg.symbols) p += CHARSETS.symbols;
+  if (cfg.excludeAmbiguous)
+    p = p
+      .split("")
+      .filter((c) => !CHARSETS.ambiguous.includes(c))
+      .join("");
+  return p;
 }
 
 function generate(cfg: Config): string {
-    const pool = buildPool(cfg);
-    if (!pool) return "";
-    const bytes = new Uint8Array(cfg.length);
-    crypto.getRandomValues(bytes);
-    return Array.from(bytes, b => pool[b % pool.length]).join("");
+  const pool = buildPool(cfg);
+  if (!pool) return "";
+  const bytes = new Uint8Array(cfg.length);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => pool[b % pool.length]).join("");
 }
 
 function entropy(poolSize: number, length: number): number {
-    return poolSize === 0 ? 0 : Math.floor(length * Math.log2(poolSize));
+  return poolSize === 0 ? 0 : Math.floor(length * Math.log2(poolSize));
 }
 
 type Level = "critical" | "weak" | "fair" | "good" | "strong";
 
 interface Strength {
-    level: Level;
-    label: string;
-    score: number;
-    color: string;
-    trackColor: string;
-    bits: number;
+  level: Level;
+  label: string;
+  score: number;
+  color: string;
+  trackColor: string;
+  bits: number;
 }
 
 function strength(bits: number): Strength {
-    if (bits < 28) return { level: "critical", label: "Critical", score: 0, color: "#EF4444", trackColor: "rgba(239,68,68,.15)", bits };
-    if (bits < 40) return { level: "weak", label: "Weak", score: 1, color: "#F97316", trackColor: "rgba(249,115,22,.15)", bits };
-    if (bits < 60) return { level: "fair", label: "Fair", score: 2, color: "#EAB308", trackColor: "rgba(234,179,8,.15)", bits };
-    if (bits < 80) return { level: "good", label: "Good", score: 3, color: "#22C55E", trackColor: "rgba(34,197,94,.15)", bits };
-    return { level: "strong", label: "Strong", score: 4, color: "#10B981", trackColor: "rgba(16,185,129,.15)", bits };
+  if (bits < 28)
+    return {
+      level: "critical",
+      label: "Critical",
+      score: 0,
+      color: "#EF4444",
+      trackColor: "rgba(239,68,68,.15)",
+      bits,
+    };
+  if (bits < 40)
+    return {
+      level: "weak",
+      label: "Weak",
+      score: 1,
+      color: "#F97316",
+      trackColor: "rgba(249,115,22,.15)",
+      bits,
+    };
+  if (bits < 60)
+    return {
+      level: "fair",
+      label: "Fair",
+      score: 2,
+      color: "#EAB308",
+      trackColor: "rgba(234,179,8,.15)",
+      bits,
+    };
+  if (bits < 80)
+    return {
+      level: "good",
+      label: "Good",
+      score: 3,
+      color: "#22C55E",
+      trackColor: "rgba(34,197,94,.15)",
+      bits,
+    };
+  return {
+    level: "strong",
+    label: "Strong",
+    score: 4,
+    color: "#10B981",
+    trackColor: "rgba(16,185,129,.15)",
+    bits,
+  };
 }
 
 function EntropyArc({ str }: { str: Strength }) {
-    const R = 42;
-    const C = 2 * Math.PI * R;
-    const maxBits = 128;
-    const fill = Math.min(str.bits / maxBits, 1);
-    const dash = fill * C;
-    const gap = C - dash;
+  const R = 42;
+  const C = 2 * Math.PI * R;
+  const maxBits = 128;
+  const fill = Math.min(str.bits / maxBits, 1);
+  const dash = fill * C;
+  const gap = C - dash;
 
-    return (
-        <svg viewBox="0 0 100 100" className="pg-arc-svg" aria-hidden="true">
-            <circle cx="50" cy="50" r={R} fill="none" stroke="var(--border)" strokeWidth="7" />
-            <circle
-                cx="50" cy="50" r={R}
-                fill="none"
-                stroke={str.color}
-                strokeWidth="7"
-                strokeLinecap="round"
-                strokeDasharray={`${dash} ${gap}`}
-                strokeDashoffset={C * 0.25}
-                className="pg-arc-fill"
-                style={{ filter: `drop-shadow(0 0 6px ${str.color}55)` }}
-            />
-            <text x="50" y="46" textAnchor="middle" className="pg-arc-bits">{str.bits}</text>
-            <text x="50" y="60" textAnchor="middle" className="pg-arc-unit">bits</text>
-        </svg>
-    );
+  return (
+    <svg viewBox="0 0 100 100" className="pg-arc-svg" aria-hidden="true">
+      <circle cx="50" cy="50" r={R} fill="none" stroke="var(--border)" strokeWidth="7" />
+      <circle
+        cx="50"
+        cy="50"
+        r={R}
+        fill="none"
+        stroke={str.color}
+        strokeWidth="7"
+        strokeLinecap="round"
+        strokeDasharray={`${dash} ${gap}`}
+        strokeDashoffset={C * 0.25}
+        className="pg-arc-fill"
+        style={{ filter: `drop-shadow(0 0 6px ${str.color}55)` }}
+      />
+      <text x="50" y="46" textAnchor="middle" className="pg-arc-bits">
+        {str.bits}
+      </text>
+      <text x="50" y="60" textAnchor="middle" className="pg-arc-unit">
+        bits
+      </text>
+    </svg>
+  );
 }
 
 function StrengthStrip({ str }: { str: Strength }) {
-    return (
-        <div className="pg-strip" aria-label={`Strength: ${str.label}`}>
-            {[0, 1, 2, 3, 4].map(i => (
-                <div
-                    key={i}
-                    className="pg-strip-seg"
-                    style={{
-                        background: i <= str.score ? str.color : "var(--border)",
-                        opacity: i <= str.score ? 1 : 0.35,
-                    }}
-                />
-            ))}
-        </div>
-    );
+  return (
+    <div className="pg-strip" aria-label={`Strength: ${str.label}`}>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <div
+          key={i}
+          className="pg-strip-seg"
+          style={{
+            background: i <= str.score ? str.color : "var(--border)",
+            opacity: i <= str.score ? 1 : 0.35,
+          }}
+        />
+      ))}
+    </div>
+  );
 }
 
 function PwRow({
-    pw, index, onCopy, onRegen, copied,
+  pw,
+  index,
+  onCopy,
+  onRegen,
+  copied,
 }: {
-    pw: string; index: number;
-    onCopy: (pw: string, i: number) => void;
-    onRegen: (i: number) => void;
-    copied: number | null;
+  pw: string;
+  index: number;
+  onCopy: (pw: string, i: number) => void;
+  onRegen: (i: number) => void;
+  copied: number | null;
 }) {
-    const [revealed, setRevealed] = useState(true);
-    const [expanded, setExpanded] = useState(false);
+  const [revealed, setRevealed] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
-    return (
-        <li className="pg-row">
-            <span className="pg-row-num">{index + 1}</span>
-            <code 
-                className={`pg-row-pw${expanded ? " is-expanded" : ""}`}
-                onClick={() => setExpanded(v => !v)}
-                aria-label={revealed ? `Password: ${pw}` : "Password hidden"}
-                title="Click to expand/collapse"
-            >
-                {revealed ? pw : "•".repeat(Math.min(pw.length, 32))}
-            </code>
-            <div className="pg-row-actions">
-                <button
-                    type="button" className="pg-row-btn"
-                    onClick={() => setRevealed(v => !v)}
-                    title={revealed ? "Hide" : "Show"}
-                    aria-label={revealed ? "Hide password" : "Show password"}
-                >
-                    <i className={`ti ${revealed ? "ti-eye-off" : "ti-eye"}`} aria-hidden="true" />
-                </button>
-                <button
-                    type="button" className="pg-row-btn"
-                    onClick={() => onRegen(index)}
-                    title="Regenerate" aria-label="Regenerate this password"
-                >
-                    <i className="ti ti-refresh" aria-hidden="true" />
-                </button>
-                <button
-                    type="button"
-                    className={`pg-row-btn pg-row-copy${copied === index ? " is-copied" : ""}`}
-                    onClick={() => onCopy(pw, index)}
-                    aria-label="Copy password"
-                >
-                    <i className={`ti ${copied === index ? "ti-check" : "ti-copy"}`} aria-hidden="true" />
-                </button>
-            </div>
-        </li>
-    );
+  return (
+    <li className="pg-row">
+      <span className="pg-row-num">{index + 1}</span>
+      <code
+        className={`pg-row-pw${expanded ? " is-expanded" : ""}`}
+        onClick={() => setExpanded((v) => !v)}
+        aria-label={revealed ? `Password: ${pw}` : "Password hidden"}
+        title="Click to expand/collapse"
+      >
+        {revealed ? pw : "•".repeat(Math.min(pw.length, 32))}
+      </code>
+      <div className="pg-row-actions">
+        <button
+          type="button"
+          className="pg-row-btn"
+          onClick={() => setRevealed((v) => !v)}
+          title={revealed ? "Hide" : "Show"}
+          aria-label={revealed ? "Hide password" : "Show password"}
+        >
+          <i className={`ti ${revealed ? "ti-eye-off" : "ti-eye"}`} aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="pg-row-btn"
+          onClick={() => onRegen(index)}
+          title="Regenerate"
+          aria-label="Regenerate this password"
+        >
+          <i className="ti ti-refresh" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className={`pg-row-btn pg-row-copy${copied === index ? " is-copied" : ""}`}
+          onClick={() => onCopy(pw, index)}
+          aria-label="Copy password"
+        >
+          <i className={`ti ${copied === index ? "ti-check" : "ti-copy"}`} aria-hidden="true" />
+        </button>
+      </div>
+    </li>
+  );
 }
 
 function CheckCard({
-    checked, onChange, label, sub, icon,
+  checked,
+  onChange,
+  label,
+  sub,
+  icon,
 }: {
-    checked: boolean; onChange: (v: boolean) => void;
-    label: string; sub: string; icon: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
+  sub: string;
+  icon: string;
 }) {
-    return (
-        <label className={`pg-check${checked ? " is-on" : ""}`}>
-            <input
-                type="checkbox" checked={checked}
-                onChange={e => onChange(e.target.checked)}
-                aria-label={`${label}: ${sub}`}
-            />
-            <span className="pg-check-icon"><i className={`ti ${icon}`} aria-hidden="true" /></span>
-            <span className="pg-check-body">
-                <span className="pg-check-label">{label}</span>
-                <span className="pg-check-sub">{sub}</span>
-            </span>
-            <span className={`pg-check-dot${checked ? " is-on" : ""}`} aria-hidden="true" />
-        </label>
-    );
+  return (
+    <label className={`pg-check${checked ? " is-on" : ""}`}>
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        aria-label={`${label}: ${sub}`}
+      />
+      <span className="pg-check-icon">
+        <i className={`ti ${icon}`} aria-hidden="true" />
+      </span>
+      <span className="pg-check-body">
+        <span className="pg-check-label">{label}</span>
+        <span className="pg-check-sub">{sub}</span>
+      </span>
+      <span className={`pg-check-dot${checked ? " is-on" : ""}`} aria-hidden="true" />
+    </label>
+  );
 }
 
 function OptionsModal({
-    cfg, update, onClose, onGenerate, noneOn
+  cfg,
+  update,
+  onClose,
+  onGenerate,
+  noneOn,
 }: {
-    cfg: Config;
-    update: <K extends keyof Config>(k: K, v: Config[K]) => void;
-    onClose: () => void;
-    onGenerate: () => void;
-    noneOn: boolean;
+  cfg: Config;
+  update: <K extends keyof Config>(k: K, v: Config[K]) => void;
+  onClose: () => void;
+  onGenerate: () => void;
+  noneOn: boolean;
 }) {
-    const PRESETS = [
-        { label: "PIN", cfg: { length: 6, uppercase: false, lowercase: false, numbers: true, symbols: false } },
-        { label: "Simple", cfg: { length: 12, uppercase: true, lowercase: true, numbers: true, symbols: false } },
-        { label: "Strong", cfg: { length: 20, uppercase: true, lowercase: true, numbers: true, symbols: true } },
-        { label: "Maximum", cfg: { length: 32, uppercase: true, lowercase: true, numbers: true, symbols: true } },
-    ];
+  const PRESETS = [
+    {
+      label: "PIN",
+      cfg: { length: 6, uppercase: false, lowercase: false, numbers: true, symbols: false },
+    },
+    {
+      label: "Simple",
+      cfg: { length: 12, uppercase: true, lowercase: true, numbers: true, symbols: false },
+    },
+    {
+      label: "Strong",
+      cfg: { length: 20, uppercase: true, lowercase: true, numbers: true, symbols: true },
+    },
+    {
+      label: "Maximum",
+      cfg: { length: 32, uppercase: true, lowercase: true, numbers: true, symbols: true },
+    },
+  ];
 
-    const applyPreset = (p: typeof PRESETS[0]) => {
-        Object.entries(p.cfg).forEach(([k, v]) => {
-            update(k as keyof Config, v as any);
-        });
-    };
+  const applyPreset = (p: (typeof PRESETS)[0]) => {
+    Object.entries(p.cfg).forEach(([k, v]) => {
+      update(k as keyof Config, v as any);
+    });
+  };
 
-    const CHARSET_OPTS: Array<{ key: CharsetKey; label: string; sub: string; icon: string }> = [
-        { key: "uppercase", label: "Uppercase", sub: "A – Z", icon: "ti-letter-case-upper" },
-        { key: "lowercase", label: "Lowercase", sub: "a – z", icon: "ti-letter-case-lower" },
-        { key: "numbers", label: "Numbers", sub: "0 – 9", icon: "ti-number" },
-        { key: "symbols", label: "Symbols", sub: "!@#$…", icon: "ti-asterisk" },
-    ];
+  const CHARSET_OPTS: Array<{ key: CharsetKey; label: string; sub: string; icon: string }> = [
+    { key: "uppercase", label: "Uppercase", sub: "A – Z", icon: "ti-letter-case-upper" },
+    { key: "lowercase", label: "Lowercase", sub: "a – z", icon: "ti-letter-case-lower" },
+    { key: "numbers", label: "Numbers", sub: "0 – 9", icon: "ti-number" },
+    { key: "symbols", label: "Symbols", sub: "!@#$…", icon: "ti-asterisk" },
+  ];
 
-    return (
-        <>
-            <div className="pg-modal-overlay" onClick={onClose} />
-            <div className="pg-modal">
-                <div className="pg-modal-header">
-                    <h2 className="pg-modal-title">Password Options</h2>
-                    <button type="button" className="pg-modal-close" onClick={onClose} aria-label="Close">
-                        <i className="ti ti-x" />
-                    </button>
-                </div>
+  return (
+    <>
+      <div className="pg-modal-overlay" onClick={onClose} />
+      <div className="pg-modal">
+        <div className="pg-modal-header">
+          <h2 className="pg-modal-title">Password Options</h2>
+          <button type="button" className="pg-modal-close" onClick={onClose} aria-label="Close">
+            <i className="ti ti-x" />
+          </button>
+        </div>
 
-                <div className="pg-modal-body">
-                    <div className="pg-section">
-                        <p className="pg-section-label">Quick Presets</p>
-                        <div className="pg-presets">
-                            {PRESETS.map(p => (
-                                <button key={p.label} type="button" className="pg-preset" onClick={() => applyPreset(p)}>
-                                    <span>{p.label}</span>
-                                    <span className="pg-preset-len">{p.cfg.length}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="pg-section">
-                        <div className="pg-section-row">
-                            <p className="pg-section-label">Length</p>
-                            <div className="pg-stepper">
-                                <button type="button" className="pg-stepper-btn"
-                                    onClick={() => update("length", Math.max(4, cfg.length - 1))}
-                                    disabled={cfg.length <= 4}>
-                                    <i className="ti ti-minus" />
-                                </button>
-                                <span className="pg-stepper-val">{cfg.length}</span>
-                                <button type="button" className="pg-stepper-btn"
-                                    onClick={() => update("length", Math.min(128, cfg.length + 1))}
-                                    disabled={cfg.length >= 128}>
-                                    <i className="ti ti-plus" />
-                                </button>
-                            </div>
-                        </div>
-                        <input
-                            type="range" min={4} max={128} value={cfg.length}
-                            onChange={e => update("length", Number(e.target.value))}
-                            className="pg-slider"
-                            style={{ "--pct": `${((cfg.length - 4) / (128 - 4)) * 100}%` } as React.CSSProperties}
-                        />
-                    </div>
-
-                    <div className="pg-section">
-                        <p className="pg-section-label">Characters</p>
-                        <div className="pg-chars">
-                            {CHARSET_OPTS.map(o => (
-                                <label key={o.key} className={`pg-char-opt${cfg[o.key] ? " is-on" : ""}`}>
-                                    <input type="checkbox" checked={cfg[o.key]}
-                                        onChange={e => update(o.key, e.target.checked)} />
-                                    <div className="pg-char-icon">
-                                        <i className={`ti ${o.icon}`} />
-                                    </div>
-                                    <div className="pg-char-body">
-                                        <span className="pg-char-label">{o.label}</span>
-                                        <span className="pg-char-sub">{o.sub}</span>
-                                    </div>
-                                    <div className={`pg-char-check${cfg[o.key] ? " is-on" : ""}`}>
-                                        <i className="ti ti-check" />
-                                    </div>
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div className="pg-section">
-                        <p className="pg-section-label">Advanced</p>
-                        <label className={`pg-adv-opt${cfg.excludeAmbiguous ? " is-on" : ""}`}>
-                            <input type="checkbox" checked={cfg.excludeAmbiguous}
-                                onChange={e => update("excludeAmbiguous", e.target.checked)} />
-                            <div className="pg-adv-icon">
-                                <i className="ti ti-eye-off" />
-                            </div>
-                            <div className="pg-adv-body">
-                                <span className="pg-adv-title">Exclude ambiguous characters</span>
-                                <span className="pg-adv-sub">Removes 0, O, 1, l, I for better readability</span>
-                            </div>
-                            <div className={`pg-char-check${cfg.excludeAmbiguous ? " is-on" : ""}`}>
-                                <i className="ti ti-check" />
-                            </div>
-                        </label>
-                    </div>
-
-                    {noneOn && (
-                        <div className="pg-warn">
-                            <i className="ti ti-alert-triangle" />
-                            <span>Select at least one character set</span>
-                        </div>
-                    )}
-                </div>
-
-                <div className="pg-modal-footer">
-                    <button type="button" className="pg-modal-btn-sec" onClick={onClose}>
-                        Cancel
-                    </button>
-                    <button type="button" className="pg-modal-btn-pri" onClick={() => { onGenerate(); onClose(); }} disabled={noneOn}>
-                        <i className="ti ti-refresh" />
-                        Generate
-                    </button>
-                </div>
+        <div className="pg-modal-body">
+          <div className="pg-section">
+            <p className="pg-section-label">Quick Presets</p>
+            <div className="pg-presets">
+              {PRESETS.map((p) => (
+                <button
+                  key={p.label}
+                  type="button"
+                  className="pg-preset"
+                  onClick={() => applyPreset(p)}
+                >
+                  <span>{p.label}</span>
+                  <span className="pg-preset-len">{p.cfg.length}</span>
+                </button>
+              ))}
             </div>
-        </>
-    );
+          </div>
+
+          <div className="pg-section">
+            <div className="pg-section-row">
+              <p className="pg-section-label">Length</p>
+              <div className="pg-stepper">
+                <button
+                  type="button"
+                  className="pg-stepper-btn"
+                  onClick={() => update("length", Math.max(4, cfg.length - 1))}
+                  disabled={cfg.length <= 4}
+                >
+                  <i className="ti ti-minus" />
+                </button>
+                <span className="pg-stepper-val">{cfg.length}</span>
+                <button
+                  type="button"
+                  className="pg-stepper-btn"
+                  onClick={() => update("length", Math.min(128, cfg.length + 1))}
+                  disabled={cfg.length >= 128}
+                >
+                  <i className="ti ti-plus" />
+                </button>
+              </div>
+            </div>
+            <input
+              type="range"
+              min={4}
+              max={128}
+              value={cfg.length}
+              onChange={(e) => update("length", Number(e.target.value))}
+              className="pg-slider"
+              style={{ "--pct": `${((cfg.length - 4) / (128 - 4)) * 100}%` } as React.CSSProperties}
+            />
+          </div>
+
+          <div className="pg-section">
+            <p className="pg-section-label">Characters</p>
+            <div className="pg-chars">
+              {CHARSET_OPTS.map((o) => (
+                <label key={o.key} className={`pg-char-opt${cfg[o.key] ? " is-on" : ""}`}>
+                  <input
+                    type="checkbox"
+                    checked={cfg[o.key]}
+                    onChange={(e) => update(o.key, e.target.checked)}
+                  />
+                  <div className="pg-char-icon">
+                    <i className={`ti ${o.icon}`} />
+                  </div>
+                  <div className="pg-char-body">
+                    <span className="pg-char-label">{o.label}</span>
+                    <span className="pg-char-sub">{o.sub}</span>
+                  </div>
+                  <div className={`pg-char-check${cfg[o.key] ? " is-on" : ""}`}>
+                    <i className="ti ti-check" />
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="pg-section">
+            <p className="pg-section-label">Advanced</p>
+            <label className={`pg-adv-opt${cfg.excludeAmbiguous ? " is-on" : ""}`}>
+              <input
+                type="checkbox"
+                checked={cfg.excludeAmbiguous}
+                onChange={(e) => update("excludeAmbiguous", e.target.checked)}
+              />
+              <div className="pg-adv-icon">
+                <i className="ti ti-eye-off" />
+              </div>
+              <div className="pg-adv-body">
+                <span className="pg-adv-title">Exclude ambiguous characters</span>
+                <span className="pg-adv-sub">Removes 0, O, 1, l, I for better readability</span>
+              </div>
+              <div className={`pg-char-check${cfg.excludeAmbiguous ? " is-on" : ""}`}>
+                <i className="ti ti-check" />
+              </div>
+            </label>
+          </div>
+
+          {noneOn && (
+            <div className="pg-warn">
+              <i className="ti ti-alert-triangle" />
+              <span>Select at least one character set</span>
+            </div>
+          )}
+        </div>
+
+        <div className="pg-modal-footer">
+          <button type="button" className="pg-modal-btn-sec" onClick={onClose}>
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="pg-modal-btn-pri"
+            onClick={() => {
+              onGenerate();
+              onClose();
+            }}
+            disabled={noneOn}
+          >
+            <i className="ti ti-refresh" />
+            Generate
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default function PasswordGeneratorWorkspace({ tool: _t }: { tool: Tool }) {
-    const [cfg, setCfg] = useState<Config>(DEFAULT);
-    const [passwords, setPasswords] = useState<string[]>([]);
-    const [count, setCount] = useState(1);
-    const [copied, setCopied] = useState<number | null>(null);
-    const [copiedAll, setCopiedAll] = useState(false);
-    const [showOptions, setShowOptions] = useState(false);
+  const [cfg, setCfg] = useState<Config>(DEFAULT);
+  const [passwords, setPasswords] = useState<string[]>([]);
+  const [count, setCount] = useState(1);
+  const [copied, setCopied] = useState<number | null>(null);
+  const [copiedAll, setCopiedAll] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
 
-    useEffect(() => {
-        setPasswords([generate(DEFAULT)]);
-    }, []);
+  useEffect(() => {
+    setPasswords([generate(DEFAULT)]);
+  }, []);
 
-    const update = useCallback(<K extends keyof Config>(k: K, v: Config[K]) => {
-        setCfg(p => ({ ...p, [k]: v }));
-    }, []);
+  const update = useCallback(<K extends keyof Config>(k: K, v: Config[K]) => {
+    setCfg((p) => ({ ...p, [k]: v }));
+  }, []);
 
-    const pool = useMemo(() => buildPool(cfg), [cfg]);
-    const bits = useMemo(() => entropy(pool.length, cfg.length), [pool, cfg.length]);
-    const str = useMemo(() => strength(bits), [bits]);
-    const noneOn = !cfg.uppercase && !cfg.lowercase && !cfg.numbers && !cfg.symbols;
+  const pool = useMemo(() => buildPool(cfg), [cfg]);
+  const bits = useMemo(() => entropy(pool.length, cfg.length), [pool, cfg.length]);
+  const str = useMemo(() => strength(bits), [bits]);
+  const noneOn = !cfg.uppercase && !cfg.lowercase && !cfg.numbers && !cfg.symbols;
 
-    const doGenerate = useCallback(() => {
-        if (noneOn) return;
-        setPasswords(Array.from({ length: Math.min(Math.max(1, count), 50) }, () => generate(cfg)));
-    }, [cfg, count, noneOn]);
+  const doGenerate = useCallback(() => {
+    if (noneOn) return;
+    setPasswords(Array.from({ length: Math.min(Math.max(1, count), 50) }, () => generate(cfg)));
+  }, [cfg, count, noneOn]);
 
-    const doRegen = useCallback((i: number) => {
-        if (noneOn) return;
-        setPasswords(p => { const a = [...p]; a[i] = generate(cfg); return a; });
-    }, [cfg, noneOn]);
+  const doRegen = useCallback(
+    (i: number) => {
+      if (noneOn) return;
+      setPasswords((p) => {
+        const a = [...p];
+        a[i] = generate(cfg);
+        return a;
+      });
+    },
+    [cfg, noneOn]
+  );
 
-    const doCopyOne = useCallback(async (pw: string, i: number) => {
-        await navigator.clipboard.writeText(pw);
-        setCopied(i);
-        setTimeout(() => setCopied(null), 1500);
-    }, []);
+  const doCopyOne = useCallback(async (pw: string, i: number) => {
+    await navigator.clipboard.writeText(pw);
+    setCopied(i);
+    setTimeout(() => setCopied(null), 1500);
+  }, []);
 
-    const doCopyAll = useCallback(async () => {
-        await navigator.clipboard.writeText(passwords.join("\n"));
-        setCopiedAll(true);
-        setTimeout(() => setCopiedAll(false), 1600);
-    }, [passwords]);
+  const doCopyAll = useCallback(async () => {
+    await navigator.clipboard.writeText(passwords.join("\n"));
+    setCopiedAll(true);
+    setTimeout(() => setCopiedAll(false), 1600);
+  }, [passwords]);
 
-    const doClearAll = useCallback(() => {
-        setPasswords([]);
-        setCount(1);
-    }, []);
+  const doClearAll = useCallback(() => {
+    setPasswords([]);
+    setCount(1);
+  }, []);
 
-    const doDownload = useCallback(() => {
-        const blob = new Blob([passwords.join("\n")], { type: "text/plain" });
-        const a = Object.assign(document.createElement("a"), {
-            href: URL.createObjectURL(blob), download: "passwords.txt",
-        });
-        a.click();
-        URL.revokeObjectURL(a.href);
-    }, [passwords]);
+  const doDownload = useCallback(() => {
+    const blob = new Blob([passwords.join("\n")], { type: "text/plain" });
+    const a = Object.assign(document.createElement("a"), {
+      href: URL.createObjectURL(blob),
+      download: "passwords.txt",
+    });
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }, [passwords]);
 
-    type Preset = { label: string; cfg: Partial<Config> };
-    const PRESETS: Preset[] = [
-        { label: "PIN", cfg: { length: 6, uppercase: false, lowercase: false, numbers: true, symbols: false } },
-        { label: "Simple", cfg: { length: 12, uppercase: true, lowercase: true, numbers: true, symbols: false } },
-        { label: "Secure", cfg: { length: 20, uppercase: true, lowercase: true, numbers: true, symbols: true } },
-        { label: "Maximum", cfg: { length: 32, uppercase: true, lowercase: true, numbers: true, symbols: true } },
-    ];
+  type Preset = { label: string; cfg: Partial<Config> };
+  const PRESETS: Preset[] = [
+    {
+      label: "PIN",
+      cfg: { length: 6, uppercase: false, lowercase: false, numbers: true, symbols: false },
+    },
+    {
+      label: "Simple",
+      cfg: { length: 12, uppercase: true, lowercase: true, numbers: true, symbols: false },
+    },
+    {
+      label: "Secure",
+      cfg: { length: 20, uppercase: true, lowercase: true, numbers: true, symbols: true },
+    },
+    {
+      label: "Maximum",
+      cfg: { length: 32, uppercase: true, lowercase: true, numbers: true, symbols: true },
+    },
+  ];
 
-    const applyPreset = useCallback((p: Preset) => {
-        setCfg(prev => ({ ...prev, ...p.cfg }));
-    }, []);
+  const applyPreset = useCallback((p: Preset) => {
+    setCfg((prev) => ({ ...prev, ...p.cfg }));
+  }, []);
 
-    const CHARSET_OPTS: Array<{ key: CharsetKey; label: string; sub: string; icon: string }> = [
-        { key: "uppercase", label: "Uppercase", sub: "A – Z", icon: "ti-letter-case-upper" },
-        { key: "lowercase", label: "Lowercase", sub: "a – z", icon: "ti-letter-case-lower" },
-        { key: "numbers", label: "Numbers", sub: "0 – 9", icon: "ti-number" },
-        { key: "symbols", label: "Symbols", sub: "!@#$…", icon: "ti-asterisk" },
-    ];
+  const CHARSET_OPTS: Array<{ key: CharsetKey; label: string; sub: string; icon: string }> = [
+    { key: "uppercase", label: "Uppercase", sub: "A – Z", icon: "ti-letter-case-upper" },
+    { key: "lowercase", label: "Lowercase", sub: "a – z", icon: "ti-letter-case-lower" },
+    { key: "numbers", label: "Numbers", sub: "0 – 9", icon: "ti-number" },
+    { key: "symbols", label: "Symbols", sub: "!@#$…", icon: "ti-asterisk" },
+  ];
 
-    const activeChars = [
-        cfg.uppercase && "ABC",
-        cfg.lowercase && "abc",
-        cfg.numbers && "123",
-        cfg.symbols && "!@#"
-    ].filter(Boolean).join(" · ");
+  const activeChars = [
+    cfg.uppercase && "ABC",
+    cfg.lowercase && "abc",
+    cfg.numbers && "123",
+    cfg.symbols && "!@#",
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
-    return (
-        <>
-            <div className="pg">
-                <div className="pg-desktop">
-                    <div className="pg-config">
-                        <div className="pg-section">
-                            <p className="pg-section-label">Preset</p>
-                            <div className="pg-presets">
-                                {PRESETS.map(p => (
-                                    <button key={p.label} type="button" className="pg-preset" onClick={() => applyPreset(p)}>
-                                        {p.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="pg-section">
-                            <div className="pg-section-row">
-                                <p className="pg-section-label">Length</p>
-                                <div className="pg-stepper">
-                                    <button type="button" className="pg-stepper-btn"
-                                        onClick={() => update("length", Math.max(4, cfg.length - 1))}
-                                        disabled={cfg.length <= 4} aria-label="Decrease length">
-                                        <i className="ti ti-minus" aria-hidden="true" />
-                                    </button>
-                                    <span className="pg-stepper-val" aria-live="polite">{cfg.length}</span>
-                                    <button type="button" className="pg-stepper-btn"
-                                        onClick={() => update("length", Math.min(128, cfg.length + 1))}
-                                        disabled={cfg.length >= 128} aria-label="Increase length">
-                                        <i className="ti ti-plus" aria-hidden="true" />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="pg-slider-wrap">
-                                <input
-                                    type="range" min={4} max={128} value={cfg.length}
-                                    onChange={e => update("length", Number(e.target.value))}
-                                    className="pg-slider"
-                                    aria-label={`Password length: ${cfg.length}`}
-                                    style={{ "--pct": `${((cfg.length - 4) / (128 - 4)) * 100}%` } as React.CSSProperties}
-                                />
-                            </div>
-                            <div className="pg-slider-marks" aria-hidden="true">
-                                {[4, 16, 32, 64, 96, 128].map(m => <span key={m}>{m}</span>)}
-                            </div>
-                        </div>
-
-                        <div className="pg-section">
-                            <p className="pg-section-label">Characters</p>
-                            <div className="pg-checks">
-                                {CHARSET_OPTS.map(o => (
-                                    <CheckCard
-                                        key={o.key}
-                                        checked={cfg[o.key]} onChange={v => update(o.key, v)}
-                                        label={o.label} sub={o.sub} icon={o.icon}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="pg-section">
-                            <p className="pg-section-label">Options</p>
-                            <label className={`pg-option${cfg.excludeAmbiguous ? " is-on" : ""}`}>
-                                <input type="checkbox" checked={cfg.excludeAmbiguous}
-                                    onChange={e => update("excludeAmbiguous", e.target.checked)}
-                                    aria-label="Exclude ambiguous characters" />
-                                <span className="pg-option-icon"><i className="ti ti-eye-off" aria-hidden="true" /></span>
-                                <span className="pg-option-body">
-                                    <span className="pg-option-title">Skip ambiguous characters</span>
-                                    <span className="pg-option-sub">Removes 0, O, 1, l, I — easier to read</span>
-                                </span>
-                                <span className={`pg-check-dot${cfg.excludeAmbiguous ? " is-on" : ""}`} aria-hidden="true" />
-                            </label>
-                        </div>
-
-                        <div className="pg-section pg-strength-section">
-                            <div className="pg-strength-gauge">
-                                <EntropyArc str={str} />
-                                <span className="pg-strength-label" style={{ color: str.color }}>{str.label}</span>
-                            </div>
-                            <div className="pg-strength-detail">
-                                <p className="pg-section-label" style={{ marginBottom: 8 }}>Security</p>
-                                <StrengthStrip str={str} />
-                                <div className="pg-strength-meta">
-                                    <span className="pg-meta-row">
-                                        <span className="pg-meta-key">Pool</span>
-                                        <span className="pg-meta-val">{pool.length} chars</span>
-                                    </span>
-                                    <span className="pg-meta-row">
-                                        <span className="pg-meta-key">Entropy</span>
-                                        <span className="pg-meta-val" style={{ color: str.color }}>{bits} bits</span>
-                                    </span>
-                                    <span className="pg-meta-row">
-                                        <span className="pg-meta-key">Combos</span>
-                                        <span className="pg-meta-val">10<sup>{Math.floor(bits * 0.301)}</sup>+</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {noneOn && (
-                            <p className="pg-warn" role="alert">
-                                <i className="ti ti-alert-triangle" aria-hidden="true" />
-                                Select at least one character set
-                            </p>
-                        )}
-                    </div>
-
-                    <div className="pg-output">
-                        <div className="pg-output-hd">
-                            <div className="pg-output-left">
-                                <span className="pg-output-title">
-                                    {passwords.length} password{passwords.length !== 1 ? "s" : ""}
-                                </span>
-                                <span className="pg-output-sub">{cfg.length} chars · {bits} bits</span>
-                            </div>
-                            <div className="pg-output-actions">
-                                {passwords.length > 0 && (
-                                    <button type="button" className="pg-hd-btn pg-hd-btn-danger" onClick={doClearAll}>
-                                        <i className="ti ti-trash" aria-hidden="true" />
-                                        <span className="pg-hd-btn-label">Clear</span>
-                                    </button>
-                                )}
-                                {passwords.length > 1 && (
-                                    <button type="button"
-                                        className={`pg-hd-btn${copiedAll ? " is-success" : ""}`}
-                                        onClick={doCopyAll}>
-                                        <i className={`ti ${copiedAll ? "ti-check" : "ti-copy"}`} aria-hidden="true" />
-                                        {copiedAll ? "Copied" : "Copy all"}
-                                    </button>
-                                )}
-                                <button type="button" className="pg-hd-btn" onClick={doDownload}>
-                                    <i className="ti ti-download" aria-hidden="true" />
-                                    <span className="pg-hd-btn-label">Save</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <ul className="pg-list" aria-label="Generated passwords" role="list">
-                            {passwords.map((pw, i) => (
-                                <PwRow key={i} pw={pw} index={i} onCopy={doCopyOne} onRegen={doRegen} copied={copied} />
-                            ))}
-                        </ul>
-
-                        <div className="pg-output-ft">
-                            <div className="pg-count">
-                                <button type="button" className="pg-count-btn"
-                                    onClick={() => setCount(c => Math.max(1, c - 1))}
-                                    disabled={count <= 1} aria-label="Fewer passwords">
-                                    <i className="ti ti-minus" aria-hidden="true" />
-                                </button>
-                                <span className="pg-count-val" aria-live="polite">{count}</span>
-                                <button type="button" className="pg-count-btn"
-                                    onClick={() => setCount(c => Math.min(50, c + 1))}
-                                    disabled={count >= 50} aria-label="More passwords">
-                                    <i className="ti ti-plus" aria-hidden="true" />
-                                </button>
-                                <span className="pg-count-label">password{count !== 1 ? "s" : ""}</span>
-                            </div>
-                            <button
-                                type="button" className="pg-generate" onClick={doGenerate} disabled={noneOn}
-                                aria-label="Generate passwords">
-                                <i className="ti ti-refresh" aria-hidden="true" />
-                                Generate
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="pg-mobile">
-                    <div className="pg-mobile-header">
-                        <div className="pg-mobile-info">
-                            <div className="pg-mobile-meta">
-                                <span className="pg-mobile-count">{passwords.length} password{passwords.length !== 1 ? "s" : ""}</span>
-                                <span className="pg-mobile-config">{cfg.length} chars · {activeChars || "None"}</span>
-                            </div>
-                            <div className="pg-mobile-strength">
-                                <div className="pg-mobile-strength-bar">
-                                    {[0, 1, 2, 3, 4].map(i => (
-                                        <div
-                                            key={i}
-                                            className="pg-mobile-strength-seg"
-                                            style={{
-                                                background: i <= str.score ? str.color : "var(--border)",
-                                                opacity: i <= str.score ? 1 : 0.3,
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-                                <div className="pg-mobile-strength-info">
-                                    <span className="pg-mobile-strength-label" style={{ color: str.color }}>{str.label}</span>
-                                    <span className="pg-mobile-strength-bits">{str.bits} bits</span>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" className="pg-mobile-options-btn" onClick={() => setShowOptions(true)}>
-                            <i className="ti ti-settings" />
-                            <span>Options</span>
-                        </button>
-                    </div>
-
-                    <div className="pg-mobile-body">
-                        <ul className="pg-mobile-list">
-                            {passwords.map((pw, i) => (
-                                <PwRow key={i} pw={pw} index={i} onCopy={doCopyOne} onRegen={doRegen} copied={copied} />
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="pg-mobile-footer">
-                        <div className="pg-mobile-actions">
-                            <div className="pg-mobile-count-ctrl">
-                                <button type="button" className="pg-mobile-count-btn"
-                                    onClick={() => setCount(c => Math.max(1, c - 1))}
-                                    disabled={count <= 1}>
-                                    <i className="ti ti-minus" />
-                                </button>
-                                <span className="pg-mobile-count-val">{count}</span>
-                                <button type="button" className="pg-mobile-count-btn"
-                                    onClick={() => setCount(c => Math.min(50, c + 1))}
-                                    disabled={count >= 50}>
-                                    <i className="ti ti-plus" />
-                                </button>
-                            </div>
-                            {passwords.length > 1 && (
-                                <button type="button"
-                                    className={`pg-mobile-action-btn${copiedAll ? " is-success" : ""}`}
-                                    onClick={doCopyAll}>
-                                    <i className={`ti ${copiedAll ? "ti-check" : "ti-copy"}`} />
-                                </button>
-                            )}
-                            {passwords.length > 0 && (
-                                <button type="button" className="pg-mobile-action-btn pg-mobile-clear-btn" onClick={doClearAll}>
-                                    <i className="ti ti-trash" />
-                                </button>
-                            )}
-                            <button type="button" className="pg-mobile-action-btn" onClick={doDownload}>
-                                <i className="ti ti-download" />
-                            </button>
-                        </div>
-                        <button type="button" className="pg-mobile-generate" onClick={doGenerate} disabled={noneOn}>
-                            <i className="ti ti-refresh" />
-                            Generate
-                        </button>
-                    </div>
-                </div>
+  return (
+    <>
+      <div className="pg">
+        <div className="pg-desktop">
+          <div className="pg-config">
+            <div className="pg-section">
+              <p className="pg-section-label">Preset</p>
+              <div className="pg-presets">
+                {PRESETS.map((p) => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    className="pg-preset"
+                    onClick={() => applyPreset(p)}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {showOptions && (
-                <OptionsModal
-                    cfg={cfg}
-                    update={update}
-                    onClose={() => setShowOptions(false)}
-                    onGenerate={doGenerate}
-                    noneOn={noneOn}
+            <div className="pg-section">
+              <div className="pg-section-row">
+                <p className="pg-section-label">Length</p>
+                <div className="pg-stepper">
+                  <button
+                    type="button"
+                    className="pg-stepper-btn"
+                    onClick={() => update("length", Math.max(4, cfg.length - 1))}
+                    disabled={cfg.length <= 4}
+                    aria-label="Decrease length"
+                  >
+                    <i className="ti ti-minus" aria-hidden="true" />
+                  </button>
+                  <span className="pg-stepper-val" aria-live="polite">
+                    {cfg.length}
+                  </span>
+                  <button
+                    type="button"
+                    className="pg-stepper-btn"
+                    onClick={() => update("length", Math.min(128, cfg.length + 1))}
+                    disabled={cfg.length >= 128}
+                    aria-label="Increase length"
+                  >
+                    <i className="ti ti-plus" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+              <div className="pg-slider-wrap">
+                <input
+                  type="range"
+                  min={4}
+                  max={128}
+                  value={cfg.length}
+                  onChange={(e) => update("length", Number(e.target.value))}
+                  className="pg-slider"
+                  aria-label={`Password length: ${cfg.length}`}
+                  style={
+                    { "--pct": `${((cfg.length - 4) / (128 - 4)) * 100}%` } as React.CSSProperties
+                  }
                 />
-            )}
+              </div>
+              <div className="pg-slider-marks" aria-hidden="true">
+                {[4, 16, 32, 64, 96, 128].map((m) => (
+                  <span key={m}>{m}</span>
+                ))}
+              </div>
+            </div>
 
-            <style>{`
+            <div className="pg-section">
+              <p className="pg-section-label">Characters</p>
+              <div className="pg-checks">
+                {CHARSET_OPTS.map((o) => (
+                  <CheckCard
+                    key={o.key}
+                    checked={cfg[o.key]}
+                    onChange={(v) => update(o.key, v)}
+                    label={o.label}
+                    sub={o.sub}
+                    icon={o.icon}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="pg-section">
+              <p className="pg-section-label">Options</p>
+              <label className={`pg-option${cfg.excludeAmbiguous ? " is-on" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={cfg.excludeAmbiguous}
+                  onChange={(e) => update("excludeAmbiguous", e.target.checked)}
+                  aria-label="Exclude ambiguous characters"
+                />
+                <span className="pg-option-icon">
+                  <i className="ti ti-eye-off" aria-hidden="true" />
+                </span>
+                <span className="pg-option-body">
+                  <span className="pg-option-title">Skip ambiguous characters</span>
+                  <span className="pg-option-sub">Removes 0, O, 1, l, I — easier to read</span>
+                </span>
+                <span
+                  className={`pg-check-dot${cfg.excludeAmbiguous ? " is-on" : ""}`}
+                  aria-hidden="true"
+                />
+              </label>
+            </div>
+
+            <div className="pg-section pg-strength-section">
+              <div className="pg-strength-gauge">
+                <EntropyArc str={str} />
+                <span className="pg-strength-label" style={{ color: str.color }}>
+                  {str.label}
+                </span>
+              </div>
+              <div className="pg-strength-detail">
+                <p className="pg-section-label" style={{ marginBottom: 8 }}>
+                  Security
+                </p>
+                <StrengthStrip str={str} />
+                <div className="pg-strength-meta">
+                  <span className="pg-meta-row">
+                    <span className="pg-meta-key">Pool</span>
+                    <span className="pg-meta-val">{pool.length} chars</span>
+                  </span>
+                  <span className="pg-meta-row">
+                    <span className="pg-meta-key">Entropy</span>
+                    <span className="pg-meta-val" style={{ color: str.color }}>
+                      {bits} bits
+                    </span>
+                  </span>
+                  <span className="pg-meta-row">
+                    <span className="pg-meta-key">Combos</span>
+                    <span className="pg-meta-val">
+                      10<sup>{Math.floor(bits * 0.301)}</sup>+
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {noneOn && (
+              <p className="pg-warn" role="alert">
+                <i className="ti ti-alert-triangle" aria-hidden="true" />
+                Select at least one character set
+              </p>
+            )}
+          </div>
+
+          <div className="pg-output">
+            <div className="pg-output-hd">
+              <div className="pg-output-left">
+                <span className="pg-output-title">
+                  {passwords.length} password{passwords.length !== 1 ? "s" : ""}
+                </span>
+                <span className="pg-output-sub">
+                  {cfg.length} chars · {bits} bits
+                </span>
+              </div>
+              <div className="pg-output-actions">
+                {passwords.length > 0 && (
+                  <button type="button" className="pg-hd-btn pg-hd-btn-danger" onClick={doClearAll}>
+                    <i className="ti ti-trash" aria-hidden="true" />
+                    <span className="pg-hd-btn-label">Clear</span>
+                  </button>
+                )}
+                {passwords.length > 1 && (
+                  <button
+                    type="button"
+                    className={`pg-hd-btn${copiedAll ? " is-success" : ""}`}
+                    onClick={doCopyAll}
+                  >
+                    <i className={`ti ${copiedAll ? "ti-check" : "ti-copy"}`} aria-hidden="true" />
+                    {copiedAll ? "Copied" : "Copy all"}
+                  </button>
+                )}
+                <button type="button" className="pg-hd-btn" onClick={doDownload}>
+                  <i className="ti ti-download" aria-hidden="true" />
+                  <span className="pg-hd-btn-label">Save</span>
+                </button>
+              </div>
+            </div>
+
+            <ul className="pg-list" aria-label="Generated passwords" role="list">
+              {passwords.map((pw, i) => (
+                <PwRow
+                  key={i}
+                  pw={pw}
+                  index={i}
+                  onCopy={doCopyOne}
+                  onRegen={doRegen}
+                  copied={copied}
+                />
+              ))}
+            </ul>
+
+            <div className="pg-output-ft">
+              <div className="pg-count">
+                <button
+                  type="button"
+                  className="pg-count-btn"
+                  onClick={() => setCount((c) => Math.max(1, c - 1))}
+                  disabled={count <= 1}
+                  aria-label="Fewer passwords"
+                >
+                  <i className="ti ti-minus" aria-hidden="true" />
+                </button>
+                <span className="pg-count-val" aria-live="polite">
+                  {count}
+                </span>
+                <button
+                  type="button"
+                  className="pg-count-btn"
+                  onClick={() => setCount((c) => Math.min(50, c + 1))}
+                  disabled={count >= 50}
+                  aria-label="More passwords"
+                >
+                  <i className="ti ti-plus" aria-hidden="true" />
+                </button>
+                <span className="pg-count-label">password{count !== 1 ? "s" : ""}</span>
+              </div>
+              <button
+                type="button"
+                className="pg-generate"
+                onClick={doGenerate}
+                disabled={noneOn}
+                aria-label="Generate passwords"
+              >
+                <i className="ti ti-refresh" aria-hidden="true" />
+                Generate
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="pg-mobile">
+          <div className="pg-mobile-header">
+            <div className="pg-mobile-info">
+              <div className="pg-mobile-meta">
+                <span className="pg-mobile-count">
+                  {passwords.length} password{passwords.length !== 1 ? "s" : ""}
+                </span>
+                <span className="pg-mobile-config">
+                  {cfg.length} chars · {activeChars || "None"}
+                </span>
+              </div>
+              <div className="pg-mobile-strength">
+                <div className="pg-mobile-strength-bar">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="pg-mobile-strength-seg"
+                      style={{
+                        background: i <= str.score ? str.color : "var(--border)",
+                        opacity: i <= str.score ? 1 : 0.3,
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="pg-mobile-strength-info">
+                  <span className="pg-mobile-strength-label" style={{ color: str.color }}>
+                    {str.label}
+                  </span>
+                  <span className="pg-mobile-strength-bits">{str.bits} bits</span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="pg-mobile-options-btn"
+              onClick={() => setShowOptions(true)}
+            >
+              <i className="ti ti-settings" />
+              <span>Options</span>
+            </button>
+          </div>
+
+          <div className="pg-mobile-body">
+            <ul className="pg-mobile-list">
+              {passwords.map((pw, i) => (
+                <PwRow
+                  key={i}
+                  pw={pw}
+                  index={i}
+                  onCopy={doCopyOne}
+                  onRegen={doRegen}
+                  copied={copied}
+                />
+              ))}
+            </ul>
+          </div>
+
+          <div className="pg-mobile-footer">
+            <div className="pg-mobile-actions">
+              <div className="pg-mobile-count-ctrl">
+                <button
+                  type="button"
+                  className="pg-mobile-count-btn"
+                  onClick={() => setCount((c) => Math.max(1, c - 1))}
+                  disabled={count <= 1}
+                >
+                  <i className="ti ti-minus" />
+                </button>
+                <span className="pg-mobile-count-val">{count}</span>
+                <button
+                  type="button"
+                  className="pg-mobile-count-btn"
+                  onClick={() => setCount((c) => Math.min(50, c + 1))}
+                  disabled={count >= 50}
+                >
+                  <i className="ti ti-plus" />
+                </button>
+              </div>
+              {passwords.length > 1 && (
+                <button
+                  type="button"
+                  className={`pg-mobile-action-btn${copiedAll ? " is-success" : ""}`}
+                  onClick={doCopyAll}
+                >
+                  <i className={`ti ${copiedAll ? "ti-check" : "ti-copy"}`} />
+                </button>
+              )}
+              {passwords.length > 0 && (
+                <button
+                  type="button"
+                  className="pg-mobile-action-btn pg-mobile-clear-btn"
+                  onClick={doClearAll}
+                >
+                  <i className="ti ti-trash" />
+                </button>
+              )}
+              <button type="button" className="pg-mobile-action-btn" onClick={doDownload}>
+                <i className="ti ti-download" />
+              </button>
+            </div>
+            <button
+              type="button"
+              className="pg-mobile-generate"
+              onClick={doGenerate}
+              disabled={noneOn}
+            >
+              <i className="ti ti-refresh" />
+              Generate
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {showOptions && (
+        <OptionsModal
+          cfg={cfg}
+          update={update}
+          onClose={() => setShowOptions(false)}
+          onGenerate={doGenerate}
+          noneOn={noneOn}
+        />
+      )}
+
+      <style>{`
         .pg {
           background: var(--bg-card);
           border: 0.5px solid var(--border);
@@ -1906,6 +2139,6 @@ export default function PasswordGeneratorWorkspace({ tool: _t }: { tool: Tool })
           }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

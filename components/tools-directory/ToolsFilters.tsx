@@ -19,11 +19,7 @@ export default function ToolsFilters({
   return (
     <>
       <div className="tdf-container">
-        <div
-          className="tdf-root"
-          role="tablist"
-          aria-label="Filter by category"
-        >
+        <div className="tdf-root" role="tablist" aria-label="Filter by category">
           <button
             role="tab"
             aria-selected={activeFilter === "all"}
@@ -38,14 +34,11 @@ export default function ToolsFilters({
               key={cat.slug}
               role="tab"
               aria-selected={activeFilter === cat.slug}
-              className={`tdf-btn${activeFilter === cat.slug ? " active" : ""
-                }`}
+              className={`tdf-btn${activeFilter === cat.slug ? " active" : ""}`}
               onClick={() => onFilterChange(cat.slug)}
             >
               <i className={`ti ${cat.icon}`} aria-hidden="true" />
-              <span className="tdf-label">
-                {cat.label.replace(" Tools", "")}
-              </span>
+              <span className="tdf-label">{cat.label.replace(" Tools", "")}</span>
               <span className="tdf-count">{cat.count}</span>
             </button>
           ))}

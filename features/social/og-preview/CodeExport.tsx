@@ -1,5 +1,6 @@
 // features/social/og-preview/CodeExport.tsx
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useState } from "react";
 import type { MetaData } from "./types";
@@ -14,7 +15,7 @@ export default function CodeExport({ meta }: CodeExportProps) {
   const [format, setFormat] = useState<"html" | "jsx">("html");
 
   const code = generateMetaTags(meta);
-  
+
   const jsxCode = code
     .replace(/<!--.*?-->/g, (match) => `{/* ${match.slice(4, -3).trim()} */}`)
     .replace(/(<meta[^>]*>)/g, (match) => match.replace(/"/g, '"'));
@@ -27,7 +28,7 @@ export default function CodeExport({ meta }: CodeExportProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      logger.error("Failed to copy:", err);
     }
   };
 

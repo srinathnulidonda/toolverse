@@ -1,5 +1,6 @@
 // features/social/og-preview/Workspace.tsx
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useState, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
@@ -73,7 +74,7 @@ export default function OgPreviewWorkspace({ tool }: { tool: Tool }) {
       const saved = localStorage.getItem("og-preview-history");
       if (saved) setHistory(JSON.parse(saved));
     } catch (e) {
-      console.error("Failed to load history:", e);
+      logger.error("Failed to load history:", e);
     }
   }, []);
 
@@ -82,7 +83,7 @@ export default function OgPreviewWorkspace({ tool }: { tool: Tool }) {
     try {
       localStorage.setItem("og-preview-history", JSON.stringify(history));
     } catch (e) {
-      console.error("Failed to save history:", e);
+      logger.error("Failed to save history:", e);
     }
   }, [history]);
 
@@ -152,14 +153,10 @@ export default function OgPreviewWorkspace({ tool }: { tool: Tool }) {
 
             {/* Tab content */}
             <div className="ogw-tab-content">
-              {activeTab === "input" && (
-                <MetaInputForm meta={meta} onChange={setMeta} />
-              )}
+              {activeTab === "input" && <MetaInputForm meta={meta} onChange={setMeta} />}
               {activeTab === "validation" && <ValidationPanel meta={meta} />}
               {activeTab === "code" && <CodeExport meta={meta} />}
-              {activeTab === "templates" && (
-                <Templates onSelect={handleTemplateSelect} />
-              )}
+              {activeTab === "templates" && <Templates onSelect={handleTemplateSelect} />}
               {activeTab === "history" && (
                 <HistoryPanel
                   items={history}

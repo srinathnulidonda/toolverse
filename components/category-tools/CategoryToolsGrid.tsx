@@ -6,7 +6,9 @@ export default function CategoryToolsGrid({ tools }: { tools: Tool[] }) {
   return (
     <>
       <div className="ctg-grid">
-        {tools.map((tool) => <CategoryToolCard key={tool.slug} tool={tool} />)}
+        {tools.map((tool) => (
+          <CategoryToolCard key={tool.slug} tool={tool} />
+        ))}
       </div>
       <style>{`
         .ctg-grid {

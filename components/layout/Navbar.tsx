@@ -57,10 +57,7 @@ export default function Navbar() {
               className={`ti ti-chevron-down${open === "categories" ? " rot" : ""}`}
               aria-hidden="true"
             />
-            <div
-              className={`tv-mega${open === "categories" ? " open" : ""}`}
-              role="menu"
-            >
+            <div className={`tv-mega${open === "categories" ? " open" : ""}`} role="menu">
               <div className="tv-mega-grid">
                 {/* First column */}
                 <div className="tv-mega-col">
@@ -71,10 +68,7 @@ export default function Navbar() {
                       className="tv-mega-item"
                       role="menuitem"
                     >
-                      <i
-                        className={`ti ${c.icon} tv-mega-icon`}
-                        aria-hidden="true"
-                      />
+                      <i className={`ti ${c.icon} tv-mega-icon`} aria-hidden="true" />
                       <span className="tv-mega-body">
                         <span className="tv-mega-name">{c.label}</span>
                         <span className="tv-mega-sub">{c.count} tools</span>
@@ -92,10 +86,7 @@ export default function Navbar() {
                       className="tv-mega-item"
                       role="menuitem"
                     >
-                      <i
-                        className={`ti ${c.icon} tv-mega-icon`}
-                        aria-hidden="true"
-                      />
+                      <i className={`ti ${c.icon} tv-mega-icon`} aria-hidden="true" />
                       <span className="tv-mega-body">
                         <span className="tv-mega-name">{c.label}</span>
                         <span className="tv-mega-sub">{c.count} tools</span>
@@ -107,9 +98,7 @@ export default function Navbar() {
 
               {/* Footer */}
               <div className="tv-mega-footer">
-                <span className="tv-mega-footer-text">
-                  {TOOLS.length} tools · free forever
-                </span>
+                <span className="tv-mega-footer-text">{TOOLS.length} tools · free forever</span>
                 <Link href="/categories" className="tv-mega-footer-link">
                   View all categories <i className="ti ti-arrow-right" aria-hidden="true" />
                 </Link>
@@ -141,37 +130,22 @@ export default function Navbar() {
           close();
         }}
       >
-        <i
-          className={`ti ${menuOpen ? "ti-x" : "ti-menu-2"}`}
-          aria-hidden="true"
-        />
+        <i className={`ti ${menuOpen ? "ti-x" : "ti-menu-2"}`} aria-hidden="true" />
       </button>
 
       {/* Mobile drawer */}
       {menuOpen && (
         <div className="tv-mob" role="dialog" aria-label="Navigation menu">
-          <Link
-            href="/categories"
-            className="tv-mob-link"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link href="/categories" className="tv-mob-link" onClick={() => setMenuOpen(false)}>
             <i className="ti ti-layout-grid" aria-hidden="true" />
             Categories
           </Link>
-          <Link
-            href="/tools"
-            className="tv-mob-link"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link href="/tools" className="tv-mob-link" onClick={() => setMenuOpen(false)}>
             <i className="ti ti-layout-grid" aria-hidden="true" />
             All Tools
           </Link>
           <div className="tv-mob-sep" />
-          <Link
-            href="/tools"
-            className="tv-mob-cta"
-            onClick={() => setMenuOpen(false)}
-          >
+          <Link href="/tools" className="tv-mob-cta" onClick={() => setMenuOpen(false)}>
             Browse Tools <i className="ti ti-arrow-right" aria-hidden="true" />
           </Link>
         </div>

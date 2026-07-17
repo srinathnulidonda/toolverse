@@ -2,14 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useMemo } from "react";
-import {
-  Task,
-  Priority,
-  PRIORITY_ORDER,
-  PRIORITY_META,
-  getPriority,
-  uid,
-} from "./widgetTypes";
+import { Task, Priority, PRIORITY_ORDER, PRIORITY_META, getPriority, uid } from "./widgetTypes";
 
 type Filter = "all" | "active" | "completed";
 
@@ -29,12 +22,7 @@ interface WidgetTasksProps {
   setDraft: (draft: TasksDraft | ((prev: TasksDraft) => TasksDraft)) => void;
 }
 
-export default function WidgetTasks({
-  tasks,
-  setTasks,
-  draft,
-  setDraft,
-}: WidgetTasksProps) {
+export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: WidgetTasksProps) {
   const { input, priority, showPicker, filter } = draft;
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +36,7 @@ export default function WidgetTasks({
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-        setDraft(d => ({ ...d, showPicker: false }));
+        setDraft((d) => ({ ...d, showPicker: false }));
       }
     };
     document.addEventListener("mousedown", handler);
@@ -59,10 +47,9 @@ export default function WidgetTasks({
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const isTyping = target.tagName === "INPUT" || 
-                       target.tagName === "TEXTAREA" || 
-                       target.isContentEditable;
-      
+      const isTyping =
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
+
       if (e.key === "/" && !isTyping) {
         e.preventDefault();
         inputRef.current?.focus();
@@ -79,7 +66,7 @@ export default function WidgetTasks({
       inputRef.current?.focus();
       return;
     }
-    
+
     const currentPage = typeof window !== "undefined" ? window.location.pathname : "";
     let context = "";
     if (currentPage.includes("/tools/")) {
@@ -87,24 +74,25 @@ export default function WidgetTasks({
       context = cleanPath.split("/").pop() || "";
     }
 
-    setTasks(prevTasks => [
+    setTasks((prevTasks) => [
       { id: uid(), text, completed: false, priority, createdAt: Date.now(), context },
       ...prevTasks,
     ]);
-    
-    setDraft(d => ({ ...d, input: "" }));
+
+    setDraft((d) => ({ ...d, input: "" }));
     inputRef.current?.focus();
   }
 
   const toggle = (id: string) =>
-    setTasks(prevTasks => prevTasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
-    
-  const remove = (id: string) => 
-    setTasks(prevTasks => prevTasks.filter((t) => t.id !== id));
+    setTasks((prevTasks) =>
+      prevTasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
+
+  const remove = (id: string) => setTasks((prevTasks) => prevTasks.filter((t) => t.id !== id));
 
   const clearCompleted = () => {
-    const filteredIds = new Set(filtered.filter(t => t.completed).map(t => t.id));
-    setTasks(prevTasks => prevTasks.filter((t) => !filteredIds.has(t.id)));
+    const filteredIds = new Set(filtered.filter((t) => t.completed).map((t) => t.id));
+    setTasks((prevTasks) => prevTasks.filter((t) => !filteredIds.has(t.id)));
   };
 
   const total = tasks.length;
@@ -114,26 +102,23 @@ export default function WidgetTasks({
   const allDone = total > 0 && done === total;
 
   // No search functionality in compact view
-  const filtered = useMemo(() =>
-    filter === "active"
-      ? tasks.filter((t) => !t.completed)
-      : filter === "completed"
-      ? tasks.filter((t) => t.completed)
-      : tasks,
+  const filtered = useMemo(
+    () =>
+      filter === "active"
+        ? tasks.filter((t) => !t.completed)
+        : filter === "completed"
+          ? tasks.filter((t) => t.completed)
+          : tasks,
     [tasks, filter]
   );
 
-  const activeSorted = useMemo(() => 
-    PRIORITY_ORDER.flatMap((p) =>
-      filtered.filter((t) => !t.completed && getPriority(t) === p)
-    ),
+  const activeSorted = useMemo(
+    () =>
+      PRIORITY_ORDER.flatMap((p) => filtered.filter((t) => !t.completed && getPriority(t) === p)),
     [filtered]
   );
-  
-  const completedSorted = useMemo(() => 
-    filtered.filter((t) => t.completed),
-    [filtered]
-  );
+
+  const completedSorted = useMemo(() => filtered.filter((t) => t.completed), [filtered]);
 
   // Always use compact sizing
   const ringRadius = 11;
@@ -144,8 +129,8 @@ export default function WidgetTasks({
     filter === "completed"
       ? "Nothing completed yet"
       : filter === "active"
-      ? "No active tasks — you're all caught up"
-      : "No tasks yet";
+        ? "No active tasks — you're all caught up"
+        : "No tasks yet";
 
   const showClearAction = filter !== "active" && completedSorted.length > 0;
 
@@ -161,7 +146,14 @@ export default function WidgetTasks({
             {total > 0 && (
               <div className="wt-ring-wrap">
                 <svg width={ringSize} height={ringSize} viewBox="0 0 30 30" aria-hidden="true">
-                  <circle cx="15" cy="15" r={ringRadius} fill="none" stroke="var(--border)" strokeWidth="2.5" />
+                  <circle
+                    cx="15"
+                    cy="15"
+                    r={ringRadius}
+                    fill="none"
+                    stroke="var(--border)"
+                    strokeWidth="2.5"
+                  />
                   <circle
                     cx="15"
                     cy="15"
@@ -202,7 +194,7 @@ export default function WidgetTasks({
               <button
                 type="button"
                 className="wt-priority-btn"
-                onClick={() => setDraft(d => ({ ...d, showPicker: !d.showPicker }))}
+                onClick={() => setDraft((d) => ({ ...d, showPicker: !d.showPicker }))}
                 aria-label={`Priority: ${priority}`}
               >
                 <span className="wt-dot" style={{ background: PRIORITY_META[priority].color }} />
@@ -218,7 +210,7 @@ export default function WidgetTasks({
                       aria-selected={priority === p}
                       className={`wt-picker-opt${priority === p ? " sel" : ""}`}
                       onClick={() => {
-                        setDraft(d => ({ ...d, priority: p, showPicker: false }));
+                        setDraft((d) => ({ ...d, priority: p, showPicker: false }));
                       }}
                     >
                       <span
@@ -242,13 +234,17 @@ export default function WidgetTasks({
               ref={inputRef}
               type="text"
               value={input}
-              onChange={(e) => setDraft(d => ({ ...d, input: e.target.value }))}
+              onChange={(e) => setDraft((d) => ({ ...d, input: e.target.value }))}
               placeholder="Add a task…"
               maxLength={120}
               className="wt-input"
             />
 
-            <button type="submit" className={`wt-submit${input.trim() ? " active" : ""}`} aria-label="Add task">
+            <button
+              type="submit"
+              className={`wt-submit${input.trim() ? " active" : ""}`}
+              aria-label="Add task"
+            >
               <PlusIcon />
             </button>
           </form>
@@ -259,7 +255,17 @@ export default function WidgetTasks({
         <div className="wt-scroll">
           {filtered.length === 0 && (
             <div className="wt-empty">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--border)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--border)"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
                 <rect x="3" y="3" width="18" height="18" rx="3" />
                 <path d="M9 12l2 2 4-4" />
               </svg>
@@ -275,17 +281,31 @@ export default function WidgetTasks({
           {allDone && filter !== "completed" && filtered.length > 0 && (
             <div className="wt-all-done">
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <circle cx="7" cy="7" r="6.5" fill="var(--brand-light)" stroke="var(--brand)" strokeWidth="0.8" />
-                <path d="M4.5 7l1.8 1.8L9.5 5" stroke="var(--brand)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle
+                  cx="7"
+                  cy="7"
+                  r="6.5"
+                  fill="var(--brand-light)"
+                  stroke="var(--brand)"
+                  strokeWidth="0.8"
+                />
+                <path
+                  d="M4.5 7l1.8 1.8L9.5 5"
+                  stroke="var(--brand)"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
               All done — great work today
             </div>
           )}
 
           {/* Compact view: flat list with priority dots, no grouping */}
-          {filter !== "completed" && activeSorted.map((task) => (
-            <TaskRow key={task.id} task={task} onToggle={toggle} onRemove={remove} />
-          ))}
+          {filter !== "completed" &&
+            activeSorted.map((task) => (
+              <TaskRow key={task.id} task={task} onToggle={toggle} onRemove={remove} />
+            ))}
 
           {/* Completed: simple flat list */}
           {completedSorted.length > 0 && filter !== "active" && (
@@ -302,9 +322,7 @@ export default function WidgetTasks({
           <>
             <div className="wt-divider" />
             <div className="wt-footer">
-              <span className="wt-footer-label">
-                {done} completed
-              </span>
+              <span className="wt-footer-label">{done} completed</span>
               <div className="wt-footer-actions">
                 <button onClick={clearCompleted} className="wt-footer-btn wt-clear-btn">
                   <TrashIcon />
@@ -619,7 +637,13 @@ function TaskRow({
         >
           {task.completed && (
             <svg width="9" height="9" viewBox="0 0 8 8" fill="none" aria-hidden="true">
-              <path d="M1.5 4l2 2 3-3" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M1.5 4l2 2 3-3"
+                stroke="#fff"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           )}
         </button>
@@ -629,7 +653,10 @@ function TaskRow({
           <span className="wt-row-dot" style={{ background: meta.color }} aria-hidden="true" />
         )}
 
-        <span className={`wt-row-text${task.completed ? " done" : ""}`} onClick={() => onToggle(task.id)}>
+        <span
+          className={`wt-row-text${task.completed ? " done" : ""}`}
+          onClick={() => onToggle(task.id)}
+        >
           {task.text}
         </span>
 
@@ -758,7 +785,16 @@ function TaskRow({
 
 function PlusIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M6 1v10M1 6h10" />
     </svg>
   );
@@ -766,7 +802,17 @@ function PlusIcon() {
 
 function TrashIcon() {
   return (
-    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <path d="M2 4h8M4.5 4V2.5h3V4M10 4l-.8 6H2.8L2 4" />
     </svg>
   );
@@ -774,7 +820,16 @@ function TrashIcon() {
 
 function CloseIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
     </svg>

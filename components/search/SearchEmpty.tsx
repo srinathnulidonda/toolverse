@@ -10,16 +10,11 @@ type SearchEmptyProps = {
   onClear: () => void;
 };
 
-const POPULAR_SLUGS = [
-  "compress-pdf",
-  "image-compress",
-  "json-formatter",
-  "qr-generator",
-];
+const POPULAR_SLUGS = ["compress-pdf", "image-compress", "json-formatter", "qr-generator"];
 
-const popular = POPULAR_SLUGS.map((slug) =>
-  TOOLS.find((t) => t.slug === slug)
-).filter(Boolean) as typeof TOOLS;
+const popular = POPULAR_SLUGS.map((slug) => TOOLS.find((t) => t.slug === slug)).filter(
+  Boolean
+) as typeof TOOLS;
 
 export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
   const CATEGORIES = getCategoriesWithCount();
@@ -49,10 +44,7 @@ export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
                   <i className={`ti ${tool.icon}`} aria-hidden="true" />
                 </div>
                 <span className="se-tool-name">{tool.label}</span>
-                <i
-                  className="ti ti-arrow-right se-tool-arrow"
-                  aria-hidden="true"
-                />
+                <i className="ti ti-arrow-right se-tool-arrow" aria-hidden="true" />
               </Link>
             ))}
           </div>
@@ -63,15 +55,9 @@ export default function SearchEmpty({ query, onClear }: SearchEmptyProps) {
           <p className="se-section-label">Browse categories</p>
           <div className="se-cats">
             {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/tools/${cat.slug}`}
-                className="se-cat"
-              >
+              <Link key={cat.slug} href={`/tools/${cat.slug}`} className="se-cat">
                 <i className={`ti ${cat.icon}`} aria-hidden="true" />
-                <span className="se-cat-name">
-                  {cat.label.replace(" Tools", "")}
-                </span>
+                <span className="se-cat-name">{cat.label.replace(" Tools", "")}</span>
                 <span className="se-cat-count">{cat.count}</span>
               </Link>
             ))}

@@ -48,7 +48,6 @@
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     opacity: 1;
@@ -313,17 +312,19 @@
 }
 
 .ctaContent::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg,
-      transparent,
-      var(--border) 30%,
-      var(--border) 70%,
-      transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border) 30%,
+    var(--border) 70%,
+    transparent
+  );
   opacity: 0.4;
 }
 
@@ -402,7 +403,7 @@
 }
 
 .ctaPrimaryButton::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -514,7 +515,6 @@
 }
 
 @media (max-width: 1400px) {
-
   .aboutHeroContainer,
   .aboutStatsContainer,
   .aboutValuesContainer,

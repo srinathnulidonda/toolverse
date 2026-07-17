@@ -175,10 +175,10 @@ export default function TweetGeneratorWorkspace({ tool }: { tool: Tool }) {
                     l === "single"
                       ? "ti-message"
                       : l === "quote"
-                      ? "ti-quote"
-                      : l === "thread"
-                      ? "ti-list"
-                      : "ti-arrow-back-up"
+                        ? "ti-quote"
+                        : l === "thread"
+                          ? "ti-list"
+                          : "ti-arrow-back-up"
                   }`}
                   aria-hidden="true"
                 />
@@ -186,10 +186,10 @@ export default function TweetGeneratorWorkspace({ tool }: { tool: Tool }) {
                   {l === "single"
                     ? "Single"
                     : l === "quote"
-                    ? "Quote Tweet"
-                    : l === "thread"
-                    ? "Thread"
-                    : "Reply"}
+                      ? "Quote Tweet"
+                      : l === "thread"
+                        ? "Thread"
+                        : "Reply"}
                 </span>
               </button>
             ))}

@@ -12,7 +12,8 @@ const TEMPLATES: Template[] = [
     category: "Content",
     tags: {
       title: "10 Best Practices for Modern Web Development in 2024",
-      description: "Discover the essential web development practices every developer should know in 2024, from performance optimization to accessibility standards.",
+      description:
+        "Discover the essential web development practices every developer should know in 2024, from performance optimization to accessibility standards.",
       keywords: "web development, best practices, coding, programming, 2024",
       author: "Tech Team",
       viewport: "width=device-width, initial-scale=1",
@@ -67,7 +68,8 @@ const TEMPLATES: Template[] = [
     category: "E-commerce",
     tags: {
       title: "Premium Leather Backpack - Handcrafted | ShopName",
-      description: "Handcrafted premium leather backpack with laptop compartment. Durable, stylish, and perfect for work or travel. Free shipping worldwide.",
+      description:
+        "Handcrafted premium leather backpack with laptop compartment. Durable, stylish, and perfect for work or travel. Free shipping worldwide.",
       keywords: "leather backpack, handcrafted, premium bags, laptop bag",
       author: "",
       viewport: "width=device-width, initial-scale=1",
@@ -122,7 +124,8 @@ const TEMPLATES: Template[] = [
     category: "Business",
     tags: {
       title: "ProductName - The Best Solution for Your Business",
-      description: "Streamline your workflow with ProductName. Trusted by 10,000+ companies worldwide. Start your free trial today, no credit card required.",
+      description:
+        "Streamline your workflow with ProductName. Trusted by 10,000+ companies worldwide. Start your free trial today, no credit card required.",
       keywords: "saas, software, business tools, productivity, automation",
       author: "",
       viewport: "width=device-width, initial-scale=1",
@@ -177,7 +180,8 @@ const TEMPLATES: Template[] = [
     category: "Personal",
     tags: {
       title: "Jane Smith - UX Designer & Creative Director",
-      description: "Award-winning UX designer with 8+ years of experience creating delightful digital experiences for startups and Fortune 500 companies.",
+      description:
+        "Award-winning UX designer with 8+ years of experience creating delightful digital experiences for startups and Fortune 500 companies.",
       keywords: "ux designer, portfolio, product design, creative director",
       author: "Jane Smith",
       viewport: "width=device-width, initial-scale=1",
@@ -232,7 +236,8 @@ const TEMPLATES: Template[] = [
     category: "Content",
     tags: {
       title: "Major Breakthrough in Renewable Energy Technology Announced",
-      description: "Scientists announce a revolutionary breakthrough in solar panel efficiency that could transform the renewable energy industry within the next decade.",
+      description:
+        "Scientists announce a revolutionary breakthrough in solar panel efficiency that could transform the renewable energy industry within the next decade.",
       keywords: "renewable energy, solar technology, breaking news, science",
       author: "News Desk",
       viewport: "width=device-width, initial-scale=1",
@@ -287,7 +292,8 @@ const TEMPLATES: Template[] = [
     category: "Business",
     tags: {
       title: "The Coffee House - Best Coffee Shop in Downtown",
-      description: "Family-owned coffee shop serving artisan coffee, fresh pastries, and light meals since 2010. Visit us in the heart of downtown.",
+      description:
+        "Family-owned coffee shop serving artisan coffee, fresh pastries, and light meals since 2010. Visit us in the heart of downtown.",
       keywords: "coffee shop, cafe, local business, downtown, pastries",
       author: "",
       viewport: "width=device-width, initial-scale=1",
@@ -356,11 +362,7 @@ export default function Templates({ onSelect }: TemplatesProps) {
 
         <div className="tpl-grid">
           {TEMPLATES.map((template) => (
-            <button
-              key={template.id}
-              className="tpl-card"
-              onClick={() => onSelect(template)}
-            >
+            <button key={template.id} className="tpl-card" onClick={() => onSelect(template)}>
               <div className="tpl-card-top">
                 <div className="tpl-icon">
                   <i className={`ti ${template.icon}`} aria-hidden="true" />

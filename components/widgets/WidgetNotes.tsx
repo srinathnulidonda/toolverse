@@ -3,19 +3,13 @@
 
 import { useEffect, useRef, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import {
-  Note,
-  ChecklistItem,
-  WidgetVariant,
-  timeAgo,
-  uid,
-} from "./widgetTypes";
+import { Note, ChecklistItem, WidgetVariant, timeAgo, uid } from "./widgetTypes";
 
 interface NotesDraft {
   activeNote: string | null;
   title: string;
   content: string;
-  type?: 'note' | 'checklist';
+  type?: "note" | "checklist";
   items?: ChecklistItem[];
   composerOpen: boolean;
   showCompleted?: boolean;
@@ -46,14 +40,14 @@ export default function WidgetNotes({
   onExpand,
 }: WidgetNotesProps) {
   const isFull = variant === "full";
-  const { 
-    activeNote, 
-    title, 
-    content, 
-    type = 'note', 
-    items = [], 
-    composerOpen, 
-    showCompleted = true 
+  const {
+    activeNote,
+    title,
+    content,
+    type = "note",
+    items = [],
+    composerOpen,
+    showCompleted = true,
   } = draft;
 
   const [deletedNote, setDeletedNote] = useState<DeletedNote | null>(null);
@@ -61,7 +55,7 @@ export default function WidgetNotes({
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [isDraggingModal, setIsDraggingModal] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  
+
   const deleteTimerRef = useRef<NodeJS.Timeout>();
   const toastTimerRef = useRef<NodeJS.Timeout>();
   const modalDragStartRef = useRef({ x: 0, y: 0, modalX: 0, modalY: 0 });
@@ -71,8 +65,8 @@ export default function WidgetNotes({
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Compute active note data once
-  const activeNoteData = useMemo(() => 
-    activeNote ? notes.find(n => n.id === activeNote) : null,
+  const activeNoteData = useMemo(
+    () => (activeNote ? notes.find((n) => n.id === activeNote) : null),
     [activeNote, notes]
   );
 
@@ -102,14 +96,16 @@ export default function WidgetNotes({
 
     const trapFocus = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
-      
+
       const modal = modalRef.current;
       if (!modal) return;
 
-      const focusable = Array.from(modal.querySelectorAll<HTMLElement>(
-        'button:not(:disabled), input, textarea, [tabindex]:not([tabindex="-1"])'
-      )).filter(el => el.offsetParent !== null);
-      
+      const focusable = Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'button:not(:disabled), input, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null);
+
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
@@ -137,7 +133,7 @@ export default function WidgetNotes({
     const handleMouseMove = (e: MouseEvent) => {
       const dx = e.clientX - modalDragStartRef.current.x;
       const dy = e.clientY - modalDragStartRef.current.y;
-      
+
       // Check threshold before starting actual drag
       if (!hasDraggedModalRef.current) {
         if (Math.abs(dx) < MODAL_DRAG_THRESHOLD && Math.abs(dy) < MODAL_DRAG_THRESHOLD) {
@@ -145,17 +141,17 @@ export default function WidgetNotes({
         }
         hasDraggedModalRef.current = true;
       }
-      
+
       const newX = modalDragStartRef.current.modalX + dx;
       const newY = modalDragStartRef.current.modalY + dy;
-      
+
       // Proper clamping with measured bounds
       const modal = modalRef.current;
       if (modal) {
         const rect = modal.getBoundingClientRect();
         const maxX = (window.innerWidth - rect.width) / 2;
         const maxY = (window.innerHeight - rect.height) / 2;
-        
+
         setModalPosition({
           x: Math.max(-maxX, Math.min(maxX, newX)),
           y: Math.max(-maxY, Math.min(maxY, newY)),
@@ -167,23 +163,23 @@ export default function WidgetNotes({
       const touch = e.touches[0];
       const dx = touch.clientX - modalDragStartRef.current.x;
       const dy = touch.clientY - modalDragStartRef.current.y;
-      
+
       if (!hasDraggedModalRef.current) {
         if (Math.abs(dx) < MODAL_DRAG_THRESHOLD && Math.abs(dy) < MODAL_DRAG_THRESHOLD) {
           return;
         }
         hasDraggedModalRef.current = true;
       }
-      
+
       const newX = modalDragStartRef.current.modalX + dx;
       const newY = modalDragStartRef.current.modalY + dy;
-      
+
       const modal = modalRef.current;
       if (modal) {
         const rect = modal.getBoundingClientRect();
         const maxX = (window.innerWidth - rect.width) / 2;
         const maxY = (window.innerHeight - rect.height) / 2;
-        
+
         setModalPosition({
           x: Math.max(-maxX, Math.min(maxX, newX)),
           y: Math.max(-maxY, Math.min(maxY, newY)),
@@ -217,12 +213,12 @@ export default function WidgetNotes({
   };
 
   const resetEditor = () => {
-    setDraft(d => ({
+    setDraft((d) => ({
       ...d,
       activeNote: null,
       title: "",
       content: "",
-      type: 'note',
+      type: "note",
       items: [],
       composerOpen: false,
       showCompleted: true,
@@ -230,10 +226,10 @@ export default function WidgetNotes({
   };
 
   const saveNote = () => {
-    const isChecklist = type === 'checklist';
-    const hasContent = title.trim() || 
-                      (isChecklist ? items.some(i => i.text.trim()) : content.trim());
-    
+    const isChecklist = type === "checklist";
+    const hasContent =
+      title.trim() || (isChecklist ? items.some((i) => i.text.trim()) : content.trim());
+
     if (!hasContent) {
       resetEditor();
       return;
@@ -246,7 +242,7 @@ export default function WidgetNotes({
         return;
       }
 
-      setNotes(prevNotes =>
+      setNotes((prevNotes) =>
         prevNotes.map((n) =>
           n.id === activeNote
             ? {
@@ -254,7 +250,7 @@ export default function WidgetNotes({
                 title: title.trim(),
                 content: isChecklist ? "" : content.trim(),
                 type: type,
-                items: isChecklist ? items.filter(i => i.text.trim()) : [],
+                items: isChecklist ? items.filter((i) => i.text.trim()) : [],
                 updatedAt: Date.now(),
               }
             : n
@@ -266,27 +262,27 @@ export default function WidgetNotes({
         title: title.trim(),
         content: isChecklist ? "" : content.trim(),
         type: type,
-        items: isChecklist ? items.filter(i => i.text.trim()) : [],
+        items: isChecklist ? items.filter((i) => i.text.trim()) : [],
         pinned: false,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
-      setNotes(prevNotes => [newNote, ...prevNotes]);
+      setNotes((prevNotes) => [newNote, ...prevNotes]);
     }
 
     resetEditor();
   };
 
   const deleteNote = (id: string) => {
-    const noteToDelete = notes.find(n => n.id === id);
+    const noteToDelete = notes.find((n) => n.id === id);
     if (!noteToDelete) return;
 
     if (deleteTimerRef.current) {
       clearTimeout(deleteTimerRef.current);
     }
 
-    setNotes(prevNotes => prevNotes.filter((n) => n.id !== id));
-    
+    setNotes((prevNotes) => prevNotes.filter((n) => n.id !== id));
+
     if (activeNote === id) resetEditor();
 
     setDeletedNote({ note: noteToDelete, timestamp: Date.now() });
@@ -309,21 +305,21 @@ export default function WidgetNotes({
       clearTimeout(deleteTimerRef.current);
     }
 
-    setNotes(prevNotes => [deletedNote.note, ...prevNotes]);
+    setNotes((prevNotes) => [deletedNote.note, ...prevNotes]);
     setDeletedNote(null);
   };
 
   const togglePin = (id: string) => {
-    setNotes(prevNotes => prevNotes.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n)));
+    setNotes((prevNotes) => prevNotes.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n)));
   };
 
   const togglePinAndSave = () => {
     if (!activeNote) {
       // For new notes: save first, then pin
-      const isChecklist = type === 'checklist';
-      const hasContent = title.trim() || 
-                        (isChecklist ? items.some(i => i.text.trim()) : content.trim());
-      
+      const isChecklist = type === "checklist";
+      const hasContent =
+        title.trim() || (isChecklist ? items.some((i) => i.text.trim()) : content.trim());
+
       if (!hasContent) return;
 
       const newNote: Note = {
@@ -331,12 +327,12 @@ export default function WidgetNotes({
         title: title.trim(),
         content: isChecklist ? "" : content.trim(),
         type: type,
-        items: isChecklist ? items.filter(i => i.text.trim()) : [],
+        items: isChecklist ? items.filter((i) => i.text.trim()) : [],
         pinned: true, // Pin immediately
         createdAt: Date.now(),
         updatedAt: Date.now(),
       };
-      setNotes(prevNotes => [newNote, ...prevNotes]);
+      setNotes((prevNotes) => [newNote, ...prevNotes]);
       resetEditor();
     } else {
       // For existing notes: just toggle pin
@@ -345,25 +341,25 @@ export default function WidgetNotes({
   };
 
   const toggleNoteType = () => {
-    const newType = type === 'checklist' ? 'note' : 'checklist';
-    
+    const newType = type === "checklist" ? "note" : "checklist";
+
     // Check if there's content that would be lost
     const hasNoteContent = content.trim().length > 0;
-    const hasChecklistItems = items.some(i => i.text.trim().length > 0);
-    
+    const hasChecklistItems = items.some((i) => i.text.trim().length > 0);
+
     let shouldProceed = true;
-    
-    if (newType === 'note' && hasChecklistItems) {
+
+    if (newType === "note" && hasChecklistItems) {
       // Converting from checklist to note - offer to preserve content
-      const itemTexts = items.filter(i => i.text.trim()).map(i => i.text.trim());
+      const itemTexts = items.filter((i) => i.text.trim()).map((i) => i.text.trim());
       if (itemTexts.length > 0) {
         shouldProceed = window.confirm(
           `Converting to a note will combine your list items into paragraph text. Continue?`
         );
         if (shouldProceed) {
           // Preserve checklist items as paragraph text
-          const combinedContent = itemTexts.join('\n');
-          setDraft(d => ({
+          const combinedContent = itemTexts.join("\n");
+          setDraft((d) => ({
             ...d,
             type: newType,
             content: combinedContent,
@@ -372,7 +368,7 @@ export default function WidgetNotes({
           return;
         }
       }
-    } else if (newType === 'checklist' && hasNoteContent) {
+    } else if (newType === "checklist" && hasNoteContent) {
       // Converting from note to checklist - offer to preserve content
       shouldProceed = window.confirm(
         `Converting to a checklist will turn your text into the first list item. Continue?`
@@ -384,67 +380,67 @@ export default function WidgetNotes({
           text: content.trim(),
           checked: false,
         };
-        setDraft(d => ({
+        setDraft((d) => ({
           ...d,
           type: newType,
-          content: '',
+          content: "",
           items: [firstItem],
         }));
         return;
       }
     }
-    
+
     if (shouldProceed) {
-      setDraft(d => ({
+      setDraft((d) => ({
         ...d,
         type: newType,
-        items: newType === 'checklist' ? [] : d.items,
-        content: newType === 'note' ? d.content : '',
+        items: newType === "checklist" ? [] : d.items,
+        content: newType === "note" ? d.content : "",
       }));
     }
   };
 
   const editNote = (note: Note) => {
-    setDraft(d => ({
+    setDraft((d) => ({
       ...d,
       activeNote: note.id,
       title: note.title,
       content: note.content || "",
-      type: note.type || 'note',
+      type: note.type || "note",
       items: note.items || [],
       composerOpen: true,
       showCompleted: true,
     }));
   };
 
-  const openComposer = (noteType: 'note' | 'checklist' = 'note') => {
-    setDraft(d => ({
+  const openComposer = (noteType: "note" | "checklist" = "note") => {
+    setDraft((d) => ({
       ...d,
       type: noteType,
       composerOpen: true,
-      items: noteType === 'checklist' ? [] : d.items,
-      content: noteType === 'note' ? d.content : '',
+      items: noteType === "checklist" ? [] : d.items,
+      content: noteType === "note" ? d.content : "",
     }));
   };
 
   const toggleItemChecked = (itemId: string) => {
-    setDraft(d => ({
+    setDraft((d) => ({
       ...d,
-      items: (d.items || []).map(i => i.id === itemId ? { ...i, checked: !i.checked } : i),
+      items: (d.items || []).map((i) => (i.id === itemId ? { ...i, checked: !i.checked } : i)),
     }));
   };
 
   const updateItemText = (itemId: string, text: string) => {
-    setDraft(d => ({
+    setDraft((d) => ({
       ...d,
-      items: (d.items || []).map(i => i.id === itemId ? { ...i, text } : i),
+      items: (d.items || []).map((i) => (i.id === itemId ? { ...i, text } : i)),
     }));
   };
 
   const deleteItem = (itemId: string) => {
-    setDraft(d => ({
+    setDraft((d) => ({
       ...d,
-      items: (d.items || []).filter(i => i.id !== itemId),
+      items: (d.items || []).filter((i) => i.id !== itemId),
     }));
   };
 
@@ -454,18 +450,18 @@ export default function WidgetNotes({
       text,
       checked: false,
     };
-    
-    setDraft(d => {
+
+    setDraft((d) => {
       const currentItems = d.items || [];
       if (afterId) {
-        const index = currentItems.findIndex(i => i.id === afterId);
+        const index = currentItems.findIndex((i) => i.id === afterId);
         const newItems = [...currentItems];
         newItems.splice(index + 1, 0, newItem);
         return { ...d, items: newItems };
       }
       return { ...d, items: [...currentItems, newItem] };
     });
-    
+
     setTimeout(() => {
       (document.querySelector(`[data-item-id="${newItem.id}"]`) as HTMLInputElement)?.focus();
     }, 0);
@@ -478,18 +474,21 @@ export default function WidgetNotes({
     } else if (e.key === "Backspace" && text === "") {
       e.preventDefault();
       const currentItems = items || [];
-      const currentIndex = currentItems.findIndex(i => i.id === itemId);
-      
+      const currentIndex = currentItems.findIndex((i) => i.id === itemId);
+
       if (currentItems.length > 1) {
         deleteItem(itemId);
-        
+
         // Focus previous item or next if first
         setTimeout(() => {
           const targetIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-          if (targetIndex < currentItems.length - 1) { // -1 because we just deleted one
+          if (targetIndex < currentItems.length - 1) {
+            // -1 because we just deleted one
             const targetItem = currentItems[targetIndex];
             if (targetItem && targetItem.id !== itemId) {
-              (document.querySelector(`[data-item-id="${targetItem.id}"]`) as HTMLInputElement)?.focus();
+              (
+                document.querySelector(`[data-item-id="${targetItem.id}"]`) as HTMLInputElement
+              )?.focus();
             }
           }
         }, 0);
@@ -503,13 +502,13 @@ export default function WidgetNotes({
   const handleModalDragStart = (e: React.MouseEvent | React.TouchEvent) => {
     // Ignore if clicking on input or button
     const target = e.target as HTMLElement;
-    if (target.tagName === 'INPUT' || target.tagName === 'BUTTON' || target.closest('button')) {
+    if (target.tagName === "INPUT" || target.tagName === "BUTTON" || target.closest("button")) {
       return;
     }
 
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+
     setIsDraggingModal(true);
     hasDraggedModalRef.current = false; // Reset
     modalDragStartRef.current = {
@@ -523,8 +522,8 @@ export default function WidgetNotes({
   const pinned = useMemo(() => notes.filter((n) => n.pinned), [notes]);
   const others = useMemo(() => notes.filter((n) => !n.pinned), [notes]);
 
-  const uncheckedItems = useMemo(() => items.filter(i => !i.checked), [items]);
-  const checkedItems = useMemo(() => items.filter(i => i.checked), [items]);
+  const uncheckedItems = useMemo(() => items.filter((i) => !i.checked), [items]);
+  const checkedItems = useMemo(() => items.filter((i) => i.checked), [items]);
 
   return (
     <>
@@ -534,7 +533,7 @@ export default function WidgetNotes({
           <div className="wn-composer-bar">
             <button
               className="wn-composer-placeholder-btn"
-              onClick={() => openComposer('note')}
+              onClick={() => openComposer("note")}
               aria-label="Take a note"
             >
               Take a note…
@@ -542,7 +541,7 @@ export default function WidgetNotes({
             <div className="wn-composer-icons">
               <button
                 className="wn-composer-icon-btn"
-                onClick={() => openComposer('checklist')}
+                onClick={() => openComposer("checklist")}
                 aria-label="New checklist"
                 title="Checklist"
               >
@@ -564,11 +563,11 @@ export default function WidgetNotes({
                 <div className="wn-section-label">PINNED</div>
                 <div className="wn-grid">
                   {pinned.map((note) => (
-                    <NoteCard 
-                      key={note.id} 
-                      note={note} 
-                      onEdit={editNote} 
-                      onDelete={deleteNote} 
+                    <NoteCard
+                      key={note.id}
+                      note={note}
+                      onEdit={editNote}
+                      onDelete={deleteNote}
                       onTogglePin={togglePin}
                       openMenuId={openMenuId}
                       onMenuToggle={setOpenMenuId}
@@ -583,11 +582,11 @@ export default function WidgetNotes({
                 {pinned.length > 0 && <div className="wn-section-label">OTHERS</div>}
                 <div className="wn-grid">
                   {others.map((note) => (
-                    <NoteCard 
-                      key={note.id} 
-                      note={note} 
-                      onEdit={editNote} 
-                      onDelete={deleteNote} 
+                    <NoteCard
+                      key={note.id}
+                      note={note}
+                      onEdit={editNote}
+                      onDelete={deleteNote}
                       onTogglePin={togglePin}
                       openMenuId={openMenuId}
                       onMenuToggle={setOpenMenuId}
@@ -619,7 +618,7 @@ export default function WidgetNotes({
 
       {/* Editor modal */}
       {composerOpen && (
-        <div 
+        <div
           className="wn-editor-overlay"
           onClick={(e) => {
             // Restore overlay click-to-close
@@ -628,7 +627,7 @@ export default function WidgetNotes({
             }
           }}
         >
-          <div 
+          <div
             ref={modalRef}
             className="wn-editor-modal"
             style={{
@@ -638,7 +637,7 @@ export default function WidgetNotes({
             role="dialog"
             aria-modal="true"
           >
-            <div 
+            <div
               className="wn-editor-header"
               onMouseDown={handleModalDragStart}
               onTouchStart={handleModalDragStart}
@@ -647,7 +646,7 @@ export default function WidgetNotes({
                 ref={titleRef}
                 type="text"
                 value={title}
-                onChange={(e) => setDraft(d => ({ ...d, title: e.target.value }))}
+                onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
                 placeholder="Title"
                 className="wn-editor-title-input"
                 maxLength={100}
@@ -666,18 +665,22 @@ export default function WidgetNotes({
                 className="wn-editor-pin-btn"
                 onClick={togglePinAndSave}
                 onMouseDown={(e) => e.stopPropagation()} // Prevent drag when clicking pin
-                title={activeNote ? (activeNoteData?.pinned ? "Unpin note" : "Pin note") : "Pin note"}
-                aria-label={activeNote ? (activeNoteData?.pinned ? "Unpin note" : "Pin note") : "Pin note"}
+                title={
+                  activeNote ? (activeNoteData?.pinned ? "Unpin note" : "Pin note") : "Pin note"
+                }
+                aria-label={
+                  activeNote ? (activeNoteData?.pinned ? "Unpin note" : "Pin note") : "Pin note"
+                }
               >
                 <PinIcon filled={activeNoteData?.pinned} />
               </button>
             </div>
 
             <div className="wn-editor-body">
-              {type === 'note' ? (
+              {type === "note" ? (
                 <textarea
                   value={content}
-                  onChange={(e) => setDraft(d => ({ ...d, content: e.target.value }))}
+                  onChange={(e) => setDraft((d) => ({ ...d, content: e.target.value }))}
                   placeholder="Take a note…"
                   className="wn-editor-content-input"
                   maxLength={5000}
@@ -703,7 +706,7 @@ export default function WidgetNotes({
                       onKeyDown={handleItemKeyDown}
                     />
                   ))}
-                  
+
                   <div className="wn-checklist-add" onClick={() => addItem()}>
                     <PlusIcon />
                     <span>List item</span>
@@ -711,23 +714,24 @@ export default function WidgetNotes({
 
                   {checkedItems.length > 0 && (
                     <>
-                      <button 
-                        className="wn-checklist-toggle" 
-                        onClick={() => setDraft(d => ({ ...d, showCompleted: !d.showCompleted }))}
+                      <button
+                        className="wn-checklist-toggle"
+                        onClick={() => setDraft((d) => ({ ...d, showCompleted: !d.showCompleted }))}
                       >
                         <ChevronIcon open={showCompleted} />
-                        {checkedItems.length} completed item{checkedItems.length !== 1 ? 's' : ''}
+                        {checkedItems.length} completed item{checkedItems.length !== 1 ? "s" : ""}
                       </button>
-                      {showCompleted && checkedItems.map((item) => (
-                        <ChecklistRow
-                          key={item.id}
-                          item={item}
-                          onToggle={toggleItemChecked}
-                          onUpdate={updateItemText}
-                          onDelete={deleteItem}
-                          onKeyDown={handleItemKeyDown}
-                        />
-                      ))}
+                      {showCompleted &&
+                        checkedItems.map((item) => (
+                          <ChecklistRow
+                            key={item.id}
+                            item={item}
+                            onToggle={toggleItemChecked}
+                            onUpdate={updateItemText}
+                            onDelete={deleteItem}
+                            onKeyDown={handleItemKeyDown}
+                          />
+                        ))}
                     </>
                   )}
                 </div>
@@ -736,17 +740,17 @@ export default function WidgetNotes({
 
             <div className="wn-editor-toolbar">
               <div className="wn-editor-toolbar-icons">
-                <button 
-                  className="wn-editor-toolbar-btn" 
+                <button
+                  className="wn-editor-toolbar-btn"
                   onClick={toggleNoteType}
-                  aria-label={type === 'checklist' ? "Convert to note" : "Convert to checklist"}
-                  title={type === 'checklist' ? "Note" : "Checklist"}
+                  aria-label={type === "checklist" ? "Convert to note" : "Convert to checklist"}
+                  title={type === "checklist" ? "Note" : "Checklist"}
                 >
-                  {type === 'checklist' ? <NoteIcon /> : <ChecklistIcon />}
+                  {type === "checklist" ? <NoteIcon /> : <ChecklistIcon />}
                 </button>
                 {activeNote && (
-                  <button 
-                    className="wn-editor-toolbar-btn wn-editor-delete" 
+                  <button
+                    className="wn-editor-toolbar-btn wn-editor-delete"
                     onClick={deleteCurrentNote}
                     aria-label="Delete note"
                     title="Delete"
@@ -1225,13 +1229,13 @@ function ChecklistRow({
 
   return (
     <>
-      <div 
+      <div
         className="wn-checklist-row"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <button
-          className={`wn-checklist-check ${item.checked ? 'checked' : ''}`}
+          className={`wn-checklist-check ${item.checked ? "checked" : ""}`}
           onClick={() => onToggle(item.id)}
           aria-label={item.checked ? "Mark incomplete" : "Mark complete"}
         >
@@ -1242,12 +1246,12 @@ function ChecklistRow({
           value={item.text}
           onChange={(e) => onUpdate(item.id, e.target.value)}
           onKeyDown={(e) => onKeyDown(e, item.id, item.text)}
-          className={`wn-checklist-input ${item.checked ? 'checked' : ''}`}
+          className={`wn-checklist-input ${item.checked ? "checked" : ""}`}
           placeholder="List item"
           data-item-id={item.id}
         />
         <button
-          className={`wn-checklist-delete ${isHovered ? 'visible' : ''}`}
+          className={`wn-checklist-delete ${isHovered ? "visible" : ""}`}
           onClick={() => onDelete(item.id)}
           aria-label="Delete item"
         >
@@ -1394,10 +1398,10 @@ function NoteCard({
     }
   };
 
-  const isChecklist = note.type === 'checklist';
+  const isChecklist = note.type === "checklist";
   const items = note.items || [];
-  const uncheckedItems = items.filter(i => !i.checked);
-  const checkedItems = items.filter(i => i.checked);
+  const uncheckedItems = items.filter((i) => !i.checked);
+  const checkedItems = items.filter((i) => i.checked);
   const visibleItems = uncheckedItems.slice(0, 3);
   const remainingUnchecked = uncheckedItems.length - visibleItems.length;
 
@@ -1447,7 +1451,11 @@ function NoteCard({
                   <PinIcon filled={note.pinned} />
                   {note.pinned ? "Unpin note" : "Pin note"}
                 </button>
-                <button className="wnc-menu-item wnc-menu-item-danger" role="menuitem" onClick={handleDelete}>
+                <button
+                  className="wnc-menu-item wnc-menu-item-danger"
+                  role="menuitem"
+                  onClick={handleDelete}
+                >
                   <TrashIcon />
                   Delete note
                 </button>
@@ -1467,8 +1475,9 @@ function NoteCard({
             {(remainingUnchecked > 0 || checkedItems.length > 0) && (
               <div className="wnc-checklist-more">
                 {remainingUnchecked > 0 && `+${remainingUnchecked} more`}
-                {remainingUnchecked > 0 && checkedItems.length > 0 && ', '}
-                {checkedItems.length > 0 && `+${checkedItems.length} ticked item${checkedItems.length !== 1 ? 's' : ''}`}
+                {remainingUnchecked > 0 && checkedItems.length > 0 && ", "}
+                {checkedItems.length > 0 &&
+                  `+${checkedItems.length} ticked item${checkedItems.length !== 1 ? "s" : ""}`}
               </div>
             )}
           </div>
@@ -1668,7 +1677,16 @@ function NoteCard({
 // Icons
 function PlusIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="12" y1="5" x2="12" y2="19" />
       <line x1="5" y1="12" x2="19" y2="12" />
     </svg>
@@ -1677,7 +1695,16 @@ function PlusIcon() {
 
 function TrashIcon() {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <polyline points="3 6 5 6 21 6" />
       <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
     </svg>
@@ -1686,7 +1713,16 @@ function TrashIcon() {
 
 function PinIcon({ filled }: { filled?: boolean }) {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="12" y1="17" x2="12" y2="22" />
       <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0-4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z" />
     </svg>
@@ -1695,7 +1731,16 @@ function PinIcon({ filled }: { filled?: boolean }) {
 
 function CheckIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <polyline points="20 6 9 17 4 12" />
     </svg>
   );
@@ -1703,7 +1748,16 @@ function CheckIcon() {
 
 function MoreIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="12" cy="12" r="1" fill="currentColor" />
       <circle cx="12" cy="5" r="1" fill="currentColor" />
       <circle cx="12" cy="19" r="1" fill="currentColor" />
@@ -1713,7 +1767,16 @@ function MoreIcon() {
 
 function ChecklistIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M9 11l3 3L22 4" />
       <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
     </svg>
@@ -1722,7 +1785,16 @@ function ChecklistIcon() {
 
 function NoteIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
       <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
     </svg>

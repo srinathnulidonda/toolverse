@@ -1,99 +1,75 @@
 // features/dev/color-converter/colorStore.ts
-import { useState, useEffect, useMemo } from "react";
-import useLocalStorage from "@/lib/useLocalStorage";
+import { useState, useMemo } from "react";
+import { useHistoryStore } from "@/lib/useHistoryStore";
 
-export interface HistoryEntry {
-    id: string;
-    color: string;
-    format: string;
-    timestamp: number;
-}
-
-const STORAGE_KEY = "color-converter-history";
+const HISTORY_KEY = "color-converter-history";
 const MAX_HISTORY_ITEMS = 50;
 
-interface HistoryEntryStorage {
-    v: number;
-    data: HistoryEntry[];
-}
-
-function validateHistory(raw: HistoryEntryStorage | null): HistoryEntry[] {
-    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
-        return [];
-    }
-    const version = raw.v;
-    const dataArray = raw.data;
-    const valid: HistoryEntry[] = [];
-    for (const item of dataArray) {
-        if (
-            item &&
-            typeof item === "object" &&
-            typeof item.id === "string" &&
-            typeof item.color === "string" &&
-            typeof item.format === "string" &&
-            typeof item.timestamp === "number"
-        ) {
-            valid.push(item as HistoryEntry);
-        }
-    }
-    if (valid.length > MAX_HISTORY_ITEMS) {
-        return valid.slice(0, MAX_HISTORY_ITEMS);
-    }
-    return valid;
+export interface HistoryEntry {
+  id: string;
+  color: string;
+  format: string;
+  timestamp: number;
 }
 
 export function useColorStore() {
-    const [rawHistory, setRawHistory] = useLocalStorage<HistoryEntryStorage>(
-        STORAGE_KEY,
-        { v: 1, data: [] }
-    );
+  const historyStore = useHistoryStore<HistoryEntry>({
+    key: HISTORY_KEY,
+    maxItems: MAX_HISTORY_ITEMS,
+    validateItem: (raw) => {
+      if (
+        raw &&
+        typeof raw === "object" &&
+        typeof (raw as any).id === "string" &&
+        typeof (raw as any).color === "string" &&
+        typeof (raw as any).format === "string" &&
+        typeof (raw as any).timestamp === "number"
+      ) {
+        return raw as HistoryEntry;
+      }
+      return null;
+    },
+    isDuplicate: (newItem: HistoryEntry, recentItems: HistoryEntry[]) => {
+      return recentItems.some((h) => h.color.toLowerCase() === newItem.color.toLowerCase());
+    },
+    serialize: (item) => item,
+    deserialize: (raw) => raw,
+  });
 
-    const history = useMemo(() => validateHistory(rawHistory), [rawHistory]);
+  const {
+    history,
+    addToHistory: historyAddToHistory,
+    clearHistory: historyClearHistory,
+  } = historyStore;
 
-    useEffect(() => {
-        if (!JSON_equal(history, rawHistory?.data)) {
-            setRawHistory({ v: 1, data: history });
-        }
-    }, [history, rawHistory]);
-
-    const addToHistory = (entry: HistoryEntry) => {
-        setRawHistory((prev) => {
-            const recentDuplicate = (prev?.data ?? [])
-                .slice(0, 5)
-                .find((h) => h.color.toLowerCase() === entry.color.toLowerCase());
-            if (recentDuplicate) return prev;
-
-            const newData = [...(prev?.data ?? []), entry].slice(
-                0,
-                MAX_HISTORY_ITEMS
-            );
-            return { v: 1, data: newData };
-        });
+  const addToHistory = (entry: Omit<HistoryEntry, "id" | "timestamp">) => {
+    const newEntry: HistoryEntry = {
+      ...entry,
+      id: Date.now().toString(),
+      timestamp: Date.now(),
     };
 
-    const clearHistory = () => {
-        setRawHistory({ v: 1, data: [] });
-    };
+    historyAddToHistory(newEntry);
+  };
 
-    const removeFromHistory = (id: string) => {
-        setRawHistory((prev) => ({
-            v: 1,
-            data: (prev?.data ?? []).filter((h) => h.id !== id)
-        }));
-    };
+  const clearHistory = () => {
+    historyClearHistory();
+  };
 
-    return {
-        history,
-        addToHistory,
-        clearHistory,
-        removeFromHistory
-    };
-}
+  const removeFromHistory = (id: string) => {
+    // Since we don't have a direct remove, we filter and replace
+    const updated = history.filter((entry) => entry.id !== id);
+    historyClearHistory();
+    updated.forEach((entry) => {
+      const { id: _, timestamp: __, ...rest } = entry;
+      addToHistory(rest);
+    });
+  };
 
-function JSON_equal(a: any, b: any): boolean {
-    try {
-        return JSON.stringify(a) === JSON.stringify(b);
-    } catch {
-        return a === b;
-    }
+  return {
+    history,
+    addToHistory,
+    clearHistory,
+    removeFromHistory,
+  };
 }

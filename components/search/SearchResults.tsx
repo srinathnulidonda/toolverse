@@ -10,10 +10,7 @@ type SearchResultsProps = {
 
 function highlight(text: string, query: string) {
   if (!query.trim()) return <>{text}</>;
-  const regex = new RegExp(
-    `(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
-    "gi"
-  );
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
   const parts = text.split(regex);
   return (
     <>

@@ -29,21 +29,27 @@ export default function QuickAccess() {
     setMounted(true);
   }, []);
 
-  const togglePin = useCallback((slug: string) => {
-    setPinned((prev) => {
-      const next = prev.includes(slug)
-        ? prev.filter((s) => s !== slug)
-        : [slug, ...prev].slice(0, MAX_ITEMS);
-      return next;
-    });
-  }, [setPinned]);
+  const togglePin = useCallback(
+    (slug: string) => {
+      setPinned((prev) => {
+        const next = prev.includes(slug)
+          ? prev.filter((s) => s !== slug)
+          : [slug, ...prev].slice(0, MAX_ITEMS);
+        return next;
+      });
+    },
+    [setPinned]
+  );
 
-  const recordVisit = useCallback((slug: string) => {
-    setRecent((prev) => {
-      const next = [slug, ...prev.filter((s) => s !== slug)].slice(0, MAX_ITEMS);
-      return next;
-    });
-  }, [setRecent]);
+  const recordVisit = useCallback(
+    (slug: string) => {
+      setRecent((prev) => {
+        const next = [slug, ...prev.filter((s) => s !== slug)].slice(0, MAX_ITEMS);
+        return next;
+      });
+    },
+    [setRecent]
+  );
 
   const clearRecent = useCallback(() => {
     setRecent([]);
@@ -91,11 +97,7 @@ export default function QuickAccess() {
 
             return (
               <li key={item.slug}>
-                <Link
-                  href={item.href}
-                  className="qa-item"
-                  onClick={() => recordVisit(item.slug)}
-                >
+                <Link href={item.href} className="qa-item" onClick={() => recordVisit(item.slug)}>
                   <span className="qa-icon">
                     <i className={`ti ${item.icon}`} aria-hidden="true" />
                   </span>
@@ -119,7 +121,10 @@ export default function QuickAccess() {
                     aria-label={isPinned ? `Unpin ${item.label}` : `Pin ${item.label}`}
                     aria-pressed={isPinned}
                   >
-                    <i className={`ti ${isPinned ? "ti-star-filled" : "ti-star"}`} aria-hidden="true" />
+                    <i
+                      className={`ti ${isPinned ? "ti-star-filled" : "ti-star"}`}
+                      aria-hidden="true"
+                    />
                   </button>
                 </Link>
               </li>

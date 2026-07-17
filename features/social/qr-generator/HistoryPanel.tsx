@@ -5,29 +5,29 @@ import type { HistoryItem, QrType } from "./types";
 import { getTypeIcon, getTypeLabel } from "./encode";
 
 type HistoryPanelProps = {
-    items: HistoryItem[];
-    onRestore: (item: HistoryItem) => void;
-    onDelete: (id: string) => void;
-    onClear: () => void;
+  items: HistoryItem[];
+  onRestore: (item: HistoryItem) => void;
+  onDelete: (id: string) => void;
+  onClear: () => void;
 };
 
 function relativeTime(ts: number): string {
-    const diff = Date.now() - ts;
-    if (diff < 60_000) return "Just now";
-    if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
-    if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
-    return `${Math.floor(diff / 86_400_000)}d ago`;
+  const diff = Date.now() - ts;
+  if (diff < 60_000) return "Just now";
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
+  return `${Math.floor(diff / 86_400_000)}d ago`;
 }
 
 export default function HistoryPanel({ items, onRestore, onDelete, onClear }: HistoryPanelProps) {
-    if (items.length === 0) {
-        return (
-            <>
-                <div className="hp-empty">
-                    <i className="ti ti-history" aria-hidden="true" />
-                    <p>No history yet. Generated QR codes will appear here.</p>
-                </div>
-                <style>{`
+  if (items.length === 0) {
+    return (
+      <>
+        <div className="hp-empty">
+          <i className="ti ti-history" aria-hidden="true" />
+          <p>No history yet. Generated QR codes will appear here.</p>
+        </div>
+        <style>{`
           .hp-empty {
             display: flex;
             flex-direction: column;
@@ -42,46 +42,57 @@ export default function HistoryPanel({ items, onRestore, onDelete, onClear }: Hi
           .hp-empty i { font-size: 28px; }
           .hp-empty p { margin: 0; color: var(--text-tertiary); max-width: 180px; line-height: 1.5; }
         `}</style>
-            </>
-        );
-    }
+      </>
+    );
+  }
 
-    return (
-        <>
-            <div className="hp-root">
-                <div className="hp-header">
-                    <span className="hp-count">{items.length} saved</span>
-                    <button className="hp-clear" onClick={onClear}>Clear all</button>
-                </div>
-                <div className="hp-list">
-                    {items.map(item => (
-                        <div key={item.id} className="hp-item">
-                            <div className="hp-thumb">
-                                {item.thumbnail ? (
-                                    <img src={item.thumbnail} alt={item.label ? `${item.label} preview` : "QR code preview"} width={36} height={36} />
-                                ) : (
-                                    <i className={`ti ${getTypeIcon(item.type)}`} aria-hidden="true" />
-                                )}
-                            </div>
-                            <div className="hp-info">
-                                <span className="hp-type">{getTypeLabel(item.type)}</span>
-                                <span className="hp-label">{item.label}</span>
-                                <span className="hp-time">{relativeTime(item.timestamp)}</span>
-                            </div>
-                            <div className="hp-item-actions">
-                                <button className="hp-restore" onClick={() => onRestore(item)} title="Restore this QR">
-                                    <i className="ti ti-refresh" aria-hidden="true" />
-                                </button>
-                                <button className="hp-delete" onClick={() => onDelete(item.id)} title="Delete">
-                                    <i className="ti ti-trash" aria-hidden="true" />
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+  return (
+    <>
+      <div className="hp-root">
+        <div className="hp-header">
+          <span className="hp-count">{items.length} saved</span>
+          <button className="hp-clear" onClick={onClear}>
+            Clear all
+          </button>
+        </div>
+        <div className="hp-list">
+          {items.map((item) => (
+            <div key={item.id} className="hp-item">
+              <div className="hp-thumb">
+                {item.thumbnail ? (
+                  <img
+                    src={item.thumbnail}
+                    alt={item.label ? `${item.label} preview` : "QR code preview"}
+                    width={36}
+                    height={36}
+                  />
+                ) : (
+                  <i className={`ti ${getTypeIcon(item.type)}`} aria-hidden="true" />
+                )}
+              </div>
+              <div className="hp-info">
+                <span className="hp-type">{getTypeLabel(item.type)}</span>
+                <span className="hp-label">{item.label}</span>
+                <span className="hp-time">{relativeTime(item.timestamp)}</span>
+              </div>
+              <div className="hp-item-actions">
+                <button
+                  className="hp-restore"
+                  onClick={() => onRestore(item)}
+                  title="Restore this QR"
+                >
+                  <i className="ti ti-refresh" aria-hidden="true" />
+                </button>
+                <button className="hp-delete" onClick={() => onDelete(item.id)} title="Delete">
+                  <i className="ti ti-trash" aria-hidden="true" />
+                </button>
+              </div>
             </div>
+          ))}
+        </div>
+      </div>
 
-            <style>{`
+      <style>{`
         .hp-root {
           display: flex;
           flex-direction: column;
@@ -193,6 +204,6 @@ export default function HistoryPanel({ items, onRestore, onDelete, onClear }: Hi
           .hp-delete:hover { color: #F87171; border-color: #7F1D1D; }
         }
       `}</style>
-            </>
-        );
+    </>
+  );
 }

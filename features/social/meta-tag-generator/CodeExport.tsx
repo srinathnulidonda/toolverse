@@ -1,5 +1,6 @@
 // features/social/meta-tag-generator/CodeExport.tsx
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useState } from "react";
 import type { MetaTags, ExportFormat } from "./types";
@@ -31,7 +32,7 @@ export default function CodeExport({ tags }: CodeExportProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      logger.error("Failed to copy:", err);
     }
   };
 
@@ -94,10 +95,14 @@ export default function CodeExport({ tags }: CodeExportProps) {
           <div className="ce-info-text">
             {format === "html" && "Paste this code inside the <head> tag of your HTML document."}
             {format === "jsx" && "Use this JSX inside your React component's return statement."}
-            {format === "nextjs" && "Import and use the Head component from 'next/head' in your Next.js pages."}
-            {format === "gatsby" && "Install react-helmet and use it to manage document head in Gatsby."}
-            {format === "vue" && "Add this to your Vue component's head() method (requires @nuxtjs/head or vue-meta)."}
-            {format === "json" && "Use this structured data in your application's meta tag management system."}
+            {format === "nextjs" &&
+              "Import and use the Head component from 'next/head' in your Next.js pages."}
+            {format === "gatsby" &&
+              "Install react-helmet and use it to manage document head in Gatsby."}
+            {format === "vue" &&
+              "Add this to your Vue component's head() method (requires @nuxtjs/head or vue-meta)."}
+            {format === "json" &&
+              "Use this structured data in your application's meta tag management system."}
           </div>
         </div>
       </div>

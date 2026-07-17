@@ -1,5 +1,6 @@
 // features/social/hashtag-generator/Workspace.tsx
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useState, useEffect, useCallback } from "react";
 import type { Tool } from "@/lib/tools";
@@ -44,7 +45,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
       const saved = localStorage.getItem("hashtag-generator-saved-sets");
       if (saved) setSavedSets(JSON.parse(saved));
     } catch (e) {
-      console.error("Failed to load saved sets:", e);
+      logger.error("Failed to load saved sets:", e);
     }
   }, []);
 
@@ -53,7 +54,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
     try {
       localStorage.setItem("hashtag-generator-saved-sets", JSON.stringify(savedSets));
     } catch (e) {
-      console.error("Failed to save sets:", e);
+      logger.error("Failed to save sets:", e);
     }
   }, [savedSets]);
 
@@ -111,9 +112,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
               {leftTab === "generate" && (
                 <div className="hgw-generate-layout">
                   <KeywordInput onGenerate={handleGenerate} />
-                  {generatedHashtags.length > 0 && (
-                    <div className="hgw-divider" />
-                  )}
+                  {generatedHashtags.length > 0 && <div className="hgw-divider" />}
                   <GeneratedHashtags
                     hashtags={generatedHashtags}
                     selectedTags={selectedTags}
@@ -122,24 +121,15 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                 </div>
               )}
               {leftTab === "browse" && (
-                <HashtagCategories
-                  selectedTags={selectedTags}
-                  onToggleTag={handleToggleTag}
-                />
+                <HashtagCategories selectedTags={selectedTags} onToggleTag={handleToggleTag} />
               )}
               {leftTab === "platform" && (
-                <PlatformSelector
-                  selectedPlatform={platform}
-                  onChange={setPlatform}
-                />
+                <PlatformSelector selectedPlatform={platform} onChange={setPlatform} />
               )}
             </div>
 
             <div className="hgw-left-footer">
-              <button
-                className="hgw-mobile-right-btn"
-                onClick={() => setMobileRightOpen(true)}
-              >
+              <button className="hgw-mobile-right-btn" onClick={() => setMobileRightOpen(true)}>
                 <i className="ti ti-bookmark" aria-hidden="true" />
                 Selected ({selectedTags.length})
                 {selectedTags.length > 0 && (
@@ -147,10 +137,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                 )}
               </button>
               {selectedTags.length > 0 && (
-                <button
-                  className="hgw-save-btn"
-                  onClick={() => setSaveModalOpen(true)}
-                >
+                <button className="hgw-save-btn" onClick={() => setSaveModalOpen(true)}>
                   <i className="ti ti-device-floppy" aria-hidden="true" />
                   Save Set
                 </button>
@@ -177,10 +164,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                 ))}
               </div>
               {rightTab === "selected" && selectedTags.length > 0 && (
-                <button
-                  className="hgw-save-set-btn"
-                  onClick={() => setSaveModalOpen(true)}
-                >
+                <button className="hgw-save-set-btn" onClick={() => setSaveModalOpen(true)}>
                   <i className="ti ti-device-floppy" aria-hidden="true" />
                   Save
                 </button>
@@ -192,25 +176,16 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                 <SelectedHashtags
                   hashtags={selectedTags}
                   platform={platform}
-                  onRemove={(tag) =>
-                    setSelectedTags((prev) => prev.filter((t) => t !== tag))
-                  }
+                  onRemove={(tag) => setSelectedTags((prev) => prev.filter((t) => t !== tag))}
                   onClear={() => setSelectedTags([])}
                 />
               )}
-              {rightTab === "export" && (
-                <ExportPanel
-                  hashtags={selectedTags}
-                  platform={platform}
-                />
-              )}
+              {rightTab === "export" && <ExportPanel hashtags={selectedTags} platform={platform} />}
               {rightTab === "saved" && (
                 <SavedSets
                   sets={savedSets}
                   onRestore={handleRestoreSet}
-                  onDelete={(id) =>
-                    setSavedSets((prev) => prev.filter((s) => s.id !== id))
-                  }
+                  onDelete={(id) => setSavedSets((prev) => prev.filter((s) => s.id !== id))}
                   onClear={() => {
                     if (confirm("Clear all saved sets?")) setSavedSets([]);
                   }}
@@ -242,10 +217,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                     </button>
                   ))}
                 </div>
-                <button
-                  className="hgw-modal-close"
-                  onClick={() => setMobileRightOpen(false)}
-                >
+                <button className="hgw-modal-close" onClick={() => setMobileRightOpen(false)}>
                   <i className="ti ti-x" aria-hidden="true" />
                 </button>
               </div>
@@ -254,9 +226,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                   <SelectedHashtags
                     hashtags={selectedTags}
                     platform={platform}
-                    onRemove={(tag) =>
-                      setSelectedTags((prev) => prev.filter((t) => t !== tag))
-                    }
+                    onRemove={(tag) => setSelectedTags((prev) => prev.filter((t) => t !== tag))}
                     onClear={() => setSelectedTags([])}
                   />
                 )}
@@ -267,9 +237,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                   <SavedSets
                     sets={savedSets}
                     onRestore={handleRestoreSet}
-                    onDelete={(id) =>
-                      setSavedSets((prev) => prev.filter((s) => s.id !== id))
-                    }
+                    onDelete={(id) => setSavedSets((prev) => prev.filter((s) => s.id !== id))}
                     onClear={() => {
                       if (confirm("Clear all saved sets?")) setSavedSets([]);
                     }}
@@ -291,10 +259,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
             <div className="hgw-save-modal">
               <div className="hgw-save-modal-header">
                 <span className="hgw-save-modal-title">Save Hashtag Set</span>
-                <button
-                  className="hgw-modal-close"
-                  onClick={() => setSaveModalOpen(false)}
-                >
+                <button className="hgw-modal-close" onClick={() => setSaveModalOpen(false)}>
                   <i className="ti ti-x" aria-hidden="true" />
                 </button>
               </div>
@@ -305,7 +270,10 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                     <span>{selectedTags.length} hashtags</span>
                   </div>
                   <div className="hgw-save-info-item">
-                    <i className={`ti ${platform === "instagram" ? "ti-brand-instagram" : "ti-brand-" + platform}`} aria-hidden="true" />
+                    <i
+                      className={`ti ${platform === "instagram" ? "ti-brand-instagram" : "ti-brand-" + platform}`}
+                      aria-hidden="true"
+                    />
                     <span>{platform}</span>
                   </div>
                 </div>
@@ -325,10 +293,7 @@ export default function HashtagGeneratorWorkspace({ tool }: { tool: Tool }) {
                 />
               </div>
               <div className="hgw-save-modal-footer">
-                <button
-                  className="hgw-save-cancel"
-                  onClick={() => setSaveModalOpen(false)}
-                >
+                <button className="hgw-save-cancel" onClick={() => setSaveModalOpen(false)}>
                   Cancel
                 </button>
                 <button

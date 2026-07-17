@@ -3,294 +3,346 @@
 
 import { useEffect, useState, useRef } from "react";
 import useLocalStorage from "@/lib/useLocalStorage";
-import { Task, Priority, TASKS_STORAGE_KEY, PRIORITY_META, PRIORITY_ORDER, getPriority, cleanTasks, uid } from "@/components/widgets/widgetTypes";
+import {
+  Task,
+  Priority,
+  TASKS_STORAGE_KEY,
+  PRIORITY_META,
+  PRIORITY_ORDER,
+  getPriority,
+  cleanTasks,
+  uid,
+} from "@/components/widgets/widgetTypes";
 
 export default function TodaysTasks() {
-    const [rawTasks, setRawTasks] = useLocalStorage<Task[]>(TASKS_STORAGE_KEY, []);
-    const tasks = cleanTasks(rawTasks);
-    const setTasks = (value: Task[] | ((prev: Task[]) => Task[])) => {
-        setRawTasks(value);
+  const [rawTasks, setRawTasks] = useLocalStorage<Task[]>(TASKS_STORAGE_KEY, []);
+  const tasks = cleanTasks(rawTasks);
+  const setTasks = (value: Task[] | ((prev: Task[]) => Task[])) => {
+    setRawTasks(value);
+  };
+
+  const [input, setInput] = useState("");
+  const [priority, setPriority] = useState<Priority>("medium");
+  const [mounted, setMounted] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const handler = (e: MouseEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setShowPicker(false);
+      }
     };
-    
-    const [input, setInput] = useState("");
-    const [priority, setPriority] = useState<Priority>("medium");
-    const [mounted, setMounted] = useState(false);
-    const [showPicker, setShowPicker] = useState(false);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [mounted]);
 
-    const inputRef = useRef<HTMLInputElement>(null);
-    const pickerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!mounted) return;
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    useEffect(() => {
-        if (!mounted) return;
-        
-        const handler = (e: MouseEvent) => {
-            if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
-                setShowPicker(false);
-            }
-        };
-        document.addEventListener("mousedown", handler);
-        return () => document.removeEventListener("mousedown", handler);
-    }, [mounted]);
-
-    useEffect(() => {
-        if (!mounted) return;
-        
-        const handler = (e: KeyboardEvent) => {
-            if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
-                e.preventDefault();
-                inputRef.current?.focus();
-            }
-        };
-        document.addEventListener("keydown", handler);
-        return () => document.removeEventListener("keydown", handler);
-    }, [mounted]);
-
-    function add(e: React.FormEvent) {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "/" && document.activeElement?.tagName !== "INPUT") {
         e.preventDefault();
-        const text = input.trim();
-        if (!text) { 
-            inputRef.current?.focus(); 
-            return; 
-        }
-        
-        const currentPage = typeof window !== "undefined" ? window.location.pathname : "";
-        let context = "";
-        if (currentPage.includes("/tools/")) {
-            const cleanPath = currentPage.replace(/\/$/, "");
-            context = cleanPath.split("/").pop() || "";
-        }
-        
-        const newTask: Task = {
-            id: uid(),
-            text,
-            completed: false,
-            priority,
-            createdAt: Date.now(),
-            context,
-        };
-        
-        setTasks(prevTasks => [newTask, ...prevTasks]);
-        setInput("");
         inputRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [mounted]);
+
+  function add(e: React.FormEvent) {
+    e.preventDefault();
+    const text = input.trim();
+    if (!text) {
+      inputRef.current?.focus();
+      return;
     }
 
-    const toggle = (id: string) => {
-        setTasks(prevTasks => 
-            prevTasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t)
-        );
+    const currentPage = typeof window !== "undefined" ? window.location.pathname : "";
+    let context = "";
+    if (currentPage.includes("/tools/")) {
+      const cleanPath = currentPage.replace(/\/$/, "");
+      context = cleanPath.split("/").pop() || "";
+    }
+
+    const newTask: Task = {
+      id: uid(),
+      text,
+      completed: false,
+      priority,
+      createdAt: Date.now(),
+      context,
     };
 
-    const remove = (id: string) => {
-        setTasks(prevTasks => prevTasks.filter(t => t.id !== id));
-    };
+    setTasks((prevTasks) => [newTask, ...prevTasks]);
+    setInput("");
+    inputRef.current?.focus();
+  }
 
-    const clearDone = () => {
-        setTasks(prevTasks => prevTasks.filter(t => !t.completed));
-    };
+  const toggle = (id: string) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
+  };
 
-    const total = tasks.length;
-    const done = tasks.filter(t => t.completed).length;
-    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
-    const allDone = total > 0 && done === total;
+  const remove = (id: string) => {
+    setTasks((prevTasks) => prevTasks.filter((t) => t.id !== id));
+  };
 
-    const sorted = [
-        ...PRIORITY_ORDER.flatMap(p => tasks.filter(t => !t.completed && getPriority(t) === p)),
-        ...tasks.filter(t => t.completed),
-    ];
+  const clearDone = () => {
+    setTasks((prevTasks) => prevTasks.filter((t) => !t.completed));
+  };
 
-    const circumference = 2 * Math.PI * 11;
+  const total = tasks.length;
+  const done = tasks.filter((t) => t.completed).length;
+  const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+  const allDone = total > 0 && done === total;
 
-    const getDateLabel = () => {
-        return new Date().toLocaleDateString("en-US", {
-            weekday: "long",
-            month: "short",
-            day: "numeric",
-        });
-    };
+  const sorted = [
+    ...PRIORITY_ORDER.flatMap((p) => tasks.filter((t) => !t.completed && getPriority(t) === p)),
+    ...tasks.filter((t) => t.completed),
+  ];
 
-    const showTasks = mounted && total > 0;
-    const showEmptyState = mounted && total === 0;
-    const showProgress = mounted && total > 0;
+  const circumference = 2 * Math.PI * 11;
 
-    return (
-        <>
-            <div className="td-card">
-                <div className="td-header">
-                    <div className="td-header-left">
-                        <span className="td-label">Today</span>
-                        <span className="td-date">{mounted ? getDateLabel() : ""}</span>
-                    </div>
+  const getDateLabel = () => {
+    return new Date().toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+    });
+  };
 
-                    {showProgress && (
-                        <div className="td-progress">
-                            <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-                                <circle
-                                    cx="15" cy="15" r="11"
-                                    fill="none"
-                                    stroke="var(--border)"
-                                    strokeWidth="2.5"
-                                />
-                                <circle
-                                    cx="15" cy="15" r="11"
-                                    fill="none"
-                                    stroke={allDone ? "#4CAF82" : "#145C3C"}
-                                    strokeWidth="2.5"
-                                    strokeLinecap="round"
-                                    strokeDasharray={circumference}
-                                    strokeDashoffset={circumference * (1 - pct / 100)}
-                                    transform="rotate(-90 15 15)"
-                                    style={{ transition: "stroke-dashoffset 0.4s ease, stroke 0.3s" }}
-                                />
-                                {allDone && (
-                                    <path
-                                        d="M10.5 15l2.5 2.5L19.5 11"
-                                        stroke="#4CAF82"
-                                        strokeWidth="1.5"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        fill="none"
-                                    />
-                                )}
-                            </svg>
-                            <span className="td-progress-label">
-                                <strong>{done}</strong>/{total}
-                            </span>
-                        </div>
-                    )}
-                </div>
+  const showTasks = mounted && total > 0;
+  const showEmptyState = mounted && total === 0;
+  const showProgress = mounted && total > 0;
 
-                <div className="td-divider" />
+  return (
+    <>
+      <div className="td-card">
+        <div className="td-header">
+          <div className="td-header-left">
+            <span className="td-label">Today</span>
+            <span className="td-date">{mounted ? getDateLabel() : ""}</span>
+          </div>
 
-                <form className="td-add-row" onSubmit={add} autoComplete="off">
-                    <div ref={pickerRef} className="td-picker-wrap">
-                        <button
-                            type="button"
-                            className="td-priority-btn"
-                            onClick={() => setShowPicker(p => !p)}
-                            aria-label={`Priority: ${priority}`}
-                        >
-                            <span
-                                className="td-dot"
-                                style={{ background: PRIORITY_META[priority].color }}
-                            />
-                        </button>
-
-                        {showPicker && (
-                            <div className="td-picker" role="listbox" aria-label="Select priority">
-                                {PRIORITY_ORDER.map(p => (
-                                    <button
-                                        key={p}
-                                        type="button"
-                                        role="option"
-                                        aria-selected={priority === p}
-                                        className={`td-picker-opt${priority === p ? " sel" : ""}`}
-                                        onClick={() => { setPriority(p); setShowPicker(false); }}
-                                    >
-                                        <span style={{ 
-                                            width: 6, 
-                                            height: 6, 
-                                            borderRadius: "50%", 
-                                            background: PRIORITY_META[p].color, 
-                                            flexShrink: 0, 
-                                            display: "block" 
-                                        }} />
-                                        {PRIORITY_META[p].label}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    <input
-                        ref={inputRef}
-                        type="text"
-                        value={input}
-                        onChange={e => setInput(e.target.value)}
-                        placeholder="Add a task…"
-                        maxLength={120}
-                        className="td-input"
-                    />
-
-                    <button
-                        type="submit"
-                        className={`td-submit${input.trim() ? " active" : ""}`}
-                        aria-label="Add task"
-                    >
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-                            stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M6 1v10M1 6h10" />
-                        </svg>
-                    </button>
-                </form>
-
-                <div className="td-divider" />
-
-                <div className="td-tasks-scroll">
-                    {showEmptyState && (
-                        <div className="td-empty">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                stroke="var(--border)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"
-                                aria-hidden="true">
-                                <rect x="3" y="3" width="18" height="18" rx="3" />
-                                <path d="M9 12l2 2 4-4" />
-                            </svg>
-                            <span>No tasks yet</span>
-                            <span className="td-empty-hint">
-                                Press <kbd>/</kbd> to start
-                            </span>
-                        </div>
-                    )}
-
-                    {showTasks && allDone && (
-                        <div className="td-all-done">
-                            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                                <circle cx="7" cy="7" r="6.5" fill="var(--brand-light)" stroke="var(--brand)" strokeWidth="0.8" />
-                                <path d="M4.5 7l1.8 1.8L9.5 5" stroke="var(--brand)" strokeWidth="1.2"
-                                    strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            All done — great work today
-                        </div>
-                    )}
-
-                    {showTasks && sorted.map((task, i) => {
-                        const isFirstCompleted =
-                            task.completed &&
-                            (i === 0 || !sorted[i - 1].completed) &&
-                            !allDone &&
-                            tasks.some(t => !t.completed);
-
-                        return (
-                            <div key={task.id}>
-                                {isFirstCompleted && <div className="td-sep" />}
-                                <TaskRow task={task} onToggle={toggle} onRemove={remove} />
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {showTasks && done > 0 && (
-                    <>
-                        <div className="td-divider" />
-                        <div className="td-footer">
-                            <span className="td-footer-label">{done} completed</span>
-                            <button onClick={clearDone} className="td-clear-btn">
-                                <svg width="10" height="10" viewBox="0 0 12 12" fill="none"
-                                    stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"
-                                    aria-hidden="true">
-                                    <path d="M2 4h8M4.5 4V2.5h3V4M10 4l-.8 6H2.8L2 4" />
-                                </svg>
-                                Clear done
-                            </button>
-                        </div>
-                    </>
+          {showProgress && (
+            <div className="td-progress">
+              <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+                <circle
+                  cx="15"
+                  cy="15"
+                  r="11"
+                  fill="none"
+                  stroke="var(--border)"
+                  strokeWidth="2.5"
+                />
+                <circle
+                  cx="15"
+                  cy="15"
+                  r="11"
+                  fill="none"
+                  stroke={allDone ? "#4CAF82" : "#145C3C"}
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={circumference * (1 - pct / 100)}
+                  transform="rotate(-90 15 15)"
+                  style={{ transition: "stroke-dashoffset 0.4s ease, stroke 0.3s" }}
+                />
+                {allDone && (
+                  <path
+                    d="M10.5 15l2.5 2.5L19.5 11"
+                    stroke="#4CAF82"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  />
                 )}
+              </svg>
+              <span className="td-progress-label">
+                <strong>{done}</strong>/{total}
+              </span>
             </div>
+          )}
+        </div>
 
-            <style>{`
+        <div className="td-divider" />
+
+        <form className="td-add-row" onSubmit={add} autoComplete="off">
+          <div ref={pickerRef} className="td-picker-wrap">
+            <button
+              type="button"
+              className="td-priority-btn"
+              onClick={() => setShowPicker((p) => !p)}
+              aria-label={`Priority: ${priority}`}
+            >
+              <span className="td-dot" style={{ background: PRIORITY_META[priority].color }} />
+            </button>
+
+            {showPicker && (
+              <div className="td-picker" role="listbox" aria-label="Select priority">
+                {PRIORITY_ORDER.map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    role="option"
+                    aria-selected={priority === p}
+                    className={`td-picker-opt${priority === p ? " sel" : ""}`}
+                    onClick={() => {
+                      setPriority(p);
+                      setShowPicker(false);
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: "50%",
+                        background: PRIORITY_META[p].color,
+                        flexShrink: 0,
+                        display: "block",
+                      }}
+                    />
+                    {PRIORITY_META[p].label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Add a task…"
+            maxLength={120}
+            className="td-input"
+          />
+
+          <button
+            type="submit"
+            className={`td-submit${input.trim() ? " active" : ""}`}
+            aria-label="Add task"
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M6 1v10M1 6h10" />
+            </svg>
+          </button>
+        </form>
+
+        <div className="td-divider" />
+
+        <div className="td-tasks-scroll">
+          {showEmptyState && (
+            <div className="td-empty">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--border)"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <path d="M9 12l2 2 4-4" />
+              </svg>
+              <span>No tasks yet</span>
+              <span className="td-empty-hint">
+                Press <kbd>/</kbd> to start
+              </span>
+            </div>
+          )}
+
+          {showTasks && allDone && (
+            <div className="td-all-done">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <circle
+                  cx="7"
+                  cy="7"
+                  r="6.5"
+                  fill="var(--brand-light)"
+                  stroke="var(--brand)"
+                  strokeWidth="0.8"
+                />
+                <path
+                  d="M4.5 7l1.8 1.8L9.5 5"
+                  stroke="var(--brand)"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              All done — great work today
+            </div>
+          )}
+
+          {showTasks &&
+            sorted.map((task, i) => {
+              const isFirstCompleted =
+                task.completed &&
+                (i === 0 || !sorted[i - 1].completed) &&
+                !allDone &&
+                tasks.some((t) => !t.completed);
+
+              return (
+                <div key={task.id}>
+                  {isFirstCompleted && <div className="td-sep" />}
+                  <TaskRow task={task} onToggle={toggle} onRemove={remove} />
+                </div>
+              );
+            })}
+        </div>
+
+        {showTasks && done > 0 && (
+          <>
+            <div className="td-divider" />
+            <div className="td-footer">
+              <span className="td-footer-label">{done} completed</span>
+              <button onClick={clearDone} className="td-clear-btn">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M2 4h8M4.5 4V2.5h3V4M10 4l-.8 6H2.8L2 4" />
+                </svg>
+                Clear done
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
+      <style>{`
         .td-card {
           background: var(--bg-card);
           border: 0.5px solid var(--border);
@@ -532,66 +584,61 @@ export default function TodaysTasks() {
         }
         .td-clear-btn:hover { color: var(--text); }
       `}</style>
-        </>
-    );
+    </>
+  );
 }
 
 function TaskRow({
-    task,
-    onToggle,
-    onRemove,
+  task,
+  onToggle,
+  onRemove,
 }: {
-    task: Task;
-    onToggle: (id: string) => void;
-    onRemove: (id: string) => void;
+  task: Task;
+  onToggle: (id: string) => void;
+  onRemove: (id: string) => void;
 }) {
-    const meta = PRIORITY_META[getPriority(task)];
+  const meta = PRIORITY_META[getPriority(task)];
 
-    return (
-        <>
-            <div className="td-row">
-                <button
-                    className={`td-check${task.completed ? " done" : ""}`}
-                    onClick={() => onToggle(task.id)}
-                    aria-label={task.completed ? "Mark incomplete" : "Mark complete"}
-                >
-                    {task.completed && (
-                        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
-                            <path d="M1.5 4l2 2 3-3" stroke="#fff" strokeWidth="1.3"
-                                strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    )}
-                </button>
+  return (
+    <>
+      <div className="td-row">
+        <button
+          className={`td-check${task.completed ? " done" : ""}`}
+          onClick={() => onToggle(task.id)}
+          aria-label={task.completed ? "Mark incomplete" : "Mark complete"}
+        >
+          {task.completed && (
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+              <path
+                d="M1.5 4l2 2 3-3"
+                stroke="#fff"
+                strokeWidth="1.3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
+        </button>
 
-                {!task.completed && (
-                    <span
-                        className="td-row-dot"
-                        style={{ background: meta.color }}
-                        aria-hidden="true"
-                    />
-                )}
+        {!task.completed && (
+          <span className="td-row-dot" style={{ background: meta.color }} aria-hidden="true" />
+        )}
 
-                <span
-                    className={`td-row-text${task.completed ? " done" : ""}`}
-                    onClick={() => onToggle(task.id)}
-                >
-                    {task.text}
-                </span>
+        <span
+          className={`td-row-text${task.completed ? " done" : ""}`}
+          onClick={() => onToggle(task.id)}
+        >
+          {task.text}
+        </span>
 
-                {task.context && (
-                    <span className="td-context-tag">{task.context}</span>
-                )}
+        {task.context && <span className="td-context-tag">{task.context}</span>}
 
-                <button
-                    className="td-row-del"
-                    onClick={() => onRemove(task.id)}
-                    aria-label="Remove task"
-                >
-                    ×
-                </button>
-            </div>
+        <button className="td-row-del" onClick={() => onRemove(task.id)} aria-label="Remove task">
+          ×
+        </button>
+      </div>
 
-            <style>{`
+      <style>{`
         .td-row {
           display: flex;
           align-items: center;
@@ -694,6 +741,6 @@ function TaskRow({
           }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

@@ -1,9 +1,10 @@
 // lib/useLocalStorage.ts
 "use client";
+import { logger } from "@/lib/logger";
 
-import { useState, useEffect, Dispatch, SetStateAction, useCallback, useRef } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction, useCallback, useRef } from "react";
 
-const STORAGE_EVENT_NAME = 'local-storage-change';
+const STORAGE_EVENT_NAME = "local-storage-change";
 const CURRENT_VERSION = 1;
 
 interface StorageChangeDetail {
@@ -13,12 +14,12 @@ interface StorageChangeDetail {
 
 function deepEqual(a: any, b: any): boolean {
   if (a === b) return true;
-  
+
   // Handle NaN
-  if (typeof a === 'number' && typeof b === 'number' && isNaN(a) && isNaN(b)) return true;
-  
+  if (typeof a === "number" && typeof b === "number" && isNaN(a) && isNaN(b)) return true;
+
   if (a == null || b == null) return false;
-  if (typeof a !== 'object' || typeof b !== 'object') return false;
+  if (typeof a !== "object" || typeof b !== "object") return false;
 
   // Handle arrays vs objects differently
   if (Array.isArray(a) !== Array.isArray(b)) return false;
@@ -37,9 +38,9 @@ function deepEqual(a: any, b: any): boolean {
 }
 
 function broadcastChange(key: string, newValue: string | null) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   const event = new CustomEvent<StorageChangeDetail>(STORAGE_EVENT_NAME, {
-    detail: { key, newValue }
+    detail: { key, newValue },
   });
   window.dispatchEvent(event);
 }
@@ -49,17 +50,20 @@ interface StorageData<T> {
   data: T;
 }
 
-function parseStored<T>(item: string | null, key: string): { data: T; version: number; isNew: boolean } | null {
+function parseStored<T>(
+  item: string | null,
+  key: string
+): { data: T; version: number; isNew: boolean } | null {
   // Distinguish between new key (null) vs empty string or corrupt data
   const isNewKey = item === null;
-  
+
   if (isNewKey) {
     return { data: null as any, version: -1, isNew: true };
   }
 
   try {
     const parsed = JSON.parse(item);
-    if (typeof parsed === 'object' && parsed !== null && 'v' in parsed && 'data' in parsed) {
+    if (typeof parsed === "object" && parsed !== null && "v" in parsed && "data" in parsed) {
       const version = Number(parsed.v);
       if (!Number.isNaN(version)) {
         return { data: parsed.data as T, version: version, isNew: false };
@@ -68,8 +72,8 @@ function parseStored<T>(item: string | null, key: string): { data: T; version: n
     // Legacy format: raw value (not wrapped)
     return { data: parsed as T, version: 0, isNew: false };
   } catch (error) {
-    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-      console.warn(`Failed to parse storage for key "${key}". Data may be corrupt.`, error);
+    if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+        logger.warn(`Failed to parse storage for key "${key}". Data may be corrupt.`, error);
     }
     return null;
   }
@@ -80,8 +84,10 @@ function migrateData<T>(parsed: { data: T; version: number }, defaultValue: T, k
     return parsed.data;
   }
 
-  if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-    console.warn(`Migrating storage for key "${key}" from v${parsed.version} to v${CURRENT_VERSION}.`);
+  if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+    logger.warn(
+      `Migrating storage for key "${key}" from v${parsed.version} to v${CURRENT_VERSION}.`
+    );
   }
 
   // Handle legacy version (v0) - use the data as-is
@@ -103,53 +109,52 @@ function useLocalStorage<T>(
 
   const initialValueRef = useRef<T>();
   if (initialValueRef.current === undefined) {
-    initialValueRef.current = typeof initialValue === 'function'
-      ? (initialValue as () => T)()
-      : initialValue;
+    initialValueRef.current =
+      typeof initialValue === "function" ? (initialValue as () => T)() : initialValue;
   }
 
   const writeToStorageSync = useCallback((value: T, targetKey: string) => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     try {
       const wrapped = JSON.stringify({ v: CURRENT_VERSION, data: value });
       window.localStorage.setItem(targetKey, wrapped);
     } catch (error) {
-      console.warn(`Error writing to localStorage key "${targetKey}":`, error);
+      if (process.env.NODE_ENV !== "production") {
+        logger.warn(`Error writing to localStorage key "${targetKey}":`, error);
+      }
 
-      if (error instanceof Error && error.name === 'QuotaExceededError') {
-        if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-          console.error('localStorage quota exceeded. Attempting to clear space...');
-        }
+      if (error instanceof Error && error.name === "QuotaExceededError") {
+        logger.error("localStorage quota exceeded. Attempting to clear space...");
 
         try {
           // Only remove the current key we're trying to write, not all tv: keys
           // This is less destructive - let the user manage their storage
           const currentSize = window.localStorage.getItem(targetKey)?.length || 0;
-          
-          if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
-            console.warn(`Current key "${targetKey}" size: ${currentSize} chars. Unable to save - quota exceeded.`);
-            console.warn('Consider clearing old data from localStorage settings.');
-          }
-          
+
+          logger.warn(
+            `Current key "${targetKey}" size: ${currentSize} chars. Unable to save - quota exceeded.`
+          );
+          logger.warn("Consider clearing old data from localStorage settings.");
+
           // Don't auto-delete other keys - that's too destructive
           // Instead, just fail gracefully
         } catch (retryError) {
-          console.error(`Failed to handle quota error for key "${targetKey}":`, retryError);
+          logger.error(`Failed to handle quota error for key "${targetKey}":`, retryError);
         }
       }
     }
   }, []);
 
   const [state, setState] = useState<T>(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return initialValueRef.current!;
     }
 
     try {
       const item = window.localStorage.getItem(key);
       const parsed = parseStored<T>(item, key);
-      
+
       if (parsed === null) {
         // Corrupt data - use default
         const defaultValue = initialValueRef.current!;
@@ -157,7 +162,9 @@ function useLocalStorage<T>(
         try {
           window.localStorage.setItem(key, wrapped);
         } catch (writeError) {
-          console.warn(`Failed to write default value to localStorage:`, writeError);
+          if (process.env.NODE_ENV !== "production") {
+            logger.warn(`Failed to write default value to localStorage:`, writeError);
+          }
         }
         return defaultValue;
       }
@@ -169,67 +176,79 @@ function useLocalStorage<T>(
         try {
           window.localStorage.setItem(key, wrapped);
         } catch (writeError) {
-          console.warn(`Failed to write default value to localStorage:`, writeError);
+          if (process.env.NODE_ENV !== "production") {
+            logger.warn(`Failed to write default value to localStorage:`, writeError);
+          }
         }
         return defaultValue;
       }
 
       // Migrate if needed
       const migratedData = migrateData(parsed, initialValueRef.current!, key);
-      
+
       if (parsed.version !== CURRENT_VERSION) {
         const wrapped = JSON.stringify({ v: CURRENT_VERSION, data: migratedData });
         try {
           window.localStorage.setItem(key, wrapped);
         } catch (e) {
-          console.warn(`Failed to migrate storage for key "${key}":`, e);
+          if (process.env.NODE_ENV !== "production") {
+            logger.warn(`Failed to migrate storage for key "${key}":`, e);
+          }
         }
       }
-      
+
       return migratedData;
     } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
+      if (process.env.NODE_ENV !== "production") {
+        logger.warn(`Error reading localStorage key "${key}":`, error);
+      }
       const defaultValue = initialValueRef.current!;
       const wrapped = JSON.stringify({ v: CURRENT_VERSION, data: defaultValue });
       try {
         window.localStorage.setItem(key, wrapped);
       } catch (writeError) {
-        console.warn(`Failed to write default value to localStorage:`, writeError);
+        if (process.env.NODE_ENV !== "production") {
+          logger.warn(`Failed to write default value to localStorage:`, writeError);
+        }
       }
       return defaultValue;
     }
   });
 
-  const writeToStorage = useCallback((value: T, targetKey: string) => {
-    if (typeof window === 'undefined') return;
+  const writeToStorage = useCallback(
+    (value: T, targetKey: string) => {
+      if (typeof window === "undefined") return;
 
-    latestValueRef.current = value;
+      latestValueRef.current = value;
 
-    if (writeTimeoutRef.current) {
-      clearTimeout(writeTimeoutRef.current);
-    }
-
-    writeTimeoutRef.current = setTimeout(() => {
-      writeToStorageSync(value, targetKey);
-    }, 50);
-  }, [writeToStorageSync]);
-
-  const setValue: Dispatch<SetStateAction<T>> = useCallback((value) => {
-    setState(prevState => {
-      const newValue = typeof value === 'function'
-        ? (value as (prev: T) => T)(prevState)
-        : value;
-
-      if (deepEqual(prevState, newValue)) {
-        return prevState;
+      if (writeTimeoutRef.current) {
+        clearTimeout(writeTimeoutRef.current);
       }
 
-      latestValueRef.current = newValue;
-      writeToStorage(newValue, keyRef.current);
+      writeTimeoutRef.current = setTimeout(() => {
+        writeToStorageSync(value, targetKey);
+      }, 50);
+    },
+    [writeToStorageSync]
+  );
 
-      return newValue;
-    });
-  }, [writeToStorage]);
+  const setValue: Dispatch<SetStateAction<T>> = useCallback(
+    (value) => {
+      setState((prevState) => {
+        const newValue = typeof value === "function" ? (value as (prev: T) => T)(prevState) : value;
+
+        if (deepEqual(prevState, newValue)) {
+          return prevState;
+        }
+
+        latestValueRef.current = newValue;
+        writeToStorage(newValue, keyRef.current);
+
+        return newValue;
+      });
+    },
+    [writeToStorage]
+  );
 
   // Handle key changes
   useEffect(() => {
@@ -245,40 +264,48 @@ function useLocalStorage<T>(
       try {
         const item = window.localStorage.getItem(key);
         const parsed = parseStored<T>(item, key);
-        
+
         if (parsed === null || parsed.isNew) {
           const defaultValue = initialValueRef.current!;
           const wrapped = JSON.stringify({ v: CURRENT_VERSION, data: defaultValue });
           try {
             window.localStorage.setItem(key, wrapped);
           } catch (writeError) {
-            console.warn(`Failed to write default value to localStorage:`, writeError);
+            if (process.env.NODE_ENV !== "production") {
+              logger.warn(`Failed to write default value to localStorage:`, writeError);
+            }
           }
           setState(defaultValue);
           latestValueRef.current = defaultValue;
         } else {
           const migratedData = migrateData(parsed, initialValueRef.current!, key);
-          
+
           if (parsed.version !== CURRENT_VERSION) {
             const wrapped = JSON.stringify({ v: CURRENT_VERSION, data: migratedData });
             try {
               window.localStorage.setItem(key, wrapped);
             } catch (e) {
-              console.warn(`Failed to migrate storage for key "${key}":`, e);
+              if (process.env.NODE_ENV !== "production") {
+                logger.warn(`Failed to migrate storage for key "${key}":`, e);
+              }
             }
           }
-          
+
           setState(migratedData);
           latestValueRef.current = migratedData;
         }
       } catch (error) {
-        console.warn(`Error reading new key "${key}":`, error);
+        if (process.env.NODE_ENV !== "production") {
+          logger.warn(`Error reading new key "${key}":`, error);
+        }
         const defaultValue = initialValueRef.current!;
         const wrapped = JSON.stringify({ v: CURRENT_VERSION, data: defaultValue });
         try {
           window.localStorage.setItem(key, wrapped);
         } catch (writeError) {
-          console.warn(`Failed to write default value to localStorage:`, writeError);
+          if (process.env.NODE_ENV !== "production") {
+            logger.warn(`Failed to write default value to localStorage:`, writeError);
+          }
         }
         setState(defaultValue);
         latestValueRef.current = defaultValue;
@@ -297,19 +324,19 @@ function useLocalStorage<T>(
       }
     };
 
-    window.addEventListener('pagehide', handleUnload);
-    window.addEventListener('beforeunload', handleUnload);
+    window.addEventListener("pagehide", handleUnload);
+    window.addEventListener("beforeunload", handleUnload);
 
     return () => {
-      window.removeEventListener('pagehide', handleUnload);
-      window.removeEventListener('beforeunload', handleUnload);
+      window.removeEventListener("pagehide", handleUnload);
+      window.removeEventListener("beforeunload", handleUnload);
       handleUnload();
     };
   }, [writeToStorageSync]);
 
   const applyIncomingValue = useCallback((newValue: T | null) => {
     setTimeout(() => {
-      setState(prevState => {
+      setState((prevState) => {
         const valueToUse = newValue === null ? initialValueRef.current! : newValue;
         if (deepEqual(prevState, valueToUse)) return prevState;
         latestValueRef.current = valueToUse;
@@ -335,13 +362,15 @@ function useLocalStorage<T>(
             }
           }
         } catch (error) {
-          console.warn(`Error parsing storage change for key "${keyRef.current}":`, error);
+          if (process.env.NODE_ENV !== "production") {
+            logger.warn(`Error parsing storage change for key "${keyRef.current}":`, error);
+          }
         }
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, [applyIncomingValue]);
 
   // Handle same-tab custom events (but don't trigger on our own changes)
@@ -362,7 +391,9 @@ function useLocalStorage<T>(
             applyIncomingValue(migratedData);
           }
         } catch (error) {
-          console.warn(`Error parsing custom storage change for key "${keyRef.current}":`, error);
+          if (process.env.NODE_ENV !== "production") {
+            logger.warn(`Error parsing custom storage change for key "${keyRef.current}":`, error);
+          }
         }
       }
     };

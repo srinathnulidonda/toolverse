@@ -34,9 +34,7 @@ export default function CategoryCard({ category, tools }: CategoryCardProps) {
               {tool.label}
             </span>
           ))}
-          {tools.length > 3 && (
-            <span className="cc-pill cc-pill-more">+{tools.length - 3}</span>
-          )}
+          {tools.length > 3 && <span className="cc-pill cc-pill-more">+{tools.length - 3}</span>}
         </div>
 
         {/* Footer: stats */}

@@ -12,7 +12,8 @@ import CodeExport from "./CodeExport";
 import Templates from "./Templates";
 import HistoryPanel from "./HistoryPanel";
 
-type TabId = "basic" | "social" | "advanced" | "preview" | "validation" | "code" | "templates" | "history";
+type TabId =
+  "basic" | "social" | "advanced" | "preview" | "validation" | "code" | "templates" | "history";
 
 const TABS: { id: TabId; icon: string; label: string; group: "input" | "output" }[] = [
   { id: "basic", icon: "ti-file-text", label: "Basic SEO", group: "input" },
@@ -58,9 +59,9 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
   };
 
   const handleDeleteHistory = (id: string) => {
-    setHistory(prev => ({
+    setHistory((prev) => ({
       v: 1,
-      data: (prev?.data || []).filter(i => i.id !== id)
+      data: (prev?.data || []).filter((i) => i.id !== id),
     }));
   };
 
@@ -105,7 +106,10 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
                 <i className="ti ti-refresh" aria-hidden="true" />
                 Reset
               </button>
-              <button className="mtg-action-btn mtg-mobile-output-btn" onClick={() => setMobileOutputOpen(true)}>
+              <button
+                className="mtg-action-btn mtg-mobile-output-btn"
+                onClick={() => setMobileOutputOpen(true)}
+              >
                 <i className="ti ti-eye" aria-hidden="true" />
                 View Output
               </button>
@@ -159,7 +163,11 @@ export default function MetaTagGeneratorWorkspace({ tool }: { tool: Tool }) {
 
         {mobileOutputOpen && (
           <>
-            <div className="mtg-mobile-backdrop" onClick={() => setMobileOutputOpen(false)} aria-hidden="true" />
+            <div
+              className="mtg-mobile-backdrop"
+              onClick={() => setMobileOutputOpen(false)}
+              aria-hidden="true"
+            />
             <div className="mtg-mobile-modal">
               <div className="mtg-mobile-modal-header">
                 <div className="mtg-mobile-tabs">

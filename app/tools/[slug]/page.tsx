@@ -1,12 +1,7 @@
 // app/tools/[slug]/page.tsx
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  TOOLS,
-  getCategoriesWithCount,
-  getCategoryBySlug,
-  getToolsByCategory,
-} from "@/lib/tools";
+import { TOOLS, getCategoriesWithCount, getCategoryBySlug, getToolsByCategory } from "@/lib/tools";
 import ToolHeader from "@/components/tool/ToolHeader";
 import ToolWorkspace from "@/components/tool/ToolWorkspace";
 import ToolSidebar from "@/components/tool/ToolSidebar";
@@ -55,11 +50,7 @@ export async function generateMetadata({
   return {};
 }
 
-export default async function ToolPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function ToolPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const CATEGORIES = getCategoriesWithCount();
 
@@ -76,12 +67,14 @@ export default async function ToolPage({
       <>
         <div
           className="ctp-page"
-          style={{
-            "--cat-color": category.color,
-            "--cat-color-dark": category.colorDark,
-            "--cat-bg": category.bgLight,
-            "--cat-bg-dark": category.bgDark,
-          } as React.CSSProperties}
+          style={
+            {
+              "--cat-color": category.color,
+              "--cat-color-dark": category.colorDark,
+              "--cat-bg": category.bgLight,
+              "--cat-bg-dark": category.bgDark,
+            } as React.CSSProperties
+          }
         >
           <CategoryToolsHeader category={category} />
 
@@ -159,12 +152,14 @@ export default async function ToolPage({
 
       <div
         className="tp-page"
-        style={{
-          "--cat-color": cat.color,
-          "--cat-color-dark": cat.colorDark,
-          "--cat-bg": cat.bgLight,
-          "--cat-bg-dark": cat.bgDark,
-        } as React.CSSProperties}
+        style={
+          {
+            "--cat-color": cat.color,
+            "--cat-color-dark": cat.colorDark,
+            "--cat-bg": cat.bgLight,
+            "--cat-bg-dark": cat.bgDark,
+          } as React.CSSProperties
+        }
       >
         <ToolHeader tool={tool} category={cat} />
 

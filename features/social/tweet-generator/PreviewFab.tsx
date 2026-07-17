@@ -45,9 +45,7 @@ export default function PreviewFab({
       </button>
 
       {/* Backdrop */}
-      {isOpen && (
-        <div className="pfab-backdrop" onClick={onClose} aria-hidden="true" />
-      )}
+      {isOpen && <div className="pfab-backdrop" onClick={onClose} aria-hidden="true" />}
 
       {/* Bottom sheet */}
       <div
@@ -57,11 +55,7 @@ export default function PreviewFab({
         aria-label="Tweet preview"
       >
         {/* Drag handle */}
-        <button
-          className="pfab-handle"
-          onClick={onClose}
-          aria-label="Close preview"
-        >
+        <button className="pfab-handle" onClick={onClose} aria-label="Close preview">
           <span className="pfab-handle-bar" />
         </button>
 
@@ -74,11 +68,7 @@ export default function PreviewFab({
               Live
             </span>
           </div>
-          <button
-            className="pfab-sheet-close"
-            onClick={onClose}
-            aria-label="Close preview"
-          >
+          <button className="pfab-sheet-close" onClick={onClose} aria-label="Close preview">
             <i className="ti ti-x" aria-hidden="true" />
           </button>
         </div>

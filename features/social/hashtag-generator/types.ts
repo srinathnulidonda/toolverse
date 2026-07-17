@@ -1,6 +1,7 @@
 // features/social/hashtag-generator/types.ts
 
-export type Platform = "instagram" | "twitter" | "tiktok" | "linkedin" | "youtube" | "facebook" | "pinterest";
+export type Platform =
+  "instagram" | "twitter" | "tiktok" | "linkedin" | "youtube" | "facebook" | "pinterest";
 
 export type HashtagSize = "mega" | "large" | "medium" | "small" | "niche";
 

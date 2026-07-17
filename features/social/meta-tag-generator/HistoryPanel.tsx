@@ -18,12 +18,7 @@ function relativeTime(ts: number): string {
   return `${Math.floor(diff / 86_400_000)}d ago`;
 }
 
-export default function HistoryPanel({
-  items,
-  onRestore,
-  onDelete,
-  onClear,
-}: HistoryPanelProps) {
+export default function HistoryPanel({ items, onRestore, onDelete, onClear }: HistoryPanelProps) {
   if (items.length === 0) {
     return (
       <>
@@ -99,17 +94,11 @@ export default function HistoryPanel({
                 )}
               </div>
               <div className="hp-card-actions">
-                <button
-                  className="hp-btn hp-restore-btn"
-                  onClick={() => onRestore(item)}
-                >
+                <button className="hp-btn hp-restore-btn" onClick={() => onRestore(item)}>
                   <i className="ti ti-refresh" aria-hidden="true" />
                   Restore
                 </button>
-                <button
-                  className="hp-btn hp-delete-btn"
-                  onClick={() => onDelete(item.id)}
-                >
+                <button className="hp-btn hp-delete-btn" onClick={() => onDelete(item.id)}>
                   <i className="ti ti-trash" aria-hidden="true" />
                 </button>
               </div>

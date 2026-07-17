@@ -34,11 +34,7 @@ export default function ToolsSearch({ query, onChange }: ToolsSearchProps) {
             onChange={(e) => onChange(e.target.value)}
           />
           {query && (
-            <button
-              className="tds-clear"
-              onClick={() => onChange("")}
-              aria-label="Clear search"
-            >
+            <button className="tds-clear" onClick={() => onChange("")} aria-label="Clear search">
               ×
             </button>
           )}

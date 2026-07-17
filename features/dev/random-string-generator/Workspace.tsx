@@ -14,396 +14,410 @@ import HistoryView from "./HistoryView";
 type ViewTab = "single" | "batch" | "pattern" | "history";
 
 const VIEW_TABS = [
-    { id: "single" as const, label: "Single", icon: "ti-file" },
-    { id: "batch" as const, label: "Batch", icon: "ti-files" },
-    { id: "pattern" as const, label: "Pattern", icon: "ti-template" },
-    { id: "history" as const, label: "History", icon: "ti-history" },
+  { id: "single" as const, label: "Single", icon: "ti-file" },
+  { id: "batch" as const, label: "Batch", icon: "ti-files" },
+  { id: "pattern" as const, label: "Pattern", icon: "ti-template" },
+  { id: "history" as const, label: "History", icon: "ti-history" },
 ];
 
 export default function RandomStringGeneratorWorkspace({ tool }: { tool: Tool }) {
-    const [viewTab, setViewTab] = useState<ViewTab>("single");
-    const [options, setOptions] = useState<GeneratorOptions>(DEFAULT_OPTIONS);
-    
-    const {
-        history,
-        favorites,
-        addToHistory,
-        clearHistory,
-        removeFromHistory,
-        addToFavorites,
-        removeFromFavorites,
-        clearFavorites,
-        isFavorite,
-    } = useStringStore();
+  const [viewTab, setViewTab] = useState<ViewTab>("single");
+  const [options, setOptions] = useState<GeneratorOptions>(DEFAULT_OPTIONS);
 
-    const handleGenerate = useCallback((result: GeneratedString) => {
-        addToHistory(result);
-    }, [addToHistory]);
+  const {
+    history,
+    favorites,
+    addToHistory,
+    clearHistory,
+    removeFromHistory,
+    addToFavorites,
+    removeFromFavorites,
+    clearFavorites,
+    isFavorite,
+  } = useStringStore();
 
-    const handleBatchGenerate = useCallback((results: GeneratedString[]) => {
-        results.forEach(result => addToHistory(result));
-    }, [addToHistory]);
+  const handleGenerate = useCallback(
+    (result: GeneratedString) => {
+      addToHistory(result);
+    },
+    [addToHistory]
+  );
 
-    const handlePatternGenerate = useCallback((value: string) => {
-        const entry: GeneratedString = {
-            id: Date.now().toString(),
-            value,
-            timestamp: Date.now(),
-            options: { ...options },
-            entropy: 0,
-            strength: "good",
-        };
-        addToHistory(entry);
-    }, [options, addToHistory]);
+  const handleBatchGenerate = useCallback(
+    (results: GeneratedString[]) => {
+      results.forEach((result) => addToHistory(result));
+    },
+    [addToHistory]
+  );
 
-    const handleRestore = useCallback((entry: GeneratedString) => {
-        setOptions(entry.options);
-        setViewTab("single");
-    }, []);
+  const handlePatternGenerate = useCallback(
+    (value: string) => {
+      const entry: GeneratedString = {
+        id: Date.now().toString(),
+        value,
+        timestamp: Date.now(),
+        options: { ...options },
+        entropy: 0,
+        strength: "good",
+      };
+      addToHistory(entry);
+    },
+    [options, addToHistory]
+  );
 
-    const handleToggleFavorite = useCallback((value: string) => {
-        if (isFavorite(value)) {
-            removeFromFavorites(value);
-        } else {
-            addToFavorites(value);
-        }
-    }, [isFavorite, addToFavorites, removeFromFavorites]);
+  const handleRestore = useCallback((entry: GeneratedString) => {
+    setOptions(entry.options);
+    setViewTab("single");
+  }, []);
 
-    const loadPreset = useCallback((presetKey: PresetType) => {
-        const preset = PRESETS[presetKey];
-        if (preset && preset.options) {
-            setOptions(prev => ({ ...prev, ...preset.options }));
-        }
-    }, []);
+  const handleToggleFavorite = useCallback(
+    (value: string) => {
+      if (isFavorite(value)) {
+        removeFromFavorites(value);
+      } else {
+        addToFavorites(value);
+      }
+    },
+    [isFavorite, addToFavorites, removeFromFavorites]
+  );
 
-    return (
-        <>
-            <div className="rsg-root">
-                {/*  Top Chrome  */}
-                <div className="rsg-chrome">
-                    <div className="rsg-chrome-left">
-                        <span className="rsg-preset-label">Presets:</span>
-                        {Object.entries(PRESETS).slice(0, 4).map(([key, preset]) => (
-                            <button
-                                key={key}
-                                type="button"
-                                className="rsg-preset-btn"
-                                onClick={() => loadPreset(key as PresetType)}
-                                title={preset.label}
-                            >
-                                <i className={`ti ${preset.icon}`} />
-                                <span className="rsg-preset-text">{preset.label}</span>
-                            </button>
-                        ))}
-                    </div>
+  const loadPreset = useCallback((presetKey: PresetType) => {
+    const preset = PRESETS[presetKey];
+    if (preset && preset.options) {
+      setOptions((prev) => ({ ...prev, ...preset.options }));
+    }
+  }, []);
 
-                    <div className="rsg-chrome-right">
-                        {history.length > 0 && (
-                            <div className="rsg-history-badge">
-                                <i className="ti ti-history" />
-                                {history.length}
-                            </div>
-                        )}
-                    </div>
-                </div>
+  return (
+    <>
+      <div className="rsg-root">
+        {/*  Top Chrome  */}
+        <div className="rsg-chrome">
+          <div className="rsg-chrome-left">
+            <span className="rsg-preset-label">Presets:</span>
+            {Object.entries(PRESETS)
+              .slice(0, 4)
+              .map(([key, preset]) => (
+                <button
+                  key={key}
+                  type="button"
+                  className="rsg-preset-btn"
+                  onClick={() => loadPreset(key as PresetType)}
+                  title={preset.label}
+                >
+                  <i className={`ti ${preset.icon}`} />
+                  <span className="rsg-preset-text">{preset.label}</span>
+                </button>
+              ))}
+          </div>
 
-                {/*  View Tabs  */}
-                <div className="rsg-tabs-bar">
-                    <nav className="rsg-tabs" role="tablist" aria-label="View selector">
-                        {VIEW_TABS.map((tab) => (
-                            <button
-                                key={tab.id}
-                                type="button"
-                                role="tab"
-                                aria-selected={viewTab === tab.id}
-                                aria-controls={`rsg-panel-${tab.id}`}
-                                className={`rsg-tab${viewTab === tab.id ? " active" : ""}`}
-                                onClick={() => setViewTab(tab.id)}
-                            >
-                                <i className={`ti ${tab.icon}`} />
-                                <span>{tab.label}</span>
-                                {tab.id === "history" && history.length > 0 && (
-                                    <span className="rsg-tab-badge">{history.length}</span>
-                                )}
-                            </button>
-                        ))}
-                    </nav>
-                </div>
+          <div className="rsg-chrome-right">
+            {history.length > 0 && (
+              <div className="rsg-history-badge">
+                <i className="ti ti-history" />
+                {history.length}
+              </div>
+            )}
+          </div>
+        </div>
 
-                {/*  Tab Content  */}
-                <div className="rsg-tab-content">
-                    {viewTab === "single" && (
-                        <div id="rsg-panel-single" role="tabpanel" className="rsg-panel">
-                            <GeneratorPanel 
-                                options={options}
-                                onOptionsChange={setOptions}
-                                onGenerate={handleGenerate} 
-                            />
-                        </div>
-                    )}
+        {/*  View Tabs  */}
+        <div className="rsg-tabs-bar">
+          <nav className="rsg-tabs" role="tablist" aria-label="View selector">
+            {VIEW_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={viewTab === tab.id}
+                aria-controls={`rsg-panel-${tab.id}`}
+                className={`rsg-tab${viewTab === tab.id ? " active" : ""}`}
+                onClick={() => setViewTab(tab.id)}
+              >
+                <i className={`ti ${tab.icon}`} />
+                <span>{tab.label}</span>
+                {tab.id === "history" && history.length > 0 && (
+                  <span className="rsg-tab-badge">{history.length}</span>
+                )}
+              </button>
+            ))}
+          </nav>
+        </div>
 
-                    {viewTab === "batch" && (
-                        <div id="rsg-panel-batch" role="tabpanel" className="rsg-panel">
-                            <BatchGenerator options={options} onGenerate={handleBatchGenerate} />
-                        </div>
-                    )}
-
-                    {viewTab === "pattern" && (
-                        <div id="rsg-panel-pattern" role="tabpanel" className="rsg-panel">
-                            <PatternGenerator onGenerate={handlePatternGenerate} />
-                        </div>
-                    )}
-
-                    {viewTab === "history" && (
-                        <div id="rsg-panel-history" role="tabpanel" className="rsg-panel">
-                            <HistoryView
-                                history={history}
-                                favorites={favorites}
-                                onClear={clearHistory}
-                                onRemove={removeFromHistory}
-                                onRestore={handleRestore}
-                                onToggleFavorite={handleToggleFavorite}
-                                onClearFavorites={clearFavorites}
-                            />
-                        </div>
-                    )}
-                </div>
-
-                {/*  Footer  */}
-                <div className="rsg-footer">
-                    <i className="ti ti-shield-lock" />
-                    <span>
-                        Generated using cryptographically secure random values (crypto.getRandomValues). 
-                        All processing happens in your browser — nothing is ever sent to a server.
-                    </span>
-                </div>
+        {/*  Tab Content  */}
+        <div className="rsg-tab-content">
+          {viewTab === "single" && (
+            <div id="rsg-panel-single" role="tabpanel" className="rsg-panel">
+              <GeneratorPanel
+                options={options}
+                onOptionsChange={setOptions}
+                onGenerate={handleGenerate}
+              />
             </div>
+          )}
 
-            <style jsx>{`
-                .rsg-root {
-                    --rsg-radius-sm: 6px;
-                    --rsg-radius-md: 8px;
-                    --rsg-radius-lg: 12px;
-                    --rsg-radius-xl: 16px;
-                    background: var(--bg-card);
-                    border: 0.5px solid var(--border);
-                    border-radius: var(--rsg-radius-xl);
-                    overflow: hidden;
-                    display: flex;
-                    flex-direction: column;
-                    min-height: 650px;
-                }
+          {viewTab === "batch" && (
+            <div id="rsg-panel-batch" role="tabpanel" className="rsg-panel">
+              <BatchGenerator options={options} onGenerate={handleBatchGenerate} />
+            </div>
+          )}
 
-                /*  Top Chrome  */
-                .rsg-chrome {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 12px;
-                    padding: 10px 14px;
-                    background: var(--bg-surface);
-                    border-bottom: 0.5px solid var(--border);
-                    flex-wrap: wrap;
-                }
+          {viewTab === "pattern" && (
+            <div id="rsg-panel-pattern" role="tabpanel" className="rsg-panel">
+              <PatternGenerator onGenerate={handlePatternGenerate} />
+            </div>
+          )}
 
-                .rsg-chrome-left {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    flex-wrap: wrap;
-                }
+          {viewTab === "history" && (
+            <div id="rsg-panel-history" role="tabpanel" className="rsg-panel">
+              <HistoryView
+                history={history}
+                favorites={favorites}
+                onClear={clearHistory}
+                onRemove={removeFromHistory}
+                onRestore={handleRestore}
+                onToggleFavorite={handleToggleFavorite}
+                onClearFavorites={clearFavorites}
+              />
+            </div>
+          )}
+        </div>
 
-                .rsg-preset-label {
-                    font-size: 10px;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    letter-spacing: 0.09em;
-                    color: var(--text-disabled);
-                    margin-right: 4px;
-                }
+        {/*  Footer  */}
+        <div className="rsg-footer">
+          <i className="ti ti-shield-lock" />
+          <span>
+            Generated using cryptographically secure random values (crypto.getRandomValues). All
+            processing happens in your browser — nothing is ever sent to a server.
+          </span>
+        </div>
+      </div>
 
-                .rsg-preset-btn {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 5px;
-                    height: 30px;
-                    padding: 0 11px;
-                    border-radius: var(--rsg-radius-md);
-                    border: 0.5px solid var(--border);
-                    background: var(--bg-card);
-                    color: var(--text-secondary);
-                    font-size: 11px;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: all 0.12s;
-                }
+      <style jsx>{`
+        .rsg-root {
+          --rsg-radius-sm: 6px;
+          --rsg-radius-md: 8px;
+          --rsg-radius-lg: 12px;
+          --rsg-radius-xl: 16px;
+          background: var(--bg-card);
+          border: 0.5px solid var(--border);
+          border-radius: var(--rsg-radius-xl);
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          min-height: 650px;
+        }
 
-                .rsg-preset-btn:hover {
-                    background: var(--brand-light);
-                    color: var(--brand-text);
-                    border-color: var(--brand-border);
-                }
+        /*  Top Chrome  */
+        .rsg-chrome {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 10px 14px;
+          background: var(--bg-surface);
+          border-bottom: 0.5px solid var(--border);
+          flex-wrap: wrap;
+        }
 
-                .rsg-preset-btn i {
-                    font-size: 13px;
-                }
+        .rsg-chrome-left {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
 
-                .rsg-preset-text {
-                    white-space: nowrap;
-                }
+        .rsg-preset-label {
+          font-size: 10px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.09em;
+          color: var(--text-disabled);
+          margin-right: 4px;
+        }
 
-                .rsg-chrome-right {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
+        .rsg-preset-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          height: 30px;
+          padding: 0 11px;
+          border-radius: var(--rsg-radius-md);
+          border: 0.5px solid var(--border);
+          background: var(--bg-card);
+          color: var(--text-secondary);
+          font-size: 11px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.12s;
+        }
 
-                .rsg-history-badge {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 5px;
-                    height: 26px;
-                    padding: 0 10px;
-                    border-radius: 99px;
-                    background: var(--brand-light);
-                    color: var(--brand-text);
-                    font-size: 11px;
-                    font-weight: 600;
-                    font-family: var(--font-mono);
-                }
+        .rsg-preset-btn:hover {
+          background: var(--brand-light);
+          color: var(--brand-text);
+          border-color: var(--brand-border);
+        }
 
-                .rsg-history-badge i {
-                    font-size: 12px;
-                }
+        .rsg-preset-btn i {
+          font-size: 13px;
+        }
 
-                /*  Tabs Bar  */
-                .rsg-tabs-bar {
-                    background: var(--bg-surface);
-                    border-bottom: 0.5px solid var(--border);
-                }
+        .rsg-preset-text {
+          white-space: nowrap;
+        }
 
-                .rsg-tabs {
-                    display: flex;
-                    padding: 0 14px;
-                }
+        .rsg-chrome-right {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
 
-                .rsg-tab {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 6px;
-                    height: 40px;
-                    padding: 0 16px;
-                    border: none;
-                    background: transparent;
-                    color: var(--text-tertiary);
-                    font-size: 12px;
-                    font-weight: 500;
-                    cursor: pointer;
-                    position: relative;
-                    transition: color 0.12s;
-                }
+        .rsg-history-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          height: 26px;
+          padding: 0 10px;
+          border-radius: 99px;
+          background: var(--brand-light);
+          color: var(--brand-text);
+          font-size: 11px;
+          font-weight: 600;
+          font-family: var(--font-mono);
+        }
 
-                .rsg-tab i {
-                    font-size: 14px;
-                }
+        .rsg-history-badge i {
+          font-size: 12px;
+        }
 
-                .rsg-tab:hover {
-                    color: var(--text);
-                }
+        /*  Tabs Bar  */
+        .rsg-tabs-bar {
+          background: var(--bg-surface);
+          border-bottom: 0.5px solid var(--border);
+        }
 
-                .rsg-tab.active {
-                    color: var(--text);
-                }
+        .rsg-tabs {
+          display: flex;
+          padding: 0 14px;
+        }
 
-                .rsg-tab.active::after {
-                    content: "";
-                    position: absolute;
-                    bottom: 0;
-                    left: 12px;
-                    right: 12px;
-                    height: 2px;
-                    background: var(--brand);
-                    border-radius: 2px 2px 0 0;
-                }
+        .rsg-tab {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          height: 40px;
+          padding: 0 16px;
+          border: none;
+          background: transparent;
+          color: var(--text-tertiary);
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+          position: relative;
+          transition: color 0.12s;
+        }
 
-                .rsg-tab-badge {
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    min-width: 18px;
-                    height: 18px;
-                    padding: 0 5px;
-                    border-radius: 99px;
-                    background: var(--brand);
-                    color: white;
-                    font-size: 10px;
-                    font-weight: 700;
-                    font-family: var(--font-mono);
-                }
+        .rsg-tab i {
+          font-size: 14px;
+        }
 
-                /*  Tab Content  */
-                .rsg-tab-content {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    min-height: 0;
-                    overflow: hidden;
-                }
+        .rsg-tab:hover {
+          color: var(--text);
+        }
 
-                .rsg-panel {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                    min-height: 0;
-                    overflow: hidden;
-                }
+        .rsg-tab.active {
+          color: var(--text);
+        }
 
-                /*  Footer  */
-                .rsg-footer {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 10px 14px;
-                    background: var(--bg-surface);
-                    border-top: 0.5px solid var(--border);
-                    font-size: 11px;
-                    color: var(--text-disabled);
-                    line-height: 1.5;
-                }
+        .rsg-tab.active::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 12px;
+          right: 12px;
+          height: 2px;
+          background: var(--brand);
+          border-radius: 2px 2px 0 0;
+        }
 
-                .rsg-footer i {
-                    font-size: 14px;
-                    flex-shrink: 0;
-                }
+        .rsg-tab-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 18px;
+          height: 18px;
+          padding: 0 5px;
+          border-radius: 99px;
+          background: var(--brand);
+          color: white;
+          font-size: 10px;
+          font-weight: 700;
+          font-family: var(--font-mono);
+        }
 
-                /*  Responsive  */
-                @media (max-width: 768px) {
-                    .rsg-chrome {
-                        padding: 8px 10px;
-                    }
+        /*  Tab Content  */
+        .rsg-tab-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          overflow: hidden;
+        }
 
-                    .rsg-preset-label {
-                        display: none;
-                    }
+        .rsg-panel {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          min-height: 0;
+          overflow: hidden;
+        }
 
-                    .rsg-preset-text {
-                        display: none;
-                    }
+        /*  Footer  */
+        .rsg-footer {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 14px;
+          background: var(--bg-surface);
+          border-top: 0.5px solid var(--border);
+          font-size: 11px;
+          color: var(--text-disabled);
+          line-height: 1.5;
+        }
 
-                    .rsg-preset-btn {
-                        padding: 0 10px;
-                        min-width: 36px;
-                        justify-content: center;
-                    }
-                }
+        .rsg-footer i {
+          font-size: 14px;
+          flex-shrink: 0;
+        }
 
-                @media (prefers-reduced-motion: reduce) {
-                    .rsg-preset-btn,
-                    .rsg-tab {
-                        transition: none;
-                    }
-                }
-            `}</style>
-        </>
-    );
+        /*  Responsive  */
+        @media (max-width: 768px) {
+          .rsg-chrome {
+            padding: 8px 10px;
+          }
+
+          .rsg-preset-label {
+            display: none;
+          }
+
+          .rsg-preset-text {
+            display: none;
+          }
+
+          .rsg-preset-btn {
+            padding: 0 10px;
+            min-width: 36px;
+            justify-content: center;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .rsg-preset-btn,
+          .rsg-tab {
+            transition: none;
+          }
+        }
+      `}</style>
+    </>
+  );
 }

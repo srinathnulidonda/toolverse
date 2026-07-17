@@ -48,37 +48,45 @@ export interface TweetGeneratorStore {
 
 // Storage wrapper for history
 interface HistoryStorage {
-    v: number;
-    data: HistoryItem[];
+  v: number;
+  data: HistoryItem[];
 }
 
 // Validation function for history
 function validateHistory(raw: HistoryStorage | null): HistoryItem[] {
-    if (!raw || typeof raw !== 'object' || !('v' in raw) || !('data' in raw) || !Array.isArray(raw.data)) {
-        return [];
+  if (
+    !raw ||
+    typeof raw !== "object" ||
+    !("v" in raw) ||
+    !("data" in raw) ||
+    !Array.isArray(raw.data)
+  ) {
+    return [];
+  }
+  const valid: HistoryItem[] = [];
+  for (const item of raw.data) {
+    if (
+      item &&
+      typeof item === "object" &&
+      typeof item.id === "string" &&
+      typeof item.name === "string" &&
+      item.tweetData &&
+      typeof item.tweetData === "object" &&
+      typeof item.style === "object" &&
+      typeof item.timestamp === "number" &&
+      typeof item.thumbnail === "string"
+    ) {
+      valid.push(item as HistoryItem);
     }
-    const valid: HistoryItem[] = [];
-    for (const item of raw.data) {
-        if (
-            item &&
-            typeof item === "object" &&
-            typeof item.id === "string" &&
-            typeof item.name === "string" &&
-            item.tweetData &&
-            typeof item.tweetData === "object" &&
-            typeof item.style === "object" &&
-            typeof item.timestamp === "number" &&
-            typeof item.thumbnail === "string"
-        ) {
-            valid.push(item as HistoryItem);
-        }
-    }
-    return valid;
+  }
+  return valid;
 }
 
 export function useTweetGeneratorStore() {
   // Tabs & UI
-  const [activeTab, setActiveTab] = useState<"content" | "profile" | "style" | "history">("content");
+  const [activeTab, setActiveTab] = useState<"content" | "profile" | "style" | "history">(
+    "content"
+  );
   const [layout, setLayout] = useState<TweetLayout>("single");
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState<boolean>(false);
 
@@ -133,10 +141,10 @@ export function useTweetGeneratorStore() {
   });
 
   // History
-  const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(
-    "tweet-generator-history",
-    { v: 1, data: [] }
-  );
+  const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>("tweet-generator-history", {
+    v: 1,
+    data: [],
+  });
 
   const history = useMemo(() => validateHistory(historyRaw), [historyRaw]);
 
@@ -182,7 +190,7 @@ export function useTweetGeneratorStore() {
               thumbnail,
             },
             ...(prev?.data ?? []),
-          ].slice(0, 20)
+          ].slice(0, 20),
         };
       });
     },
@@ -234,15 +242,15 @@ export function useTweetGeneratorStore() {
     hasContent,
     saveToHistory,
     handleRestore,
-    handleClearHistory
+    handleClearHistory,
   };
 }
 
 // Helper for deep equality (since we don't have lodash)
 function JSON_equal(a: any, b: any): boolean {
-    try {
-        return JSON.stringify(a) === JSON.stringify(b);
-    } catch {
-        return a === b;
-    }
+  try {
+    return JSON.stringify(a) === JSON.stringify(b);
+  } catch {
+    return a === b;
+  }
 }

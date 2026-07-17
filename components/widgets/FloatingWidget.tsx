@@ -6,7 +6,18 @@ import { createPortal } from "react-dom";
 import useLocalStorage from "@/lib/useLocalStorage";
 import WidgetTasks from "./WidgetTasks";
 import WidgetNotes from "./WidgetNotes";
-import { Task, Note, Priority, ChecklistItem, TASKS_STORAGE_KEY, NOTES_STORAGE_KEY, TASKS_DRAFT_KEY, NOTES_DRAFT_KEY, cleanTasks, cleanNotes } from "./widgetTypes";
+import {
+  Task,
+  Note,
+  Priority,
+  ChecklistItem,
+  TASKS_STORAGE_KEY,
+  NOTES_STORAGE_KEY,
+  TASKS_DRAFT_KEY,
+  NOTES_DRAFT_KEY,
+  cleanTasks,
+  cleanNotes,
+} from "./widgetTypes";
 
 type ViewMode = "minimized" | "expanded" | "full";
 type ActiveTab = "tasks" | "notes";
@@ -16,7 +27,7 @@ const WIDGET_POSITION_KEY = "tv:widget-position";
 const ACTIVE_TAB_KEY = "tv:active-tab";
 
 const MAX_PANEL_HEIGHT = 600; // Match actual CSS
-const MAX_PANEL_WIDTH = 380;  // Match actual CSS
+const MAX_PANEL_WIDTH = 380; // Match actual CSS
 const DRAG_THRESHOLD = 4;
 
 interface TasksDraft {
@@ -32,7 +43,7 @@ interface NotesDraft {
   activeNote: string | null;
   title: string;
   content: string;
-  type?: 'note' | 'checklist';
+  type?: "note" | "checklist";
   items?: ChecklistItem[];
   composerOpen: boolean;
   showCompleted?: boolean;
@@ -51,7 +62,7 @@ const DEFAULT_NOTES_DRAFT: NotesDraft = {
   activeNote: null,
   title: "",
   content: "",
-  type: 'note',
+  type: "note",
   items: [],
   composerOpen: false,
   showCompleted: true,
@@ -61,39 +72,45 @@ export default function FloatingWidget() {
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("minimized");
   const [activeTab, setActiveTab] = useLocalStorage<ActiveTab>(ACTIVE_TAB_KEY, "notes");
-  
+
   const [persistedPosition, setPersistedPosition] = useLocalStorage(WIDGET_POSITION_KEY, {
     bottom: 24,
     right: 24,
   });
-  
+
   const [livePosition, setLivePosition] = useState(persistedPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   const [rawTasks, setRawTasks] = useLocalStorage<Task[]>(TASKS_STORAGE_KEY, []);
   const [rawNotes, setRawNotes] = useLocalStorage<Note[]>(NOTES_STORAGE_KEY, []);
-  
+
   const tasks = useMemo(() => cleanTasks(rawTasks), [rawTasks]);
   const notes = useMemo(() => cleanNotes(rawNotes), [rawNotes]);
-  
+
   const setTasks = (value: Task[] | ((prev: Task[]) => Task[])) => setRawTasks(value);
   const setNotes = (value: Note[] | ((prev: Note[]) => Note[])) => setRawNotes(value);
 
-  const [notesDraft, setNotesDraft] = useLocalStorage<NotesDraft>(NOTES_DRAFT_KEY, DEFAULT_NOTES_DRAFT);
-  const [tasksDraft, setTasksDraft] = useLocalStorage<TasksDraft>(TASKS_DRAFT_KEY, DEFAULT_TASKS_DRAFT);
+  const [notesDraft, setNotesDraft] = useLocalStorage<NotesDraft>(
+    NOTES_DRAFT_KEY,
+    DEFAULT_NOTES_DRAFT
+  );
+  const [tasksDraft, setTasksDraft] = useLocalStorage<TasksDraft>(
+    TASKS_DRAFT_KEY,
+    DEFAULT_TASKS_DRAFT
+  );
 
   const widgetRef = useRef<HTMLDivElement>(null);
   const hasDraggedRef = useRef(false);
   const startPosRef = useRef({ x: 0, y: 0 });
-  
+
   const livePositionRef = useRef(livePosition);
   const isDraggingRef = useRef(isDragging);
-  
+
   useEffect(() => {
     livePositionRef.current = livePosition;
   }, [livePosition]);
-  
+
   useEffect(() => {
     isDraggingRef.current = isDragging;
   }, [isDragging]);
@@ -115,29 +132,32 @@ export default function FloatingWidget() {
     }
   }, [activeTab, viewMode]);
 
-  const clampPosition = (pos: { bottom: number; right: number }, currentViewMode: ViewMode = viewMode) => {
+  const clampPosition = (
+    pos: { bottom: number; right: number },
+    currentViewMode: ViewMode = viewMode
+  ) => {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    
+
     // Use actual measured panel size on mobile
     let maxHeight = currentViewMode === "expanded" ? MAX_PANEL_HEIGHT : 100;
     let maxWidth = currentViewMode === "expanded" ? MAX_PANEL_WIDTH : 100;
-    
+
     if (viewportWidth < 768) {
       maxWidth = Math.min(MAX_PANEL_WIDTH, viewportWidth - 32);
     }
-    
+
     if (viewportHeight < 768) {
       maxHeight = Math.min(MAX_PANEL_HEIGHT, viewportHeight - 120);
     }
-    
+
     if (viewportWidth < MAX_PANEL_WIDTH + 20) {
       return {
         bottom: Math.max(10, Math.min(pos.bottom, viewportHeight - maxHeight)),
         right: 10,
       };
     }
-    
+
     return {
       bottom: Math.max(10, Math.min(pos.bottom, viewportHeight - maxHeight)),
       right: Math.max(10, Math.min(pos.right, viewportWidth - maxWidth)),
@@ -155,7 +175,7 @@ export default function FloatingWidget() {
 
     window.addEventListener("resize", handleResize);
     window.addEventListener("orientationchange", handleResize);
-    
+
     return () => {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("orientationchange", handleResize);
@@ -176,9 +196,8 @@ export default function FloatingWidget() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const isTyping = target.tagName === "INPUT" || 
-                       target.tagName === "TEXTAREA" || 
-                       target.isContentEditable;
+      const isTyping =
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
 
       if ((e.metaKey || e.ctrlKey) && e.key === "k" && !isTyping) {
         e.preventDefault();
@@ -189,7 +208,7 @@ export default function FloatingWidget() {
           return "minimized";
         });
       }
-      
+
       if (e.key === "Escape" && !isTyping) {
         setViewMode((prev) => {
           if (prev === "full") return "expanded";
@@ -207,23 +226,29 @@ export default function FloatingWidget() {
 
     const previouslyFocused = document.activeElement as HTMLElement | null;
     const originalOverflow = document.body.style.overflow;
-    
+
     document.body.style.overflow = "hidden";
-    
+
     setTimeout(() => {
-      widgetRef.current?.querySelector<HTMLElement>("button:not(:disabled), input, [tabindex]:not([tabindex='-1'])")?.focus();
+      widgetRef.current
+        ?.querySelector<HTMLElement>(
+          "button:not(:disabled), input, [tabindex]:not([tabindex='-1'])"
+        )
+        ?.focus();
     }, 100);
 
     const trapFocus = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
-      
+
       const modal = widgetRef.current?.querySelector(".fw-full-panel");
       if (!modal) return;
 
-      const focusable = Array.from(modal.querySelectorAll<HTMLElement>(
-        'button, input, textarea, [tabindex]:not([tabindex="-1"])'
-      )).filter(el => !el.hasAttribute('disabled') && el.offsetParent !== null);
-      
+      const focusable = Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'button, input, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
@@ -249,12 +274,12 @@ export default function FloatingWidget() {
     setIsDragging(true);
     hasDraggedRef.current = false;
     startPosRef.current = { x: e.clientX, y: e.clientY };
-    
+
     const rect = widgetRef.current?.getBoundingClientRect();
     if (rect) {
-      setDragOffset({ 
-        x: rect.right - e.clientX, 
-        y: rect.bottom - e.clientY 
+      setDragOffset({
+        x: rect.right - e.clientX,
+        y: rect.bottom - e.clientY,
       });
     }
   };
@@ -264,12 +289,12 @@ export default function FloatingWidget() {
     setIsDragging(true);
     hasDraggedRef.current = false;
     startPosRef.current = { x: touch.clientX, y: touch.clientY };
-    
+
     const rect = widgetRef.current?.getBoundingClientRect();
     if (rect) {
-      setDragOffset({ 
-        x: rect.right - touch.clientX, 
-        y: rect.bottom - touch.clientY 
+      setDragOffset({
+        x: rect.right - touch.clientX,
+        y: rect.bottom - touch.clientY,
       });
     }
   };
@@ -280,19 +305,19 @@ export default function FloatingWidget() {
     const clamp = (clientX: number, clientY: number) => {
       const dx = clientX - startPosRef.current.x;
       const dy = clientY - startPosRef.current.y;
-      
+
       if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
         hasDraggedRef.current = true;
       }
 
       const newBottom = window.innerHeight - clientY - dragOffset.y;
       const newRight = window.innerWidth - clientX - dragOffset.x;
-      
+
       setLivePosition(clampPosition({ bottom: newBottom, right: newRight }));
     };
 
     const handleMouseMove = (e: MouseEvent) => clamp(e.clientX, e.clientY);
-    
+
     const handleTouchMove = (e: TouchEvent) => {
       e.preventDefault();
       const touch = e.touches[0];
@@ -313,7 +338,7 @@ export default function FloatingWidget() {
     document.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("touchmove", handleTouchMove, { passive: false });
     document.addEventListener("touchend", handleTouchEnd);
-    
+
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
@@ -359,8 +384,8 @@ export default function FloatingWidget() {
   const renderWidgetContent = () => {
     if (activeTab === "tasks") {
       return (
-        <WidgetTasks 
-          tasks={tasks} 
+        <WidgetTasks
+          tasks={tasks}
           setTasks={setTasks}
           draft={tasksDraft}
           setDraft={setTasksDraft}
@@ -369,9 +394,9 @@ export default function FloatingWidget() {
       );
     } else {
       return (
-        <WidgetNotes 
+        <WidgetNotes
           variant={viewMode === "full" ? "full" : "compact"}
-          notes={notes} 
+          notes={notes}
           setNotes={setNotes}
           draft={notesDraft}
           setDraft={setNotesDraft}
@@ -384,34 +409,48 @@ export default function FloatingWidget() {
   if (viewMode === "full") {
     return createPortal(
       <div className="fw-overlay" onClick={() => setViewMode("expanded")}>
-        <div 
+        <div
           ref={widgetRef}
-          className="fw-full-panel" 
-          onClick={(e) => e.stopPropagation()} 
-          role="dialog" 
+          className="fw-full-panel"
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
           aria-modal="true"
         >
           <div className="fw-full-header">
             <div className="fw-tab-track">
-              <button className={`fw-tab ${activeTab === "tasks" ? "active" : ""}`} onClick={() => setActiveTab("tasks")}>
+              <button
+                className={`fw-tab ${activeTab === "tasks" ? "active" : ""}`}
+                onClick={() => setActiveTab("tasks")}
+              >
                 <TasksTabIcon size={15} /> Tasks
               </button>
-              <button className={`fw-tab ${activeTab === "notes" ? "active" : ""}`} onClick={() => setActiveTab("notes")}>
+              <button
+                className={`fw-tab ${activeTab === "notes" ? "active" : ""}`}
+                onClick={() => setActiveTab("notes")}
+              >
                 <NotesTabIcon size={15} /> Notes
               </button>
             </div>
             <div className="fw-full-header-actions">
-              <button className="fw-icon-btn" onClick={() => setViewMode("expanded")} aria-label="Shrink to panel" title="Shrink">
+              <button
+                className="fw-icon-btn"
+                onClick={() => setViewMode("expanded")}
+                aria-label="Shrink to panel"
+                title="Shrink"
+              >
                 <ShrinkIcon />
               </button>
-              <button className="fw-icon-btn fw-icon-btn-close" onClick={() => setViewMode("minimized")} aria-label="Close" title="Close">
+              <button
+                className="fw-icon-btn fw-icon-btn-close"
+                onClick={() => setViewMode("minimized")}
+                aria-label="Close"
+                title="Close"
+              >
                 <CloseIcon />
               </button>
             </div>
           </div>
-          <div className="fw-full-content">
-            {renderWidgetContent()}
-          </div>
+          <div className="fw-full-content">{renderWidgetContent()}</div>
         </div>
 
         <style>{`
@@ -588,11 +627,11 @@ export default function FloatingWidget() {
     <div
       ref={widgetRef}
       className={`fw-root ${isDragging ? "dragging" : ""}`}
-      style={{ 
-        position: "fixed", 
-        bottom: `${livePosition.bottom}px`, 
-        right: `${livePosition.right}px`, 
-        zIndex: 9999 
+      style={{
+        position: "fixed",
+        bottom: `${livePosition.bottom}px`,
+        right: `${livePosition.right}px`,
+        zIndex: 9999,
       }}
     >
       {viewMode === "minimized" && (
@@ -618,7 +657,7 @@ export default function FloatingWidget() {
         <div className="fw-panel">
           <div className="fw-header">
             <button
-              className="fw-drag-handle" 
+              className="fw-drag-handle"
               onMouseDown={handleMouseDown}
               onTouchStart={handleTouchStart}
               onKeyDown={handleDragKeyDown}
@@ -629,28 +668,42 @@ export default function FloatingWidget() {
               <DragHandleIcon />
             </button>
             <div className="fw-tab-track">
-              <button className={`fw-tab ${activeTab === "tasks" ? "active" : ""}`} onClick={() => setActiveTab("tasks")}>
+              <button
+                className={`fw-tab ${activeTab === "tasks" ? "active" : ""}`}
+                onClick={() => setActiveTab("tasks")}
+              >
                 <TasksTabIcon /> Tasks
               </button>
-              <button className={`fw-tab ${activeTab === "notes" ? "active" : ""}`} onClick={() => setActiveTab("notes")}>
+              <button
+                className={`fw-tab ${activeTab === "notes" ? "active" : ""}`}
+                onClick={() => setActiveTab("notes")}
+              >
                 <NotesTabIcon /> Notes
               </button>
             </div>
             <div className="fw-header-actions">
               {activeTab === "notes" && ( // Only show expand for notes
-                <button className="fw-icon-btn" onClick={() => setViewMode("full")} aria-label="Expand to full view" title="Expand">
+                <button
+                  className="fw-icon-btn"
+                  onClick={() => setViewMode("full")}
+                  aria-label="Expand to full view"
+                  title="Expand"
+                >
                   <ExpandIcon />
                 </button>
               )}
-              <button className="fw-icon-btn fw-icon-btn-close" onClick={() => setViewMode("minimized")} aria-label="Close" title="Close">
+              <button
+                className="fw-icon-btn fw-icon-btn-close"
+                onClick={() => setViewMode("minimized")}
+                aria-label="Close"
+                title="Close"
+              >
                 <CloseIcon />
               </button>
             </div>
           </div>
 
-          <div className="fw-content">
-            {renderWidgetContent()}
-          </div>
+          <div className="fw-content">{renderWidgetContent()}</div>
         </div>
       )}
 
@@ -932,7 +985,16 @@ export default function FloatingWidget() {
 
 function TasksTabIcon({ size = 14 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M9 11l3 3L22 4" />
       <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
     </svg>
@@ -941,7 +1003,16 @@ function TasksTabIcon({ size = 14 }: { size?: number }) {
 
 function NotesTabIcon({ size = 14 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
       <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
     </svg>
@@ -950,7 +1021,16 @@ function NotesTabIcon({ size = 14 }: { size?: number }) {
 
 function CloseIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
@@ -959,7 +1039,16 @@ function CloseIcon() {
 
 function ExpandIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <polyline points="15 3 21 3 21 9" />
       <polyline points="9 21 3 21 3 15" />
       <line x1="21" y1="3" x2="14" y2="10" />
@@ -970,7 +1059,16 @@ function ExpandIcon() {
 
 function ShrinkIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <polyline points="4 14 10 14 10 20" />
       <polyline points="20 10 14 10 14 4" />
       <line x1="14" y1="10" x2="21" y2="3" />
@@ -981,7 +1079,16 @@ function ShrinkIcon() {
 
 function DragHandleIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <circle cx="9" cy="5" r="1" fill="currentColor" stroke="none" />
       <circle cx="9" cy="12" r="1" fill="currentColor" stroke="none" />
       <circle cx="9" cy="19" r="1" fill="currentColor" stroke="none" />

@@ -1,14 +1,7 @@
 // features/social/og-preview/types.ts
 
-export type Platform = 
-  | "facebook" 
-  | "twitter" 
-  | "linkedin" 
-  | "slack" 
-  | "discord" 
-  | "whatsapp" 
-  | "imessage"
-  | "telegram";
+export type Platform =
+  "facebook" | "twitter" | "linkedin" | "slack" | "discord" | "whatsapp" | "imessage" | "telegram";
 
 export type TwitterCardType = "summary" | "summary_large_image" | "player" | "app";
 

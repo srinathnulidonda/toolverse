@@ -7,13 +7,9 @@ type CategoryToolsSidebarProps = {
   currentCategory: CategoryWithCount;
 };
 
-export default function CategoryToolsSidebar({
-  currentCategory,
-}: CategoryToolsSidebarProps) {
+export default function CategoryToolsSidebar({ currentCategory }: CategoryToolsSidebarProps) {
   const CATEGORIES = getCategoriesWithCount();
-  const otherCategories = CATEGORIES.filter(
-    (c) => c.slug !== currentCategory.slug
-  );
+  const otherCategories = CATEGORIES.filter((c) => c.slug !== currentCategory.slug);
 
   return (
     <>
@@ -26,8 +22,7 @@ export default function CategoryToolsSidebar({
           <div>
             <p className="cts-priv-title">100% private</p>
             <p className="cts-priv-body">
-              All tools run entirely in your browser. Your files never leave
-              your device.
+              All tools run entirely in your browser. Your files never leave your device.
             </p>
           </div>
         </div>
@@ -37,21 +32,11 @@ export default function CategoryToolsSidebar({
           <p className="cts-other-label">Other categories</p>
           <div className="cts-other-list">
             {otherCategories.map((cat) => (
-              <Link
-                key={cat.slug}
-                href={`/tools/${cat.slug}`}
-                className="cts-other-item"
-              >
-                <i
-                  className={`ti ${cat.icon} cts-other-icon`}
-                  aria-hidden="true"
-                />
+              <Link key={cat.slug} href={`/tools/${cat.slug}`} className="cts-other-item">
+                <i className={`ti ${cat.icon} cts-other-icon`} aria-hidden="true" />
                 <span className="cts-other-name">{cat.label}</span>
                 <span className="cts-other-count">{cat.count}</span>
-                <i
-                  className="ti ti-chevron-right cts-other-chevron"
-                  aria-hidden="true"
-                />
+                <i className="ti ti-chevron-right cts-other-chevron" aria-hidden="true" />
               </Link>
             ))}
           </div>
@@ -61,11 +46,7 @@ export default function CategoryToolsSidebar({
         <Link href="/tools" className="cts-all-btn">
           <i className="ti ti-layout-grid" aria-hidden="true" />
           View all tools
-          <i
-            className="ti ti-arrow-right"
-            aria-hidden="true"
-            style={{ marginLeft: "auto" }}
-          />
+          <i className="ti ti-arrow-right" aria-hidden="true" style={{ marginLeft: "auto" }} />
         </Link>
       </aside>
 

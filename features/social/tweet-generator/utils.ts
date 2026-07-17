@@ -195,16 +195,10 @@ export function highlightTextEntities(text: string, theme: TweetTheme): string {
   );
 
   // Mentions
-  highlighted = highlighted.replace(
-    /@(\w+)/g,
-    `<span style="color: ${theme.link}">@$1</span>`
-  );
+  highlighted = highlighted.replace(/@(\w+)/g, `<span style="color: ${theme.link}">@$1</span>`);
 
   // Hashtags
-  highlighted = highlighted.replace(
-    /#(\w+)/g,
-    `<span style="color: ${theme.link}">#$1</span>`
-  );
+  highlighted = highlighted.replace(/#(\w+)/g, `<span style="color: ${theme.link}">#$1</span>`);
 
   return highlighted;
 }

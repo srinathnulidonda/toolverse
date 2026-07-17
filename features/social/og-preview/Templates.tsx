@@ -12,7 +12,8 @@ const TEMPLATES: Template[] = [
     data: {
       type: "article",
       title: "10 Tips for Writing Better Meta Tags",
-      description: "Learn how to craft compelling meta tags that improve your click-through rates and social engagement across all platforms.",
+      description:
+        "Learn how to craft compelling meta tags that improve your click-through rates and social engagement across all platforms.",
       image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=1200&h=630&fit=crop",
       siteName: "Tech Blog",
       twitterCard: "summary_large_image",
@@ -29,7 +30,8 @@ const TEMPLATES: Template[] = [
     data: {
       type: "product",
       title: "Premium Wireless Headphones - Noise Cancelling",
-      description: "Experience studio-quality sound with our premium wireless headphones. Features active noise cancellation, 30-hour battery life, and premium comfort.",
+      description:
+        "Experience studio-quality sound with our premium wireless headphones. Features active noise cancellation, 30-hour battery life, and premium comfort.",
       image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&h=630&fit=crop",
       siteName: "AudioStore",
       twitterCard: "summary_large_image",
@@ -45,7 +47,8 @@ const TEMPLATES: Template[] = [
     data: {
       type: "website",
       title: "Build Your SaaS Product Faster | ProductName",
-      description: "The all-in-one platform to build, launch, and scale your SaaS product. Start free today and join 10,000+ founders building the future.",
+      description:
+        "The all-in-one platform to build, launch, and scale your SaaS product. Start free today and join 10,000+ founders building the future.",
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=630&fit=crop",
       siteName: "ProductName",
       twitterCard: "summary_large_image",
@@ -62,7 +65,8 @@ const TEMPLATES: Template[] = [
     data: {
       type: "profile",
       title: "Jane Smith - Product Designer & Creative Director",
-      description: "Award-winning product designer specializing in user experience, interface design, and design systems. Available for freelance projects.",
+      description:
+        "Award-winning product designer specializing in user experience, interface design, and design systems. Available for freelance projects.",
       image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200&h=630&fit=crop",
       siteName: "Jane Smith Portfolio",
       twitterCard: "summary_large_image",
@@ -80,7 +84,8 @@ const TEMPLATES: Template[] = [
     data: {
       type: "article",
       title: "Breaking: Major Tech Company Announces New AI Initiative",
-      description: "In a surprise announcement today, the company revealed plans to invest $10 billion in artificial intelligence research and development over the next five years.",
+      description:
+        "In a surprise announcement today, the company revealed plans to invest $10 billion in artificial intelligence research and development over the next five years.",
       image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=630&fit=crop",
       siteName: "Tech News Daily",
       twitterCard: "summary_large_image",
@@ -97,7 +102,8 @@ const TEMPLATES: Template[] = [
     data: {
       type: "website",
       title: "DesignCon 2024 - The Future of Digital Design",
-      description: "Join 5,000+ designers, developers, and innovators at the world's leading design conference. March 15-17, 2024 in San Francisco.",
+      description:
+        "Join 5,000+ designers, developers, and innovators at the world's leading design conference. March 15-17, 2024 in San Francisco.",
       image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=630&fit=crop",
       siteName: "DesignCon",
       twitterCard: "summary_large_image",
@@ -114,7 +120,8 @@ const TEMPLATES: Template[] = [
     data: {
       type: "video.movie",
       title: "How to Master Open Graph Tags in 10 Minutes",
-      description: "A complete tutorial on implementing Open Graph meta tags for better social media sharing. Perfect for beginners and advanced users.",
+      description:
+        "A complete tutorial on implementing Open Graph meta tags for better social media sharing. Perfect for beginners and advanced users.",
       image: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1200&h=630&fit=crop",
       siteName: "WebDev Academy",
       twitterCard: "player",
@@ -133,7 +140,8 @@ const TEMPLATES: Template[] = [
     data: {
       type: "music.song",
       title: "EP 42: The Art of Social Media Marketing with Sarah Johnson",
-      description: "Join us as we dive deep into modern social media strategies, content creation tips, and the latest platform updates with marketing expert Sarah Johnson.",
+      description:
+        "Join us as we dive deep into modern social media strategies, content creation tips, and the latest platform updates with marketing expert Sarah Johnson.",
       image: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=1200&h=630&fit=crop",
       siteName: "Marketing Matters Podcast",
       twitterCard: "summary_large_image",
@@ -163,11 +171,7 @@ export default function Templates({ onSelect }: TemplatesProps) {
 
         <div className="tpl-grid">
           {TEMPLATES.map((template) => (
-            <button
-              key={template.id}
-              className="tpl-card"
-              onClick={() => onSelect(template)}
-            >
+            <button key={template.id} className="tpl-card" onClick={() => onSelect(template)}>
               <div className="tpl-card-icon">
                 <i className={`ti ${template.icon}`} aria-hidden="true" />
               </div>
@@ -185,7 +189,8 @@ export default function Templates({ onSelect }: TemplatesProps) {
         <div className="tpl-footer">
           <i className="ti ti-info-circle" aria-hidden="true" />
           <span>
-            Templates use placeholder images from Unsplash. Replace with your own images for production.
+            Templates use placeholder images from Unsplash. Replace with your own images for
+            production.
           </span>
         </div>
       </div>

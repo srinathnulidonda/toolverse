@@ -17,18 +17,17 @@ export default function KeywordInput({ onGenerate }: KeywordInputProps) {
 
   const handleGenerate = async () => {
     if (generating) return;
-    
+
     const input = mode === "keyword" ? keyword.trim() : caption.trim();
     if (!input) return;
 
     setGenerating(true);
-    
+
     // Simulate async processing for better UX
     setTimeout(() => {
       try {
-        const hashtags = mode === "keyword" 
-          ? generateFromKeyword(input)
-          : generateFromCaption(input);
+        const hashtags =
+          mode === "keyword" ? generateFromKeyword(input) : generateFromCaption(input);
         onGenerate(hashtags);
       } finally {
         setGenerating(false);

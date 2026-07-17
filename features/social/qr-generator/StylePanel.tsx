@@ -32,12 +32,11 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
   return (
     <>
       <div className="sp-root">
-
         {/* Color presets */}
         <section className="sp-section">
           <p className="sp-label">Presets</p>
           <div className="sp-presets-grid">
-            {PRESETS.map(p => {
+            {PRESETS.map((p) => {
               const active =
                 style.fgColor.toLowerCase() === p.fg.toLowerCase() &&
                 style.bgColor.toLowerCase() === p.bg.toLowerCase();
@@ -52,9 +51,10 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                   <span
                     className="sp-preset-swatch"
                     style={{
-                      background: p.bg === "#FFFFFF" || p.bg === "#FFFBF5"
-                        ? `linear-gradient(135deg, ${p.fg} 50%, ${p.bg} 50%)`
-                        : `linear-gradient(135deg, ${p.fg} 50%, ${p.bg} 50%)`,
+                      background:
+                        p.bg === "#FFFFFF" || p.bg === "#FFFBF5"
+                          ? `linear-gradient(135deg, ${p.fg} 50%, ${p.bg} 50%)`
+                          : `linear-gradient(135deg, ${p.fg} 50%, ${p.bg} 50%)`,
                       border: "0.5px solid var(--border)",
                     }}
                   />
@@ -69,16 +69,24 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
         <section className="sp-section">
           <p className="sp-label">Custom colors</p>
           <div className="sp-color-grid">
-            {(["fg", "bg"] as const).map(k => {
+            {(["fg", "bg"] as const).map((k) => {
               const id = `sp-color-${k}`;
-              const value = k === "fg" ? style.fgColor : style.transparent ? "transparent" : style.bgColor;
+              const value =
+                k === "fg" ? style.fgColor : style.transparent ? "transparent" : style.bgColor;
               const label = k === "fg" ? "Foreground" : "Background";
-              const swatch = k === "fg" ? style.fgColor : style.transparent ? undefined : style.bgColor;
+              const swatch =
+                k === "fg" ? style.fgColor : style.transparent ? undefined : style.bgColor;
               return (
                 <div key={k} className="sp-color-card">
-                  <label className="sp-color-card-label" htmlFor={id}>{label}</label>
+                  <label className="sp-color-card-label" htmlFor={id}>
+                    {label}
+                  </label>
                   <div className="sp-color-input-row">
-                    <label className="sp-swatch-btn" htmlFor={id} aria-label={`Pick ${label} color`}>
+                    <label
+                      className="sp-swatch-btn"
+                      htmlFor={id}
+                      aria-label={`Pick ${label} color`}
+                    >
                       <span
                         className={`sp-swatch${k === "bg" && style.transparent ? " sp-swatch-transparent" : ""}`}
                         style={swatch ? { background: swatch } : undefined}
@@ -88,7 +96,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                         type="color"
                         className="sp-color-picker"
                         value={k === "fg" ? style.fgColor : style.bgColor}
-                        onChange={e =>
+                        onChange={(e) =>
                           k === "fg"
                             ? set({ fgColor: e.target.value })
                             : set({ bgColor: e.target.value, transparent: false })
@@ -100,9 +108,12 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                       className="sp-hex-input"
                       value={value}
                       maxLength={11}
-                      onChange={e => {
+                      onChange={(e) => {
                         const v = e.target.value;
-                        if (k === "bg" && v === "transparent") { set({ transparent: true }); return; }
+                        if (k === "bg" && v === "transparent") {
+                          set({ transparent: true });
+                          return;
+                        }
                         if (/^#[0-9A-Fa-f]{0,6}$/.test(v)) {
                           k === "fg"
                             ? set({ fgColor: v })
@@ -142,13 +153,15 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
           <input
             type="range"
             className="sp-range"
-            min={128} max={1024} step={32}
+            min={128}
+            max={1024}
+            step={32}
             value={style.size}
-            onChange={e => set({ size: Number(e.target.value) })}
+            onChange={(e) => set({ size: Number(e.target.value) })}
             aria-label="QR code size"
           />
           <div className="sp-chips">
-            {SIZE_CHIPS.map(s => (
+            {SIZE_CHIPS.map((s) => (
               <button
                 key={s}
                 type="button"
@@ -170,9 +183,11 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
           <input
             type="range"
             className="sp-range"
-            min={0} max={8} step={1}
+            min={0}
+            max={8}
+            step={1}
             value={style.margin}
-            onChange={e => set({ margin: Number(e.target.value) })}
+            onChange={(e) => set({ margin: Number(e.target.value) })}
             aria-label="QR code margin"
           />
         </section>
@@ -181,7 +196,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
         <section className="sp-section">
           <p className="sp-label">Error correction</p>
           <div className="sp-ec-grid">
-            {ERROR_LEVELS.map(lvl => (
+            {ERROR_LEVELS.map((lvl) => (
               <button
                 key={lvl.value}
                 type="button"

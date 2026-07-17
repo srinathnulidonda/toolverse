@@ -37,14 +37,11 @@ export default function ValidationPanel({ tags }: ValidationPanelProps) {
         <div className="vp-score-card">
           <div className="vp-score-circle">
             <svg viewBox="0 0 120 120" className="vp-score-svg">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" strokeWidth="10" />
               <circle
-                cx="60" cy="60" r="52"
-                fill="none"
-                stroke="var(--border)"
-                strokeWidth="10"
-              />
-              <circle
-                cx="60" cy="60" r="52"
+                cx="60"
+                cy="60"
+                r="52"
                 fill="none"
                 stroke={getScoreColor(score)}
                 strokeWidth="10"

@@ -1,21 +1,21 @@
 {
-    "name": "Toolverse — Free Utility Hub",
-    "short_name": "Toolverse",
-    "description": "Privacy-first browser tools for PDF, images, finance, dev, resume and social media",
-    "start_url": "/",
-    "display": "standalone",
-    "background_color": "#111110",
-    "theme_color": "#4CAF82",
-    "icons": [
-        {
-            "src": "/favicon.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/favicon.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+  "name": "Toolverse — Free Utility Hub",
+  "short_name": "Toolverse",
+  "description": "Privacy-first browser tools for PDF, images, finance, dev, resume and social media",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111110",
+  "theme_color": "#4CAF82",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

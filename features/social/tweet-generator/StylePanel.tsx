@@ -52,9 +52,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
   const set = (patch: Partial<TweetStyle>) => onChange({ ...style, ...patch });
 
   const currentTheme =
-    style.theme === "custom" && style.customTheme
-      ? style.customTheme
-      : THEME_PRESETS[style.theme];
+    style.theme === "custom" && style.customTheme ? style.customTheme : THEME_PRESETS[style.theme];
 
   const handleThemeChange = (themeKey: ThemePreset) => {
     if (themeKey === "custom") {
@@ -108,14 +106,8 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                           borderColor: theme.border,
                         }}
                       >
-                        <span
-                          className="sp-theme-text"
-                          style={{ color: theme.text }}
-                        />
-                        <span
-                          className="sp-theme-accent"
-                          style={{ background: theme.accent }}
-                        />
+                        <span className="sp-theme-text" style={{ color: theme.text }} />
+                        <span className="sp-theme-accent" style={{ background: theme.accent }} />
                       </div>
                     </div>
                     <span className="sp-theme-name">{theme.name}</span>
@@ -156,9 +148,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                 ] as const
               ).map((colorField) => (
                 <div key={colorField.key} className="sp-color-field">
-                  <label className="sp-color-label">
-                    {colorField.label}
-                  </label>
+                  <label className="sp-color-label">{colorField.label}</label>
                   <div className="sp-color-input-row">
                     <label className="sp-swatch-btn">
                       <span
@@ -205,9 +195,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
               <button
                 key={ratio.value}
                 type="button"
-                className={`sp-ratio-btn${
-                  style.aspectRatio === ratio.value ? " active" : ""
-                }`}
+                className={`sp-ratio-btn${style.aspectRatio === ratio.value ? " active" : ""}`}
                 onClick={() => set({ aspectRatio: ratio.value })}
               >
                 <i className={`ti ${ratio.icon}`} aria-hidden="true" />
@@ -228,9 +216,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
               <button
                 key={font.value}
                 type="button"
-                className={`sp-font-btn${
-                  style.fontFamily === font.value ? " active" : ""
-                }`}
+                className={`sp-font-btn${style.fontFamily === font.value ? " active" : ""}`}
                 onClick={() => set({ fontFamily: font.value })}
               >
                 <span className="sp-font-name">{font.label}</span>
@@ -288,9 +274,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
               <button
                 key={bg.type}
                 type="button"
-                className={`sp-bg-type-btn${
-                  style.backgroundType === bg.type ? " active" : ""
-                }`}
+                className={`sp-bg-type-btn${style.backgroundType === bg.type ? " active" : ""}`}
                 onClick={() => set({ backgroundType: bg.type })}
               >
                 <i className={`ti ${bg.icon}`} aria-hidden="true" />
@@ -308,8 +292,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                     <span
                       className="sp-swatch"
                       style={{
-                        background:
-                          style.backgroundGradient?.start || "#667EEA",
+                        background: style.backgroundGradient?.start || "#667EEA",
                       }}
                     />
                     <input
@@ -383,8 +366,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                       if (/^#[0-9A-Fa-f]{0,6}$/.test(v)) {
                         set({
                           backgroundGradient: {
-                            start:
-                              style.backgroundGradient?.start || "#667EEA",
+                            start: style.backgroundGradient?.start || "#667EEA",
                             end: v,
                             angle: style.backgroundGradient?.angle || 135,
                           },
@@ -398,9 +380,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
               <div className="sp-field">
                 <div className="sp-field-header">
                   <label className="sp-field-label">Angle</label>
-                  <code className="sp-value">
-                    {style.backgroundGradient?.angle || 135}°
-                  </code>
+                  <code className="sp-value">{style.backgroundGradient?.angle || 135}°</code>
                 </div>
                 <input
                   type="range"
@@ -432,16 +412,13 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                     key={pattern.value}
                     type="button"
                     className={`sp-pattern-btn${
-                      style.backgroundPattern?.type === pattern.value
-                        ? " active"
-                        : ""
+                      style.backgroundPattern?.type === pattern.value ? " active" : ""
                     }`}
                     onClick={() =>
                       set({
                         backgroundPattern: {
                           type: pattern.value,
-                          color:
-                            style.backgroundPattern?.color || currentTheme.border,
+                          color: style.backgroundPattern?.color || currentTheme.border,
                           opacity: style.backgroundPattern?.opacity || 0.1,
                           scale: style.backgroundPattern?.scale || 1,
                         },
@@ -458,10 +435,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                 <div className="sp-field-header">
                   <label className="sp-field-label">Opacity</label>
                   <code className="sp-value">
-                    {((style.backgroundPattern?.opacity || 0.1) * 100).toFixed(
-                      0
-                    )}
-                    %
+                    {((style.backgroundPattern?.opacity || 0.1) * 100).toFixed(0)}%
                   </code>
                 </div>
                 <input
@@ -475,8 +449,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                     set({
                       backgroundPattern: {
                         type: style.backgroundPattern?.type || "dots",
-                        color:
-                          style.backgroundPattern?.color || currentTheme.border,
+                        color: style.backgroundPattern?.color || currentTheme.border,
                         opacity: Number(e.target.value),
                         scale: style.backgroundPattern?.scale || 1,
                       },
@@ -488,9 +461,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
               <div className="sp-field">
                 <div className="sp-field-header">
                   <label className="sp-field-label">Scale</label>
-                  <code className="sp-value">
-                    {style.backgroundPattern?.scale || 1}x
-                  </code>
+                  <code className="sp-value">{style.backgroundPattern?.scale || 1}x</code>
                 </div>
                 <input
                   type="range"
@@ -503,8 +474,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                     set({
                       backgroundPattern: {
                         type: style.backgroundPattern?.type || "dots",
-                        color:
-                          style.backgroundPattern?.color || currentTheme.border,
+                        color: style.backgroundPattern?.color || currentTheme.border,
                         opacity: style.backgroundPattern?.opacity || 0.1,
                         scale: Number(e.target.value),
                       },
@@ -527,9 +497,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
                 <button
                   key={corner.value}
                   type="button"
-                  className={`sp-corner-btn${
-                    style.cornerStyle === corner.value ? " active" : ""
-                  }`}
+                  className={`sp-corner-btn${style.cornerStyle === corner.value ? " active" : ""}`}
                   onClick={() => set({ cornerStyle: corner.value })}
                 >
                   {corner.label}
@@ -581,9 +549,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
               max={5}
               step={1}
               value={style.shadowIntensity}
-              onChange={(e) =>
-                set({ shadowIntensity: Number(e.target.value) })
-              }
+              onChange={(e) => set({ shadowIntensity: Number(e.target.value) })}
             />
           </div>
 
@@ -647,20 +613,11 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
               </div>
 
               <div className="sp-watermark-positions">
-                {(
-                  [
-                    "top-left",
-                    "top-right",
-                    "bottom-left",
-                    "bottom-right",
-                  ] as const
-                ).map((pos) => (
+                {(["top-left", "top-right", "bottom-left", "bottom-right"] as const).map((pos) => (
                   <button
                     key={pos}
                     type="button"
-                    className={`sp-wm-pos-btn${
-                      style.watermark.position === pos ? " active" : ""
-                    }`}
+                    className={`sp-wm-pos-btn${style.watermark.position === pos ? " active" : ""}`}
                     onClick={() =>
                       set({
                         watermark: { ...style.watermark, position: pos },
@@ -675,9 +632,7 @@ export default function StylePanel({ style, onChange }: StylePanelProps) {
               <div className="sp-field">
                 <div className="sp-field-header">
                   <label className="sp-field-label">Opacity</label>
-                  <code className="sp-value">
-                    {(style.watermark.opacity * 100).toFixed(0)}%
-                  </code>
+                  <code className="sp-value">{(style.watermark.opacity * 100).toFixed(0)}%</code>
                 </div>
                 <input
                   type="range"

@@ -11,19 +11,14 @@ type HashtagCategoriesProps = {
   onToggleTag: (tag: string) => void;
 };
 
-export default function HashtagCategories({
-  selectedTags,
-  onToggleTag,
-}: HashtagCategoriesProps) {
+export default function HashtagCategories({ selectedTags, onToggleTag }: HashtagCategoriesProps) {
   const [expandedCategory, setExpandedCategory] = useState<string | null>("fashion");
   const [search, setSearch] = useState("");
 
   const filteredCategories = search.trim()
     ? CATEGORIES.map((cat) => ({
         ...cat,
-        hashtags: cat.hashtags.filter((h) =>
-          h.tag.includes(search.toLowerCase().trim())
-        ),
+        hashtags: cat.hashtags.filter((h) => h.tag.includes(search.toLowerCase().trim())),
       })).filter((cat) => cat.hashtags.length > 0)
     : CATEGORIES;
 
@@ -67,9 +62,7 @@ export default function HashtagCategories({
                 <button
                   className="hc-category-header"
                   onClick={() =>
-                    setExpandedCategory(
-                      isExpanded && !search.trim() ? null : category.id
-                    )
+                    setExpandedCategory(isExpanded && !search.trim() ? null : category.id)
                   }
                 >
                   <div className="hc-category-left">
@@ -80,9 +73,7 @@ export default function HashtagCategories({
                     )}
                   </div>
                   <div className="hc-category-right">
-                    <span className="hc-category-count">
-                      {category.hashtags.length} tags
-                    </span>
+                    <span className="hc-category-count">{category.hashtags.length} tags</span>
                     {!search.trim() && (
                       <i
                         className={`ti ti-chevron-down hc-chevron ${isExpanded ? "expanded" : ""}`}
@@ -115,9 +106,7 @@ export default function HashtagCategories({
                               {formatReach(hashtag.estimatedReach)}
                             </span>
                           </div>
-                          {isSelected && (
-                            <i className="ti ti-check hc-check" aria-hidden="true" />
-                          )}
+                          {isSelected && <i className="ti ti-check hc-check" aria-hidden="true" />}
                         </button>
                       );
                     })}

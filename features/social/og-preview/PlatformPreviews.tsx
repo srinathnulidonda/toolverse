@@ -89,14 +89,12 @@ export default function PlatformPreviews({ meta }: PlatformPreviewsProps) {
               <div className="ppv-platform-label">
                 <i className={`ti ${getPlatformIcon(selectedPlatform)}`} aria-hidden="true" />
                 <span>{getPlatformLabel(selectedPlatform)}</span>
-                <span className="ppv-device-indicator">{device === "desktop" ? "Desktop" : "Mobile"}</span>
+                <span className="ppv-device-indicator">
+                  {device === "desktop" ? "Desktop" : "Mobile"}
+                </span>
               </div>
               <div className={`ppv-preview-wrapper ${device === "mobile" ? "mobile" : ""}`}>
-                <PlatformPreview
-                  platform={selectedPlatform}
-                  meta={meta}
-                  device={device}
-                />
+                <PlatformPreview platform={selectedPlatform} meta={meta} device={device} />
               </div>
             </div>
           ) : (
@@ -108,11 +106,7 @@ export default function PlatformPreviews({ meta }: PlatformPreviewsProps) {
                     <span>{getPlatformLabel(platform)}</span>
                   </div>
                   <div className={`ppv-grid-item-preview ${device === "mobile" ? "mobile" : ""}`}>
-                    <PlatformPreview
-                      platform={platform}
-                      meta={meta}
-                      device={device}
-                    />
+                    <PlatformPreview platform={platform} meta={meta} device={device} />
                   </div>
                 </div>
               ))}
@@ -129,7 +123,8 @@ export default function PlatformPreviews({ meta }: PlatformPreviewsProps) {
               </div>
               <p className="ppv-empty-title">No preview available</p>
               <p className="ppv-empty-text">
-                Fill in the title, description, and image to see how your content will look when shared
+                Fill in the title, description, and image to see how your content will look when
+                shared
               </p>
             </div>
           </div>

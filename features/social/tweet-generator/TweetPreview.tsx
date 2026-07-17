@@ -1,5 +1,6 @@
 // features/social/tweet-generator/TweetPreview.tsx
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { TweetData, TweetStyle, ExportFormat } from "./types";
@@ -19,11 +20,7 @@ type TweetPreviewProps = {
   onSave: (thumbnail: string) => void;
 };
 
-export default function TweetPreview({
-  tweetData,
-  style,
-  onSave,
-}: TweetPreviewProps) {
+export default function TweetPreview({ tweetData, style, onSave }: TweetPreviewProps) {
   const previewRef = useRef<HTMLDivElement>(null);
   const [exporting, setExporting] = useState<ExportFormat | null>(null);
   const [saved, setSaved] = useState(false);
@@ -32,14 +29,10 @@ export default function TweetPreview({
   const hasContent = tweetData.content.text.trim().length > 0;
 
   const theme =
-    style.theme === "custom" && style.customTheme
-      ? style.customTheme
-      : THEME_PRESETS[style.theme];
+    style.theme === "custom" && style.customTheme ? style.customTheme : THEME_PRESETS[style.theme];
 
   const dimensions = getAspectRatioDimensions(
-    style.aspectRatio === "custom"
-      ? "16:9"
-      : style.aspectRatio,
+    style.aspectRatio === "custom" ? "16:9" : style.aspectRatio,
     800
   );
 
@@ -63,7 +56,7 @@ export default function TweetPreview({
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {
-      console.error("Failed to save:", error);
+      logger.error("Failed to save:", error);
     }
   }, [hasContent, onSave]);
 
@@ -76,10 +69,7 @@ export default function TweetPreview({
       try {
         const scale = format === "svg" ? 1 : 3; // 3x for retina
         const canvas = await html2canvas(previewRef.current, {
-          backgroundColor:
-            style.backgroundType === "solid"
-              ? theme.background
-              : "transparent",
+          backgroundColor: style.backgroundType === "solid" ? theme.background : "transparent",
           scale,
           logging: false,
           useCORS: true,
@@ -124,7 +114,7 @@ export default function TweetPreview({
           );
         }
       } catch (error) {
-        console.error("Export failed:", error);
+        logger.error("Export failed:", error);
         setExporting(null);
       }
     },
@@ -145,17 +135,15 @@ export default function TweetPreview({
       canvas.toBlob(async (blob) => {
         if (!blob) return;
         try {
-          await navigator.clipboard.write([
-            new ClipboardItem({ "image/png": blob }),
-          ]);
+          await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
           setCopied(true);
           setTimeout(() => setCopied(false), 2000);
         } catch (err) {
-          console.error("Copy failed:", err);
+          logger.error("Copy failed:", err);
         }
       }, "image/png");
     } catch (error) {
-      console.error("Failed to copy:", error);
+      logger.error("Failed to copy:", error);
     }
   }, [hasContent, theme]);
 
@@ -187,9 +175,7 @@ export default function TweetPreview({
       const size = 20 * style.backgroundPattern.scale;
       return {
         backgroundSize:
-          style.backgroundPattern.type === "grid"
-            ? `${size}px ${size}px`
-            : `${size}px ${size}px`,
+          style.backgroundPattern.type === "grid" ? `${size}px ${size}px` : `${size}px ${size}px`,
         opacity: style.backgroundPattern.opacity,
       };
     }
@@ -221,8 +207,7 @@ export default function TweetPreview({
     return shadows[style.shadowIntensity] || shadows[2];
   };
 
-  const verifiedBadgeColor =
-    VERIFIED_BADGE_COLORS[tweetData.profile.verifiedType];
+  const verifiedBadgeColor = VERIFIED_BADGE_COLORS[tweetData.profile.verifiedType];
 
   return (
     <>
@@ -241,9 +226,7 @@ export default function TweetPreview({
                 <div className="tp-placeholder-icon">
                   <i className="ti ti-message" aria-hidden="true" />
                 </div>
-                <p className="tp-placeholder-text">
-                  Enter tweet content to see preview
-                </p>
+                <p className="tp-placeholder-text">Enter tweet content to see preview</p>
               </div>
             ) : (
               <div
@@ -270,10 +253,7 @@ export default function TweetPreview({
                   />
                   <div className="tp-profile-info">
                     <div className="tp-name-row">
-                      <span
-                        className="tp-display-name"
-                        style={{ color: theme.text }}
-                      >
+                      <span className="tp-display-name" style={{ color: theme.text }}>
                         {tweetData.profile.displayName}
                       </span>
                       {tweetData.profile.verified && (
@@ -284,10 +264,7 @@ export default function TweetPreview({
                         />
                       )}
                     </div>
-                    <span
-                      className="tp-handle"
-                      style={{ color: theme.textSecondary }}
-                    >
+                    <span className="tp-handle" style={{ color: theme.textSecondary }}>
                       @{tweetData.profile.handle}
                     </span>
                   </div>
@@ -304,20 +281,14 @@ export default function TweetPreview({
                       fontFamily: getFontFamily(style.fontFamily),
                     }}
                     dangerouslySetInnerHTML={{
-                      __html: highlightTextEntities(
-                        tweetData.content.text,
-                        theme
-                      ),
+                      __html: highlightTextEntities(tweetData.content.text, theme),
                     }}
                   />
                 </div>
 
                 {/* Timestamp & Source */}
                 <div className="tp-tweet-meta">
-                  <span
-                    className="tp-timestamp"
-                    style={{ color: theme.textSecondary }}
-                  >
+                  <span className="tp-timestamp" style={{ color: theme.textSecondary }}>
                     {formatTimestamp(
                       tweetData.content.timestamp,
                       tweetData.content.timestampFormat,
@@ -326,16 +297,10 @@ export default function TweetPreview({
                   </span>
                   {tweetData.content.showSource && (
                     <>
-                      <span
-                        className="tp-meta-dot"
-                        style={{ color: theme.textTertiary }}
-                      >
+                      <span className="tp-meta-dot" style={{ color: theme.textTertiary }}>
                         ·
                       </span>
-                      <span
-                        className="tp-source"
-                        style={{ color: theme.textSecondary }}
-                      >
+                      <span className="tp-source" style={{ color: theme.textSecondary }}>
                         {tweetData.content.source}
                       </span>
                     </>
@@ -344,10 +309,7 @@ export default function TweetPreview({
 
                 {/* Engagement Metrics */}
                 {tweetData.engagement.showMetrics && (
-                  <div
-                    className="tp-engagement"
-                    style={{ borderColor: theme.border }}
-                  >
+                  <div className="tp-engagement" style={{ borderColor: theme.border }}>
                     <div className="tp-metrics">
                       <div className="tp-metric">
                         <i
@@ -429,10 +391,7 @@ export default function TweetPreview({
             onClick={handleSave}
             disabled={!hasContent}
           >
-            <i
-              className={`ti ${saved ? "ti-check" : "ti-bookmark"}`}
-              aria-hidden="true"
-            />
+            <i className={`ti ${saved ? "ti-check" : "ti-bookmark"}`} aria-hidden="true" />
             <span>{saved ? "Saved!" : "Save to history"}</span>
           </button>
 
@@ -441,10 +400,7 @@ export default function TweetPreview({
             onClick={handleCopyImage}
             disabled={!hasContent}
           >
-            <i
-              className={`ti ${copied ? "ti-check" : "ti-clipboard"}`}
-              aria-hidden="true"
-            />
+            <i className={`ti ${copied ? "ti-check" : "ti-clipboard"}`} aria-hidden="true" />
             <span>{copied ? "Copied!" : "Copy image"}</span>
           </button>
         </div>
@@ -491,8 +447,7 @@ export default function TweetPreview({
 
 function getFontFamily(family: string): string {
   const families: Record<string, string> = {
-    system:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    system: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     inter: '"Inter", -apple-system, sans-serif',
     segoe: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
     "sf-pro": '"SF Pro Display", -apple-system, sans-serif',

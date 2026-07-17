@@ -3,6 +3,11 @@ import Link from "next/link";
 import { TOOLS } from "@/lib/tools";
 import { getCategoriesWithCount } from "@/lib/tools";
 
+export const metadata = {
+  title: "Page Not Found - Toolverse",
+  description: "The page you're looking for doesn't exist or has been moved.",
+};
+
 const popular = TOOLS.slice(0, 4);
 
 export default function NotFound() {
@@ -12,7 +17,6 @@ export default function NotFound() {
     <>
       <div className="nf-page">
         <div className="nf-shell">
-
           {/* Status */}
           <div className="nf-status">
             <span className="nf-status-dot" aria-hidden="true" />
@@ -57,11 +61,7 @@ export default function NotFound() {
             </Link>
             <div className="nf-footer-cats">
               {CATEGORIES.slice(0, 4).map((cat) => (
-                <Link
-                  key={cat.slug}
-                  href={`/categories/${cat.slug}`}
-                  className="nf-cat-chip"
-                >
+                <Link key={cat.slug} href={`/categories/${cat.slug}`} className="nf-cat-chip">
                   <i className={`ti ${cat.icon}`} aria-hidden="true" />
                   {cat.label.replace(" Tools", "")}
                 </Link>

@@ -1,11 +1,11 @@
 // features/social/og-preview/utils.ts
 
-import type { 
-  MetaData, 
-  ImageValidation, 
-  ValidationResult, 
+import type {
+  MetaData,
+  ImageValidation,
+  ValidationResult,
   Platform,
-  PlatformRequirements 
+  PlatformRequirements,
 } from "./types";
 
 export const PLATFORM_REQUIREMENTS: Record<Platform, PlatformRequirements> = {
@@ -141,14 +141,13 @@ export async function fetchMetaFromUrl(url: string): Promise<Partial<MetaData>> 
     const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
     const response = await fetch(proxyUrl);
     const html = await response.text();
-    
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
-    
+
     const getMetaContent = (name: string): string => {
-      const meta = 
-        doc.querySelector(`meta[property="${name}"]`) ||
-        doc.querySelector(`meta[name="${name}"]`);
+      const meta =
+        doc.querySelector(`meta[property="${name}"]`) || doc.querySelector(`meta[name="${name}"]`);
       return meta?.getAttribute("content") || "";
     };
 
@@ -160,21 +159,21 @@ export async function fetchMetaFromUrl(url: string): Promise<Partial<MetaData>> 
       type: getMetaContent("og:type") || "website",
       siteName: getMetaContent("og:site_name") || "",
       locale: getMetaContent("og:locale") || "en_US",
-      
+
       twitterCard: (getMetaContent("twitter:card") as any) || "summary_large_image",
       twitterSite: getMetaContent("twitter:site") || "",
       twitterCreator: getMetaContent("twitter:creator") || "",
       twitterTitle: getMetaContent("twitter:title") || "",
       twitterDescription: getMetaContent("twitter:description") || "",
       twitterImage: getMetaContent("twitter:image") || "",
-      
+
       keywords: getMetaContent("keywords") || "",
       author: getMetaContent("author") || "",
       canonical: doc.querySelector("link[rel='canonical']")?.getAttribute("href") || "",
       robots: getMetaContent("robots") || "",
       themeColor: getMetaContent("theme-color") || "",
       favicon: doc.querySelector("link[rel='icon']")?.getAttribute("href") || "",
-      
+
       imageAlt: getMetaContent("og:image:alt") || "",
       imageWidth: getMetaContent("og:image:width") || "",
       imageHeight: getMetaContent("og:image:height") || "",
@@ -200,7 +199,7 @@ export async function validateImage(imageUrl: string): Promise<ImageValidation> 
     // Load image to get dimensions
     const img = new Image();
     img.crossOrigin = "anonymous";
-    
+
     const result = await new Promise<ImageValidation>((resolve) => {
       img.onload = () => {
         const width = img.naturalWidth;
@@ -246,10 +245,7 @@ export async function validateImage(imageUrl: string): Promise<ImageValidation> 
   }
 }
 
-export function validateMetaForPlatform(
-  meta: MetaData,
-  platform: Platform
-): ValidationResult[] {
+export function validateMetaForPlatform(meta: MetaData, platform: Platform): ValidationResult[] {
   const results: ValidationResult[] = [];
   const req = PLATFORM_REQUIREMENTS[platform];
 
@@ -339,7 +335,8 @@ export function generateMetaTags(meta: MetaData): string {
 
   lines.push("<!-- Primary Meta Tags -->");
   if (meta.title) lines.push(`<title>${escapeHtml(meta.title)}</title>`);
-  if (meta.description) lines.push(`<meta name="description" content="${escapeHtml(meta.description)}">`);
+  if (meta.description)
+    lines.push(`<meta name="description" content="${escapeHtml(meta.description)}">`);
   if (meta.keywords) lines.push(`<meta name="keywords" content="${escapeHtml(meta.keywords)}">`);
   if (meta.author) lines.push(`<meta name="author" content="${escapeHtml(meta.author)}">`);
   if (meta.robots) lines.push(`<meta name="robots" content="${escapeHtml(meta.robots)}">`);
@@ -347,28 +344,46 @@ export function generateMetaTags(meta: MetaData): string {
 
   lines.push("");
   lines.push("<!-- Open Graph / Facebook -->");
-  lines.push(`<meta property="og:type" content="${escapeHtml(meta.type || 'website')}">`);
+  lines.push(`<meta property="og:type" content="${escapeHtml(meta.type || "website")}">`);
   if (meta.url) lines.push(`<meta property="og:url" content="${escapeHtml(meta.url)}">`);
   if (meta.title) lines.push(`<meta property="og:title" content="${escapeHtml(meta.title)}">`);
-  if (meta.description) lines.push(`<meta property="og:description" content="${escapeHtml(meta.description)}">`);
+  if (meta.description)
+    lines.push(`<meta property="og:description" content="${escapeHtml(meta.description)}">`);
   if (meta.image) {
     lines.push(`<meta property="og:image" content="${escapeHtml(meta.image)}">`);
-    if (meta.imageAlt) lines.push(`<meta property="og:image:alt" content="${escapeHtml(meta.imageAlt)}">`);
-    if (meta.imageWidth) lines.push(`<meta property="og:image:width" content="${escapeHtml(meta.imageWidth)}">`);
-    if (meta.imageHeight) lines.push(`<meta property="og:image:height" content="${escapeHtml(meta.imageHeight)}">`);
+    if (meta.imageAlt)
+      lines.push(`<meta property="og:image:alt" content="${escapeHtml(meta.imageAlt)}">`);
+    if (meta.imageWidth)
+      lines.push(`<meta property="og:image:width" content="${escapeHtml(meta.imageWidth)}">`);
+    if (meta.imageHeight)
+      lines.push(`<meta property="og:image:height" content="${escapeHtml(meta.imageHeight)}">`);
   }
-  if (meta.siteName) lines.push(`<meta property="og:site_name" content="${escapeHtml(meta.siteName)}">`);
+  if (meta.siteName)
+    lines.push(`<meta property="og:site_name" content="${escapeHtml(meta.siteName)}">`);
   if (meta.locale) lines.push(`<meta property="og:locale" content="${escapeHtml(meta.locale)}">`);
 
   lines.push("");
   lines.push("<!-- Twitter -->");
-  lines.push(`<meta name="twitter:card" content="${escapeHtml(meta.twitterCard || 'summary_large_image')}">`);
+  lines.push(
+    `<meta name="twitter:card" content="${escapeHtml(meta.twitterCard || "summary_large_image")}">`
+  );
   if (meta.url) lines.push(`<meta name="twitter:url" content="${escapeHtml(meta.url)}">`);
-  if (meta.twitterTitle || meta.title) lines.push(`<meta name="twitter:title" content="${escapeHtml(meta.twitterTitle || meta.title)}">`);
-  if (meta.twitterDescription || meta.description) lines.push(`<meta name="twitter:description" content="${escapeHtml(meta.twitterDescription || meta.description)}">`);
-  if (meta.twitterImage || meta.image) lines.push(`<meta name="twitter:image" content="${escapeHtml(meta.twitterImage || meta.image)}">`);
-  if (meta.twitterSite) lines.push(`<meta name="twitter:site" content="${escapeHtml(meta.twitterSite)}">`);
-  if (meta.twitterCreator) lines.push(`<meta name="twitter:creator" content="${escapeHtml(meta.twitterCreator)}">`);
+  if (meta.twitterTitle || meta.title)
+    lines.push(
+      `<meta name="twitter:title" content="${escapeHtml(meta.twitterTitle || meta.title)}">`
+    );
+  if (meta.twitterDescription || meta.description)
+    lines.push(
+      `<meta name="twitter:description" content="${escapeHtml(meta.twitterDescription || meta.description)}">`
+    );
+  if (meta.twitterImage || meta.image)
+    lines.push(
+      `<meta name="twitter:image" content="${escapeHtml(meta.twitterImage || meta.image)}">`
+    );
+  if (meta.twitterSite)
+    lines.push(`<meta name="twitter:site" content="${escapeHtml(meta.twitterSite)}">`);
+  if (meta.twitterCreator)
+    lines.push(`<meta name="twitter:creator" content="${escapeHtml(meta.twitterCreator)}">`);
 
   if (meta.themeColor) {
     lines.push("");

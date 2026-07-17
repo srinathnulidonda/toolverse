@@ -63,10 +63,23 @@ export const PLATFORM_LIMITS: Record<Platform, PlatformLimit> = {
 
 // Commonly flagged/shadowbanned hashtags on Instagram (illustrative list)
 export const RISKY_HASHTAGS = new Set([
-  "like4like", "follow4follow", "likeforlike", "followforfollow",
-  "l4l", "f4f", "instalike", "instafollow", "likeforfollow",
-  "followback", "like4follow", "tagsforlikes", "spam4spam",
-  "teamfollowback", "followtrain", "likebait", "commentforcomment",
+  "like4like",
+  "follow4follow",
+  "likeforlike",
+  "followforfollow",
+  "l4l",
+  "f4f",
+  "instalike",
+  "instafollow",
+  "likeforfollow",
+  "followback",
+  "like4follow",
+  "tagsforlikes",
+  "spam4spam",
+  "teamfollowback",
+  "followtrain",
+  "likebait",
+  "commentforcomment",
 ]);
 
 export const CATEGORIES: Category[] = [
@@ -217,13 +230,43 @@ export const CATEGORIES: Category[] = [
       { tag: "photography", size: "mega", estimatedReach: 890000000, category: "photography" },
       { tag: "photooftheday", size: "mega", estimatedReach: 680000000, category: "photography" },
       { tag: "photographer", size: "large", estimatedReach: 165000000, category: "photography" },
-      { tag: "portraitphotography", size: "medium", estimatedReach: 45000000, category: "photography" },
-      { tag: "landscapephotography", size: "medium", estimatedReach: 38000000, category: "photography" },
-      { tag: "streetphotography", size: "medium", estimatedReach: 28000000, category: "photography" },
-      { tag: "naturephotography", size: "small", estimatedReach: 18000000, category: "photography" },
+      {
+        tag: "portraitphotography",
+        size: "medium",
+        estimatedReach: 45000000,
+        category: "photography",
+      },
+      {
+        tag: "landscapephotography",
+        size: "medium",
+        estimatedReach: 38000000,
+        category: "photography",
+      },
+      {
+        tag: "streetphotography",
+        size: "medium",
+        estimatedReach: 28000000,
+        category: "photography",
+      },
+      {
+        tag: "naturephotography",
+        size: "small",
+        estimatedReach: 18000000,
+        category: "photography",
+      },
       { tag: "filmphotography", size: "small", estimatedReach: 9800000, category: "photography" },
-      { tag: "minimalistphotography", size: "niche", estimatedReach: 1200000, category: "photography" },
-      { tag: "blackandwhitephotography", size: "niche", estimatedReach: 2400000, category: "photography" },
+      {
+        tag: "minimalistphotography",
+        size: "niche",
+        estimatedReach: 1200000,
+        category: "photography",
+      },
+      {
+        tag: "blackandwhitephotography",
+        size: "niche",
+        estimatedReach: 2400000,
+        category: "photography",
+      },
     ],
   },
   {

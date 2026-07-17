@@ -5,102 +5,83 @@ import type { QrStyle } from "./types";
 import QrPreview from "./QrPreview";
 
 type PreviewFabProps = {
-    data: string;
-    style: QrStyle;
-    slug: string;
-    isOpen: boolean;
-    onOpen: () => void;
-    onClose: () => void;
-    onSave: (thumbnail: string) => void;
+  data: string;
+  style: QrStyle;
+  slug: string;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onSave: (thumbnail: string) => void;
 };
 
 export default function PreviewFab({
-    data,
-    style,
-    slug,
-    isOpen,
-    onOpen,
-    onClose,
-    onSave,
+  data,
+  style,
+  slug,
+  isOpen,
+  onOpen,
+  onClose,
+  onSave,
 }: PreviewFabProps) {
-    if (!data) return null;
+  if (!data) return null;
 
-    return (
-        <>
-            {/* Floating action button — sticky at bottom of config panel */}
-            <button
-                className="pfab-btn"
-                onClick={onOpen}
-                aria-label="View QR code preview"
-                aria-expanded={isOpen}
-                aria-haspopup="dialog"
-            >
-                <span className="pfab-btn-inner">
-                    <i className="ti ti-qrcode pfab-icon" aria-hidden="true" />
-                    <span className="pfab-label">View QR code</span>
-                </span>
-                <span className="pfab-arrow" aria-hidden="true">
-                    <i className="ti ti-chevron-up" />
-                </span>
-            </button>
+  return (
+    <>
+      {/* Floating action button — sticky at bottom of config panel */}
+      <button
+        className="pfab-btn"
+        onClick={onOpen}
+        aria-label="View QR code preview"
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
+      >
+        <span className="pfab-btn-inner">
+          <i className="ti ti-qrcode pfab-icon" aria-hidden="true" />
+          <span className="pfab-label">View QR code</span>
+        </span>
+        <span className="pfab-arrow" aria-hidden="true">
+          <i className="ti ti-chevron-up" />
+        </span>
+      </button>
 
-            {/* Backdrop */}
-            {isOpen && (
-                <div
-                    className="pfab-backdrop"
-                    onClick={onClose}
-                    aria-hidden="true"
-                />
+      {/* Backdrop */}
+      {isOpen && <div className="pfab-backdrop" onClick={onClose} aria-hidden="true" />}
+
+      {/* Bottom sheet */}
+      <div
+        className={`pfab-sheet${isOpen ? " pfab-sheet--open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="QR code preview"
+      >
+        {/* Drag handle */}
+        <button className="pfab-handle" onClick={onClose} aria-label="Close preview">
+          <span className="pfab-handle-bar" />
+        </button>
+
+        {/* Sheet header */}
+        <div className="pfab-sheet-header">
+          <div className="pfab-sheet-title-group">
+            <span className="pfab-sheet-title">Your QR Code</span>
+            {data && (
+              <span className="pfab-sheet-live">
+                <span className="pfab-live-dot" aria-hidden="true" />
+                Live preview
+              </span>
             )}
+          </div>
+          <button className="pfab-sheet-close" onClick={onClose} aria-label="Close preview">
+            <i className="ti ti-x" aria-hidden="true" />
+          </button>
+        </div>
 
-            {/* Bottom sheet */}
-            <div
-                className={`pfab-sheet${isOpen ? " pfab-sheet--open" : ""}`}
-                role="dialog"
-                aria-modal="true"
-                aria-label="QR code preview"
-            >
-                {/* Drag handle */}
-                <button
-                    className="pfab-handle"
-                    onClick={onClose}
-                    aria-label="Close preview"
-                >
-                    <span className="pfab-handle-bar" />
-                </button>
+        {/* Sheet content */}
+        <div className="pfab-sheet-body">
+          <QrPreview data={data} style={style} slug={slug} onSave={onSave} />
+        </div>
+      </div>
 
-                {/* Sheet header */}
-                <div className="pfab-sheet-header">
-                    <div className="pfab-sheet-title-group">
-                        <span className="pfab-sheet-title">Your QR Code</span>
-                        {data && (
-                            <span className="pfab-sheet-live">
-                                <span className="pfab-live-dot" aria-hidden="true" />
-                                Live preview
-                            </span>
-                        )}
-                    </div>
-                    <button
-                        className="pfab-sheet-close"
-                        onClick={onClose}
-                        aria-label="Close preview"
-                    >
-                        <i className="ti ti-x" aria-hidden="true" />
-                    </button>
-                </div>
-
-                {/* Sheet content */}
-                <div className="pfab-sheet-body">
-                    <QrPreview
-                        data={data}
-                        style={style}
-                        slug={slug}
-                        onSave={onSave}
-                    />
-                </div>
-            </div>
-
-            <style>{`
+      <style>{`
         /* ── FAB — hidden on desktop, shown on mobile via media query ── */
         .pfab-btn {
           display: none;
@@ -346,6 +327,6 @@ export default function PreviewFab({
           }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

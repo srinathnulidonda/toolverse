@@ -21,9 +21,7 @@ export default function ToolsGrid({ tools }: ToolsGridProps) {
             <i className="ti ti-mood-empty" aria-hidden="true" />
           </div>
           <p className="tdg-empty-title">No tools found</p>
-          <p className="tdg-empty-desc">
-            Try a different search term or category.
-          </p>
+          <p className="tdg-empty-desc">Try a different search term or category.</p>
         </div>
       )}
 

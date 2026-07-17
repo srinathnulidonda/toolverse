@@ -41,10 +41,10 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
 
   const handleFetch = async () => {
     if (!fetchUrl.trim()) return;
-    
+
     setFetching(true);
     setFetchError("");
-    
+
     try {
       const fetchedMeta = await fetchMetaFromUrl(fetchUrl);
       onChange({ ...meta, ...fetchedMeta });
@@ -58,13 +58,12 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
   const set = (patch: Partial<MetaData>) => onChange({ ...meta, ...patch });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
   return (
     <>
       <div className="mif-root">
-        
         {/* Mode toggle */}
         <div className="mif-mode-toggle">
           <button
@@ -128,16 +127,16 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
 
         {/* Basic Meta Tags */}
         <section className="mif-section">
-          <button
-            className="mif-section-header"
-            onClick={() => toggleSection("basic")}
-          >
+          <button className="mif-section-header" onClick={() => toggleSection("basic")}>
             <div className="mif-section-header-left">
               <i className="ti ti-file-text" aria-hidden="true" />
               <span className="mif-section-title">Basic Meta Tags</span>
               <span className="mif-section-badge">Required</span>
             </div>
-            <i className={`ti ti-chevron-down mif-chevron ${expandedSections.basic ? "expanded" : ""}`} aria-hidden="true" />
+            <i
+              className={`ti ti-chevron-down mif-chevron ${expandedSections.basic ? "expanded" : ""}`}
+              aria-hidden="true"
+            />
           </button>
 
           {expandedSections.basic && (
@@ -145,7 +144,10 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
               <div className="mif-field">
                 <label className="mif-label" htmlFor="mif-title">
                   Page Title
-                  <span className="mif-char-count" style={{ color: meta.title.length > 60 ? "#D97706" : "var(--text-tertiary)" }}>
+                  <span
+                    className="mif-char-count"
+                    style={{ color: meta.title.length > 60 ? "#D97706" : "var(--text-tertiary)" }}
+                  >
                     {meta.title.length}/60
                   </span>
                 </label>
@@ -164,7 +166,12 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
               <div className="mif-field">
                 <label className="mif-label" htmlFor="mif-description">
                   Description
-                  <span className="mif-char-count" style={{ color: meta.description.length > 155 ? "#D97706" : "var(--text-tertiary)" }}>
+                  <span
+                    className="mif-char-count"
+                    style={{
+                      color: meta.description.length > 155 ? "#D97706" : "var(--text-tertiary)",
+                    }}
+                  >
                     {meta.description.length}/155
                   </span>
                 </label>
@@ -195,14 +202,20 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
                 />
                 {meta.image && (
                   <div className="mif-image-preview">
-                    <img src={meta.image} alt="Preview" onError={(e) => e.currentTarget.style.display = "none"} />
+                    <img
+                      src={meta.image}
+                      alt="Preview"
+                      onError={(e) => (e.currentTarget.style.display = "none")}
+                    />
                   </div>
                 )}
               </div>
 
               <div className="mif-row">
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-url">Canonical URL</label>
+                  <label className="mif-label" htmlFor="mif-url">
+                    Canonical URL
+                  </label>
                   <input
                     id="mif-url"
                     type="url"
@@ -213,7 +226,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
                   />
                 </div>
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-type">Content Type</label>
+                  <label className="mif-label" htmlFor="mif-type">
+                    Content Type
+                  </label>
                   <select
                     id="mif-type"
                     className="mif-select"
@@ -230,7 +245,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
               </div>
 
               <div className="mif-field">
-                <label className="mif-label" htmlFor="mif-sitename">Site Name</label>
+                <label className="mif-label" htmlFor="mif-sitename">
+                  Site Name
+                </label>
                 <input
                   id="mif-sitename"
                   type="text"
@@ -246,16 +263,16 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
 
         {/* Twitter Card */}
         <section className="mif-section">
-          <button
-            className="mif-section-header"
-            onClick={() => toggleSection("twitter")}
-          >
+          <button className="mif-section-header" onClick={() => toggleSection("twitter")}>
             <div className="mif-section-header-left">
               <i className="ti ti-brand-twitter" aria-hidden="true" />
               <span className="mif-section-title">Twitter Card</span>
               <span className="mif-section-badge optional">Optional</span>
             </div>
-            <i className={`ti ti-chevron-down mif-chevron ${expandedSections.twitter ? "expanded" : ""}`} aria-hidden="true" />
+            <i
+              className={`ti ti-chevron-down mif-chevron ${expandedSections.twitter ? "expanded" : ""}`}
+              aria-hidden="true"
+            />
           </button>
 
           {expandedSections.twitter && (
@@ -279,7 +296,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
 
               <div className="mif-row">
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-tw-site">@username (Site)</label>
+                  <label className="mif-label" htmlFor="mif-tw-site">
+                    @username (Site)
+                  </label>
                   <input
                     id="mif-tw-site"
                     type="text"
@@ -290,7 +309,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
                   />
                 </div>
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-tw-creator">@username (Author)</label>
+                  <label className="mif-label" htmlFor="mif-tw-creator">
+                    @username (Author)
+                  </label>
                   <input
                     id="mif-tw-creator"
                     type="text"
@@ -354,23 +375,25 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
 
         {/* Advanced Meta */}
         <section className="mif-section">
-          <button
-            className="mif-section-header"
-            onClick={() => toggleSection("advanced")}
-          >
+          <button className="mif-section-header" onClick={() => toggleSection("advanced")}>
             <div className="mif-section-header-left">
               <i className="ti ti-settings" aria-hidden="true" />
               <span className="mif-section-title">Advanced Meta</span>
               <span className="mif-section-badge optional">Optional</span>
             </div>
-            <i className={`ti ti-chevron-down mif-chevron ${expandedSections.advanced ? "expanded" : ""}`} aria-hidden="true" />
+            <i
+              className={`ti ti-chevron-down mif-chevron ${expandedSections.advanced ? "expanded" : ""}`}
+              aria-hidden="true"
+            />
           </button>
 
           {expandedSections.advanced && (
             <div className="mif-section-body">
               <div className="mif-row">
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-img-alt">Image Alt Text</label>
+                  <label className="mif-label" htmlFor="mif-img-alt">
+                    Image Alt Text
+                  </label>
                   <input
                     id="mif-img-alt"
                     type="text"
@@ -381,7 +404,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
                   />
                 </div>
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-locale">Locale</label>
+                  <label className="mif-label" htmlFor="mif-locale">
+                    Locale
+                  </label>
                   <input
                     id="mif-locale"
                     type="text"
@@ -395,7 +420,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
 
               <div className="mif-row">
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-img-w">Image Width (px)</label>
+                  <label className="mif-label" htmlFor="mif-img-w">
+                    Image Width (px)
+                  </label>
                   <input
                     id="mif-img-w"
                     type="number"
@@ -406,7 +433,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
                   />
                 </div>
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-img-h">Image Height (px)</label>
+                  <label className="mif-label" htmlFor="mif-img-h">
+                    Image Height (px)
+                  </label>
                   <input
                     id="mif-img-h"
                     type="number"
@@ -419,7 +448,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
               </div>
 
               <div className="mif-field">
-                <label className="mif-label" htmlFor="mif-author">Author</label>
+                <label className="mif-label" htmlFor="mif-author">
+                  Author
+                </label>
                 <input
                   id="mif-author"
                   type="text"
@@ -435,22 +466,24 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
 
         {/* SEO Meta */}
         <section className="mif-section">
-          <button
-            className="mif-section-header"
-            onClick={() => toggleSection("seo")}
-          >
+          <button className="mif-section-header" onClick={() => toggleSection("seo")}>
             <div className="mif-section-header-left">
               <i className="ti ti-seo" aria-hidden="true" />
               <span className="mif-section-title">SEO & Extras</span>
               <span className="mif-section-badge optional">Optional</span>
             </div>
-            <i className={`ti ti-chevron-down mif-chevron ${expandedSections.seo ? "expanded" : ""}`} aria-hidden="true" />
+            <i
+              className={`ti ti-chevron-down mif-chevron ${expandedSections.seo ? "expanded" : ""}`}
+              aria-hidden="true"
+            />
           </button>
 
           {expandedSections.seo && (
             <div className="mif-section-body">
               <div className="mif-field">
-                <label className="mif-label" htmlFor="mif-keywords">Keywords</label>
+                <label className="mif-label" htmlFor="mif-keywords">
+                  Keywords
+                </label>
                 <input
                   id="mif-keywords"
                   type="text"
@@ -463,7 +496,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
               </div>
 
               <div className="mif-field">
-                <label className="mif-label" htmlFor="mif-canonical">Canonical URL</label>
+                <label className="mif-label" htmlFor="mif-canonical">
+                  Canonical URL
+                </label>
                 <input
                   id="mif-canonical"
                   type="url"
@@ -476,7 +511,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
 
               <div className="mif-row">
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-robots">Robots</label>
+                  <label className="mif-label" htmlFor="mif-robots">
+                    Robots
+                  </label>
                   <select
                     id="mif-robots"
                     className="mif-select"
@@ -491,7 +528,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
                   </select>
                 </div>
                 <div className="mif-field">
-                  <label className="mif-label" htmlFor="mif-theme">Theme Color</label>
+                  <label className="mif-label" htmlFor="mif-theme">
+                    Theme Color
+                  </label>
                   <div className="mif-color-input-row">
                     <input
                       type="color"
@@ -512,7 +551,9 @@ export default function MetaInputForm({ meta, onChange }: MetaInputFormProps) {
               </div>
 
               <div className="mif-field">
-                <label className="mif-label" htmlFor="mif-favicon">Favicon URL</label>
+                <label className="mif-label" htmlFor="mif-favicon">
+                  Favicon URL
+                </label>
                 <input
                   id="mif-favicon"
                   type="url"

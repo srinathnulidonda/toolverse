@@ -12,10 +12,7 @@ export default function CategoryToolsHeader({ category }: Props) {
           <div className="cth-header-row">
             <div className="cth-crumb-col">
               <Breadcrumb
-                items={[
-                  { label: "Tools", href: "/tools" },
-                  { label: category.label },
-                ]}
+                items={[{ label: "Tools", href: "/tools" }, { label: category.label }]}
                 inline
               />
             </div>

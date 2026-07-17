@@ -1,5 +1,6 @@
 // features/social/hashtag-generator/SelectedHashtags.tsx
 "use client";
+import { logger } from "@/lib/logger";
 
 import { useState } from "react";
 import type { Platform } from "./types";
@@ -20,21 +21,21 @@ export default function SelectedHashtags({
   onClear,
 }: SelectedHashtagsProps) {
   const [copied, setCopied] = useState(false);
-  
+
   const warnings = validateHashtagSet(hashtags, platform);
   const limit = PLATFORM_LIMITS[platform];
   const totalChars = hashtags.reduce((sum, h) => sum + h.length + 2, 0);
 
   const handleCopy = async () => {
     if (hashtags.length === 0) return;
-    
+
     try {
       const text = formatHashtagsForExport(hashtags, "space");
       await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      logger.error("Failed to copy:", err);
     }
   };
 
@@ -80,20 +81,19 @@ export default function SelectedHashtags({
             <span className="sh-stat-value" style={{ color: getCountColor() }}>
               {hashtags.length}
             </span>
-            <span className="sh-stat-label">
-              / {limit.maxHashtags} hashtags
-            </span>
+            <span className="sh-stat-label">/ {limit.maxHashtags} hashtags</span>
           </div>
           <div className="sh-stat">
             <span className="sh-stat-value" style={{ color: getCharColor() }}>
               {totalChars}
             </span>
-            <span className="sh-stat-label">
-              / {limit.maxCharacters.toLocaleString()} chars
-            </span>
+            <span className="sh-stat-label">/ {limit.maxCharacters.toLocaleString()} chars</span>
           </div>
           <div className="sh-stat">
-            <span className="sh-stat-value" style={{ color: hashtags.length <= limit.recommended ? "var(--brand)" : "#D97706" }}>
+            <span
+              className="sh-stat-value"
+              style={{ color: hashtags.length <= limit.recommended ? "var(--brand)" : "#D97706" }}
+            >
               {limit.recommended}
             </span>
             <span className="sh-stat-label">recommended</span>
@@ -109,8 +109,8 @@ export default function SelectedHashtags({
                     warning.level === "error"
                       ? "ti-alert-circle"
                       : warning.level === "warning"
-                      ? "ti-alert-triangle"
-                      : "ti-info-circle"
+                        ? "ti-alert-triangle"
+                        : "ti-info-circle"
                   }`}
                   aria-hidden="true"
                 />
@@ -157,7 +157,9 @@ export default function SelectedHashtags({
             <span className="sh-preview-label">Copy preview:</span>
             <div className="sh-preview-text">
               {formatHashtagsForExport(hashtags.slice(0, 5), "space")}
-              {hashtags.length > 5 && <span className="sh-preview-more">... +{hashtags.length - 5} more</span>}
+              {hashtags.length > 5 && (
+                <span className="sh-preview-more">... +{hashtags.length - 5} more</span>
+              )}
             </div>
           </div>
         )}

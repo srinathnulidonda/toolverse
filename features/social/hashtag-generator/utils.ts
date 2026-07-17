@@ -90,9 +90,7 @@ export function generateFromKeyword(keyword: string): Hashtag[] {
   const allTags = getAllHashtags();
 
   // 1. Exact/partial matches from curated database
-  const matches = allTags.filter(
-    (h) => h.tag.includes(clean) || clean.includes(h.tag)
-  );
+  const matches = allTags.filter((h) => h.tag.includes(clean) || clean.includes(h.tag));
   results.push(...matches);
 
   // 2. Generate variations for the keyword itself
@@ -159,10 +157,36 @@ export function generateFromKeyword(keyword: string): Hashtag[] {
 export function generateFromCaption(caption: string): Hashtag[] {
   // Extract meaningful words (nouns/keywords) - simple approach: words > 3 chars, not common stopwords
   const stopwords = new Set([
-    "this", "that", "with", "from", "have", "just", "your", "will",
-    "about", "there", "their", "what", "when", "where", "which",
-    "would", "could", "should", "into", "than", "then", "them",
-    "these", "those", "some", "such", "very", "much", "more", "most",
+    "this",
+    "that",
+    "with",
+    "from",
+    "have",
+    "just",
+    "your",
+    "will",
+    "about",
+    "there",
+    "their",
+    "what",
+    "when",
+    "where",
+    "which",
+    "would",
+    "could",
+    "should",
+    "into",
+    "than",
+    "then",
+    "them",
+    "these",
+    "those",
+    "some",
+    "such",
+    "very",
+    "much",
+    "more",
+    "most",
   ]);
 
   const words = caption
@@ -217,10 +241,7 @@ export function calculateReachEstimate(hashtags: Hashtag[]): ReachEstimate {
   return { totalReach, competitionLevel, distribution };
 }
 
-export function validateHashtagSet(
-  hashtags: string[],
-  platform: Platform
-): ValidationWarning[] {
+export function validateHashtagSet(hashtags: string[], platform: Platform): ValidationWarning[] {
   const warnings: ValidationWarning[] = [];
   const limit = PLATFORM_LIMITS[platform];
 
@@ -252,9 +273,7 @@ export function validateHashtagSet(
     });
   }
 
-  const risky = hashtags.filter((h) =>
-    RISKY_HASHTAGS.has(h.toLowerCase().replace("#", ""))
-  );
+  const risky = hashtags.filter((h) => RISKY_HASHTAGS.has(h.toLowerCase().replace("#", "")));
   if (risky.length > 0) {
     warnings.push({
       level: "warning",
@@ -275,10 +294,7 @@ export function validateHashtagSet(
   return warnings;
 }
 
-export function formatHashtagsForExport(
-  hashtags: string[],
-  format: ExportFormat
-): string {
+export function formatHashtagsForExport(hashtags: string[], format: ExportFormat): string {
   const tagged = hashtags.map((h) => (h.startsWith("#") ? h : `#${h}`));
 
   switch (format) {

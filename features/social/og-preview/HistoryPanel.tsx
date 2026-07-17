@@ -18,12 +18,7 @@ function relativeTime(ts: number): string {
   return `${Math.floor(diff / 86_400_000)}d ago`;
 }
 
-export default function HistoryPanel({
-  items,
-  onRestore,
-  onDelete,
-  onClear,
-}: HistoryPanelProps) {
+export default function HistoryPanel({ items, onRestore, onDelete, onClear }: HistoryPanelProps) {
   if (items.length === 0) {
     return (
       <>
@@ -81,13 +76,9 @@ export default function HistoryPanel({
               </div>
               <div className="hp-content">
                 <div className="hp-title">{item.title || "Untitled"}</div>
-                <div className="hp-description">
-                  {item.description || "No description"}
-                </div>
+                <div className="hp-description">{item.description || "No description"}</div>
                 <div className="hp-meta">
-                  <span className="hp-url">
-                    {item.url ? new URL(item.url).hostname : "No URL"}
-                  </span>
+                  <span className="hp-url">{item.url ? new URL(item.url).hostname : "No URL"}</span>
                   <span className="hp-dot">•</span>
                   <span className="hp-time">{relativeTime(item.timestamp)}</span>
                 </div>

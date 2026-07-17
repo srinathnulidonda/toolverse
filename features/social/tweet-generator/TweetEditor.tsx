@@ -2,12 +2,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
-import type {
-  TweetContent,
-  TweetEngagement,
-  TweetProfile,
-  TweetLayout,
-} from "./types";
+import type { TweetContent, TweetEngagement, TweetProfile, TweetLayout } from "./types";
 import { validateTweetLength, TWITTER_SOURCES, generateDefaultAvatar } from "./utils";
 
 type TweetEditorProps = {
@@ -114,9 +109,7 @@ export default function TweetEditor({
                 type="text"
                 className="te-input"
                 value={profile.displayName}
-                onChange={(e) =>
-                  onProfileChange({ ...profile, displayName: e.target.value })
-                }
+                onChange={(e) => onProfileChange({ ...profile, displayName: e.target.value })}
                 placeholder="John Doe"
                 maxLength={50}
               />
@@ -157,9 +150,7 @@ export default function TweetEditor({
                 role="switch"
                 aria-checked={profile.verified}
                 className={`te-toggle${profile.verified ? " on" : ""}`}
-                onClick={() =>
-                  onProfileChange({ ...profile, verified: !profile.verified })
-                }
+                onClick={() => onProfileChange({ ...profile, verified: !profile.verified })}
               >
                 <span className="te-toggle-thumb" />
               </button>
@@ -171,31 +162,19 @@ export default function TweetEditor({
                   <button
                     key={type}
                     type="button"
-                    className={`te-verified-btn${
-                      profile.verifiedType === type ? " active" : ""
-                    }`}
-                    onClick={() =>
-                      onProfileChange({ ...profile, verifiedType: type })
-                    }
+                    className={`te-verified-btn${profile.verifiedType === type ? " active" : ""}`}
+                    onClick={() => onProfileChange({ ...profile, verifiedType: type })}
                   >
                     <i
                       className="ti ti-circle-check-filled"
                       style={{
                         color:
-                          type === "blue"
-                            ? "#1D9BF0"
-                            : type === "gold"
-                            ? "#FFD700"
-                            : "#697882",
+                          type === "blue" ? "#1D9BF0" : type === "gold" ? "#FFD700" : "#697882",
                       }}
                       aria-hidden="true"
                     />
                     <span>
-                      {type === "blue"
-                        ? "Individual"
-                        : type === "gold"
-                        ? "Business"
-                        : "Government"}
+                      {type === "blue" ? "Individual" : type === "gold" ? "Business" : "Government"}
                     </span>
                   </button>
                 ))}
@@ -218,9 +197,7 @@ export default function TweetEditor({
               <label className="te-field-label" htmlFor="te-tweet-text">
                 Tweet Text
               </label>
-              <span
-                className={`te-char-count${!validation.valid ? " te-over-limit" : ""}`}
-              >
+              <span className={`te-char-count${!validation.valid ? " te-over-limit" : ""}`}>
                 {validation.length} / {validation.max}
               </span>
             </div>
@@ -253,17 +230,15 @@ export default function TweetEditor({
                   name="timestamp-format"
                   value={fmt}
                   checked={content.timestampFormat === fmt}
-                  onChange={() =>
-                    onChange({ ...content, timestampFormat: fmt })
-                  }
+                  onChange={() => onChange({ ...content, timestampFormat: fmt })}
                   className="te-radio"
                 />
                 <span className="te-radio-text">
                   {fmt === "relative"
                     ? "Relative (2h ago)"
                     : fmt === "absolute"
-                    ? "Absolute (date + time)"
-                    : "Custom"}
+                      ? "Absolute (date + time)"
+                      : "Custom"}
                 </span>
               </label>
             ))}
@@ -275,9 +250,7 @@ export default function TweetEditor({
                 type="text"
                 className="te-input"
                 value={content.customTimestamp || ""}
-                onChange={(e) =>
-                  onChange({ ...content, customTimestamp: e.target.value })
-                }
+                onChange={(e) => onChange({ ...content, customTimestamp: e.target.value })}
                 placeholder="e.g., 2:30 PM · Dec 15, 2024"
               />
             </div>
@@ -303,9 +276,7 @@ export default function TweetEditor({
               role="switch"
               aria-checked={content.showSource}
               className={`te-toggle${content.showSource ? " on" : ""}`}
-              onClick={() =>
-                onChange({ ...content, showSource: !content.showSource })
-              }
+              onClick={() => onChange({ ...content, showSource: !content.showSource })}
             >
               <span className="te-toggle-thumb" />
             </button>

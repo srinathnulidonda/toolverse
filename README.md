@@ -1,204 +1,229 @@
-# ⚡ Toolverse
+<div align="center">
 
-> Free, privacy-first utility hub. PDF · Images · Finance · Dev · Social · Resume  
-> No sign-up · No uploads · Files stay in your browser · Forever free
+# Toolverse 
+### Free utility hub offering 50+ client‑side tools for PDF, image, development, finance, resume, and social tasks – **all processing stays in your browser**
 
-**Live:** `toolverse.vercel.app` → [Link](https://toolverse.vercel.app/)  
-**Docs:** `toolverse.vercel.app/docs` or separate — see below  
-**Status:** Phase 1 in progress — Compress PDF live, 5 more tools shipping soon
+[![Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-brightgreen)](https://toolverse.vercel.app)
+[![Documentation](https://img.shields.io/badge/Documentation-Read_Docs-blue)](https://github.com/srinathnulidonda/toolverse#readme)
+[![Report Bug](https://img.shields.io/badge/Report_Bug-Open_Issue-red)](https://github.com/srinathnulidonda/toolverse/issues)
+[![Request Feature](https://img.shields.io/badge/Request_Feature-Open_Issue-yellow)](https://github.com/srinathnulidonda/toolverse/issues)
+[![Discord](https://img.shields.io/discord/placeholder?label=Discord&color=7289DA&logo=discord)](https://discord.gg/yourserver)
 
----
+</div>
 
-## What's in this repo
+## ✨ Features
 
-A Next.js 14 app that runs ~90% of its processing entirely in the browser — no server round-trips, no file uploads, no cost. The other 10% (PDF ↔ Word/Excel) proxies to a LibreOffice container on Railway.
+- **50+ Client-Side Tools** - PDF, image, developer, finance, resume, and social tools - all processing stays in the browser (zero uploads)
+- **Next.js 16 with Turbopack** - Blazing fast builds and updates
+- **TypeScript Strict Mode** - Enterprise-grade type safety
+- **Centralized History Store** - `useHistoryStore` hook for seamless state management
+- **Production-Ready Logger** - Automatically strips console calls in production
+- **Error Boundaries** - Graceful UI fallback for unexpected errors
+- **Full Test Suite** - Vitest (jsdom) with 80% coverage threshold
+- **Professional Code Quality** - Linted with ESLint, formatted with Prettier
+- **Responsive Design** - Works flawlessly on mobile, tablet, and desktop
+- **Accessibility Focused** - WCAG 2.1 compliant components
+- **PWA Ready** - Installable web app with offline capabilities
 
-Full architecture, tool list, database schema, API design, SEO strategy, monetization model, folder structure, and build roadmap are documented in **`/public/docs/index.html`** — open it in a browser.
+## 🛠️ Tool Categories
 
----
+| Category | Tools | Description |
+|----------|-------|-------------|
+| 📄 **PDF** | 9 tools | Compress, merge, split, convert, rotate PDFs |
+| 🖼️ **Image** | 8 tools | Compress, resize, convert, crop, remove background |
+| ⚙️ **Developer** | 24 tools | JSON utils, formatters, validators, generators, converters |
+| 💰 **Finance** | 10 tools | GST, EMI, SIP, tax calculators, currency converter |
+| 📄 **Resume** | 5 tools | Builder, checker, cover letter, LinkedIn summary |
+| 🔗 **Social** | 4 tools | QR codes, meta tags, hashtag generator, tweet cards |
 
-## Stack
+## 🚀 Quick Start
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS + shadcn/ui |
-| PDF core | pdf-lib (browser) |
-| PDF preview | PDF.js |
-| Images | Canvas API |
-| OCR | Tesseract.js |
-| Word/Excel | LibreOffice on Railway |
-| Auth | Clerk |
-| Database | Supabase (Postgres + RLS) |
-| Rate limiting | Upstash Redis |
-| Hosting | Vercel |
-| CDN / DDoS | Cloudflare |
+### Prerequisites
 
----
+- Node.js ≥ 18
+- pnpm (recommended) or npm/yarn
 
-## Quick start
+### Installation
 
 ```bash
-git clone <repo-url>
+# Clone the repository
+git clone <repository-url>
 cd toolverse
-pnpm install
-# No .env.example file; create .env.local based on the Environment vars below
+
+# Install dependencies
+pnpm install          # or npm install / yarn
+
+# Start development server
+pnpm dev              # http://localhost:3000
+```
+
+### Production Build
+
+```bash
+# Build for production
+pnpm build
+
+# Run the built app
+pnpm start
+```
+
+## 📖 Usage Examples
+
+### Using Developer Tools
+
+```bash
+# Format JSON
 pnpm dev
-# → http://localhost:3000
-```
-Note: Create a `.env.local` file in the root and fill in the variables as described in the Environment section below.
+# Navigate to /tools/json-formatter
 
----
+# Generate secure passwords  
+# Visit /tools/password-generator
 
-## Environment variables
-
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-
-# Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-
-# Railway (LibreOffice)
-RAILWAY_CONVERT_URL=
-RAILWAY_API_SECRET=
-
-# Upstash Redis
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-
-# App
-NEXT_PUBLIC_APP_URL=https://toolverse.vercel.app
-NEXT_PUBLIC_APP_NAME=Toolverse
+# Convert timestamps
+# Go to /tools/timestamp-converter
 ```
 
----
+### Using Finance Tools
 
-## Project structure
+```bash
+# Calculate GST
+# Visit /tools/gst-calculator
+
+# Generate invoices
+# Go to /tools/gst-invoice-generator
+
+# Calculate EMI
+# Navigate to /tools/emi-calculator
+```
+
+## 📸 Screenshots
+
+<div align="center">
+  <img src=".github/assets/screenshots/home.png" alt="Toolverse Home Page" width="800"/>
+  <p><em>Toolverse Home Page</em></p>
+</div>
+
+
+<div align="center">
+  <img src=".github/assets/screenshots/qr-generator.png" alt="QR Code Generator Tool" width="400"/>
+  <img src=".github/assets/screenshots/html-formatter.png" alt="HTML Formatter Tool" width="400"/>
+  <p><em>QR Code Generator (left) and HTML Formatter (right) tools in action</em></p>
+</div>
+
+<div align="center">
+  <img src=".github/assets/screenshots/gst-calculator.png" alt="GST Calculator Tool" width="400"/>
+  <p><em>GST Calculator tool in action</em></p>
+</div>
+
+## 📁 Project Structure
 
 ```
 toolverse/
-├── app/
-│   ├── (marketing)/         # Homepage, blog, API docs
-│   ├── (tools)/             # 51 tool pages (SSR for SEO)
-│   │   ├── compress-pdf/
-│   │   ├── merge-pdf/
-│   │   ├── image/
-│   │   ├── finance/
-│   │   ├── dev/
-│   │   ├── social/
-│   │   └── docs/
-│   ├── (dashboard)/         # Auth-required user dashboard
-│   └── api/
-│       ├── convert/         # LibreOffice proxy
-│       ├── analytics/       # Tool event tracking
-│       └── user/            # Plan status
-│
-├── components/
-│   ├── tools/               # UploadZone, ProcessingBar, DownloadButton
-│   │                        # FileSummary, RelatedTools, FAQSection
-│   ├── layout/              # Header, Footer, Breadcrumb
-│   ├── home/                # HeroSearch, ToolGrid, WeatherWidget, Todo
-│   └── ui/                  # shadcn/ui components
-│
-├── lib/
-│   ├── pdf/                 # compress · merge · split · rotate · protect
-│   ├── image/               # compress · resize · convert · passport
-│   ├── finance/             # gst · emi · sip · tax · vat
-│   ├── db/                  # Supabase client
-│   └── utils/               # file validation · rate limiting · analytics
-│
-├── config/
-│   └── tools.ts             # Master list: name, url, category, related, keywords
-│
-└── public/
-    ├── og/                  # OG images — 1200×630, one per tool
-    └── docs/
-        └── index.html       # Full project documentation (open in browser)
+├── app/                    # Next.js App Router
+│   ├── layout.tsx          # Root layout with providers
+│   ├── page.tsx            # Homepage
+│   ├── tools/              # Tools directory
+│   │   ├── page.tsx        # Tools index
+│   │   └── [slug]/         # Individual tool pages
+│   │       ├── page.tsx    # Tool description/marketing
+│   │       └── client-page.tsx # Actual tool implementation
+│   ├── (legal)/            # Legal pages (cookies, privacy, terms)
+│   └── (marketing)/        # Marketing pages (about, contact, faq)
+├── components/             # Reusable UI components
+│   ├── layout/             # Layout components (navbar, footer)
+│   ├── home/               # Homepage sections
+│   ├── tools-directory/    # Tools browsing components
+│   ├── category-tools/     # Category-specific tool components
+│   ├── tool/               # Individual tool components
+│   ├── shared/             # Shared utilities (history, workspace)
+│   ├── search/             # Search functionality
+│   ├── categories/         # Category browsing
+│   └── ui/                 # Primitive UI components
+├── data/                   # Centralized data layer
+│   ├── tools.ts            # Tool definitions (50+ tools)
+│   ├── categories.ts       # Category metadata
+│   └── collections.ts      # Tool collections
+├── lib/                    # Utility functions & hooks
+│   ├── tools.ts            # Tool-related helpers
+│   ├── historyStore.ts     # Centralized history management
+│   └── logger.ts           # Production-ready logger
+├── public/                 # Static assets
+│   ├── favicon.png         # Browser favicon
+│   ├── logo.png            # Application logo
+│   └── manifest.json       # PWA manifest
+└── styles/                 # Global CSS styles
 ```
 
----
+## 🔧 Available Scripts
 
-## Tools — current status
+| Script | Description |
+|--------|-------------|
+| `pnpm dev` | Start Next.js development server (`next dev`) |
+| `pnpm build` | Production build (`next build`) |
+| `pnpm start` | Run the built application (`next start`) |
+| `pnpm lint` | Run ESLint for code quality checks |
+| `pnpm format` | Format code with Prettier |
+| `pnpm test` | Run Vitest test suite |
+| `pnpm test:watch` | Run tests in watch mode |
+| `pnpm type-check` | Run TypeScript type checking |
 
-| Tool | Route | Status |
-|---|---|---|
-| Compress PDF | `/compress-pdf` | ✅ Live |
-| Merge PDF | `/merge-pdf` | 🔜 Soon |
-| Split PDF | `/split-pdf` | 🔜 Soon |
-| PDF → Word | `/pdf-to-word` | 🔜 Soon |
-| Image → PDF | `/jpg-to-pdf` | 🔜 Soon |
-| AI Summarise | `/summarize-pdf` | 🤖 AI |
+## 🌐 Environment Variables
 
-**51 tools planned across 6 categories** — full list in `/public/docs/index.html`.
+| Variable | Required? | Description |
+|----------|-----------|-------------|
+| `NEXT_PUBLIC_SENTRY_DSN` | No | Sentry DSN for error tracking (set in `.env.local`) |
+| `NEXT_PUBLIC_APP_URL` | **Yes** | Base URL for metadata generation (e.g., `https://toolverse.vercel.app`) |
 
----
+## 🤝 Contributing
 
-## Build phases
+We welcome contributions! Please follow these steps:
 
-```
-Phase 1  Weeks 1–4   Launch MVP — compress, merge, split, image tools
-Phase 2  Month 2     Global + India tools — GST, QR, JSON formatter, AdSense
-Phase 3  Month 3     Auth + resume builder — Clerk, Supabase RLS, Railway
-Phase 4  Month 4–6   Scale — all tools, developer API, SEO blog, i18n
-Phase 5  Month 6+    PWA, regional finance modules, 100k visits/mo target
-```
+1. **Fork** the repository
+2. **Create** your feature branch (`git checkout -b feature/amazing-feature`)
+3. **Make** your changes
+4. **Ensure** lint passes: `pnpm lint && pnpm format`
+5. **Verify** tests pass: `pnpm test`
+6. **Commit** your changes (`git commit -m 'Add amazing feature'`)
+7. **Push** to the branch (`git push origin feature/amazing-feature`)
+8. **Open** a Pull Request
 
----
+### Development Guidelines
 
-## 🌐 Domain names
+- Follow existing code style (ESLint + Prettier)
+- Write tests for new functionality
+- Keep components small and focused
+- Use TypeScript strictly - avoid `any` types
+- Add JSDoc comments for complex functions
+- Ensure accessibility compliance (WCAG 2.1)
+- Optimize for performance - minimize re-renders
 
-Currently on `toolverse.vercel.app`. Recommended production domains:
+### Reporting Issues
 
-### Product (main app)
-| Option | Notes |
-|---|---|
-| `toolverse.com` | Best — clean, brandable, memorable |
-| `toolverse.app` | Modern `.app` TLD, good for tools |
-| `toolverse.io` | Dev-friendly but slightly less consumer |
-| `usetoolverse.com` | Fallback if `.com` is taken |
+Please use the [GitHub Issues](https://github.com/srinathnulidonda/toolverse/issues) to report bugs or request features. Include:
 
-### Docs site (`/public/docs/index.html`)
-| Option | Notes |
-|---|---|
-| `docs.toolverse.com` | Standard — subdomain of main domain |
-| `toolverse.com/docs` | Preferred if keeping it in-app (no extra domain) |
-| `toolverse.dev` | Doubles as a docs/developer portal brand |
+- Clear description of the issue
+- Steps to reproduce
+- Expected vs actual behavior
+- Screenshots (if applicable)
+- Environment details (browser, OS, etc.)
 
-### Internal / email
-| Purpose | Recommended |
-|---|---|
-| Transactional email | `hello@toolverse.com` or `noreply@toolverse.com` |
-| Support | `support@toolverse.com` |
-| Email provider | Resend or Postmark — both work with Vercel easily |
+## 📄 License
 
-> **Recommendation:** buy `toolverse.com` first. Use `toolverse.com/docs` (in-app route) to avoid managing a second domain while in early stages. Add `docs.toolverse.com` later when the docs site warrants it.
+This project is private / UNLICENSED.
 
----
+## 📞 Contact & Support
 
-## Key files
+- **Questions?** Open an issue or reach out at srinathnulidonda@example.com
+- **Documentation:** Visit individual tool pages for usage instructions
+- **Updates:** Follow for new tool releases and feature improvements
 
-| File | Purpose |
-|---|---|
-| `app/compress-pdf/page.tsx` | Compress tool UI — drop zone, presets, result screen |
-| `app/page.tsx` | Homepage — hero, tool grid, stats, CTA |
-| `app/layout.tsx` | Root layout — fonts, metadata |
-| `lib/compress.ts` | Core compression logic — pdf-lib, level/preset helpers |
-| `config/tools.ts` | Master tool registry |
-| `public/docs/index.html` | Full project documentation |
+## 🙏 Acknowledgments
 
----
+- Built with [Next.js](https://nextjs.org/)
+- Icons powered by [Templarian](https://templarian.com/)
+- Inspired by the open-source developer tools community
+- Special thanks to all contributors and users
 
-## Docs
-
-Everything not in this file — architecture diagrams, full tool list, database schema, API design, SEO keyword strategy, monetization model, performance targets, privacy summary — is in:
-
-```
-public/docs/index.html
-```
-
-Open it directly in a browser. No build step needed.
+<div align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/srinathnulidonda">Srinath Nulidonda</a></sub>
+</div>

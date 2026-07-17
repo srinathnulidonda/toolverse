@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 // components/widgets/widgetTypes.ts
 
 export type Priority = "high" | "medium" | "low";
@@ -21,7 +22,7 @@ export type Note = {
   id: string;
   title: string;
   content: string;
-  type?: 'note' | 'checklist';
+  type?: "note" | "checklist";
   items?: ChecklistItem[];
   pinned: boolean;
   createdAt: number;
@@ -60,7 +61,7 @@ export function timeAgo(timestamp: number): string {
 }
 
 export function uid(): string {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
     return crypto.randomUUID();
   }
   return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
@@ -69,71 +70,72 @@ export function uid(): string {
 export function validateTask(task: any): task is Task {
   return (
     task &&
-    typeof task.id === 'string' &&
-    typeof task.text === 'string' &&
-    typeof task.completed === 'boolean' &&
-    typeof task.createdAt === 'number' &&
+    typeof task.id === "string" &&
+    typeof task.text === "string" &&
+    typeof task.completed === "boolean" &&
+    typeof task.createdAt === "number" &&
     (task.priority === undefined || PRIORITY_ORDER.includes(task.priority)) &&
-    (task.context === undefined || typeof task.context === 'string')
+    (task.context === undefined || typeof task.context === "string")
   );
 }
 
 export function validateChecklistItem(item: any): item is ChecklistItem {
   return (
     item &&
-    typeof item.id === 'string' &&
-    typeof item.text === 'string' &&
-    typeof item.checked === 'boolean'
+    typeof item.id === "string" &&
+    typeof item.text === "string" &&
+    typeof item.checked === "boolean"
   );
 }
 
 export function validateNote(note: any): note is Note {
   return (
     note &&
-    typeof note.id === 'string' &&
-    typeof note.title === 'string' &&
-    typeof note.content === 'string' &&
-    typeof note.pinned === 'boolean' &&
-    typeof note.createdAt === 'number' &&
-    typeof note.updatedAt === 'number' &&
-    (note.type === undefined || note.type === 'note' || note.type === 'checklist') &&
-    (note.items === undefined || (Array.isArray(note.items) && note.items.every(validateChecklistItem)))
+    typeof note.id === "string" &&
+    typeof note.title === "string" &&
+    typeof note.content === "string" &&
+    typeof note.pinned === "boolean" &&
+    typeof note.createdAt === "number" &&
+    typeof note.updatedAt === "number" &&
+    (note.type === undefined || note.type === "note" || note.type === "checklist") &&
+    (note.items === undefined ||
+      (Array.isArray(note.items) && note.items.every(validateChecklistItem)))
   );
 }
 
 export function cleanTasks(tasks: any[]): Task[] {
   if (!Array.isArray(tasks)) {
-    console.warn('cleanTasks: expected array, got', typeof tasks);
+    logger.warn("cleanTasks: expected array, got", typeof tasks);
     return [];
   }
-  
-  const cleaned = tasks.filter(validateTask).map(task => ({
+
+  const cleaned = tasks.filter(validateTask).map((task) => ({
     ...task,
     priority: getPriority(task),
   }));
-  
+
   if (cleaned.length < tasks.length) {
-    console.warn(`cleanTasks: dropped ${tasks.length - cleaned.length} invalid task(s)`);
+    logger.warn(`cleanTasks: dropped ${tasks.length - cleaned.length} invalid task(s)`);
   }
-  
+
   return cleaned;
 }
 
 export function cleanNotes(notes: any[]): Note[] {
   if (!Array.isArray(notes)) {
-    console.warn('cleanNotes: expected array, got', typeof notes);
+    logger.warn("cleanNotes: expected array, got", typeof notes);
     return [];
   }
-  
-  const cleaned = notes.filter(validateNote).map(note => ({
+
+  const cleaned = notes.filter(validateNote).map((note) => ({
     ...note,
-    type: note.type || 'note',
+    type: note.type || "note",
     items: Array.isArray(note.items) ? note.items.filter(validateChecklistItem) : [],
   }));
-  
+
   if (cleaned.length < notes.length) {
-    console.warn(`cleanNotes: dropped ${notes.length - cleaned.length} invalid note(s)`);
+    logger.warn(`cleanNotes: dropped ${notes.length - cleaned.length} invalid note(s)`);
   }
-  
+
   return cleaned;
 }

@@ -135,12 +135,14 @@ export default function ValidationPanel({ meta }: ValidationPanelProps) {
                   )}
                   {hasErrors && (
                     <span className="vp-platform-badge vp-badge-error">
-                      {results.filter((r) => r.level === "error").length} error{results.filter((r) => r.level === "error").length !== 1 ? "s" : ""}
+                      {results.filter((r) => r.level === "error").length} error
+                      {results.filter((r) => r.level === "error").length !== 1 ? "s" : ""}
                     </span>
                   )}
                   {!hasErrors && hasWarnings && (
                     <span className="vp-platform-badge vp-badge-warning">
-                      {results.filter((r) => r.level === "warning").length} warning{results.filter((r) => r.level === "warning").length !== 1 ? "s" : ""}
+                      {results.filter((r) => r.level === "warning").length} warning
+                      {results.filter((r) => r.level === "warning").length !== 1 ? "s" : ""}
                     </span>
                   )}
                 </div>
@@ -152,9 +154,7 @@ export default function ValidationPanel({ meta }: ValidationPanelProps) {
                         <div className="vp-issue-header">
                           <i
                             className={`ti ${
-                              result.level === "error"
-                                ? "ti-alert-circle"
-                                : "ti-alert-triangle"
+                              result.level === "error" ? "ti-alert-circle" : "ti-alert-triangle"
                             }`}
                             aria-hidden="true"
                           />

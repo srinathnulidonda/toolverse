@@ -38,7 +38,7 @@ const WORKSPACES: Record<string, ComponentType<{ tool: Tool }>> = {
   "json-formatter": JsonFormatterWorkspace,
   "json-validator": JSONValidatorWorkspace,
   "json-minifier": JSONMinifierWorkspace,
-  "base64": Base64Workspace,
+  base64: Base64Workspace,
   "url-encoder": UrlEncoderWorkspace,
   "uuid-generator": UuidGeneratorWorkspace,
   "password-generator": PasswordGeneratorWorkspace,
@@ -82,8 +82,7 @@ export default function ToolWorkspace({ tool }: ToolWorkspaceProps) {
           </div>
           <p className="tw-title">{tool.label}</p>
           <p className="tw-desc">
-            Tool interface coming soon. This is where the{" "}
-            {tool.label.toLowerCase()} tool will live.
+            Tool interface coming soon. This is where the {tool.label.toLowerCase()} tool will live.
           </p>
         </div>
       </div>
