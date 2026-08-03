@@ -1,6 +1,8 @@
 <div align="center">
 
-# Toolverse 
+<img src="public/logo.png" alt="Toolverse Logo" width="380">
+
+
 ### Free utility hub offering 50+ client‑side tools for PDF, image, development, finance, resume, and social tasks – **all processing stays in your browser**
 
 [![Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-brightgreen)](https://toolverse.vercel.app)
@@ -213,7 +215,7 @@ This project is private / UNLICENSED.
 
 ## 📞 Contact & Support
 
-- **Questions?** Open an issue or reach out at srinathnulidonda@example.com
+- **Questions?** Open an issue or reach out at srinathnulidonda@gmail.com
 - **Documentation:** Visit individual tool pages for usage instructions
 - **Updates:** Follow for new tool releases and feature improvements
 

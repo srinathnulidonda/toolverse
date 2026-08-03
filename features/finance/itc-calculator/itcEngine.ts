@@ -1,377 +1,238 @@
 // features/finance/itc-calculator/itcEngine.ts
 
-export interface ITCCalculation {
-  totalITC: number;
-  eligibleITC: number;
-  blockedITC: number;
-  reversedITC: number;
-  itcUtilized: number;
-  itcBalance: number;
+import { REVERSAL_RULES } from "./itcRules.config";
+
+export type ITCStatus =
+    | "ELIGIBLE"
+    | "BLOCKED_17_5"
+    | "TIME_BARRED"
+    | "REVERSED_42_43"
+    | "REVERSED_37"
+    | "PARTIALLY_AVAILABLE";
+
+export interface ITCInvoiceInput {
+    invoiceNumber: string;
+    invoiceDate: string;
+    claimDate: string;
+    gstinSupplier: string;
+    totalInvoiceValue: number;
+    gstPaid: number;
+    itcClaimedInBooks: number;
+    itcAvailableInGSTR2B: number;
+    isCapitalGood: boolean;
+    checkTimeLimit: boolean;
+    usageSplit?: {
+        taxable: number;
+        exempt: number;
+        nonBusiness: number;
+    };
+    supplierPaymentStatus: {
+        daysPastDue: number;
+        amountPaid: number;
+        totalPayable: number;
+    };
+    blockedCategory?: string;
 }
 
-export interface ITCOptions {
-  gstRate: number;
-  blockedAmount: number;
-  reversedAmount: number;
-  utilizedAmount: number;
-  period: "monthly" | "quarterly" | "annual";
+export interface ITCCalculationResult {
+    eligibleITC: number;
+    ineligibleITC: number;
+    status: ITCStatus;
+    breakdown: {
+        booksITC: number;
+        gstr2bITC: number;
+        matchedITC: number;
+        blockedAmount: number;
+        timeBarredAmount: number;
+        reversed42_43: number;
+        reversed37: number;
+    };
+    warnings: string[];
+    recommendations: string[];
+    explanation: string;
 }
 
-export interface BlockedITCCategory {
-  title: string;
-  description: string;
-  icon: string;
-  examples?: string[];
+function calculateTimeLimitDeadline(invoiceDate: string): Date {
+    const invoice = new Date(invoiceDate);
+    const invoiceMonth = invoice.getMonth();
+    const invoiceYear = invoice.getFullYear();
+
+    const fyEndYear = invoiceMonth >= 3 ? invoiceYear + 1 : invoiceYear;
+
+    return new Date(fyEndYear + 1, 10, 30);
 }
 
-export interface GST_Rate {
-  rate: number;
-  label: string;
-  description: string;
-  common: boolean;
+function isTimeBarred(invoiceDate: string, claimDate: string): boolean {
+    const deadline = calculateTimeLimitDeadline(invoiceDate);
+    const claim = new Date(claimDate);
+
+    return claim > deadline;
 }
 
-export const GST_RATES: GST_Rate[] = [
-  { rate: 0, label: "0% GST", description: "Exempt goods & services", common: true },
-  { rate: 0.25, label: "0.25% GST", description: "Precious stones, diamonds", common: false },
-  { rate: 3, label: "3% GST", description: "Gold, silver, precious metals", common: false },
-  { rate: 5, label: "5% GST", description: "Household necessities, transport", common: true },
-  { rate: 12, label: "12% GST", description: "Processed foods, computers", common: true },
-  { rate: 18, label: "18% GST", description: "Most services, industrial goods", common: true },
-  { rate: 28, label: "28% GST", description: "Luxury items, automobiles", common: true },
-];
+export function calculateITCEligibility(input: ITCInvoiceInput): ITCCalculationResult {
+    const warnings: string[] = [];
+    const recommendations: string[] = [];
 
-export const BLOCKED_ITC_CATEGORIES: BlockedITCCategory[] = [
-  {
-    title: "Motor Vehicles",
-    description:
-      "ITC blocked on motor vehicles and other conveyances except for specific business use",
-    icon: "ti-car",
-    examples: ["Cars", "Two-wheelers", "Trucks for general business use"],
-  },
-  {
-    title: "Food & Beverages",
-    description:
-      "ITC not available on food, beverages, outdoor catering, and accommodation services",
-    icon: "ti-chef-hat",
-    examples: ["Restaurant bills", "Office refreshments", "Business meals"],
-  },
-  {
-    title: "Personal Use",
-    description: "Goods or services for personal consumption or use by any person",
-    icon: "ti-user",
-    examples: ["Personal mobile bills", "Home items", "Entertainment"],
-  },
-  {
-    title: "Club Memberships",
-    description:
-      "ITC blocked on membership of a club, health and fitness centre, and similar services",
-    icon: "ti-building-community",
-    examples: ["Club memberships", "Gym memberships", "Sports clubs"],
-  },
-  {
-    title: "Life Insurance",
-    description: "Health insurance and life insurance services for employees",
-    icon: "ti-shield-heart",
-    examples: ["Employee insurance premiums", "Health insurance", "Life insurance"],
-  },
-  {
-    title: "Travel & Accommodation",
-    description:
-      "Rent-a-cab, life insurance and health insurance services (except for specific conditions)",
-    icon: "ti-plane",
-    examples: ["Taxi services", "Hotel accommodation", "Travel insurance"],
-  },
-];
+    const matchedITC = Math.min(input.itcClaimedInBooks, input.itcAvailableInGSTR2B);
 
-export const DEFAULT_ITC_OPTIONS: ITCOptions = {
-  gstRate: 18,
-  blockedAmount: 0,
-  reversedAmount: 0,
-  utilizedAmount: 0,
-  period: "monthly",
-};
+    if (input.itcClaimedInBooks > input.itcAvailableInGSTR2B) {
+        const diff = input.itcClaimedInBooks - input.itcAvailableInGSTR2B;
+        warnings.push(`Books ITC exceeds GSTR-2B by ₹${diff.toFixed(2)}. Contact supplier to file their return.`);
+    }
 
-// Core ITC calculation function
-export function calculateITC(
-  purchaseAmount: number,
-  gstRate: number,
-  blockedAmount: number = 0,
-  reversedAmount: number = 0,
-  utilizedAmount: number = 0
-): ITCCalculation {
-  // Calculate total ITC from GST component of purchase
-  const totalITC = (purchaseAmount * gstRate) / (100 + gstRate);
+    let blockedAmount = 0;
+    if (input.blockedCategory) {
+        blockedAmount = matchedITC;
+        warnings.push(`This falls under blocked credit category (Section 17(5)). ITC cannot be claimed.`);
+    }
 
-  // Calculate eligible ITC after blocking and reversals
-  const eligibleITC = Math.max(0, totalITC - blockedAmount - reversedAmount);
+    let timeBarredAmount = 0;
+    if (input.checkTimeLimit && isTimeBarred(input.invoiceDate, input.claimDate)) {
+        timeBarredAmount = matchedITC - blockedAmount;
+        const deadline = calculateTimeLimitDeadline(input.invoiceDate);
+        warnings.push(
+            `ITC claim is time-barred. Deadline was ${deadline.toLocaleDateString()}. ITC cannot be claimed after this date.`
+        );
+    } else if (!input.checkTimeLimit) {
+        const deadline = calculateTimeLimitDeadline(input.invoiceDate);
+        const daysLeft = Math.ceil((deadline.getTime() - new Date(input.claimDate).getTime()) / (1000 * 60 * 60 * 24));
+        if (daysLeft > 0 && daysLeft < 90) {
+            recommendations.push(`Claim this ITC soon. Only ${daysLeft} days left until deadline (${deadline.toLocaleDateString()}).`);
+        }
+    }
 
-  // Calculate remaining ITC balance after utilization
-  const itcBalance = Math.max(0, eligibleITC - utilizedAmount);
+    let reversed42_43 = 0;
+    if (input.usageSplit && (input.usageSplit.exempt > 0 || input.usageSplit.nonBusiness > 0)) {
+        const availableForReversal = matchedITC - blockedAmount - timeBarredAmount;
+        const reversalPercent = input.usageSplit.exempt + input.usageSplit.nonBusiness;
+        reversed42_43 = (availableForReversal * reversalPercent) / 100;
 
-  return {
-    totalITC: parseFloat(totalITC.toFixed(2)),
-    eligibleITC: parseFloat(eligibleITC.toFixed(2)),
-    blockedITC: parseFloat(blockedAmount.toFixed(2)),
-    reversedITC: parseFloat(reversedAmount.toFixed(2)),
-    itcUtilized: parseFloat(utilizedAmount.toFixed(2)),
-    itcBalance: parseFloat(itcBalance.toFixed(2)),
-  };
+        if (input.usageSplit.exempt > 0) {
+            warnings.push(
+                `${input.usageSplit.exempt}% of input used for exempt supplies. ITC reversed proportionately under Rule 42/43.`
+            );
+        }
+        if (input.usageSplit.nonBusiness > 0) {
+            warnings.push(
+                `${input.usageSplit.nonBusiness}% of input used for non-business purposes. ITC cannot be claimed on this portion.`
+            );
+        }
+        recommendations.push(`To claim full ITC, use inputs only for taxable supplies.`);
+    }
+
+    let reversed37 = 0;
+    const totalPayable = input.supplierPaymentStatus.totalPayable;
+    const amountPaid = input.supplierPaymentStatus.amountPaid;
+    const paymentRatio = totalPayable > 0 ? Math.min(1, amountPaid / totalPayable) : 1;
+
+    if (input.supplierPaymentStatus.daysPastDue > REVERSAL_RULES.rule37.daysLimit) {
+        const availableForReversal = matchedITC - blockedAmount - timeBarredAmount - reversed42_43;
+        reversed37 = availableForReversal * (1 - paymentRatio);
+
+        const daysOverdue = input.supplierPaymentStatus.daysPastDue - REVERSAL_RULES.rule37.daysLimit;
+        warnings.push(
+            `Payment overdue by ${daysOverdue} days beyond 180-day limit. ITC must be reversed under Rule 37.`
+        );
+        recommendations.push(
+            `Pay the remaining ₹${(totalPayable - amountPaid).toFixed(2)} to re-avail this ITC. Interest may also apply.`
+        );
+    } else if (input.supplierPaymentStatus.daysPastDue > 150 && paymentRatio < 1) {
+        const daysLeft = 180 - input.supplierPaymentStatus.daysPastDue;
+        recommendations.push(
+            `Payment due in ${daysLeft} days. Pay ₹${(totalPayable - amountPaid).toFixed(2)} within this period to avoid ITC reversal.`
+        );
+    }
+
+    const totalReversals = blockedAmount + timeBarredAmount + reversed42_43 + reversed37;
+    const eligibleITC = Math.max(0, matchedITC - totalReversals);
+    const ineligibleITC = matchedITC - eligibleITC;
+
+    let status: ITCStatus = "ELIGIBLE";
+    if (blockedAmount > 0) {
+        status = "BLOCKED_17_5";
+    } else if (timeBarredAmount > 0) {
+        status = "TIME_BARRED";
+    } else if (reversed37 > 0) {
+        status = "REVERSED_37";
+    } else if (reversed42_43 > 0) {
+        status = "REVERSED_42_43";
+    } else if (eligibleITC < matchedITC && eligibleITC > 0) {
+        status = "PARTIALLY_AVAILABLE";
+    }
+
+    let explanation = "";
+    if (status === "ELIGIBLE") {
+        explanation = "All conditions met. Full ITC can be claimed.";
+    } else if (status === "BLOCKED_17_5") {
+        explanation = `This invoice is for a blocked credit category under Section 17(5). ITC cannot be claimed regardless of other factors.`;
+    } else if (status === "TIME_BARRED") {
+        explanation = `The time limit for claiming this ITC has expired as per Section 16(4). ITC cannot be claimed after the deadline.`;
+    } else if (status === "REVERSED_37") {
+        explanation = `Supplier payment not made within 180 days. ITC must be reversed under Rule 37 until payment is completed.`;
+    } else if (status === "REVERSED_42_43") {
+        explanation = `Input used for both taxable and exempt/non-business supplies. ITC reversed proportionately under Rule 42/43.`;
+    } else if (status === "PARTIALLY_AVAILABLE") {
+        explanation = `Multiple factors affecting ITC eligibility. Only partial ITC can be claimed.`;
+    }
+
+    if (eligibleITC > 0 && warnings.length === 0) {
+        recommendations.push("Maintain proper documentation including tax invoice, payment proof, and GSTR-2B reconciliation.");
+    }
+
+    return {
+        eligibleITC: parseFloat(eligibleITC.toFixed(2)),
+        ineligibleITC: parseFloat(ineligibleITC.toFixed(2)),
+        status,
+        breakdown: {
+            booksITC: parseFloat(input.itcClaimedInBooks.toFixed(2)),
+            gstr2bITC: parseFloat(input.itcAvailableInGSTR2B.toFixed(2)),
+            matchedITC: parseFloat(matchedITC.toFixed(2)),
+            blockedAmount: parseFloat(blockedAmount.toFixed(2)),
+            timeBarredAmount: parseFloat(timeBarredAmount.toFixed(2)),
+            reversed42_43: parseFloat(reversed42_43.toFixed(2)),
+            reversed37: parseFloat(reversed37.toFixed(2)),
+        },
+        warnings,
+        recommendations,
+        explanation,
+    };
 }
 
-// Calculate ITC for multiple items/periods
-export function calculateBulkITC(
-  items: Array<{
-    purchaseAmount: number;
-    gstRate: number;
-    blockedAmount?: number;
-    reversedAmount?: number;
-    utilizedAmount?: number;
-  }>
-): ITCCalculation {
-  let totalITC = 0;
-  let totalEligible = 0;
-  let totalBlocked = 0;
-  let totalReversed = 0;
-  let totalUtilized = 0;
-
-  items.forEach((item) => {
-    const calc = calculateITC(
-      item.purchaseAmount,
-      item.gstRate,
-      item.blockedAmount || 0,
-      item.reversedAmount || 0,
-      item.utilizedAmount || 0
-    );
-
-    totalITC += calc.totalITC;
-    totalEligible += calc.eligibleITC;
-    totalBlocked += calc.blockedITC;
-    totalReversed += calc.reversedITC;
-    totalUtilized += calc.itcUtilized;
-  });
-
-  const itcBalance = Math.max(0, totalEligible - totalUtilized);
-
-  return {
-    totalITC: parseFloat(totalITC.toFixed(2)),
-    eligibleITC: parseFloat(totalEligible.toFixed(2)),
-    blockedITC: parseFloat(totalBlocked.toFixed(2)),
-    reversedITC: parseFloat(totalReversed.toFixed(2)),
-    itcUtilized: parseFloat(totalUtilized.toFixed(2)),
-    itcBalance: parseFloat(itcBalance.toFixed(2)),
-  };
-}
-
-// Calculate ITC eligibility percentage
-export function calculateITCEligibilityRate(calculation: ITCCalculation): number {
-  if (calculation.totalITC === 0) return 0;
-  return parseFloat(((calculation.eligibleITC / calculation.totalITC) * 100).toFixed(2));
-}
-
-// Calculate ITC utilization percentage
-export function calculateITCUtilizationRate(calculation: ITCCalculation): number {
-  if (calculation.eligibleITC === 0) return 0;
-  return parseFloat(((calculation.itcUtilized / calculation.eligibleITC) * 100).toFixed(2));
-}
-
-// Estimate monthly ITC based on period
-export function estimateMonthlyITC(
-  calculation: ITCCalculation,
-  period: ITCOptions["period"]
-): ITCCalculation {
-  const divisor = period === "annual" ? 12 : period === "quarterly" ? 3 : 1;
-
-  return {
-    totalITC: parseFloat((calculation.totalITC / divisor).toFixed(2)),
-    eligibleITC: parseFloat((calculation.eligibleITC / divisor).toFixed(2)),
-    blockedITC: parseFloat((calculation.blockedITC / divisor).toFixed(2)),
-    reversedITC: parseFloat((calculation.reversedITC / divisor).toFixed(2)),
-    itcUtilized: parseFloat((calculation.itcUtilized / divisor).toFixed(2)),
-    itcBalance: parseFloat((calculation.itcBalance / divisor).toFixed(2)),
-  };
-}
-
-// Check if purchase qualifies for ITC
-export function checkITCEligibility(
-  category: string,
-  businessUse: boolean = true,
-  hasValidInvoice: boolean = true,
-  supplierGSTIN: boolean = true
-): {
-  eligible: boolean;
-  reason?: string;
-  blockedCategories?: string[];
+export function calculateBulkITC(invoices: ITCInvoiceInput[]): {
+    totalEligibleITC: number;
+    totalIneligibleITC: number;
+    summaryByStatus: Record<ITCStatus, { count: number; amount: number }>;
 } {
-  const blockedCats = [];
+    const statusTypes: ITCStatus[] = [
+        "ELIGIBLE",
+        "BLOCKED_17_5",
+        "TIME_BARRED",
+        "REVERSED_42_43",
+        "REVERSED_37",
+        "PARTIALLY_AVAILABLE",
+    ];
 
-  // Check blocked categories
-  const blocked = BLOCKED_ITC_CATEGORIES.find(
-    (cat) =>
-      cat.title.toLowerCase().includes(category.toLowerCase()) ||
-      cat.examples?.some((ex) => ex.toLowerCase().includes(category.toLowerCase()))
-  );
+    const summaryByStatus: Record<ITCStatus, { count: number; amount: number }> = {} as any;
+    statusTypes.forEach((status) => {
+        summaryByStatus[status] = { count: 0, amount: 0 };
+    });
 
-  if (blocked) {
-    blockedCats.push(blocked.title);
-  }
+    let totalEligibleITC = 0;
+    let totalIneligibleITC = 0;
 
-  // Check basic eligibility conditions
-  if (!hasValidInvoice) {
+    invoices.forEach((invoice) => {
+        const calc = calculateITCEligibility(invoice);
+        totalEligibleITC += calc.eligibleITC;
+        totalIneligibleITC += calc.ineligibleITC;
+
+        const statusEntry = summaryByStatus[calc.status];
+        statusEntry.count += 1;
+        statusEntry.amount += calc.eligibleITC;
+    });
+
     return {
-      eligible: false,
-      reason: "Valid tax invoice required for ITC claim",
-      blockedCategories: blockedCats,
+        totalEligibleITC: parseFloat(totalEligibleITC.toFixed(2)),
+        totalIneligibleITC: parseFloat(totalIneligibleITC.toFixed(2)),
+        summaryByStatus,
     };
-  }
-
-  if (!supplierGSTIN) {
-    return {
-      eligible: false,
-      reason: "Supplier must be registered under GST",
-      blockedCategories: blockedCats,
-    };
-  }
-
-  if (!businessUse) {
-    return {
-      eligible: false,
-      reason: "Goods/services must be used for business purposes",
-      blockedCategories: blockedCats,
-    };
-  }
-
-  if (blocked) {
-    return {
-      eligible: false,
-      reason: `ITC blocked for ${blocked.title}`,
-      blockedCategories: blockedCats,
-    };
-  }
-
-  return { eligible: true, blockedCategories: [] };
 }
-
-// Calculate ITC reversal under Rule 42/43
-export function calculateRule42Reversal(
-  eligibleITC: number,
-  exemptSupplies: number,
-  totalSupplies: number
-): number {
-  if (totalSupplies === 0) return 0;
-
-  const exemptRatio = exemptSupplies / totalSupplies;
-  const reversalAmount = eligibleITC * exemptRatio;
-
-  return parseFloat(reversalAmount.toFixed(2));
-}
-
-// Calculate interest on delayed ITC reversal
-export function calculateITCInterest(
-  amount: number,
-  delayInDays: number,
-  interestRate: number = 18 // 18% per annum as per GST law
-): number {
-  const dailyRate = interestRate / 365 / 100;
-  const interest = amount * dailyRate * delayInDays;
-
-  return parseFloat(interest.toFixed(2));
-}
-
-// Format currency for display
-export function formatCurrency(amount: number, currency: string = "INR"): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
-
-// Format number for display
-export function formatNumber(n: number): string {
-  return new Intl.NumberFormat("en-IN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
-}
-
-// Export to CSV for ITC records
-export function exportITCToCSV(
-  records: Array<{
-    date: string;
-    supplier: string;
-    invoiceNo: string;
-    amount: number;
-    gstRate: number;
-    itcClaimed: number;
-    status: string;
-  }>
-): string {
-  const headers = [
-    "Date",
-    "Supplier Name",
-    "Invoice Number",
-    "Purchase Amount",
-    "GST Rate (%)",
-    "ITC Claimed",
-    "Status",
-  ];
-
-  const rows = records.map((record) => [
-    record.date,
-    record.supplier,
-    record.invoiceNo,
-    record.amount,
-    record.gstRate,
-    record.itcClaimed,
-    record.status,
-  ]);
-
-  return [headers, ...rows]
-    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
-    .join("\n");
-}
-
-// Sample ITC scenarios for testing
-export const ITC_SCENARIOS = {
-  manufacturing: {
-    name: "Manufacturing Company",
-    description: "Raw materials and manufacturing expenses",
-    purchases: 500000,
-    gstRate: 18,
-    blockedAmount: 25000, // Motor vehicles, employee welfare
-    reversedAmount: 0,
-    utilizedAmount: 70000,
-  },
-
-  trading: {
-    name: "Trading Business",
-    description: "Goods for resale and office expenses",
-    purchases: 200000,
-    gstRate: 18,
-    blockedAmount: 5000, // Office refreshments
-    reversedAmount: 0,
-    utilizedAmount: 30000,
-  },
-
-  services: {
-    name: "Service Provider",
-    description: "Office rent, utilities, and professional services",
-    purchases: 150000,
-    gstRate: 18,
-    blockedAmount: 15000, // Restaurant bills, club memberships
-    reversedAmount: 5000, // Some exempt supplies
-    utilizedAmount: 20000,
-  },
-
-  ecommerce: {
-    name: "E-commerce Platform",
-    description: "Warehousing, logistics, and technology expenses",
-    purchases: 800000,
-    gstRate: 18,
-    blockedAmount: 40000, // Employee benefits, food & beverage
-    reversedAmount: 10000, // Export sales proportion
-    utilizedAmount: 110000,
-  },
-};

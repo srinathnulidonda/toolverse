@@ -1,346 +1,328 @@
 // features/finance/itc-calculator/itcStore.ts
-import { useState, useEffect, useMemo } from "react";
-import useLocalStorage from "@/lib/useLocalStorage";
-import type { ITCCalculation, ITCOptions } from "./itcEngine";
 
-export interface ITCHistoryEntry {
-  id: string;
-  timestamp: number;
-  title: string;
-  calculation: ITCCalculation;
-  options: ITCOptions;
-  purchaseAmount: number;
-  tags: string[];
-  note?: string;
-  period?: string;
+import { logger } from "@/lib/logger";
+import { useMemo, useCallback } from "react";
+import useLocalStorage from "@/lib/useLocalStorage";
+import type { ITCCalculationResult, ITCInvoiceInput } from "./itcEngine";
+
+export interface ITHistoryEntry {
+    id: string;
+    timestamp: number;
+    title: string;
+    calculation: ITCCalculationResult;
+    input: ITCInvoiceInput;
+    isFavorite: boolean;
+    tags: string[];
+    note?: string;
 }
 
 export interface ITCSettings {
-  defaultOptions: ITCOptions;
-  autoSave: boolean;
-  defaultBusinessType: "manufacturing" | "trading" | "services" | "other";
-  showAdvanced: boolean;
-  reminderDays: number; // Remind to utilize ITC before expiry
-  maxHistoryItems: number;
+    autoSave: boolean;
+    maxHistoryItems: number;
+    defaultUsageSplit: {
+        taxable: number;
+        exempt: number;
+        nonBusiness: number;
+    };
+    showAdvancedOptions: boolean;
 }
 
 const STORAGE_KEYS = {
-  history: "tv:itc-history",
-  settings: "tv:itc-settings",
+    history: "tv:itc-history",
+    settings: "tv:itc-settings",
 } as const;
 
-const MAX_HISTORY_ITEMS = 50;
-
 interface HistoryStorage {
-  v: number;
-  data: ITCHistoryEntry[];
+    v: number;
+    data: ITHistoryEntry[];
 }
 
 interface SettingsStorage {
-  v: number;
-  data: ITCSettings;
-}
-
-function validateHistory(raw: HistoryStorage | null): ITCHistoryEntry[] {
-  if (
-    !raw ||
-    typeof raw !== "object" ||
-    !("v" in raw) ||
-    !("data" in raw) ||
-    !Array.isArray(raw.data)
-  ) {
-    return [];
-  }
-
-  const valid: ITCHistoryEntry[] = [];
-  for (const item of raw.data) {
-    if (
-      item &&
-      typeof item === "object" &&
-      typeof item.id === "string" &&
-      typeof item.timestamp === "number" &&
-      typeof item.title === "string" &&
-      item.calculation &&
-      typeof item.calculation === "object" &&
-      item.options &&
-      typeof item.options === "object" &&
-      typeof item.purchaseAmount === "number" &&
-      Array.isArray(item.tags)
-    ) {
-      valid.push(item as ITCHistoryEntry);
-    }
-  }
-
-  if (valid.length > MAX_HISTORY_ITEMS) {
-    return valid.slice(0, MAX_HISTORY_ITEMS);
-  }
-  return valid;
-}
-
-function validateSettings(raw: SettingsStorage | null): ITCSettings {
-  if (!raw || typeof raw !== "object" || !("v" in raw) || !("data" in raw)) {
-    return getDefaultSettings();
-  }
-  return { ...getDefaultSettings(), ...raw.data };
+    v: number;
+    data: ITCSettings;
 }
 
 function getDefaultSettings(): ITCSettings {
-  return {
-    defaultOptions: {
-      gstRate: 18,
-      blockedAmount: 0,
-      reversedAmount: 0,
-      utilizedAmount: 0,
-      period: "monthly",
-    },
-    autoSave: true,
-    defaultBusinessType: "trading",
-    showAdvanced: false,
-    reminderDays: 30,
-    maxHistoryItems: 50,
-  };
+    return {
+        autoSave: true,
+        maxHistoryItems: 100,
+        defaultUsageSplit: {
+            taxable: 100,
+            exempt: 0,
+            nonBusiness: 0,
+        },
+        showAdvancedOptions: false,
+    };
+}
+
+function isValidHistoryEntry(item: any): item is ITHistoryEntry {
+    if (!item || typeof item !== "object") return false;
+
+    if (
+        typeof item.id !== "string" ||
+        typeof item.timestamp !== "number" ||
+        typeof item.title !== "string" ||
+        typeof item.isFavorite !== "boolean" ||
+        !Array.isArray(item.tags)
+    ) {
+        return false;
+    }
+
+    if (!item.calculation || typeof item.calculation !== "object") return false;
+    const calc = item.calculation;
+    if (
+        typeof calc.eligibleITC !== "number" ||
+        typeof calc.ineligibleITC !== "number" ||
+        typeof calc.status !== "string" ||
+        !calc.breakdown ||
+        typeof calc.breakdown !== "object"
+    ) {
+        return false;
+    }
+
+    if (!item.input || typeof item.input !== "object") return false;
+    const inp = item.input;
+    if (
+        typeof inp.invoiceNumber !== "string" ||
+        typeof inp.invoiceDate !== "string" ||
+        typeof inp.gstinSupplier !== "string" ||
+        typeof inp.totalInvoiceValue !== "number" ||
+        typeof inp.gstPaid !== "number"
+    ) {
+        return false;
+    }
+
+    if (
+        !isFinite(calc.eligibleITC) ||
+        !isFinite(calc.ineligibleITC) ||
+        calc.eligibleITC < 0 ||
+        calc.ineligibleITC < 0
+    ) {
+        return false;
+    }
+
+    return true;
+}
+
+function validateHistory(raw: HistoryStorage | null, maxItems: number): ITHistoryEntry[] {
+    if (
+        !raw ||
+        typeof raw !== "object" ||
+        !("v" in raw) ||
+        !("data" in raw) ||
+        !Array.isArray(raw.data)
+    ) {
+        return [];
+    }
+
+    const valid: ITHistoryEntry[] = [];
+    const invalid: any[] = [];
+
+    for (const item of raw.data) {
+        if (isValidHistoryEntry(item)) {
+            valid.push(item);
+        } else {
+            invalid.push(item);
+        }
+    }
+
+    if (invalid.length > 0 && process.env.NODE_ENV === "development") {
+        logger.warn(`Filtered out ${invalid.length} invalid ITC history entries`);
+    }
+
+    valid.sort((a, b) => b.timestamp - a.timestamp);
+
+    if (valid.length > maxItems) {
+        return valid.slice(0, maxItems);
+    }
+
+    return valid;
+}
+
+function validateSettings(raw: SettingsStorage | null): ITCSettings {
+    const defaults = getDefaultSettings();
+
+    if (!raw || typeof raw !== "object" || !("v" in raw) || !("data" in raw)) {
+        return defaults;
+    }
+
+    return {
+        autoSave: typeof raw.data.autoSave === "boolean" ? raw.data.autoSave : defaults.autoSave,
+        maxHistoryItems:
+            typeof raw.data.maxHistoryItems === "number" && raw.data.maxHistoryItems > 0
+                ? Math.min(raw.data.maxHistoryItems, 500)
+                : defaults.maxHistoryItems,
+        defaultUsageSplit: raw.data.defaultUsageSplit || defaults.defaultUsageSplit,
+        showAdvancedOptions:
+            typeof raw.data.showAdvancedOptions === "boolean"
+                ? raw.data.showAdvancedOptions
+                : defaults.showAdvancedOptions,
+    };
+}
+
+function generateEntryId(): string {
+    return `itc_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 }
 
 export function useITCStore() {
-  const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(STORAGE_KEYS.history, {
-    v: 1,
-    data: [],
-  });
-  const [settingsRaw, setSettingsRaw] = useLocalStorage<SettingsStorage>(STORAGE_KEYS.settings, {
-    v: 1,
-    data: getDefaultSettings(),
-  });
-
-  const history = useMemo(() => validateHistory(historyRaw), [historyRaw]);
-  const settings = useMemo(() => validateSettings(settingsRaw), [settingsRaw]);
-
-  useEffect(() => {
-    if (!deepEqual(history, historyRaw?.data)) {
-      setHistoryRaw({ v: 1, data: history });
-    }
-  }, [history, historyRaw]);
-
-  useEffect(() => {
-    if (!deepEqual(settings, settingsRaw?.data)) {
-      setSettingsRaw({ v: 1, data: settings });
-    }
-  }, [settings, settingsRaw]);
-
-  const addToHistory = (entry: Omit<ITCHistoryEntry, "id">) => {
-    if (!settings.autoSave) return;
-
-    const newEntry: ITCHistoryEntry = {
-      ...entry,
-      id: `itc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    };
-
-    setHistoryRaw((prev) => {
-      const newData = [newEntry, ...(prev?.data ?? [])].slice(0, settings.maxHistoryItems);
-      return { v: 1, data: newData };
+    const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(STORAGE_KEYS.history, {
+        v: 1,
+        data: [],
     });
-  };
 
-  const removeFromHistory = (id: string) => {
-    setHistoryRaw((prev) => ({
-      v: 1,
-      data: (prev?.data ?? []).filter((e) => e.id !== id),
-    }));
-  };
+    const [settingsRaw, setSettingsRaw] = useLocalStorage<SettingsStorage>(STORAGE_KEYS.settings, {
+        v: 1,
+        data: getDefaultSettings(),
+    });
 
-  const clearHistory = () => {
-    setHistoryRaw({ v: 1, data: [] });
-  };
+    const settings = useMemo(() => validateSettings(settingsRaw), [settingsRaw]);
 
-  const updateEntry = (id: string, updates: Partial<ITCHistoryEntry>) => {
-    setHistoryRaw((prev) => ({
-      v: 1,
-      data: (prev?.data ?? []).map((e) => (e.id === id ? { ...e, ...updates } : e)),
-    }));
-  };
-
-  const searchHistory = (query: string): ITCHistoryEntry[] => {
-    if (!query.trim()) return history;
-
-    const q = query.toLowerCase();
-    return history.filter(
-      (e) =>
-        e.title.toLowerCase().includes(q) ||
-        e.note?.toLowerCase().includes(q) ||
-        e.tags.some((t) => t.toLowerCase().includes(q)) ||
-        e.period?.toLowerCase().includes(q)
-    );
-  };
-
-  const getHistoryByPeriod = (period: ITCOptions["period"]): ITCHistoryEntry[] => {
-    return history.filter((e) => e.options.period === period);
-  };
-
-  const getStatistics = () => {
-    const totalEntries = history.length;
-    const totalITCClaimed = history.reduce((acc, e) => acc + e.calculation.eligibleITC, 0);
-    const totalITCUtilized = history.reduce((acc, e) => acc + e.calculation.itcUtilized, 0);
-    const totalITCBalance = history.reduce((acc, e) => acc + e.calculation.itcBalance, 0);
-    const averageITCRate =
-      totalEntries > 0
-        ? history.reduce((acc, e) => acc + (e.calculation.totalITC / e.purchaseAmount) * 100, 0) /
-          totalEntries
-        : 0;
-
-    const periodUsage = history.reduce(
-      (acc, e) => {
-        acc[e.options.period] = (acc[e.options.period] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
+    const history = useMemo(
+        () => validateHistory(historyRaw, settings.maxHistoryItems),
+        [historyRaw, settings.maxHistoryItems]
     );
 
-    const gstRateUsage = history.reduce(
-      (acc, e) => {
-        const rate = e.options.gstRate;
-        acc[rate] = (acc[rate] || 0) + 1;
-        return acc;
-      },
-      {} as Record<number, number>
+    const saveToHistory = useCallback(
+        (entry: Omit<ITHistoryEntry, "id" | "timestamp">) => {
+            if (!settings.autoSave) {
+                return;
+            }
+
+            const newEntry: ITHistoryEntry = {
+                ...entry,
+                id: generateEntryId(),
+                timestamp: Date.now(),
+            };
+
+            try {
+                setHistoryRaw((prev) => {
+                    const newData = [newEntry, ...(prev?.data ?? [])].slice(0, settings.maxHistoryItems);
+                    return { v: 1, data: newData };
+                });
+            } catch (error) {
+                logger.error("Failed to save to history:", error);
+            }
+        },
+        [settings.autoSave, settings.maxHistoryItems, setHistoryRaw]
     );
 
-    // Calculate blocked ITC percentage
-    const totalGSTPaid = history.reduce((acc, e) => acc + e.calculation.totalITC, 0);
-    const totalBlocked = history.reduce((acc, e) => acc + e.calculation.blockedITC, 0);
-    const blockedPercentage = totalGSTPaid > 0 ? (totalBlocked / totalGSTPaid) * 100 : 0;
+    const removeFromHistory = useCallback(
+        (id: string) => {
+            try {
+                setHistoryRaw((prev) => ({
+                    v: 1,
+                    data: (prev?.data ?? []).filter((e) => e.id !== id),
+                }));
+            } catch (error) {
+                logger.error("Failed to remove from history:", error);
+            }
+        },
+        [setHistoryRaw]
+    );
 
-    // Calculate utilization efficiency
-    const utilizationRate = totalITCClaimed > 0 ? (totalITCUtilized / totalITCClaimed) * 100 : 0;
-
-    return {
-      totalEntries,
-      totalITCClaimed,
-      totalITCUtilized,
-      totalITCBalance,
-      averageITCRate: parseFloat(averageITCRate.toFixed(2)),
-      blockedPercentage: parseFloat(blockedPercentage.toFixed(2)),
-      utilizationRate: parseFloat(utilizationRate.toFixed(2)),
-      periodUsage,
-      gstRateUsage,
-      mostUsedPeriod: Object.entries(periodUsage).sort(([, a], [, b]) => b - a)[0]?.[0] || null,
-      mostUsedGSTRate: Object.entries(gstRateUsage).sort(([, a], [, b]) => b - a)[0]?.[0] || null,
-    };
-  };
-
-  const updateSettings = (updates: Partial<ITCSettings>) => {
-    setSettingsRaw((prev) => ({
-      v: 1,
-      data: { ...(prev?.data ?? getDefaultSettings()), ...updates },
-    }));
-  };
-
-  const resetSettings = () => {
-    setSettingsRaw({ v: 1, data: getDefaultSettings() });
-  };
-
-  const exportHistory = (format: "json" | "csv") => {
-    if (format === "json") return JSON.stringify(history, null, 2);
-
-    const headers = [
-      "Date",
-      "Title",
-      "Period",
-      "Purchase Amount",
-      "GST Rate (%)",
-      "Total ITC",
-      "Blocked ITC",
-      "Eligible ITC",
-      "ITC Utilized",
-      "ITC Balance",
-    ];
-
-    const rows = history.map((e) => [
-      new Date(e.timestamp).toISOString().split("T")[0],
-      e.title,
-      e.options.period,
-      e.purchaseAmount,
-      e.options.gstRate,
-      e.calculation.totalITC,
-      e.calculation.blockedITC,
-      e.calculation.eligibleITC,
-      e.calculation.itcUtilized,
-      e.calculation.itcBalance,
-    ]);
-
-    return [headers, ...rows]
-      .map((row) => row.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
-      .join("\n");
-  };
-
-  // Get ITC reminders (entries with high unused balance)
-  const getITCReminders = (): Array<{
-    entry: ITCHistoryEntry;
-    daysOld: number;
-    reminder: string;
-  }> => {
-    const now = Date.now();
-    return history
-      .filter((e) => e.calculation.itcBalance > 1000) // Only significant balances
-      .map((e) => {
-        const daysOld = Math.floor((now - e.timestamp) / (1000 * 60 * 60 * 24));
-        let reminder = "";
-
-        if (daysOld > settings.reminderDays) {
-          reminder = `Unused ITC balance of ₹${e.calculation.itcBalance.toLocaleString()} from ${daysOld} days ago`;
+    const clearHistory = useCallback(() => {
+        try {
+            setHistoryRaw({ v: 1, data: [] });
+        } catch (error) {
+            logger.error("Failed to clear history:", error);
         }
+    }, [setHistoryRaw]);
 
-        return { entry: e, daysOld, reminder };
-      })
-      .filter((r) => r.reminder)
-      .sort((a, b) => b.daysOld - a.daysOld);
-  };
+    const toggleFavorite = useCallback(
+        (id: string) => {
+            try {
+                setHistoryRaw((prev) => ({
+                    v: 1,
+                    data: (prev?.data ?? []).map((e) =>
+                        e.id === id ? { ...e, isFavorite: !e.isFavorite } : e
+                    ),
+                }));
+            } catch (error) {
+                logger.error("Failed to toggle favorite:", error);
+            }
+        },
+        [setHistoryRaw]
+    );
 
-  // Get monthly summary for current period
-  const getMonthlySummary = () => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
+    const updateEntry = useCallback(
+        (id: string, updates: Partial<ITHistoryEntry>) => {
+            try {
+                setHistoryRaw((prev) => ({
+                    v: 1,
+                    data: (prev?.data ?? []).map((e) => (e.id === id ? { ...e, ...updates } : e)),
+                }));
+            } catch (error) {
+                logger.error("Failed to update entry:", error);
+            }
+        },
+        [setHistoryRaw]
+    );
 
-    const monthlyEntries = history.filter((e) => {
-      const entryDate = new Date(e.timestamp);
-      return entryDate.getMonth() === currentMonth && entryDate.getFullYear() === currentYear;
-    });
+    const searchHistory = useCallback(
+        (query: string): ITHistoryEntry[] => {
+            if (!query.trim()) return history;
 
-    const totalPurchases = monthlyEntries.reduce((acc, e) => acc + e.purchaseAmount, 0);
-    const totalITC = monthlyEntries.reduce((acc, e) => acc + e.calculation.eligibleITC, 0);
-    const totalUtilized = monthlyEntries.reduce((acc, e) => acc + e.calculation.itcUtilized, 0);
-    const totalBalance = monthlyEntries.reduce((acc, e) => acc + e.calculation.itcBalance, 0);
+            const q = query.toLowerCase();
+            return history.filter(
+                (e) =>
+                    e.title.toLowerCase().includes(q) ||
+                    e.input.invoiceNumber.toLowerCase().includes(q) ||
+                    e.input.gstinSupplier.toLowerCase().includes(q) ||
+                    e.note?.toLowerCase().includes(q) ||
+                    e.tags.some((t) => t.toLowerCase().includes(q)) ||
+                    e.calculation.status.toLowerCase().includes(q)
+            );
+        },
+        [history]
+    );
+
+    const getFavorites = useCallback(() => history.filter((e) => e.isFavorite), [history]);
+
+    const getStatistics = useCallback(() => {
+        const totalEntries = history.length;
+        const favoriteCount = history.filter((e) => e.isFavorite).length;
+        const totalEligibleITC = history.reduce(
+            (acc, e) => acc + (e.calculation?.eligibleITC || 0),
+            0
+        );
+        const totalIneligibleITC = history.reduce(
+            (acc, e) => acc + (e.calculation?.ineligibleITC || 0),
+            0
+        );
+        const averageEligibleITC =
+            totalEntries > 0 ? totalEligibleITC / totalEntries : 0;
+
+        const statusUsage = history.reduce(
+            (acc, e) => {
+                const status = e.calculation?.status;
+                if (status) {
+                    acc[status] = (acc[status] || 0) + 1;
+                }
+                return acc;
+            },
+            {} as Record<string, number>
+        );
+
+        return {
+            totalEntries,
+            favoriteCount,
+            totalEligibleITC,
+            totalIneligibleITC,
+            averageEligibleITC,
+            statusUsage,
+        };
+    }, [history]);
 
     return {
-      entries: monthlyEntries.length,
-      totalPurchases,
-      totalITC,
-      totalUtilized,
-      totalBalance,
-      utilizationRate: totalITC > 0 ? (totalUtilized / totalITC) * 100 : 0,
+        history,
+        settings,
+        saveToHistory,
+        removeFromHistory,
+        clearHistory,
+        toggleFavorite,
+        updateEntry,
+        searchHistory,
+        getFavorites,
+        getStatistics,
     };
-  };
-
-  return {
-    history,
-    settings,
-    addToHistory,
-    removeFromHistory,
-    clearHistory,
-    updateEntry,
-    searchHistory,
-    getHistoryByPeriod,
-    getStatistics,
-    updateSettings,
-    resetSettings,
-    exportHistory,
-    getITCReminders,
-    getMonthlySummary,
-  };
-}
-
-function deepEqual(a: any, b: any): boolean {
-  try {
-    return JSON.stringify(a) === JSON.stringify(b);
-  } catch {
-    return a === b;
-  }
 }

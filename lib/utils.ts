@@ -136,3 +136,28 @@ export function throttle<T extends (...args: any[]) => any>(
     }
   };
 }
+
+/**
+ * Currency code type.
+ */
+export type CurrencyCode = "INR" | "USD" | "EUR" | "GBP";
+
+/**
+ * Format a number as currency.
+ * @param amount The amount to format
+ * @param currencyCode The currency code (default: INR)
+ * @returns Formatted currency string
+ */
+export function formatCurrency(amount: number, currencyCode: CurrencyCode = 'INR'): string {
+  if (!isFinite(amount)) {
+    // Fallback for non-finite numbers
+    return currencyCode === 'INR' ? '₹0.00' : '$0.00';
+  }
+
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: currencyCode,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}

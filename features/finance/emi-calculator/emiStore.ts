@@ -1,55 +1,55 @@
-// features/finance/gst-calculator/gstStore.ts
+// features/finance/emi-calculator/emiStore.ts
 
 import { logger } from "@/lib/logger";
 import { useMemo, useCallback } from "react";
 import useLocalStorage from "@/lib/useLocalStorage";
-import type { GSTCalculationResult, GSTInput } from "./gstEngine";
+import type { EMICalculationResult, EMIInput } from "./emiEngine";
 
-export interface GSTHistoryEntry {
+export interface EMIHistoryEntry {
     id: string;
     timestamp: number;
     title: string;
-    calculation: GSTCalculationResult;
-    input: GSTInput;
+    calculation: EMICalculationResult;
+    input: EMIInput;
     isFavorite: boolean;
     tags: string[];
     note?: string;
 }
 
-export interface GSTSettings {
+export interface EMISettings {
     autoSave: boolean;
     maxHistoryItems: number;
-    defaultGSTRate: number;
-    defaultSupplyType: "INTRA_STATE" | "INTER_STATE";
-    showAdvancedOptions: boolean;
+    defaultCurrency: string;
+    showAmortizationTable: boolean;
+    decimalPlaces: number;
 }
 
 const STORAGE_KEYS = {
-    history: "tv:gst-history",
-    settings: "tv:gst-settings",
+    history: "tv:emi-history",
+    settings: "tv:emi-settings",
 } as const;
 
 interface HistoryStorage {
     v: number;
-    data: GSTHistoryEntry[];
+    data: EMIHistoryEntry[];
 }
 
 interface SettingsStorage {
     v: number;
-    data: GSTSettings;
+    data: EMISettings;
 }
 
-function getDefaultSettings(): GSTSettings {
+function getDefaultSettings(): EMISettings {
     return {
         autoSave: true,
         maxHistoryItems: 100,
-        defaultGSTRate: 18,
-        defaultSupplyType: "INTRA_STATE",
-        showAdvancedOptions: false,
+        defaultCurrency: "₹",
+        showAmortizationTable: true,
+        decimalPlaces: 2,
     };
 }
 
-function isValidHistoryEntry(item: any): item is GSTHistoryEntry {
+function isValidHistoryEntry(item: any): item is EMIHistoryEntry {
     if (!item || typeof item !== "object") return false;
 
     if (
@@ -65,11 +65,13 @@ function isValidHistoryEntry(item: any): item is GSTHistoryEntry {
     if (!item.calculation || typeof item.calculation !== "object") return false;
     const calc = item.calculation;
     if (
-        typeof calc.baseAmount !== "number" ||
-        typeof calc.taxableValue !== "number" ||
-        typeof calc.totalTax !== "number" ||
-        typeof calc.finalAmount !== "number" ||
-        typeof calc.gstRate !== "number"
+        typeof calc.emi !== "number" ||
+        typeof calc.totalInterest !== "number" ||
+        typeof calc.totalPayment !== "number" ||
+        !calc.principalVsInterestRatio ||
+        typeof calc.principalVsInterestRatio !== "object" ||
+        typeof calc.principalVsInterestRatio.principal !== "number" ||
+        typeof calc.principalVsInterestRatio.interest !== "number"
     ) {
         return false;
     }
@@ -77,21 +79,22 @@ function isValidHistoryEntry(item: any): item is GSTHistoryEntry {
     if (!item.input || typeof item.input !== "object") return false;
     const inp = item.input;
     if (
-        typeof inp.mode !== "string" ||
-        typeof inp.amount !== "number" ||
-        typeof inp.gstRate !== "number" ||
-        typeof inp.supplyType !== "string"
+        typeof inp.loanAmount !== "number" ||
+        typeof inp.interestRate !== "number" ||
+        typeof inp.tenureValue !== "number" ||
+        typeof inp.tenureUnit !== "string" ||
+        typeof inp.loanStartDate !== "string"
     ) {
         return false;
     }
 
     if (
-        !isFinite(calc.baseAmount) ||
-        !isFinite(calc.totalTax) ||
-        !isFinite(calc.finalAmount) ||
-        calc.baseAmount < 0 ||
-        calc.totalTax < 0 ||
-        calc.finalAmount < 0
+        !isFinite(calc.emi) ||
+        !isFinite(calc.totalInterest) ||
+        !isFinite(calc.totalPayment) ||
+        calc.emi < 0 ||
+        calc.totalInterest < 0 ||
+        calc.totalPayment < 0
     ) {
         return false;
     }
@@ -99,7 +102,7 @@ function isValidHistoryEntry(item: any): item is GSTHistoryEntry {
     return true;
 }
 
-function validateHistory(raw: HistoryStorage | null, maxItems: number): GSTHistoryEntry[] {
+function validateHistory(raw: HistoryStorage | null, maxItems: number): EMIHistoryEntry[] {
     if (
         !raw ||
         typeof raw !== "object" ||
@@ -110,7 +113,7 @@ function validateHistory(raw: HistoryStorage | null, maxItems: number): GSTHisto
         return [];
     }
 
-    const valid: GSTHistoryEntry[] = [];
+    const valid: EMIHistoryEntry[] = [];
     const invalid: any[] = [];
 
     for (const item of raw.data) {
@@ -122,7 +125,7 @@ function validateHistory(raw: HistoryStorage | null, maxItems: number): GSTHisto
     }
 
     if (invalid.length > 0 && process.env.NODE_ENV === "development") {
-        logger.warn(`Filtered out ${invalid.length} invalid GST history entries`);
+        logger.warn(`Filtered out ${invalid.length} invalid EMI history entries`);
     }
 
     valid.sort((a, b) => b.timestamp - a.timestamp);
@@ -134,7 +137,7 @@ function validateHistory(raw: HistoryStorage | null, maxItems: number): GSTHisto
     return valid;
 }
 
-function validateSettings(raw: SettingsStorage | null): GSTSettings {
+function validateSettings(raw: SettingsStorage | null): EMISettings {
     const defaults = getDefaultSettings();
 
     if (!raw || typeof raw !== "object" || !("v" in raw) || !("data" in raw)) {
@@ -147,21 +150,26 @@ function validateSettings(raw: SettingsStorage | null): GSTSettings {
             typeof raw.data.maxHistoryItems === "number" && raw.data.maxHistoryItems > 0
                 ? Math.min(raw.data.maxHistoryItems, 500)
                 : defaults.maxHistoryItems,
-        defaultGSTRate:
-            typeof raw.data.defaultGSTRate === "number" ? raw.data.defaultGSTRate : defaults.defaultGSTRate,
-        defaultSupplyType: raw.data.defaultSupplyType || defaults.defaultSupplyType,
-        showAdvancedOptions:
-            typeof raw.data.showAdvancedOptions === "boolean"
-                ? raw.data.showAdvancedOptions
-                : defaults.showAdvancedOptions,
+        defaultCurrency:
+            typeof raw.data.defaultCurrency === "string"
+                ? raw.data.defaultCurrency
+                : defaults.defaultCurrency,
+        showAmortizationTable:
+            typeof raw.data.showAmortizationTable === "boolean"
+                ? raw.data.showAmortizationTable
+                : defaults.showAmortizationTable,
+        decimalPlaces:
+            typeof raw.data.decimalPlaces === "number" && raw.data.decimalPlaces >= 0
+                ? Math.min(raw.data.decimalPlaces, 6)
+                : defaults.decimalPlaces,
     };
 }
 
 function generateEntryId(): string {
-    return `gst_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+    return `emi_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 }
 
-export function useGSTStore() {
+export function useEMIStore() {
     const [historyRaw, setHistoryRaw] = useLocalStorage<HistoryStorage>(STORAGE_KEYS.history, {
         v: 1,
         data: [],
@@ -180,12 +188,12 @@ export function useGSTStore() {
     );
 
     const saveToHistory = useCallback(
-        (entry: Omit<GSTHistoryEntry, "id" | "timestamp">) => {
+        (entry: Omit<EMIHistoryEntry, "id" | "timestamp">) => {
             if (!settings.autoSave) {
                 return;
             }
 
-            const newEntry: GSTHistoryEntry = {
+            const newEntry: EMIHistoryEntry = {
                 ...entry,
                 id: generateEntryId(),
                 timestamp: Date.now(),
@@ -242,11 +250,11 @@ export function useGSTStore() {
     );
 
     const updateEntry = useCallback(
-        (id: string, updates: Partial<GSTHistoryEntry>) => {
+        (id: string, updates: Partial<EMIHistoryEntry>) => {
             try {
                 setHistoryRaw((prev) => ({
                     v: 1,
-                    data: (prev?.data ?? []).map((e) => (e.id === id ? { ...e, ...updates } : e)),
+                    data: (prev?.data ?? []).map((e) => (e.id === id ? { ...e, ...updates} : e)),
                 }));
             } catch (error) {
                 logger.error("Failed to update entry:", error);
@@ -256,17 +264,19 @@ export function useGSTStore() {
     );
 
     const searchHistory = useCallback(
-        (query: string): GSTHistoryEntry[] => {
+        (query: string): EMIHistoryEntry[] => {
             if (!query.trim()) return history;
 
             const q = query.toLowerCase();
             return history.filter(
                 (e) =>
                     e.title.toLowerCase().includes(q) ||
+                    e.input.loanAmount.toString().includes(q) ||
+                    e.input.interestRate.toString().includes(q) ||
+                    e.input.tenureValue.toString().includes(q) ||
                     e.note?.toLowerCase().includes(q) ||
                     e.tags.some((t) => t.toLowerCase().includes(q)) ||
-                    e.calculation.mode.toLowerCase().includes(q) ||
-                    e.calculation.supplyType.toLowerCase().includes(q)
+                    e.calculation.emi.toString().includes(q)
             );
         },
         [history]
@@ -277,18 +287,20 @@ export function useGSTStore() {
     const getStatistics = useCallback(() => {
         const totalEntries = history.length;
         const favoriteCount = history.filter((e) => e.isFavorite).length;
-        const totalBaseAmount = history.reduce((acc, e) => acc + (e.calculation?.baseAmount || 0), 0);
-        const totalTax = history.reduce((acc, e) => acc + (e.calculation?.totalTax || 0), 0);
-        const avgGSTRate = totalEntries > 0
-            ? history.reduce((acc, e) => acc + (e.calculation?.gstRate || 0), 0) / totalEntries
-            : 0;
+        const totalInterestPaid = history.reduce(
+            (acc, e) => acc + (e.calculation?.totalInterestWithPrepayment || e.calculation?.totalInterest || 0),
+            0
+        );
+        const totalPrincipalPaid = history.reduce(
+            (acc, e) => acc + (e.calculation?.schedule?.reduce((sum, row) => sum + row.principal, 0) || 0),
+            0
+        );
+        const averageEMI = totalEntries > 0 ? history.reduce((acc, e) => acc + e.calculation.emi, 0) / totalEntries : 0;
 
-        const modeUsage = history.reduce(
+        const loanTypeUsage = history.reduce(
             (acc, e) => {
-                const mode = e.calculation?.mode;
-                if (mode) {
-                    acc[mode] = (acc[mode] || 0) + 1;
-                }
+                const loanType = e.input.loanType || "unknown";
+                acc[loanType] = (acc[loanType] || 0) + 1;
                 return acc;
             },
             {} as Record<string, number>
@@ -297,10 +309,10 @@ export function useGSTStore() {
         return {
             totalEntries,
             favoriteCount,
-            totalBaseAmount,
-            totalTax,
-            avgGSTRate,
-            modeUsage,
+            totalInterestPaid,
+            totalPrincipalPaid,
+            averageEMI,
+            loanTypeUsage,
         };
     }, [history]);
 
