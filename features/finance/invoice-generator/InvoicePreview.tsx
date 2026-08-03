@@ -450,10 +450,13 @@ export function InvoicePreview({ invoice, totals }: InvoicePreviewProps) {
         @media (max-width: 768px) {
           .inv-preview {
             padding: 16px;
+            overflow: auto; /* Enable both horizontal and vertical scrolling */
           }
 
           .inv-preview-paper {
             padding: 24px;
+            width: 100%;
+            max-width: none; /* Allow full width on mobile */
           }
 
           .inv-preview-header {
@@ -484,6 +487,86 @@ export function InvoicePreview({ invoice, totals }: InvoicePreviewProps) {
 
           .inv-preview-totals {
             width: 100%;
+            margin-top: 20px;
+          }
+
+          /* Make table horizontally scrollable on small screens */
+          .inv-preview-table {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          /* Improve table cell spacing for better readability */
+          .inv-preview-table th,
+          .inv-preview-table td {
+            padding: 8px 12px;
+            font-size: 12px;
+          }
+
+          .inv-preview-table th {
+            font-weight: 700;
+          }
+
+          .inv-preview-table td:nth-child(2),
+          .inv-preview-table td:nth-child(3),
+          .inv-preview-table td:nth-child(4),
+          .inv-preview-table td:nth-child(5) {
+            text-align: right;
+            font-family: var(--font-mono);
+            font-weight: 600;
+          }
+
+          /* Additional optimizations for very small screens (like 320px width) */
+          @media (max-width: 320px) {
+            .inv-preview {
+              padding: 12px;
+            }
+
+            .inv-preview-paper {
+              padding: 16px;
+            }
+
+            .inv-preview-title {
+              font-size: 20px;
+            }
+
+            .inv-preview-meta-row {
+              font-size: 11px;
+              gap: 4px;
+            }
+
+            .inv-preview-party-label {
+              font-size: 10px;
+            }
+
+            .inv-preview-party-name {
+              font-size: 14px;
+            }
+
+            .inv-preview-party-text {
+              font-size: 11px;
+            }
+
+            .inv-preview-table th,
+            .inv-preview-table td {
+              padding: 6px 8px;
+              font-size: 11px;
+            }
+
+            .inv-preview-totals-row {
+              font-size: 11px;
+              gap: 8px;
+            }
+
+            .inv-preview-note-title {
+              font-size: 10px;
+            }
+
+            .inv-preview-note-text {
+              font-size: 10px;
+            }
           }
         }
       `}</style>

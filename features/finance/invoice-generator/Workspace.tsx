@@ -6,13 +6,13 @@ import { logger } from "@/lib/logger";
 import { useState, useMemo, useCallback } from "react";
 import type { Tool } from "@/lib/tools";
 import {
-    calculateInvoiceTotals,
-    generateInvoiceNumber,
-    createEmptyLineItem,
-    isValidLineItem,
-    type InvoiceData,
-    type InvoiceLineItem,
-    type CurrencyCode,
+  calculateInvoiceTotals,
+  generateInvoiceNumber,
+  createEmptyLineItem,
+  isValidLineItem,
+  type InvoiceData,
+  type InvoiceLineItem,
+  type CurrencyCode,
 } from "./invoiceEngine";
 import { useInvoiceStore } from "./invoiceStore";
 import { SAMPLE_INVOICES, SAMPLE_INVOICE_LABELS, type SampleInvoiceType } from "./sampleData";
@@ -27,620 +27,620 @@ import { DEFAULT_TERMS_TEMPLATES } from "./invoiceRules.config";
 type MobilePanel = "edit" | "preview";
 
 function getTodayString(): string {
-    return new Date().toISOString().split('T')[0];
+  return new Date().toISOString().split('T')[0];
 }
 
 function getDateString(daysFromNow: number): string {
-    const date = new Date();
-    date.setDate(date.getDate() + daysFromNow);
-    return date.toISOString().split('T')[0];
+  const date = new Date();
+  date.setDate(date.getDate() + daysFromNow);
+  return date.toISOString().split('T')[0];
 }
 
 export default function InvoiceGeneratorWorkspace({ tool }: { tool: Tool }) {
-    const {
-        companyProfiles,
-        clients,
-        settings,
-        saveInvoice,
-        saveCompanyProfile,
-        saveClient,
-        updateLastInvoiceNumber,
-    } = useInvoiceStore();
+  const {
+    companyProfiles,
+    clients,
+    settings,
+    saveInvoice,
+    saveCompanyProfile,
+    saveClient,
+    updateLastInvoiceNumber,
+  } = useInvoiceStore();
 
-    const [invoiceNumber, setInvoiceNumber] = useState(() =>
-        generateInvoiceNumber(settings.lastInvoiceNumber)
-    );
-    const [invoiceDate, setInvoiceDate] = useState(getTodayString());
-    const [dueDate, setDueDate] = useState(getDateString(30));
-    const [currency, setCurrency] = useState<CurrencyCode>(settings.defaultCurrency);
-    const [paymentStatus, setPaymentStatus] = useState<"DRAFT" | "SENT" | "PAID" | "OVERDUE">("DRAFT");
+  const [invoiceNumber, setInvoiceNumber] = useState(() =>
+    generateInvoiceNumber(settings.lastInvoiceNumber)
+  );
+  const [invoiceDate, setInvoiceDate] = useState(getTodayString());
+  const [dueDate, setDueDate] = useState(getDateString(30));
+  const [currency, setCurrency] = useState<CurrencyCode>(settings.defaultCurrency);
+  const [paymentStatus, setPaymentStatus] = useState<"DRAFT" | "SENT" | "PAID" | "OVERDUE">("DRAFT");
 
-    const [companyName, setCompanyName] = useState("");
-    const [companyAddress, setCompanyAddress] = useState("");
-    const [companyGSTIN, setCompanyGSTIN] = useState("");
-    const [companyEmail, setCompanyEmail] = useState("");
-    const [companyPhone, setCompanyPhone] = useState("");
-    const [companyLogo, setCompanyLogo] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [companyAddress, setCompanyAddress] = useState("");
+  const [companyGSTIN, setCompanyGSTIN] = useState("");
+  const [companyEmail, setCompanyEmail] = useState("");
+  const [companyPhone, setCompanyPhone] = useState("");
+  const [companyLogo, setCompanyLogo] = useState("");
 
-    const [clientName, setClientName] = useState("");
-    const [clientAddress, setClientAddress] = useState("");
-    const [clientGSTIN, setClientGSTIN] = useState("");
-    const [clientEmail, setClientEmail] = useState("");
-    const [clientPhone, setClientPhone] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [clientAddress, setClientAddress] = useState("");
+  const [clientGSTIN, setClientGSTIN] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
 
-    const [lineItems, setLineItems] = useState<InvoiceLineItem[]>([createEmptyLineItem()]);
+  const [lineItems, setLineItems] = useState<InvoiceLineItem[]>([createEmptyLineItem()]);
 
-    const [discountType, setDiscountType] = useState<"FLAT" | "PERCENT">("FLAT");
-    const [discountValue, setDiscountValue] = useState("0");
+  const [discountType, setDiscountType] = useState<"FLAT" | "PERCENT">("FLAT");
+  const [discountValue, setDiscountValue] = useState("0");
 
-    const [notes, setNotes] = useState("");
-    const [terms, setTerms] = useState("");
+  const [notes, setNotes] = useState("");
+  const [terms, setTerms] = useState("");
 
-    const [showSampleMenu, setShowSampleMenu] = useState(false);
-    const [mobilePanel, setMobilePanel] = useState<MobilePanel>("edit");
-    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [showSampleMenu, setShowSampleMenu] = useState(false);
+  const [mobilePanel, setMobilePanel] = useState<MobilePanel>("edit");
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-    const parsed = useMemo(() => {
-        return {
-            discountValue: parseFloat(discountValue) || 0,
-        };
-    }, [discountValue]);
+  const parsed = useMemo(() => {
+    return {
+      discountValue: parseFloat(discountValue) || 0,
+    };
+  }, [discountValue]);
 
-    const totals = useMemo(() => {
-        return calculateInvoiceTotals(lineItems, discountType, parsed.discountValue);
-    }, [lineItems, discountType, parsed.discountValue]);
+  const totals = useMemo(() => {
+    return calculateInvoiceTotals(lineItems, discountType, parsed.discountValue);
+  }, [lineItems, discountType, parsed.discountValue]);
 
-    const currentInvoice = useMemo((): InvoiceData => {
-        return {
-            invoiceNumber,
-            invoiceDate,
-            dueDate,
-            currency,
-            paymentStatus,
-            companyName,
-            companyAddress,
-            companyGSTIN,
-            companyEmail,
-            companyPhone,
-            companyLogo,
-            clientName,
-            clientAddress,
-            clientGSTIN,
-            clientEmail,
-            clientPhone,
-            lineItems,
-            discountType,
-            discountValue: parsed.discountValue,
-            notes,
-            terms,
-        };
-    }, [
-        invoiceNumber,
-        invoiceDate,
-        dueDate,
-        currency,
-        paymentStatus,
-        companyName,
-        companyAddress,
-        companyGSTIN,
-        companyEmail,
-        companyPhone,
-        companyLogo,
-        clientName,
-        clientAddress,
-        clientGSTIN,
-        clientEmail,
-        clientPhone,
-        lineItems,
-        discountType,
-        parsed.discountValue,
-        notes,
-        terms,
-    ]);
+  const currentInvoice = useMemo((): InvoiceData => {
+    return {
+      invoiceNumber,
+      invoiceDate,
+      dueDate,
+      currency,
+      paymentStatus,
+      companyName,
+      companyAddress,
+      companyGSTIN,
+      companyEmail,
+      companyPhone,
+      companyLogo,
+      clientName,
+      clientAddress,
+      clientGSTIN,
+      clientEmail,
+      clientPhone,
+      lineItems,
+      discountType,
+      discountValue: parsed.discountValue,
+      notes,
+      terms,
+    };
+  }, [
+    invoiceNumber,
+    invoiceDate,
+    dueDate,
+    currency,
+    paymentStatus,
+    companyName,
+    companyAddress,
+    companyGSTIN,
+    companyEmail,
+    companyPhone,
+    companyLogo,
+    clientName,
+    clientAddress,
+    clientGSTIN,
+    clientEmail,
+    clientPhone,
+    lineItems,
+    discountType,
+    parsed.discountValue,
+    notes,
+    terms,
+  ]);
 
-    const isValidInvoice = useMemo(() => {
-        return (
-            invoiceNumber.trim() !== "" &&
-            companyName.trim() !== "" &&
-            clientName.trim() !== "" &&
-            lineItems.length > 0 &&
-            lineItems.some(isValidLineItem)
-        );
-    }, [invoiceNumber, companyName, clientName, lineItems]);
-
-    const handleSaveInvoice = useCallback(() => {
-        if (!isValidInvoice) return;
-
-        try {
-            saveInvoice(currentInvoice);
-            updateLastInvoiceNumber(invoiceNumber);
-            logger.info("Invoice saved successfully");
-        } catch (error) {
-            logger.error("Failed to save invoice:", error);
-        }
-    }, [isValidInvoice, currentInvoice, saveInvoice, updateLastInvoiceNumber, invoiceNumber]);
-
-    const handleDownloadPDF = useCallback(async () => {
-        if (!isValidInvoice) return;
-
-        setIsGeneratingPDF(true);
-        try {
-            await downloadInvoicePDF(currentInvoice, totals);
-            updateLastInvoiceNumber(invoiceNumber);
-        } catch (error) {
-            logger.error("Failed to generate PDF:", error);
-        } finally {
-            setIsGeneratingPDF(false);
-        }
-    }, [isValidInvoice, currentInvoice, totals, updateLastInvoiceNumber, invoiceNumber]);
-
-    const handleReset = useCallback(() => {
-        setInvoiceNumber(generateInvoiceNumber(settings.lastInvoiceNumber));
-        setInvoiceDate(getTodayString());
-        setDueDate(getDateString(30));
-        setCurrency(settings.defaultCurrency);
-        setPaymentStatus("DRAFT");
-        setCompanyName("");
-        setCompanyAddress("");
-        setCompanyGSTIN("");
-        setCompanyEmail("");
-        setCompanyPhone("");
-        setCompanyLogo("");
-        setClientName("");
-        setClientAddress("");
-        setClientGSTIN("");
-        setClientEmail("");
-        setClientPhone("");
-        setLineItems([createEmptyLineItem()]);
-        setDiscountType("FLAT");
-        setDiscountValue("0");
-        setNotes("");
-        setTerms("");
-    }, [settings]);
-
-    const loadSample = useCallback((type: SampleInvoiceType) => {
-        const sample = SAMPLE_INVOICES[type];
-        setInvoiceNumber(sample.invoiceNumber);
-        setInvoiceDate(sample.invoiceDate);
-        setDueDate(sample.dueDate);
-        setCurrency(sample.currency);
-        setPaymentStatus(sample.paymentStatus);
-        setCompanyName(sample.companyName);
-        setCompanyAddress(sample.companyAddress);
-        setCompanyGSTIN(sample.companyGSTIN);
-        setCompanyEmail(sample.companyEmail);
-        setCompanyPhone(sample.companyPhone);
-        setCompanyLogo(sample.companyLogo);
-        setClientName(sample.clientName);
-        setClientAddress(sample.clientAddress);
-        setClientGSTIN(sample.clientGSTIN);
-        setClientEmail(sample.clientEmail);
-        setClientPhone(sample.clientPhone);
-        setLineItems([...sample.lineItems]);
-        setDiscountType(sample.discountType);
-        setDiscountValue(sample.discountValue.toString());
-        setNotes(sample.notes);
-        setTerms(sample.terms);
-        setShowSampleMenu(false);
-        setMobilePanel("edit");
-    }, []);
-
-    const handleLoadProfile = useCallback(
-        (profileId: string) => {
-            const profile = companyProfiles.find((p) => p.id === profileId);
-            if (!profile) return;
-
-            setCompanyName(profile.businessName);
-            setCompanyAddress(profile.address);
-            setCompanyGSTIN(profile.gstin);
-            setCompanyEmail(profile.email);
-            setCompanyPhone(profile.phone);
-            setCompanyLogo(profile.logo || "");
-        },
-        [companyProfiles]
-    );
-
-    const handleSaveProfile = useCallback(() => {
-        if (!companyName.trim()) return;
-
-        try {
-            saveCompanyProfile({
-                name: companyName,
-                businessName: companyName,
-                address: companyAddress,
-                gstin: companyGSTIN,
-                email: companyEmail,
-                phone: companyPhone,
-                logo: companyLogo,
-                isDefault: companyProfiles.length === 0,
-            });
-            logger.info("Company profile saved");
-        } catch (error) {
-            logger.error("Failed to save profile:", error);
-        }
-    }, [companyName, companyAddress, companyGSTIN, companyEmail, companyPhone, companyLogo, companyProfiles, saveCompanyProfile]);
-
-    const handleLoadClient = useCallback(
-        (clientId: string) => {
-            const client = clients.find((c) => c.id === clientId);
-            if (!client) return;
-
-            setClientName(client.name);
-            setClientAddress(client.address);
-            setClientGSTIN(client.gstin);
-            setClientEmail(client.email);
-            setClientPhone(client.phone);
-        },
-        [clients]
-    );
-
-    const handleSaveClient = useCallback(() => {
-        if (!clientName.trim()) return;
-
-        try {
-            saveClient({
-                name: clientName,
-                address: clientAddress,
-                gstin: clientGSTIN,
-                email: clientEmail,
-                phone: clientPhone,
-            });
-            logger.info("Client saved");
-        } catch (error) {
-            logger.error("Failed to save client:", error);
-        }
-    }, [clientName, clientAddress, clientGSTIN, clientEmail, clientPhone, saveClient]);
-
-    const handleLineItemChange = useCallback(
-        (id: string, field: keyof InvoiceLineItem, value: any) => {
-            setLineItems((prev) =>
-                prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
-            );
-        },
-        []
-    );
-
-    const handleAddLineItem = useCallback(() => {
-        setLineItems((prev) => [...prev, createEmptyLineItem()]);
-    }, []);
-
-    const handleRemoveLineItem = useCallback((id: string) => {
-        setLineItems((prev) => {
-            if (prev.length === 1) return prev;
-            return prev.filter((item) => item.id !== id);
-        });
-    }, []);
-
+  const isValidInvoice = useMemo(() => {
     return (
-        <>
-            <div className="inv-workspace" role="main" aria-label="Invoice Generator">
-                <div className="inv-chrome">
-                    <div className="inv-chrome-left">
-                        <div className="inv-sample-dropdown">
-                            <button
-                                type="button"
-                                className="inv-btn inv-btn-icon"
-                                onClick={() => setShowSampleMenu((s) => !s)}
-                                aria-label="Load sample data"
-                                aria-haspopup="menu"
-                                aria-expanded={showSampleMenu}
-                            >
-                                <i className="ti ti-wand" aria-hidden="true" />
-                                <span>Examples</span>
-                            </button>
+      invoiceNumber.trim() !== "" &&
+      companyName.trim() !== "" &&
+      clientName.trim() !== "" &&
+      lineItems.length > 0 &&
+      lineItems.some(isValidLineItem)
+    );
+  }, [invoiceNumber, companyName, clientName, lineItems]);
 
-                            {showSampleMenu && (
-                                <div className="inv-sample-menu" role="menu">
-                                    <div className="inv-sample-menu-header">
-                                        <span>Load Sample Invoice</span>
-                                    </div>
-                                    {(Object.keys(SAMPLE_INVOICES) as SampleInvoiceType[]).map((type) => (
-                                        <button
-                                            key={type}
-                                            type="button"
-                                            role="menuitem"
-                                            className="inv-sample-menu-item"
-                                            onClick={() => loadSample(type)}
-                                        >
-                                            <i className={`ti ${SAMPLE_INVOICE_LABELS[type].icon}`} aria-hidden="true" />
-                                            <div className="inv-sample-item-content">
-                                                <strong>{SAMPLE_INVOICE_LABELS[type].label}</strong>
-                                                <span>{SAMPLE_INVOICE_LABELS[type].desc}</span>
-                                            </div>
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    </div>
+  const handleSaveInvoice = useCallback(() => {
+    if (!isValidInvoice) return;
 
-                    <div className="inv-chrome-right">
-                        <button
-                            type="button"
-                            className="inv-btn inv-btn-ghost"
-                            onClick={handleReset}
-                            aria-label="Reset form"
-                        >
-                            <i className="ti ti-refresh" aria-hidden="true" />
-                            <span>Reset</span>
-                        </button>
+    try {
+      saveInvoice(currentInvoice);
+      updateLastInvoiceNumber(invoiceNumber);
+      logger.info("Invoice saved successfully");
+    } catch (error) {
+      logger.error("Failed to save invoice:", error);
+    }
+  }, [isValidInvoice, currentInvoice, saveInvoice, updateLastInvoiceNumber, invoiceNumber]);
 
-                        {isValidInvoice && (
-                            <>
-                                <button
-                                    type="button"
-                                    className="inv-btn inv-btn-primary"
-                                    onClick={handleDownloadPDF}
-                                    disabled={isGeneratingPDF}
-                                    aria-label="Download PDF"
-                                    aria-busy={isGeneratingPDF}
-                                >
-                                    <i
-                                        className={`ti ${isGeneratingPDF ? "ti-loader-2 inv-spin" : "ti-file-download"}`}
-                                        aria-hidden="true"
-                                    />
-                                    <span>{isGeneratingPDF ? "Generating…" : "Export PDF"}</span>
-                                </button>
+  const handleDownloadPDF = useCallback(async () => {
+    if (!isValidInvoice) return;
 
-                                <button
-                                    type="button"
-                                    className="inv-btn inv-btn-primary"
-                                    onClick={handleSaveInvoice}
-                                    aria-label="Save invoice"
-                                >
-                                    <i className="ti ti-device-floppy" aria-hidden="true" />
-                                    <span>Save</span>
-                                </button>
-                            </>
-                        )}
-                    </div>
-                </div>
+    setIsGeneratingPDF(true);
+    try {
+      await downloadInvoicePDF(currentInvoice, totals);
+      updateLastInvoiceNumber(invoiceNumber);
+    } catch (error) {
+      logger.error("Failed to generate PDF:", error);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  }, [isValidInvoice, currentInvoice, totals, updateLastInvoiceNumber, invoiceNumber]);
 
-                <div className="inv-mobile-tabs" role="tablist" aria-label="Panel selector">
+  const handleReset = useCallback(() => {
+    setInvoiceNumber(generateInvoiceNumber(settings.lastInvoiceNumber));
+    setInvoiceDate(getTodayString());
+    setDueDate(getDateString(30));
+    setCurrency(settings.defaultCurrency);
+    setPaymentStatus("DRAFT");
+    setCompanyName("");
+    setCompanyAddress("");
+    setCompanyGSTIN("");
+    setCompanyEmail("");
+    setCompanyPhone("");
+    setCompanyLogo("");
+    setClientName("");
+    setClientAddress("");
+    setClientGSTIN("");
+    setClientEmail("");
+    setClientPhone("");
+    setLineItems([createEmptyLineItem()]);
+    setDiscountType("FLAT");
+    setDiscountValue("0");
+    setNotes("");
+    setTerms("");
+  }, [settings]);
+
+  const loadSample = useCallback((type: SampleInvoiceType) => {
+    const sample = SAMPLE_INVOICES[type];
+    setInvoiceNumber(sample.invoiceNumber);
+    setInvoiceDate(sample.invoiceDate);
+    setDueDate(sample.dueDate);
+    setCurrency(sample.currency);
+    setPaymentStatus(sample.paymentStatus);
+    setCompanyName(sample.companyName);
+    setCompanyAddress(sample.companyAddress);
+    setCompanyGSTIN(sample.companyGSTIN);
+    setCompanyEmail(sample.companyEmail);
+    setCompanyPhone(sample.companyPhone);
+    setCompanyLogo(sample.companyLogo);
+    setClientName(sample.clientName);
+    setClientAddress(sample.clientAddress);
+    setClientGSTIN(sample.clientGSTIN);
+    setClientEmail(sample.clientEmail);
+    setClientPhone(sample.clientPhone);
+    setLineItems([...sample.lineItems]);
+    setDiscountType(sample.discountType);
+    setDiscountValue(sample.discountValue.toString());
+    setNotes(sample.notes);
+    setTerms(sample.terms);
+    setShowSampleMenu(false);
+    setMobilePanel("edit");
+  }, []);
+
+  const handleLoadProfile = useCallback(
+    (profileId: string) => {
+      const profile = companyProfiles.find((p) => p.id === profileId);
+      if (!profile) return;
+
+      setCompanyName(profile.businessName);
+      setCompanyAddress(profile.address);
+      setCompanyGSTIN(profile.gstin);
+      setCompanyEmail(profile.email);
+      setCompanyPhone(profile.phone);
+      setCompanyLogo(profile.logo || "");
+    },
+    [companyProfiles]
+  );
+
+  const handleSaveProfile = useCallback(() => {
+    if (!companyName.trim()) return;
+
+    try {
+      saveCompanyProfile({
+        name: companyName,
+        businessName: companyName,
+        address: companyAddress,
+        gstin: companyGSTIN,
+        email: companyEmail,
+        phone: companyPhone,
+        logo: companyLogo,
+        isDefault: companyProfiles.length === 0,
+      });
+      logger.info("Company profile saved");
+    } catch (error) {
+      logger.error("Failed to save profile:", error);
+    }
+  }, [companyName, companyAddress, companyGSTIN, companyEmail, companyPhone, companyLogo, companyProfiles, saveCompanyProfile]);
+
+  const handleLoadClient = useCallback(
+    (clientId: string) => {
+      const client = clients.find((c) => c.id === clientId);
+      if (!client) return;
+
+      setClientName(client.name);
+      setClientAddress(client.address);
+      setClientGSTIN(client.gstin);
+      setClientEmail(client.email);
+      setClientPhone(client.phone);
+    },
+    [clients]
+  );
+
+  const handleSaveClient = useCallback(() => {
+    if (!clientName.trim()) return;
+
+    try {
+      saveClient({
+        name: clientName,
+        address: clientAddress,
+        gstin: clientGSTIN,
+        email: clientEmail,
+        phone: clientPhone,
+      });
+      logger.info("Client saved");
+    } catch (error) {
+      logger.error("Failed to save client:", error);
+    }
+  }, [clientName, clientAddress, clientGSTIN, clientEmail, clientPhone, saveClient]);
+
+  const handleLineItemChange = useCallback(
+    (id: string, field: keyof InvoiceLineItem, value: any) => {
+      setLineItems((prev) =>
+        prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+      );
+    },
+    []
+  );
+
+  const handleAddLineItem = useCallback(() => {
+    setLineItems((prev) => [...prev, createEmptyLineItem()]);
+  }, []);
+
+  const handleRemoveLineItem = useCallback((id: string) => {
+    setLineItems((prev) => {
+      if (prev.length === 1) return prev;
+      return prev.filter((item) => item.id !== id);
+    });
+  }, []);
+
+  return (
+    <>
+      <div className="inv-workspace" role="main" aria-label="Invoice Generator">
+        <div className="inv-chrome">
+          <div className="inv-chrome-left">
+            <div className="inv-sample-dropdown">
+              <button
+                type="button"
+                className="inv-btn inv-btn-icon"
+                onClick={() => setShowSampleMenu((s) => !s)}
+                aria-label="Load sample data"
+                aria-haspopup="menu"
+                aria-expanded={showSampleMenu}
+              >
+                <i className="ti ti-wand" aria-hidden="true" />
+                <span>Examples</span>
+              </button>
+
+              {showSampleMenu && (
+                <div className="inv-sample-menu" role="menu">
+                  <div className="inv-sample-menu-header">
+                    <span>Load Sample Invoice</span>
+                  </div>
+                  {(Object.keys(SAMPLE_INVOICES) as SampleInvoiceType[]).map((type) => (
                     <button
-                        type="button"
-                        role="tab"
-                        aria-selected={mobilePanel === "edit"}
-                        className={`inv-mobile-tab${mobilePanel === "edit" ? " active" : ""}`}
-                        onClick={() => setMobilePanel("edit")}
+                      key={type}
+                      type="button"
+                      role="menuitem"
+                      className="inv-sample-menu-item"
+                      onClick={() => loadSample(type)}
                     >
-                        Edit
+                      <i className={`ti ${SAMPLE_INVOICE_LABELS[type].icon}`} aria-hidden="true" />
+                      <div className="inv-sample-item-content">
+                        <strong>{SAMPLE_INVOICE_LABELS[type].label}</strong>
+                        <span>{SAMPLE_INVOICE_LABELS[type].desc}</span>
+                      </div>
                     </button>
-                    <button
-                        type="button"
-                        role="tab"
-                        aria-selected={mobilePanel === "preview"}
-                        className={`inv-mobile-tab${mobilePanel === "preview" ? " active" : ""}`}
-                        onClick={() => setMobilePanel("preview")}
-                    >
-                        Preview
-                    </button>
+                  ))}
                 </div>
+              )}
+            </div>
+          </div>
 
-                <div className="inv-body">
-                    <div
-                        className={`inv-panel inv-panel-edit${mobilePanel === "edit" ? " mobile-visible" : " mobile-hidden"}`}
-                    >
-                        <div className="inv-panel-header">
-                            <div className="inv-panel-title">
-                                <i className="ti ti-pencil" aria-hidden="true" />
-                                Invoice Editor
-                            </div>
-                        </div>
+          <div className="inv-chrome-right">
+            <button
+              type="button"
+              className="inv-btn inv-btn-ghost"
+              onClick={handleReset}
+              aria-label="Reset form"
+            >
+              <i className="ti ti-refresh" aria-hidden="true" />
+              <span>Reset</span>
+            </button>
 
-                        <div className="inv-panel-content">
-                            <div className="inv-editor-sections">
-                                <div className="inv-editor-section">
-                                    <h3 className="inv-section-heading">Invoice Details</h3>
-                                    <div className="inv-meta-grid">
-                                        <div className="inv-field">
-                                            <label htmlFor="invoice-number" className="inv-label">
-                                                Invoice Number
-                                                <span className="inv-required">*</span>
-                                            </label>
-                                            <input
-                                                id="invoice-number"
-                                                type="text"
-                                                className="inv-input inv-input-mono"
-                                                value={invoiceNumber}
-                                                onChange={(e) => setInvoiceNumber(e.target.value)}
-                                                required
-                                            />
-                                        </div>
+            {isValidInvoice && (
+              <>
+                <button
+                  type="button"
+                  className="inv-btn inv-btn-primary"
+                  onClick={handleDownloadPDF}
+                  disabled={isGeneratingPDF}
+                  aria-label="Download PDF"
+                  aria-busy={isGeneratingPDF}
+                >
+                  <i
+                    className={`ti ${isGeneratingPDF ? "ti-loader-2 inv-spin" : "ti-file-download"}`}
+                    aria-hidden="true"
+                  />
+                  <span>{isGeneratingPDF ? "Generating…" : "Export PDF"}</span>
+                </button>
 
-                                        <div className="inv-field">
-                                            <label htmlFor="invoice-date" className="inv-label">
-                                                Invoice Date
-                                            </label>
-                                            <input
-                                                id="invoice-date"
-                                                type="date"
-                                                className="inv-input"
-                                                value={invoiceDate}
-                                                onChange={(e) => setInvoiceDate(e.target.value)}
-                                            />
-                                        </div>
+                <button
+                  type="button"
+                  className="inv-btn inv-btn-primary"
+                  onClick={handleSaveInvoice}
+                  aria-label="Save invoice"
+                >
+                  <i className="ti ti-device-floppy" aria-hidden="true" />
+                  <span>Save</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
 
-                                        <div className="inv-field">
-                                            <label htmlFor="due-date" className="inv-label">
-                                                Due Date
-                                            </label>
-                                            <input
-                                                id="due-date"
-                                                type="date"
-                                                className="inv-input"
-                                                value={dueDate}
-                                                onChange={(e) => setDueDate(e.target.value)}
-                                            />
-                                        </div>
+        <div className="inv-mobile-tabs" role="tablist" aria-label="Panel selector">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mobilePanel === "edit"}
+            className={`inv-mobile-tab${mobilePanel === "edit" ? " active" : ""}`}
+            onClick={() => setMobilePanel("edit")}
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mobilePanel === "preview"}
+            className={`inv-mobile-tab${mobilePanel === "preview" ? " active" : ""}`}
+            onClick={() => setMobilePanel("preview")}
+          >
+            Preview
+          </button>
+        </div>
 
-                                        <div className="inv-field">
-                                            <label htmlFor="currency" className="inv-label">
-                                                Currency
-                                            </label>
-                                            <select
-                                                id="currency"
-                                                className="inv-select"
-                                                value={currency}
-                                                onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-                                            >
-                                                <option value="INR">₹ INR - Indian Rupee</option>
-                                                <option value="USD">$ USD - US Dollar</option>
-                                                <option value="EUR">€ EUR - Euro</option>
-                                                <option value="GBP">£ GBP - British Pound</option>
-                                            </select>
-                                        </div>
-
-                                        <div className="inv-field">
-                                            <label htmlFor="payment-status" className="inv-label">
-                                                Payment Status
-                                            </label>
-                                            <select
-                                                id="payment-status"
-                                                className="inv-select"
-                                                value={paymentStatus}
-                                                onChange={(e) =>
-                                                    setPaymentStatus(e.target.value as "DRAFT" | "SENT" | "PAID" | "OVERDUE")
-                                                }
-                                            >
-                                                <option value="DRAFT">Draft</option>
-                                                <option value="SENT">Sent</option>
-                                                <option value="PAID">Paid</option>
-                                                <option value="OVERDUE">Overdue</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="inv-editor-section">
-                                    <CompanyProfileForm
-                                        companyName={companyName}
-                                        companyAddress={companyAddress}
-                                        companyGSTIN={companyGSTIN}
-                                        companyEmail={companyEmail}
-                                        companyPhone={companyPhone}
-                                        companyLogo={companyLogo}
-                                        onCompanyNameChange={setCompanyName}
-                                        onCompanyAddressChange={setCompanyAddress}
-                                        onCompanyGSTINChange={setCompanyGSTIN}
-                                        onCompanyEmailChange={setCompanyEmail}
-                                        onCompanyPhoneChange={setCompanyPhone}
-                                        onCompanyLogoChange={setCompanyLogo}
-                                        savedProfiles={companyProfiles}
-                                        onLoadProfile={handleLoadProfile}
-                                        onSaveProfile={handleSaveProfile}
-                                    />
-                                </div>
-
-                                <div className="inv-editor-section">
-                                    <ClientForm
-                                        clientName={clientName}
-                                        clientAddress={clientAddress}
-                                        clientGSTIN={clientGSTIN}
-                                        clientEmail={clientEmail}
-                                        clientPhone={clientPhone}
-                                        onClientNameChange={setClientName}
-                                        onClientAddressChange={setClientAddress}
-                                        onClientGSTINChange={setClientGSTIN}
-                                        onClientEmailChange={setClientEmail}
-                                        onClientPhoneChange={setClientPhone}
-                                        savedClients={clients}
-                                        onLoadClient={handleLoadClient}
-                                        onSaveClient={handleSaveClient}
-                                    />
-                                </div>
-
-                                <div className="inv-editor-section">
-                                    <LineItemsTable
-                                        lineItems={lineItems}
-                                        currency={currency}
-                                        onLineItemChange={handleLineItemChange}
-                                        onAddLineItem={handleAddLineItem}
-                                        onRemoveLineItem={handleRemoveLineItem}
-                                    />
-                                </div>
-
-                                <div className="inv-editor-section">
-                                    <TotalsSummary
-                                        totals={totals}
-                                        currency={currency}
-                                        discountType={discountType}
-                                        discountValue={discountValue}
-                                        onDiscountTypeChange={setDiscountType}
-                                        onDiscountValueChange={setDiscountValue}
-                                    />
-                                </div>
-
-                                <div className="inv-editor-section">
-                                    <h3 className="inv-section-heading">
-                                        <i className="ti ti-notes" aria-hidden="true" />
-                                        Notes & Terms
-                                    </h3>
-
-                                    <div className="inv-field">
-                                        <label htmlFor="notes" className="inv-label">
-                                            Notes (Optional)
-                                        </label>
-                                        <textarea
-                                            id="notes"
-                                            className="inv-textarea"
-                                            value={notes}
-                                            onChange={(e) => setNotes(e.target.value)}
-                                            placeholder="Add any notes for your client..."
-                                            rows={3}
-                                        />
-                                    </div>
-
-                                    <div className="inv-field">
-                                        <label htmlFor="terms" className="inv-label">
-                                            Terms & Conditions
-                                        </label>
-                                        <div className="inv-terms-templates">
-                                            {DEFAULT_TERMS_TEMPLATES.map((template) => (
-                                                <button
-                                                    key={template.id}
-                                                    type="button"
-                                                    className="inv-template-btn"
-                                                    onClick={() => setTerms(template.content)}
-                                                >
-                                                    {template.label}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        <textarea
-                                            id="terms"
-                                            className="inv-textarea"
-                                            value={terms}
-                                            onChange={(e) => setTerms(e.target.value)}
-                                            placeholder="Payment terms, bank details, etc..."
-                                            rows={5}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="inv-divider" aria-hidden="true" />
-
-                    <div
-                        className={`inv-panel inv-panel-preview${mobilePanel === "preview" ? " mobile-visible" : " mobile-hidden"}`}
-                    >
-                        <div className="inv-panel-header">
-                            <div className="inv-panel-title">
-                                <i className="ti ti-eye" aria-hidden="true" />
-                                Live Preview
-                            </div>
-                        </div>
-
-                        <div className="inv-panel-content">
-                            <InvoicePreview invoice={currentInvoice} totals={totals} />
-                        </div>
-                    </div>
-                </div>
+        <div className="inv-body">
+          <div
+            className={`inv-panel inv-panel-edit${mobilePanel === "edit" ? " mobile-visible" : " mobile-hidden"}`}
+          >
+            <div className="inv-panel-header">
+              <div className="inv-panel-title">
+                <i className="ti ti-pencil" aria-hidden="true" />
+                Invoice Editor
+              </div>
             </div>
 
-            <style jsx>{`
+            <div className="inv-panel-content">
+              <div className="inv-editor-sections">
+                <div className="inv-editor-section">
+                  <h3 className="inv-section-heading">Invoice Details</h3>
+                  <div className="inv-meta-grid">
+                    <div className="inv-field">
+                      <label htmlFor="invoice-number" className="inv-label">
+                        Invoice Number
+                        <span className="inv-required">*</span>
+                      </label>
+                      <input
+                        id="invoice-number"
+                        type="text"
+                        className="inv-input inv-input-mono"
+                        value={invoiceNumber}
+                        onChange={(e) => setInvoiceNumber(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="inv-field">
+                      <label htmlFor="invoice-date" className="inv-label">
+                        Invoice Date
+                      </label>
+                      <input
+                        id="invoice-date"
+                        type="date"
+                        className="inv-input"
+                        value={invoiceDate}
+                        onChange={(e) => setInvoiceDate(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="inv-field">
+                      <label htmlFor="due-date" className="inv-label">
+                        Due Date
+                      </label>
+                      <input
+                        id="due-date"
+                        type="date"
+                        className="inv-input"
+                        value={dueDate}
+                        onChange={(e) => setDueDate(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="inv-field">
+                      <label htmlFor="currency" className="inv-label">
+                        Currency
+                      </label>
+                      <select
+                        id="currency"
+                        className="inv-select"
+                        value={currency}
+                        onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
+                      >
+                        <option value="INR">₹ INR - Indian Rupee</option>
+                        <option value="USD">$ USD - US Dollar</option>
+                        <option value="EUR">€ EUR - Euro</option>
+                        <option value="GBP">£ GBP - British Pound</option>
+                      </select>
+                    </div>
+
+                    <div className="inv-field">
+                      <label htmlFor="payment-status" className="inv-label">
+                        Payment Status
+                      </label>
+                      <select
+                        id="payment-status"
+                        className="inv-select"
+                        value={paymentStatus}
+                        onChange={(e) =>
+                          setPaymentStatus(e.target.value as "DRAFT" | "SENT" | "PAID" | "OVERDUE")
+                        }
+                      >
+                        <option value="DRAFT">Draft</option>
+                        <option value="SENT">Sent</option>
+                        <option value="PAID">Paid</option>
+                        <option value="OVERDUE">Overdue</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="inv-editor-section">
+                  <CompanyProfileForm
+                    companyName={companyName}
+                    companyAddress={companyAddress}
+                    companyGSTIN={companyGSTIN}
+                    companyEmail={companyEmail}
+                    companyPhone={companyPhone}
+                    companyLogo={companyLogo}
+                    onCompanyNameChange={setCompanyName}
+                    onCompanyAddressChange={setCompanyAddress}
+                    onCompanyGSTINChange={setCompanyGSTIN}
+                    onCompanyEmailChange={setCompanyEmail}
+                    onCompanyPhoneChange={setCompanyPhone}
+                    onCompanyLogoChange={setCompanyLogo}
+                    savedProfiles={companyProfiles}
+                    onLoadProfile={handleLoadProfile}
+                    onSaveProfile={handleSaveProfile}
+                  />
+                </div>
+
+                <div className="inv-editor-section">
+                  <ClientForm
+                    clientName={clientName}
+                    clientAddress={clientAddress}
+                    clientGSTIN={clientGSTIN}
+                    clientEmail={clientEmail}
+                    clientPhone={clientPhone}
+                    onClientNameChange={setClientName}
+                    onClientAddressChange={setClientAddress}
+                    onClientGSTINChange={setClientGSTIN}
+                    onClientEmailChange={setClientEmail}
+                    onClientPhoneChange={setClientPhone}
+                    savedClients={clients}
+                    onLoadClient={handleLoadClient}
+                    onSaveClient={handleSaveClient}
+                  />
+                </div>
+
+                <div className="inv-editor-section">
+                  <LineItemsTable
+                    lineItems={lineItems}
+                    currency={currency}
+                    onLineItemChange={handleLineItemChange}
+                    onAddLineItem={handleAddLineItem}
+                    onRemoveLineItem={handleRemoveLineItem}
+                  />
+                </div>
+
+                <div className="inv-editor-section">
+                  <TotalsSummary
+                    totals={totals}
+                    currency={currency}
+                    discountType={discountType}
+                    discountValue={discountValue}
+                    onDiscountTypeChange={setDiscountType}
+                    onDiscountValueChange={setDiscountValue}
+                  />
+                </div>
+
+                <div className="inv-editor-section">
+                  <h3 className="inv-section-heading">
+                    <i className="ti ti-notes" aria-hidden="true" />
+                    Notes & Terms
+                  </h3>
+
+                  <div className="inv-field">
+                    <label htmlFor="notes" className="inv-label">
+                      Notes (Optional)
+                    </label>
+                    <textarea
+                      id="notes"
+                      className="inv-textarea"
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      placeholder="Add any notes for your client..."
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="inv-field">
+                    <label htmlFor="terms" className="inv-label">
+                      Terms & Conditions
+                    </label>
+                    <div className="inv-terms-templates">
+                      {DEFAULT_TERMS_TEMPLATES.map((template) => (
+                        <button
+                          key={template.id}
+                          type="button"
+                          className="inv-template-btn"
+                          onClick={() => setTerms(template.content)}
+                        >
+                          {template.label}
+                        </button>
+                      ))}
+                    </div>
+                    <textarea
+                      id="terms"
+                      className="inv-textarea"
+                      value={terms}
+                      onChange={(e) => setTerms(e.target.value)}
+                      placeholder="Payment terms, bank details, etc..."
+                      rows={5}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="inv-divider" aria-hidden="true" />
+
+          <div
+            className={`inv-panel inv-panel-preview${mobilePanel === "preview" ? " mobile-visible" : " mobile-hidden"}`}
+          >
+            <div className="inv-panel-header">
+              <div className="inv-panel-title">
+                <i className="ti ti-eye" aria-hidden="true" />
+                Live Preview
+              </div>
+            </div>
+
+            <div className="inv-panel-content">
+              <InvoicePreview invoice={currentInvoice} totals={totals} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
         .inv-workspace {
           background: var(--bg-card);
           border: 0.5px solid var(--border);
@@ -1075,12 +1075,100 @@ export default function InvoiceGeneratorWorkspace({ tool }: { tool: Tool }) {
             display: flex;
           }
 
+          .inv-panel-header {
+            padding: 0 10px;
+            gap: 6px;
+          }
+
+          .inv-panel-title {
+            font-size: 9.5px;
+            letter-spacing: 0.02em;
+            gap: 5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
+
+          .inv-panel-title i {
+            font-size: 12px;
+          }
+
           .inv-editor-sections {
             padding: 16px;
           }
 
+          /* Mobile-specific layout for invoice details */
           .inv-meta-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+          }
+
+          /* Invoice Number - full width */
+          .inv-meta-grid .inv-field:nth-child(1) {
+            grid-column: 1 / -1;
+          }
+
+          /* Invoice Date and Due Date - side by side */
+          .inv-meta-grid .inv-field:nth-child(2) {
+            grid-column: 1;
+          }
+
+          .inv-meta-grid .inv-field:nth-child(3) {
+            grid-column: 2;
+          }
+
+          /* Currency and Payment Status - side by side */
+          .inv-meta-grid .inv-field:nth-child(4) {
+            grid-column: 1;
+          }
+
+          .inv-meta-grid .inv-field:nth-child(5) {
+            grid-column: 2;
+          }
+
+          /* Extra small screens - stack everything */
+          @media (max-width: 320px) {
+            .inv-meta-grid {
+              grid-template-columns: 1fr;
+            }
+
+            .inv-meta-grid .inv-field:nth-child(1),
+            .inv-meta-grid .inv-field:nth-child(2),
+            .inv-meta-grid .inv-field:nth-child(3),
+            .inv-meta-grid .inv-field:nth-child(4),
+            .inv-meta-grid .inv-field:nth-child(5) {
+              grid-column: 1 / -1;
+            }
+          }
+
+          .inv-section-heading {
+            font-size: 13px;
+          }
+
+          .inv-section-heading i {
+            font-size: 16px;
+          }
+
+          .inv-label {
+            font-size: 11.5px;
+          }
+
+          .inv-input,
+          .inv-select,
+          .inv-textarea {
+            padding: 0 12px;
+            height: 40px;
+            font-size: 13px;
+          }
+
+          .inv-textarea {
+            padding: 10px 12px;
+            min-height: 60px;
+          }
+
+          .inv-template-btn {
+            padding: 4px 10px;
+            font-size: 11px;
           }
         }
 
@@ -1089,6 +1177,92 @@ export default function InvoiceGeneratorWorkspace({ tool }: { tool: Tool }) {
             border-radius: 0;
             border-left: none;
             border-right: none;
+          }
+
+          .inv-panel-header {
+            padding: 0 10px;
+            gap: 6px;
+          }
+
+          .inv-panel-title {
+            font-size: 9.5px;
+            letter-spacing: 0.02em;
+            gap: 5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
+
+          .inv-panel-title i {
+            font-size: 12px;
+          }
+
+          .inv-editor-sections {
+            padding: 16px;
+          }
+
+          .inv-meta-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .inv-section-heading {
+            font-size: 13px;
+          }
+
+          .inv-section-heading i {
+            font-size: 16px;
+          }
+
+          .inv-label {
+            font-size: 11.5px;
+          }
+
+          .inv-input,
+          .inv-select,
+          .inv-textarea {
+            padding: 0 12px;
+            height: 40px;
+            font-size: 13px;
+          }
+
+          .inv-textarea {
+            padding: 10px 12px;
+            min-height: 60px;
+          }
+
+          .inv-template-btn {
+            padding: 4px 10px;
+            font-size: 11px;
+          }
+
+          /* Additional tweaks for very small screens (like 320px width) */
+          @media (max-width: 320px) {
+            .inv-section-heading {
+              font-size: 12px;
+            }
+
+            .inv-section-heading i {
+              font-size: 14px;
+            }
+
+            .inv-label {
+              font-size: 11px;
+            }
+
+            .inv-input,
+            .inv-select,
+            .inv-textarea {
+              font-size: 12px;
+              height: 36px;
+            }
+
+            .inv-textarea {
+              min-height: 50px;
+            }
+
+            .inv-template-btn {
+              font-size: 10px;
+              padding: 3px 8px;
+            }
           }
         }
 
@@ -1109,6 +1283,6 @@ export default function InvoiceGeneratorWorkspace({ tool }: { tool: Tool }) {
           }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

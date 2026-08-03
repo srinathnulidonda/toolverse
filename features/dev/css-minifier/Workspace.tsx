@@ -8,6 +8,9 @@ import CSSBatch from "./CSSBatch";
 import HistoryList from "@/components/shared/HistoryList";
 import { useHistoryStore } from "@/lib/useHistoryStore";
 import { formatBytes } from "@/utils";
+import "./style/CSSBatch.css";
+import "./style/CSSPreview.css";
+import "./style/Workspace.css";
 
 interface HistoryEntry {
   id: string;
@@ -107,7 +110,7 @@ export default function CSSMinifierWorkspace({ tool }: { tool: Tool }) {
             >
               <i className={`ti ${tab.icon}`} />
               {tab.label}
-              {tab.id === "history" && history.length > 0 && (
+              {typeof window !== 'undefined' && tab.id === "history" && history.length > 0 && (
                 <span className="cm-badge">{history.length}</span>
               )}
             </button>
@@ -122,7 +125,7 @@ export default function CSSMinifierWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {viewTab === "batch" && (
-          <CSSBatch onComplete={() => {}} />
+          <CSSBatch onComplete={() => { }} />
         )}
 
         {viewTab === "history" && (

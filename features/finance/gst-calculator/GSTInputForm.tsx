@@ -630,12 +630,48 @@ export function GSTInputForm({
           }
 
           .gst-mode-toggle,
-          .gst-form-grid {
+          .gst-form-grid,
+          .gst-preview-grid {
             grid-template-columns: 1fr;
           }
 
           .gst-form-actions {
             display: block;
+          }
+
+          /* Typography */
+          .gst-label {
+            font-size: 11px;
+          }
+
+          .gst-required {
+            font-size: 12px;
+          }
+
+          .gst-field-help,
+          .gst-field-hint {
+            font-size: 10.5px;
+          }
+
+          /* Buttons */
+          .gst-view-results-btn {
+            padding: 14px 16px;
+          }
+
+          .gst-view-results-btn > i:first-child {
+            font-size: 18px;
+          }
+
+          .gst-btn-content strong {
+            font-size: 13px;
+          }
+
+          .gst-btn-desc {
+            font-size: 11px;
+          }
+
+          .gst-view-results-btn > i:last-child {
+            font-size: 16px;
           }
         }
 

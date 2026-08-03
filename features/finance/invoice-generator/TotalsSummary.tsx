@@ -278,6 +278,87 @@ export function TotalsSummary({
           font-weight: 700;
         }
 
+        @media (max-width: 768px) {
+          .inv-totals {
+            gap: 10px;
+          }
+
+          .inv-totals-title {
+            font-size: 12px;
+            gap: 6px;
+          }
+
+          .inv-totals-title i {
+            font-size: 14px;
+          }
+
+          .inv-discount-label {
+            font-size: 11px;
+          }
+
+          .inv-discount-controls {
+            grid-template-columns: 1fr;
+            gap: 6px;
+          }
+
+          .inv-discount-input,
+          .inv-discount-type {
+            height: 32px;
+            padding: 0 10px;
+            font-size: 12px;
+          }
+
+          .inv-totals-item {
+            padding: 10px 12px;
+            gap: 10px;
+          }
+
+          .inv-totals-label {
+            font-size: 11.5px;
+            gap: 6px;
+          }
+
+          .inv-totals-label i {
+            font-size: 14px;
+          }
+
+          .inv-totals-value {
+            font-size: 12px;
+          }
+
+          .inv-totals-divider {
+            height: 0.5px;
+          }
+
+          .inv-totals-subtitle {
+            font-size: 10px;
+            padding: 6px 12px;
+            gap: 4px;
+          }
+
+          .inv-totals-subtitle i {
+            font-size: 11px;
+          }
+
+          .inv-item-discount .inv-totals-value,
+          .inv-item-grand .inv-totals-label,
+          .inv-item-grand .inv-totals-value {
+            font-size: 12px;
+          }
+
+          .inv-item-grand .inv-totals-value {
+            font-size: 13px;
+            font-weight: 700;
+          }
+
+          /* Ensure Grand Total is visible and properly sized */
+          .inv-item-grand {
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .inv-discount-input,
           .inv-discount-type {

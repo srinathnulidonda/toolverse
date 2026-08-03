@@ -11,7 +11,7 @@ export const PDF_BRAND = {
     companyName: "Toolverse",
     productName: "GST Calculator",
     websiteUrl: "www.toolverse.com",
-    logoPath: "/logo.png",
+    logoPath: "/logo-dark.png",
     primary: [20, 92, 60] as [number, number, number],
     primaryDark: [13, 63, 41] as [number, number, number],
     dark: [17, 24, 39] as [number, number, number],
@@ -175,7 +175,7 @@ function drawFooter(doc: jsPDF, pageNumber: number, totalPages: number) {
         pageHeight - 7
     );
     doc.setFont("helvetica", "bold");
-    doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth - MARGIN_X, pageHeight - 9, { align: "right" });
+    doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth - MARGIN_X, pageHeight - 7, { align: "right" });
 }
 
 function sectionTitle(doc: jsPDF, y: number, label: string): number {
@@ -211,7 +211,7 @@ export async function generateGSTReportPDF(data: GSTReportData): Promise<jsPDF> 
 
     ensureSpace(30);
     const infoBoxW = pageWidth - MARGIN_X * 2;
-    const infoBoxH = 20;
+    const infoBoxH = 24; // headroom for wrapped Calculation Mode / GST Rate + Cess values
     doc.setFillColor(...PDF_BRAND.lightGray);
     doc.roundedRect(MARGIN_X, y, infoBoxW, infoBoxH, 2, 2, "F");
 
@@ -219,7 +219,7 @@ export async function generateGSTReportPDF(data: GSTReportData): Promise<jsPDF> 
         { label: "Reference", value: data.reference || "—", mono: false },
         { label: "Calculation Mode", value: data.mode === "ADD_GST" ? "Add GST (Forward)" : "Remove GST (Reverse)", mono: false },
         { label: "Supply Type", value: data.supplyType === "INTRA_STATE" ? "Intra-State" : "Inter-State", mono: false },
-        { label: "GST Rate", value: `${data.gstRate.toFixed(2)}%${data.cessRate > 0 ? ` + ${data.cessRate.toFixed(2)}% Cess` : ""}`, mono: false },
+        { label: "GST Rate", value: `${data.calculation.gstRate.toFixed(2)}%${data.calculation.cessRate > 0 ? ` + ${data.calculation.cessRate.toFixed(2)}% Cess` : ""}`, mono: false },
     ];
     const colW = infoBoxW / infoCols.length;
 
@@ -311,7 +311,7 @@ export async function generateGSTReportPDF(data: GSTReportData): Promise<jsPDF> 
 
     autoTable(doc, {
         startY: y,
-        margin: { left: MARGIN_X, right: MARGIN_X },
+        margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
         head: [["Particulars", "Amount"]],
         body: breakdownRows,
         theme: "plain",
@@ -337,7 +337,9 @@ export async function generateGSTReportPDF(data: GSTReportData): Promise<jsPDF> 
 
         autoTable(doc, {
             startY: y,
-            margin: { left: MARGIN_X, right: MARGIN_X },
+            margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
+            head: [["Particulars", "Amount"]],
+            headStyles: { fillColor: PDF_BRAND.primary, textColor: 255, fontStyle: "bold" },
             theme: "plain",
             styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark },
             body: [
@@ -356,7 +358,7 @@ export async function generateGSTReportPDF(data: GSTReportData): Promise<jsPDF> 
         y = (doc as any).lastAutoTable.finalY + 10;
     }
 
-    const totalPages = (doc.internal as any).getNumberOfPages();
+    const totalPages = doc.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i);
         drawFooter(doc, i, totalPages);

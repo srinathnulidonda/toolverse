@@ -129,6 +129,7 @@ export default function CategoryCard({ category, tools }: CategoryCardProps) {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+          max-height: 3.3em;
         }
 
         .cc-pills {

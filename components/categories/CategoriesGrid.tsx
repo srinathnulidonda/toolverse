@@ -23,6 +23,7 @@ export default function CategoriesGrid({ categories }: CategoriesGridProps) {
           grid-template-columns: repeat(4, minmax(0, 1fr));
           gap: 16px;
           margin-bottom: 56px;
+          align-items: start;
         }
 
         @media (max-width: 1280px) {

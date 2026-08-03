@@ -1,0 +1,224 @@
+.rsg-root {
+    --rsg-radius-sm: 6px;
+    --rsg-radius-md: 8px;
+    --rsg-radius-lg: 12px;
+    --rsg-radius-xl: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--rsg-radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 650px;
+}
+
+/*  Top Chrome  */
+.rsg-chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.rsg-chrome-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.rsg-preset-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text-disabled);
+    margin-right: 4px;
+}
+
+.rsg-preset-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 11px;
+    border-radius: var(--rsg-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.rsg-preset-btn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.rsg-preset-btn i {
+    font-size: 13px;
+}
+
+.rsg-preset-text {
+    white-space: nowrap;
+}
+
+.rsg-chrome-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rsg-history-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+}
+
+.rsg-history-badge i {
+    font-size: 12px;
+}
+
+/*  Tabs Bar  */
+.rsg-tabs-bar {
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+}
+
+.rsg-tabs {
+    display: flex;
+    padding: 0 14px;
+}
+
+.rsg-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.rsg-tab i {
+    font-size: 14px;
+}
+
+.rsg-tab:hover {
+    color: var(--text);
+}
+
+.rsg-tab.active {
+    color: var(--text);
+}
+
+.rsg-tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.rsg-tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+/*  Tab Content  */
+.rsg-tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.rsg-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*  Footer  */
+.rsg-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    font-size: 11px;
+    color: var(--text-disabled);
+    line-height: 1.5;
+}
+
+.rsg-footer i {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .rsg-chrome {
+        padding: 8px 10px;
+    }
+
+    .rsg-preset-label {
+        display: none;
+    }
+
+    .rsg-preset-text {
+        display: none;
+    }
+
+    .rsg-preset-btn {
+        padding: 0 10px;
+        min-width: 36px;
+        justify-content: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .rsg-preset-btn,
+    .rsg-tab {
+        transition: none;
+    }
+}

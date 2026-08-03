@@ -8,207 +8,208 @@ import type { InvoiceLineItem, CurrencyCode } from "./invoiceEngine";
 import { TAX_RATE_PRESETS } from "./invoiceRules.config";
 
 type LineItemsTableProps = {
-    lineItems: InvoiceLineItem[];
-    currency: CurrencyCode;
-    onLineItemChange: (id: string, field: keyof InvoiceLineItem, value: any) => void;
-    onAddLineItem: () => void;
-    onRemoveLineItem: (id: string) => void;
+  lineItems: InvoiceLineItem[];
+  currency: CurrencyCode;
+  onLineItemChange: (id: string, field: keyof InvoiceLineItem, value: any) => void;
+  onAddLineItem: () => void;
+  onRemoveLineItem: (id: string) => void;
 };
 
 export function LineItemsTable({
-    lineItems,
-    currency,
-    onLineItemChange,
-    onAddLineItem,
-    onRemoveLineItem,
+  lineItems,
+  currency,
+  onLineItemChange,
+  onAddLineItem,
+  onRemoveLineItem,
 }: LineItemsTableProps) {
-    return (
-        <div className="inv-line-items">
-            <div className="inv-items-header">
-                <h3 className="inv-items-title">
-                    <i className="ti ti-list" aria-hidden="true" />
-                    Line Items
-                </h3>
-                <button type="button" className="inv-btn inv-btn-add" onClick={onAddLineItem}>
-                    <i className="ti ti-plus" aria-hidden="true" />
-                    Add Item
-                </button>
+  return (
+    <div className="inv-line-items">
+      <div className="inv-items-header">
+        <h3 className="inv-items-title">
+          <i className="ti ti-list" aria-hidden="true" />
+          Line Items
+        </h3>
+        <button type="button" className="inv-btn inv-btn-add" onClick={onAddLineItem}>
+          <i className="ti ti-plus" aria-hidden="true" />
+          Add Item
+        </button>
+      </div>
+
+      <div className="inv-items-desktop">
+        <table className="inv-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Tax %</th>
+              <th>Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {lineItems.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <input
+                    type="text"
+                    className="inv-table-input"
+                    value={item.description}
+                    onChange={(e) => onLineItemChange(item.id, "description", e.target.value)}
+                    placeholder="Item description"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    className="inv-table-input inv-table-input-number"
+                    value={item.quantity}
+                    onChange={(e) =>
+                      onLineItemChange(item.id, "quantity", parseFloat(e.target.value) || 0)
+                    }
+                    min="0"
+                    step="1"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    className="inv-table-input inv-table-input-number"
+                    value={item.unitPrice}
+                    onChange={(e) =>
+                      onLineItemChange(item.id, "unitPrice", parseFloat(e.target.value) || 0)
+                    }
+                    min="0"
+                    step="0.01"
+                  />
+                </td>
+                <td>
+                  <select
+                    className="inv-table-select"
+                    value={item.taxRate}
+                    onChange={(e) =>
+                      onLineItemChange(item.id, "taxRate", parseFloat(e.target.value))
+                    }
+                  >
+                    {TAX_RATE_PRESETS.map((preset) => (
+                      <option key={preset.rate} value={preset.rate}>
+                        {preset.rate}%
+                      </option>
+                    ))}
+                    {!TAX_RATE_PRESETS.find((p) => p.rate === item.taxRate) && (
+                      <option value={item.taxRate}>{item.taxRate}%</option>
+                    )}
+                  </select>
+                </td>
+                <td className="inv-table-total">{formatCurrency(calculateLineTotal(item), currency)}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="inv-table-remove"
+                    onClick={() => onRemoveLineItem(item.id)}
+                    aria-label="Remove item"
+                  >
+                    <i className="ti ti-trash" aria-hidden="true" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="inv-items-mobile">
+        {lineItems.map((item, index) => (
+          <div key={item.id} className="inv-item-card">
+            <div className="inv-item-card-header">
+              <span className="inv-item-number">#{index + 1}</span>
+              <button
+                type="button"
+                className="inv-item-remove"
+                onClick={() => onRemoveLineItem(item.id)}
+                aria-label="Remove item"
+              >
+                <i className="ti ti-trash" aria-hidden="true" />
+              </button>
             </div>
 
-            <div className="inv-items-desktop">
-                <table className="inv-table">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Qty</th>
-                            <th>Unit Price</th>
-                            <th>Tax %</th>
-                            <th>Total</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {lineItems.map((item) => (
-                            <tr key={item.id}>
-                                <td>
-                                    <input
-                                        type="text"
-                                        className="inv-table-input"
-                                        value={item.description}
-                                        onChange={(e) => onLineItemChange(item.id, "description", e.target.value)}
-                                        placeholder="Item description"
-                                    />
-                                </td>
-                                <td>
-                                    <input
-                                        type="number"
-                                        className="inv-table-input inv-table-input-number"
-                                        value={item.quantity}
-                                        onChange={(e) =>
-                                            onLineItemChange(item.id, "quantity", parseFloat(e.target.value) || 0)
-                                        }
-                                        min="0"
-                                        step="1"
-                                    />
-                                </td>
-                                <td>
-                                    <input
-                                        type="number"
-                                        className="inv-table-input inv-table-input-number"
-                                        value={item.unitPrice}
-                                        onChange={(e) =>
-                                            onLineItemChange(item.id, "unitPrice", parseFloat(e.target.value) || 0)
-                                        }
-                                        min="0"
-                                        step="0.01"
-                                    />
-                                </td>
-                                <td>
-                                    <select
-                                        className="inv-table-select"
-                                        value={item.taxRate}
-                                        onChange={(e) =>
-                                            onLineItemChange(item.id, "taxRate", parseFloat(e.target.value))
-                                        }
-                                    >
-                                        {TAX_RATE_PRESETS.map((preset) => (
-                                            <option key={preset.rate} value={preset.rate}>
-                                                {preset.rate}%
-                                            </option>
-                                        ))}
-                                        {!TAX_RATE_PRESETS.find((p) => p.rate === item.taxRate) && (
-                                            <option value={item.taxRate}>{item.taxRate}%</option>
-                                        )}
-                                    </select>
-                                </td>
-                                <td className="inv-table-total">{formatCurrency(calculateLineTotal(item), currency)}</td>
-                                <td>
-                                    <button
-                                        type="button"
-                                        className="inv-table-remove"
-                                        onClick={() => onRemoveLineItem(item.id)}
-                                        aria-label="Remove item"
-                                    >
-                                        <i className="ti ti-trash" aria-hidden="true" />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            <div className="inv-item-field">
+              <label className="inv-item-label">Description</label>
+              <input
+                type="text"
+                className="inv-item-input"
+                value={item.description}
+                onChange={(e) => onLineItemChange(item.id, "description", e.target.value)}
+                placeholder="Item description"
+              />
             </div>
 
-            <div className="inv-items-mobile">
-                {lineItems.map((item, index) => (
-                    <div key={item.id} className="inv-item-card">
-                        <div className="inv-item-card-header">
-                            <span className="inv-item-number">#{index + 1}</span>
-                            <button
-                                type="button"
-                                className="inv-item-remove"
-                                onClick={() => onRemoveLineItem(item.id)}
-                                aria-label="Remove item"
-                            >
-                                <i className="ti ti-trash" aria-hidden="true" />
-                            </button>
-                        </div>
+            <div className="inv-item-row">
+              <div className="inv-item-field">
+                <label className="inv-item-label">Qty</label>
+                <input
+                  type="number"
+                  className="inv-item-input"
+                  value={item.quantity}
+                  onChange={(e) =>
+                    onLineItemChange(item.id, "quantity", parseFloat(e.target.value) || 0)
+                  }
+                  min="0"
+                  step="1"
+                />
+              </div>
 
-                        <div className="inv-item-field">
-                            <label className="inv-item-label">Description</label>
-                            <input
-                                type="text"
-                                className="inv-item-input"
-                                value={item.description}
-                                onChange={(e) => onLineItemChange(item.id, "description", e.target.value)}
-                                placeholder="Item description"
-                            />
-                        </div>
-
-                        <div className="inv-item-row">
-                            <div className="inv-item-field">
-                                <label className="inv-item-label">Qty</label>
-                                <input
-                                    type="number"
-                                    className="inv-item-input"
-                                    value={item.quantity}
-                                    onChange={(e) =>
-                                        onLineItemChange(item.id, "quantity", parseFloat(e.target.value) || 0)
-                                    }
-                                    min="0"
-                                    step="1"
-                                />
-                            </div>
-
-                            <div className="inv-item-field">
-                                <label className="inv-item-label">Unit Price</label>
-                                <input
-                                    type="number"
-                                    className="inv-item-input"
-                                    value={item.unitPrice}
-                                    onChange={(e) =>
-                                        onLineItemChange(item.id, "unitPrice", parseFloat(e.target.value) || 0)
-                                    }
-                                    min="0"
-                                    step="0.01"
-                                />
-                            </div>
-
-                            <div className="inv-item-field">
-                                <label className="inv-item-label">Tax</label>
-                                <select
-                                    className="inv-item-select"
-                                    value={item.taxRate}
-                                    onChange={(e) =>
-                                        onLineItemChange(item.id, "taxRate", parseFloat(e.target.value))
-                                    }
-                                >
-                                    {TAX_RATE_PRESETS.map((preset) => (
-                                        <option key={preset.rate} value={preset.rate}>
-                                            {preset.rate}%
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="inv-item-total-row">
-                            <span className="inv-item-total-label">Total:</span>
-                            <strong className="inv-item-total-value">
-                                {formatCurrency(calculateLineTotal(item), currency)}
-                            </strong>
-                        </div>
-                    </div>
-                ))}
+              <div className="inv-item-field">
+                <label className="inv-item-label">Unit Price</label>
+                <input
+                  type="number"
+                  className="inv-item-input"
+                  value={item.unitPrice}
+                  onChange={(e) =>
+                    onLineItemChange(item.id, "unitPrice", parseFloat(e.target.value) || 0)
+                  }
+                  min="0"
+                  step="0.01"
+                />
+              </div>
             </div>
 
-            {lineItems.length === 0 && (
-                <div className="inv-items-empty">
-                    <i className="ti ti-package-off" aria-hidden="true" />
-                    <p>No line items yet. Click "Add Item" to get started.</p>
-                </div>
-            )}
+            <div className="inv-item-row">
+              <div className="inv-item-field">
+                <label className="inv-item-label">Tax</label>
+                <select
+                  className="inv-item-select"
+                  value={item.taxRate}
+                  onChange={(e) =>
+                    onLineItemChange(item.id, "taxRate", parseFloat(e.target.value))
+                  }
+                >
+                  {TAX_RATE_PRESETS.map((preset) => (
+                    <option key={preset.rate} value={preset.rate}>
+                      {preset.rate}%
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <style jsx>{`
+              <div className="inv-item-field">
+                <strong className="inv-item-total-value">
+                  {formatCurrency(calculateLineTotal(item), currency)}
+                </strong>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {lineItems.length === 0 && (
+        <div className="inv-items-empty">
+          <i className="ti ti-package-off" aria-hidden="true" />
+          <p>No line items yet. Click "Add Item" to get started.</p>
+        </div>
+      )}
+
+      <style jsx>{`
         .inv-line-items {
           display: flex;
           flex-direction: column;
@@ -527,7 +528,7 @@ export function LineItemsTable({
           font-family: var(--font-sans);
         }
 
-        @media (max-width: 768px) {
+@media (max-width: 768px) {
           .inv-items-desktop {
             display: none;
           }
@@ -536,6 +537,90 @@ export function LineItemsTable({
             display: flex;
             flex-direction: column;
             gap: 12px;
+          }
+
+          /* Mobile layout for line items */
+          /* Description is full-width (already default) */
+
+          /* Qty and Unit Price side by side */
+          .inv-item-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+          }
+
+          /* Tax and Total side by side */
+          .inv-item-total-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+          }
+
+          /* Improve input sizes and spacing for mobile touch targets */
+          .inv-item-input,
+          .inv-item-select {
+            height: 40px;
+            padding: 0 12px;
+            font-size: 13px;
+          }
+
+          /* Adjust label sizes for better mobile readability */
+          .inv-item-label {
+            font-size: 11.5px;
+          }
+
+          /* Adjust card padding for better mobile spacing */
+          .inv-item-card {
+            padding: 12px;
+            gap: 10px;
+          }
+
+          /* Adjust header and total row spacing */
+          .inv-item-card-header,
+          .inv-item-total-row {
+            padding: 8px 0;
+          }
+
+          /* Improve button sizes for mobile touch targets */
+          .inv-btn {
+            height: 36px;
+            padding: 0 12px;
+            font-size: 12px;
+          }
+
+          .inv-btn i {
+            font-size: 14px;
+          }
+
+          /* Improve remove button touch target */
+          .inv-item-remove,
+          .inv-table-remove {
+            width: 36px;
+            height: 36px;
+          }
+
+          .inv-item-remove i,
+          .inv-table-remove i {
+            font-size: 16px;
+          }
+
+          /* Extra small screens - stack everything */
+          @media (max-width: 320px) {
+            .inv-item-row,
+            .inv-item-total-row {
+              grid-template-columns: 1fr;
+            }
+            /* Reduce text size for better fit */
+            .inv-item-label {
+              font-size: 11px;
+            }
+            .inv-item-input,
+            .inv-item-select {
+              font-size: 12px;
+              height: 36px;
+              padding: 0 10px;
+            }
           }
         }
 
@@ -548,6 +633,6 @@ export function LineItemsTable({
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 }

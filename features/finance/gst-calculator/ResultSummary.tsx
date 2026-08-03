@@ -6,23 +6,23 @@ import { formatCurrency } from "@/lib/utils";
 import type { GSTCalculationResult, CalculationMode } from "./gstEngine";
 
 type ResultSummaryProps = {
-    calculation: GSTCalculationResult;
-    reference: string;
-    onCopy: (text: string, key: string) => void;
-    copiedKey: string;
-    onDownloadPDF: () => void;
-    isGeneratingPDF: boolean;
+  calculation: GSTCalculationResult;
+  reference: string;
+  onCopy: (text: string, key: string) => void;
+  copiedKey: string;
+  onDownloadPDF: () => void;
+  isGeneratingPDF: boolean;
 };
 
 export function ResultSummary({
-    calculation,
-    reference,
-    onCopy,
-    copiedKey,
-    onDownloadPDF,
-    isGeneratingPDF,
+  calculation,
+  reference,
+  onCopy,
+  copiedKey,
+  onDownloadPDF,
+  isGeneratingPDF,
 }: ResultSummaryProps) {
-    const resultText = `
+  const resultText = `
 GST Calculation Result - ${reference}
 
 ═══════════════════════════════════
@@ -37,9 +37,9 @@ FINAL AMOUNT: ${formatCurrency(calculation.finalAmount)}
 Tax Breakdown:
 • Taxable Value: ${formatCurrency(calculation.taxableValue)}
 ${calculation.supplyType === "INTRA_STATE"
-            ? `• CGST @ ${(calculation.gstRate / 2).toFixed(2)}%: ${formatCurrency(calculation.cgst)}
+      ? `• CGST @ ${(calculation.gstRate / 2).toFixed(2)}%: ${formatCurrency(calculation.cgst)}
 • SGST @ ${(calculation.gstRate / 2).toFixed(2)}%: ${formatCurrency(calculation.sgst)}`
-            : `• IGST @ ${calculation.gstRate.toFixed(2)}%: ${formatCurrency(calculation.igst)}`}
+      : `• IGST @ ${calculation.gstRate.toFixed(2)}%: ${formatCurrency(calculation.igst)}`}
 ${calculation.cess > 0 ? `• Cess @ ${calculation.cessRate.toFixed(2)}%: ${formatCurrency(calculation.cess)}` : ''}
 
 ${calculation.quantity > 1 ? `\nPer Unit:
@@ -48,204 +48,204 @@ ${calculation.quantity > 1 ? `\nPer Unit:
 • Final: ${formatCurrency(calculation.perUnitFinal)}` : ''}
   `.trim();
 
-    return (
-        <div className="gst-result-summary">
-            <div className="gst-status-banner">
-                <div className="gst-status-icon">
-                    <i className={`ti ${calculation.mode === "ADD_GST" ? "ti-plus" : "ti-minus"}`} aria-hidden="true" />
-                </div>
-                <div className="gst-status-content">
-                    <span className="gst-status-label">Calculation Status</span>
-                    <strong className="gst-status-value">
-                        {calculation.mode === "ADD_GST" ? "GST Added Successfully" : "GST Extracted Successfully"}
-                    </strong>
-                </div>
+  return (
+    <div className="gst-result-summary">
+      <div className="gst-status-banner">
+        <div className="gst-status-icon">
+          <i className={`ti ${calculation.mode === "ADD_GST" ? "ti-plus" : "ti-minus"}`} aria-hidden="true" />
+        </div>
+        <div className="gst-status-content">
+          <span className="gst-status-label">Calculation Status</span>
+          <strong className="gst-status-value">
+            {calculation.mode === "ADD_GST" ? "GST Added Successfully" : "GST Extracted Successfully"}
+          </strong>
+        </div>
+      </div>
+
+      <div className="gst-result-cards">
+        <div className="gst-result-card gst-card-primary">
+          <div className="gst-card-icon">
+            <i className="ti ti-currency-rupee" aria-hidden="true" />
+          </div>
+          <div className="gst-card-content">
+            <span className="gst-card-label">Base Amount</span>
+            <strong className="gst-card-value">{formatCurrency(calculation.baseAmount)}</strong>
+          </div>
+        </div>
+
+        <div className="gst-result-card gst-card-accent">
+          <div className="gst-card-icon">
+            <i className="ti ti-receipt-tax" aria-hidden="true" />
+          </div>
+          <div className="gst-card-content">
+            <span className="gst-card-label">Total Tax</span>
+            <strong className="gst-card-value">{formatCurrency(calculation.totalTax)}</strong>
+          </div>
+        </div>
+
+        <div className="gst-result-card gst-card-success">
+          <div className="gst-card-icon">
+            <i className="ti ti-circle-check" aria-hidden="true" />
+          </div>
+          <div className="gst-card-content">
+            <span className="gst-card-label">Final Amount</span>
+            <strong className="gst-card-value">{formatCurrency(calculation.finalAmount)}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div className="gst-breakdown-section">
+        <h4 className="gst-breakdown-heading">
+          <i className="ti ti-list-details" aria-hidden="true" />
+          Tax Breakdown
+        </h4>
+
+        <div className="gst-breakdown-list">
+          <div className="gst-breakdown-item">
+            <div className="gst-breakdown-label">
+              <i className="ti ti-currency-rupee" aria-hidden="true" />
+              Base Amount
             </div>
+            <div className="gst-breakdown-value">{formatCurrency(calculation.baseAmount)}</div>
+          </div>
 
-            <div className="gst-result-cards">
-                <div className="gst-result-card gst-card-primary">
-                    <div className="gst-card-icon">
-                        <i className="ti ti-currency-rupee" aria-hidden="true" />
-                    </div>
-                    <div className="gst-card-content">
-                        <span className="gst-card-label">Base Amount</span>
-                        <strong className="gst-card-value">{formatCurrency(calculation.baseAmount)}</strong>
-                    </div>
-                </div>
-
-                <div className="gst-result-card gst-card-accent">
-                    <div className="gst-card-icon">
-                        <i className="ti ti-receipt-tax" aria-hidden="true" />
-                    </div>
-                    <div className="gst-card-content">
-                        <span className="gst-card-label">Total Tax</span>
-                        <strong className="gst-card-value">{formatCurrency(calculation.totalTax)}</strong>
-                    </div>
-                </div>
-
-                <div className="gst-result-card gst-card-success">
-                    <div className="gst-card-icon">
-                        <i className="ti ti-circle-check" aria-hidden="true" />
-                    </div>
-                    <div className="gst-card-content">
-                        <span className="gst-card-label">Final Amount</span>
-                        <strong className="gst-card-value">{formatCurrency(calculation.finalAmount)}</strong>
-                    </div>
-                </div>
+          {calculation.quantity > 1 && (
+            <div className="gst-breakdown-item">
+              <div className="gst-breakdown-label">
+                <i className="ti ti-x" aria-hidden="true" />
+                Quantity
+              </div>
+              <div className="gst-breakdown-value">{calculation.quantity} units</div>
             </div>
+          )}
 
-            <div className="gst-breakdown-section">
-                <h4 className="gst-breakdown-heading">
-                    <i className="ti ti-list-details" aria-hidden="true" />
-                    Tax Breakdown
-                </h4>
+          <div className="gst-breakdown-divider" />
 
-                <div className="gst-breakdown-list">
-                    <div className="gst-breakdown-item">
-                        <div className="gst-breakdown-label">
-                            <i className="ti ti-currency-rupee" aria-hidden="true" />
-                            Base Amount
-                        </div>
-                        <div className="gst-breakdown-value">{formatCurrency(calculation.baseAmount)}</div>
-                    </div>
-
-                    {calculation.quantity > 1 && (
-                        <div className="gst-breakdown-item">
-                            <div className="gst-breakdown-label">
-                                <i className="ti ti-x" aria-hidden="true" />
-                                Quantity
-                            </div>
-                            <div className="gst-breakdown-value">{calculation.quantity} units</div>
-                        </div>
-                    )}
-
-                    <div className="gst-breakdown-divider" />
-
-                    <div className="gst-breakdown-item gst-item-highlight">
-                        <div className="gst-breakdown-label">
-                            <i className="ti ti-receipt" aria-hidden="true" />
-                            Taxable Value
-                        </div>
-                        <div className="gst-breakdown-value">{formatCurrency(calculation.taxableValue)}</div>
-                    </div>
-
-                    <div className="gst-breakdown-divider" />
-                    <div className="gst-breakdown-subtitle">
-                        <i className="ti ti-plus" aria-hidden="true" />
-                        Tax Components
-                    </div>
-
-                    {calculation.supplyType === "INTRA_STATE" ? (
-                        <>
-                            <div className="gst-breakdown-item">
-                                <div className="gst-breakdown-label">
-                                    <i className="ti ti-building" aria-hidden="true" />
-                                    CGST @ {(calculation.gstRate / 2).toFixed(2)}%
-                                </div>
-                                <div className="gst-breakdown-value">{formatCurrency(calculation.cgst)}</div>
-                            </div>
-
-                            <div className="gst-breakdown-item">
-                                <div className="gst-breakdown-label">
-                                    <i className="ti ti-map-pin" aria-hidden="true" />
-                                    SGST @ {(calculation.gstRate / 2).toFixed(2)}%
-                                </div>
-                                <div className="gst-breakdown-value">{formatCurrency(calculation.sgst)}</div>
-                            </div>
-                        </>
-                    ) : (
-                        <div className="gst-breakdown-item">
-                            <div className="gst-breakdown-label">
-                                <i className="ti ti-route" aria-hidden="true" />
-                                IGST @ {calculation.gstRate.toFixed(2)}%
-                            </div>
-                            <div className="gst-breakdown-value">{formatCurrency(calculation.igst)}</div>
-                        </div>
-                    )}
-
-                    {calculation.cess > 0 && (
-                        <div className="gst-breakdown-item">
-                            <div className="gst-breakdown-label">
-                                <i className="ti ti-plus-minus" aria-hidden="true" />
-                                Cess @ {calculation.cessRate.toFixed(2)}%
-                            </div>
-                            <div className="gst-breakdown-value">{formatCurrency(calculation.cess)}</div>
-                        </div>
-                    )}
-
-                    <div className="gst-breakdown-divider" />
-
-                    <div className="gst-breakdown-item gst-item-total">
-                        <div className="gst-breakdown-label">
-                            <i className="ti ti-sum" aria-hidden="true" />
-                            Total Tax
-                        </div>
-                        <div className="gst-breakdown-value">{formatCurrency(calculation.totalTax)}</div>
-                    </div>
-
-                    <div className="gst-breakdown-item gst-item-total">
-                        <div className="gst-breakdown-label">
-                            <i className="ti ti-circle-check" aria-hidden="true" />
-                            Final Amount (Inc. Tax)
-                        </div>
-                        <div className="gst-breakdown-value">{formatCurrency(calculation.finalAmount)}</div>
-                    </div>
-                </div>
+          <div className="gst-breakdown-item gst-item-highlight">
+            <div className="gst-breakdown-label">
+              <i className="ti ti-receipt" aria-hidden="true" />
+              Taxable Value
             </div>
+            <div className="gst-breakdown-value">{formatCurrency(calculation.taxableValue)}</div>
+          </div>
 
-            {calculation.quantity > 1 && (
-                <div className="gst-per-unit">
-                    <h4 className="gst-per-unit-heading">
-                        <i className="ti ti-package" aria-hidden="true" />
-                        Per Unit Breakdown
-                    </h4>
-                    <div className="gst-per-unit-grid">
-                        <div className="gst-per-unit-item">
-                            <span className="gst-per-unit-label">Base</span>
-                            <strong className="gst-per-unit-value">{formatCurrency(calculation.perUnitBase)}</strong>
-                        </div>
-                        <div className="gst-per-unit-item">
-                            <span className="gst-per-unit-label">Tax</span>
-                            <strong className="gst-per-unit-value">{formatCurrency(calculation.perUnitTax)}</strong>
-                        </div>
-                        <div className="gst-per-unit-item">
-                            <span className="gst-per-unit-label">Final</span>
-                            <strong className="gst-per-unit-value">{formatCurrency(calculation.perUnitFinal)}</strong>
-                        </div>
-                    </div>
+          <div className="gst-breakdown-divider" />
+          <div className="gst-breakdown-subtitle">
+            <i className="ti ti-plus" aria-hidden="true" />
+            Tax Components
+          </div>
+
+          {calculation.supplyType === "INTRA_STATE" ? (
+            <>
+              <div className="gst-breakdown-item">
+                <div className="gst-breakdown-label">
+                  <i className="ti ti-building" aria-hidden="true" />
+                  CGST @ {(calculation.gstRate / 2).toFixed(2)}%
                 </div>
-            )}
+                <div className="gst-breakdown-value">{formatCurrency(calculation.cgst)}</div>
+              </div>
 
-            <div className="gst-result-actions">
-                <button
-                    type="button"
-                    className={`gst-action-btn${copiedKey === "summary" ? " success" : ""}`}
-                    onClick={() => onCopy(resultText, "summary")}
-                >
-                    <i className={`ti ${copiedKey === "summary" ? "ti-check" : "ti-copy"}`} aria-hidden="true" />
-                    {copiedKey === "summary" ? "Copied!" : (
-                        <>
-                            Copy<span className="gst-btn-text-full"> Result</span>
-                        </>
-                    )}
-                </button>
-
-                <button
-                    type="button"
-                    className="gst-action-btn primary"
-                    onClick={onDownloadPDF}
-                    disabled={isGeneratingPDF}
-                    aria-busy={isGeneratingPDF}
-                >
-                    <i
-                        className={`ti ${isGeneratingPDF ? "ti-loader-2 gst-spin" : "ti-file-download"}`}
-                        aria-hidden="true"
-                    />
-                    {isGeneratingPDF ? "Generating PDF…" : "Download PDF Report"}
-                </button>
+              <div className="gst-breakdown-item">
+                <div className="gst-breakdown-label">
+                  <i className="ti ti-map-pin" aria-hidden="true" />
+                  SGST @ {(calculation.gstRate / 2).toFixed(2)}%
+                </div>
+                <div className="gst-breakdown-value">{formatCurrency(calculation.sgst)}</div>
+              </div>
+            </>
+          ) : (
+            <div className="gst-breakdown-item">
+              <div className="gst-breakdown-label">
+                <i className="ti ti-route" aria-hidden="true" />
+                IGST @ {calculation.gstRate.toFixed(2)}%
+              </div>
+              <div className="gst-breakdown-value">{formatCurrency(calculation.igst)}</div>
             </div>
+          )}
 
-            <style jsx>{`
+          {calculation.cess > 0 && (
+            <div className="gst-breakdown-item">
+              <div className="gst-breakdown-label">
+                <i className="ti ti-plus-minus" aria-hidden="true" />
+                Cess @ {calculation.cessRate.toFixed(2)}%
+              </div>
+              <div className="gst-breakdown-value">{formatCurrency(calculation.cess)}</div>
+            </div>
+          )}
+
+          <div className="gst-breakdown-divider" />
+
+          <div className="gst-breakdown-item gst-item-total">
+            <div className="gst-breakdown-label">
+              <i className="ti ti-sum" aria-hidden="true" />
+              Total Tax
+            </div>
+            <div className="gst-breakdown-value">{formatCurrency(calculation.totalTax)}</div>
+          </div>
+
+          <div className="gst-breakdown-item gst-item-total">
+            <div className="gst-breakdown-label">
+              <i className="ti ti-circle-check" aria-hidden="true" />
+              Final Amount (Inc. Tax)
+            </div>
+            <div className="gst-breakdown-value">{formatCurrency(calculation.finalAmount)}</div>
+          </div>
+        </div>
+      </div>
+
+      {calculation.quantity > 1 && (
+        <div className="gst-per-unit">
+          <h4 className="gst-per-unit-heading">
+            <i className="ti ti-package" aria-hidden="true" />
+            Per Unit Breakdown
+          </h4>
+          <div className="gst-per-unit-grid">
+            <div className="gst-per-unit-item">
+              <span className="gst-per-unit-label">Base</span>
+              <strong className="gst-per-unit-value">{formatCurrency(calculation.perUnitBase)}</strong>
+            </div>
+            <div className="gst-per-unit-item">
+              <span className="gst-per-unit-label">Tax</span>
+              <strong className="gst-per-unit-value">{formatCurrency(calculation.perUnitTax)}</strong>
+            </div>
+            <div className="gst-per-unit-item">
+              <span className="gst-per-unit-label">Final</span>
+              <strong className="gst-per-unit-value">{formatCurrency(calculation.perUnitFinal)}</strong>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="gst-result-actions">
+        <button
+          type="button"
+          className={`gst-action-btn${copiedKey === "summary" ? " success" : ""}`}
+          onClick={() => onCopy(resultText, "summary")}
+        >
+          <i className={`ti ${copiedKey === "summary" ? "ti-check" : "ti-copy"}`} aria-hidden="true" />
+          {copiedKey === "summary" ? "Copied!" : (
+            <>
+              Copy<span className="gst-btn-text-full"> Result</span>
+            </>
+          )}
+        </button>
+
+        <button
+          type="button"
+          className="gst-action-btn primary"
+          onClick={onDownloadPDF}
+          disabled={isGeneratingPDF}
+          aria-busy={isGeneratingPDF}
+        >
+          <i
+            className={`ti ${isGeneratingPDF ? "ti-loader-2 gst-spin" : "ti-file-download"}`}
+            aria-hidden="true"
+          />
+          {isGeneratingPDF ? "Generating PDF…" : "Download PDF Report"}
+        </button>
+      </div>
+
+      <style jsx>{`
         .gst-result-summary {
           padding: 20px;
           display: flex;
@@ -302,13 +302,16 @@ ${calculation.quantity > 1 ? `\nPer Unit:
           font-size: 15px;
           font-weight: 700;
           color: var(--brand-text);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .gst-result-cards {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-          gap: 12px;
-        }
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
 
         .gst-result-card {
           padding: 16px;
@@ -434,6 +437,9 @@ ${calculation.quantity > 1 ? `\nPer Unit:
           font-weight: 700;
           font-family: var(--font-mono);
           line-height: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .gst-breakdown-section {
@@ -496,6 +502,8 @@ ${calculation.quantity > 1 ? `\nPer Unit:
           color: var(--text);
           font-family: var(--font-mono);
           white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .gst-breakdown-divider {
@@ -674,12 +682,37 @@ ${calculation.quantity > 1 ? `\nPer Unit:
             gap: 16px;
           }
 
-          .gst-result-cards {
+          .gst-result-cards,
+          .gst-prepayment-grid {
             grid-template-columns: 1fr;
           }
 
+          .gst-status-label {
+            font-size: 11px;
+          }
+
+          .gst-status-value {
+            font-size: 15px;
+          }
+
+          .gst-card-label {
+            font-size: 10.5px;
+          }
+
           .gst-card-value {
-            font-size: 18px;
+            font-size: 15px;
+          }
+
+          .gst-prepayment-heading {
+            font-size: 12px;
+          }
+
+          .gst-benefit-label {
+            font-size: 10px;
+          }
+
+          .gst-benefit-value {
+            font-size: 12px;
           }
 
           .gst-breakdown-label {
@@ -688,6 +721,14 @@ ${calculation.quantity > 1 ? `\nPer Unit:
 
           .gst-breakdown-value {
             font-size: 12.5px;
+          }
+
+          .gst-item-total .gst-breakdown-label {
+            font-size: 12px;
+          }
+
+          .gst-item-total .gst-breakdown-value {
+            font-size: 13px;
           }
 
           .gst-result-actions {
@@ -728,6 +769,6 @@ ${calculation.quantity > 1 ? `\nPer Unit:
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 }

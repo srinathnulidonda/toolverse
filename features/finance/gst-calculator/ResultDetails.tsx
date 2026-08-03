@@ -472,6 +472,99 @@ export function ResultDetails({
             grid-template-columns: 1fr;
             gap: 12px;
           }
+
+          .gst-detail-heading {
+            font-size: 12px;
+            padding: 10px 14px;
+          }
+
+          .gst-detail-heading i {
+            font-size: 14px;
+          }
+
+          .gst-detail-label {
+            font-size: 10.5px;
+          }
+
+          .gst-detail-value {
+            font-size: 12px;
+          }
+
+          .gst-tax-bars {
+            padding: 12px;
+            gap: 12px;
+          }
+
+          .gst-tax-bar-label {
+            font-size: 11.5px;
+          }
+
+          .gst-tax-bar-label i {
+            font-size: 12px;
+          }
+
+          .gst-tax-bar-amount {
+            font-size: 12px;
+          }
+
+          .gst-tax-bar-rate {
+            font-size: 10px;
+          }
+
+          .gst-step-num {
+            width: 24px;
+            height: 24px;
+            font-size: 11px;
+          }
+
+          .gst-step-title {
+            font-size: 12px;
+          }
+
+          .gst-step-formula code {
+            font-size: 11px;
+          }
+
+          .gst-step-result {
+            padding: 5px 8px;
+            gap: 4px;
+          }
+
+          .gst-step-result i {
+            font-size: 12px;
+          }
+
+          .gst-step-result strong {
+            font-size: 12px;
+          }
+
+          .gst-summary-item {
+            padding: 6px 10px;
+            gap: 6px;
+            font-size: 11.5px;
+          }
+
+          .gst-summary-item span {
+            font-size: 10.5px;
+          }
+
+          .gst-summary-item strong {
+            font-size: 11.5px;
+          }
+
+          .gst-action-btn {
+            height: 32px;
+            padding: 0 12px;
+            font-size: 12px;
+          }
+
+          .gst-action-btn i {
+            font-size: 13px;
+          }
+
+          .gst-spin {
+            animation-duration: 0.6s;
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {

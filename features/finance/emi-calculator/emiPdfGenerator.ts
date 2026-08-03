@@ -11,7 +11,7 @@ export const PDF_BRAND = {
     companyName: "Toolverse",
     productName: "EMI Calculator",
     websiteUrl: "www.toolverse.com",
-    logoPath: "/logo.png",
+    logoPath: "/logo-dark.png",
     primary: [20, 92, 60] as [number, number, number],
     primaryDark: [13, 63, 41] as [number, number, number],
     dark: [17, 24, 39] as [number, number, number],
@@ -90,6 +90,8 @@ const PAGE = { width: 210, height: 297 };
 const MARGIN_X = 14;
 const CONTENT_TOP = 36;
 const CONTENT_BOTTOM = PAGE.height - 22;
+const SECTION_GAP = 10;
+const BLOCK_PAD = 8;
 
 function fitFontSize(
     doc: jsPDF,
@@ -184,7 +186,7 @@ function drawFooter(doc: jsPDF, pageNumber: number, totalPages: number) {
     doc.text(
         `${PDF_BRAND.companyName}  ·  ${PDF_BRAND.websiteUrl}`,
         MARGIN_X,
-        pageHeight - 11
+        pageHeight - 12
     );
     doc.text(
         "This is a system-generated report for informational purposes only and does not constitute financial advice.",
@@ -192,19 +194,19 @@ function drawFooter(doc: jsPDF, pageNumber: number, totalPages: number) {
         pageHeight - 7
     );
     doc.setFont("helvetica", "bold");
-    doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth - MARGIN_X, pageHeight - 9, {
+    doc.text(`Page ${pageNumber} of ${totalPages}`, pageWidth - MARGIN_X, pageHeight - 7, {
         align: "right",
     });
 }
 
 function sectionTitle(doc: jsPDF, y: number, label: string): number {
     doc.setFillColor(...PDF_BRAND.lightGray);
-    doc.roundedRect(MARGIN_X, y, PAGE.width - MARGIN_X * 2, 8, 1.5, 1.5, "F");
+    doc.roundedRect(MARGIN_X, y, PAGE.width - MARGIN_X * 2, BLOCK_PAD, 1.5, 1.5, "F");
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9.5);
     doc.setTextColor(...PDF_BRAND.dark);
     doc.text(label.toUpperCase(), MARGIN_X + 4, y + 5.5);
-    return y + 8 + 5;
+    return y + BLOCK_PAD + 5;
 }
 
 export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> {
@@ -254,7 +256,7 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
         doc.setFont(col.mono ? "courier" : "helvetica", "bold");
         doc.setFontSize(col.mono ? 8.5 : 9.5);
         doc.setTextColor(...PDF_BRAND.dark);
-        doc.text(col.value, x, y + 14.5);
+        doc.text(col.value, x, y + 14.5, { maxWidth: colW - 8 });
 
         if (i > 0) {
             doc.setDrawColor(...PDF_BRAND.border);
@@ -263,9 +265,10 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
         }
     });
 
-    y += infoBoxH + 8;
+    y += infoBoxH + BLOCK_PAD;
 
     ensureSpace(14);
+    y += 4;
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
@@ -282,7 +285,7 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
     doc.setTextColor(...PDF_BRAND.primaryDark);
     doc.text(formatINR(data.calculation.emi), MARGIN_X, y + 15);
 
-    y += 20 + 10;
+    y += 20 + SECTION_GAP;
 
     ensureSpace(24);
     const cardW = (pageWidth - MARGIN_X * 2 - 6) / 2;
@@ -311,9 +314,9 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
     doc.setTextColor(220, 38, 38);
     doc.text(formatINR(data.calculation.totalPayment), card2X + 5, y + 15);
 
-    y += 20 + 10;
+    y += 20 + SECTION_GAP;
 
-    ensureSpace(14);
+    ensureSpace(14 + 16);
     y = sectionTitle(doc, y, "Loan Summary");
 
     const summaryRows: [string, string][] = [
@@ -321,9 +324,9 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
         ["Interest Rate", `${data.interestRate}% per annum`],
         [
             "Loan Tenure",
-            `${data.tenureValue} ${data.tenureUnit}(${
-                data.tenureUnit === "years" ? "=" + data.tenureValue * 12 : ""
-            } months)`,
+            data.tenureUnit === "years"
+                ? `${data.tenureValue} years (${data.tenureValue * 12} months)`
+                : `${data.tenureValue} months`,
         ],
         ["Loan Start Date", formatDate(data.loanStartDate)],
         ["Loan Type", data.loanType.charAt(0).toUpperCase() + data.loanType.slice(1)],
@@ -332,32 +335,38 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
             data.prepaymentType === "none"
                 ? "None"
                 : data.prepaymentType === "one-time"
-                ? `One-time: ${formatINR(
-                      data.prepaymentAmount || 0
-                  )} at month ${data.prepaymentMonth || "-"}` // Fixed template literal
-                : `Recurring: ${formatINR(
-                      data.prepaymentAmount || 0
-                  )} per month starting from month ${data.prepaymentMonth || "-"}` // Fixed template literal
+                    ? `One-time: ${formatINR(
+                        data.prepaymentAmount || 0
+                    )} at month ${data.prepaymentMonth || "-"}`
+                    : `Recurring: ${formatINR(
+                        data.prepaymentAmount || 0
+                    )} per month starting from month ${data.prepaymentMonth || "-"}`
         ],
     ];
 
     autoTable(doc, {
         startY: y,
-        margin: { left: MARGIN_X, right: MARGIN_X },
+        margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
         head: [["Particulars", "Details"]],
         body: summaryRows,
         theme: "plain",
-        styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark },
+        styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark, valign: "middle" },
         headStyles: { fillColor: PDF_BRAND.primary, textColor: 255, fontStyle: "bold" },
-        columnStyles: { 1: { halign: "left", fontStyle: "normal" } },
+        columnStyles: {
+            0: { cellWidth: 55, fontStyle: "bold" },
+            1: { fontStyle: "normal" },
+        },
+        didParseCell: (hookData) => {
+            hookData.cell.styles.halign = "left";
+        },
         alternateRowStyles: { fillColor: PDF_BRAND.lightGray },
         didDrawPage: () => drawHeader(doc, logo, reportId, generatedStr),
     });
 
-    y = (doc as any).lastAutoTable.finalY + 10;
+    y = (doc as any).lastAutoTable.finalY + SECTION_GAP;
 
     if ((data.calculation.interestSaved ?? 0) > 0 || (data.calculation.tenureReducedMonths ?? 0) > 0) {
-        ensureSpace(14);
+        ensureSpace(14 + 16);
         y = sectionTitle(doc, y, "Prepayment Benefits");
 
         const benefitRows: [string, string][] = [
@@ -367,7 +376,7 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
             ],
             [
                 "Tenure Reduced",
-                `${data.calculation.tenureReducedMonths ?? 0} months`,
+                `${Math.max(0, data.calculation.tenureReducedMonths ?? 0)} months`,
             ],
             [
                 "Total Interest with Prepayment",
@@ -381,21 +390,27 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
 
         autoTable(doc, {
             startY: y,
-            margin: { left: MARGIN_X, right: MARGIN_X },
+            margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
             head: [["Particulars", "Amount/Value"]],
             body: benefitRows,
             theme: "plain",
-            styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark },
+            styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark, valign: "middle" },
             headStyles: { fillColor: PDF_BRAND.primary, textColor: 255, fontStyle: "bold" },
-            columnStyles: { 1: { halign: "right", fontStyle: "bold" } },
+            columnStyles: {
+                0: { cellWidth: 55, fontStyle: "bold" },
+                1: { cellWidth: PAGE.width - MARGIN_X * 2 - 55, fontStyle: "bold" },
+            },
+            didParseCell: (hookData) => {
+                hookData.cell.styles.halign = "left";
+            },
             alternateRowStyles: { fillColor: PDF_BRAND.lightGray },
             didDrawPage: () => drawHeader(doc, logo, reportId, generatedStr),
         });
 
-        y = (doc as any).lastAutoTable.finalY + 10;
+        y = (doc as any).lastAutoTable.finalY + SECTION_GAP;
     }
 
-    ensureSpace(14);
+    ensureSpace(14 + 16);
     y = sectionTitle(doc, y, "Principal vs Interest Breakdown");
 
     const breakdownRows: [string, string][] = [
@@ -403,32 +418,42 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
         ["Interest Component", formatINR(data.calculation.principalVsInterestRatio.interest)],
         [
             "Principal : Interest Ratio",
-            `${(
-                data.calculation.principalVsInterestRatio.principal /
-                data.calculation.principalVsInterestRatio.interest
-            ).toFixed(2)} : 1`,
+            data.calculation.principalVsInterestRatio.interest > 0
+                ? `${(
+                    data.calculation.principalVsInterestRatio.principal /
+                    data.calculation.principalVsInterestRatio.interest
+                ).toFixed(2)} : 1`
+                : "N/A (0% interest)",
         ],
     ];
 
     autoTable(doc, {
         startY: y,
-        margin: { left: MARGIN_X, right: MARGIN_X },
+        margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
         head: [["Component", "Amount"]],
         body: breakdownRows,
         theme: "plain",
-        styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark },
+        styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark, valign: "middle" },
         headStyles: { fillColor: PDF_BRAND.primary, textColor: 255, fontStyle: "bold" },
-        columnStyles: { 1: { halign: "right", fontStyle: "bold" } },
+        columnStyles: {
+            0: { cellWidth: 55, fontStyle: "bold" },
+            1: { fontStyle: "bold" },
+        },
+        didParseCell: (hookData) => {
+            hookData.cell.styles.halign = "left";
+        },
         alternateRowStyles: { fillColor: PDF_BRAND.lightGray },
         didDrawPage: () => drawHeader(doc, logo, reportId, generatedStr),
     });
 
-    y = (doc as any).lastAutoTable.finalY + 10;
+    y = (doc as any).lastAutoTable.finalY + SECTION_GAP;
 
     ensureSpace(30);
     y = sectionTitle(doc, y, "Amortization Schedule");
 
-    // Handle large tables by paginating
+    // Column order & headers follow standard banking amortization schedule format:
+    // Month | Payment Date | EMI | Principal | Interest | Balance
+    // All columns left-aligned (header + data), matching the source spec's markdown table.
     const scheduleData = data.calculation.schedule.map((row) => [
         row.month,
         formatDate(row.paymentDate),
@@ -440,32 +465,29 @@ export async function generateEMIReportPDF(data: EMIReportData): Promise<jsPDF> 
 
     autoTable(doc, {
         startY: y,
-        margin: { left: MARGIN_X, right: MARGIN_X },
+        margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
         head: [
-            ["Month", "Payment Date", "EMI (₹)", "Principal (₹)", "Interest (₹)", "Balance (₹)"],
+            ["Month", "Payment Date", "EMI", "Principal", "Interest", "Balance"],
         ],
         body: scheduleData,
         theme: "striped",
-        styles: { fontSize: 8, cellPadding: 3, textColor: PDF_BRAND.dark },
+        styles: { fontSize: 8, cellPadding: 3, textColor: PDF_BRAND.dark, valign: "middle", halign: "left" },
         headStyles: {
             fillColor: PDF_BRAND.primary,
             textColor: 255,
             fontStyle: "bold",
-            halign: "center",
+            halign: "left",
         },
         columnStyles: {
-            0: { halign: "right", fontStyle: "bold" },
-            1: { halign: "left" },
-            2: { halign: "right", fontStyle: "bold" },
-            3: { halign: "right" },
-            4: { halign: "right" },
-            5: { halign: "right", fontStyle: "bold" },
+            0: { fontStyle: "bold" },
+            2: { fontStyle: "bold" },
+            5: { fontStyle: "bold" },
         },
         alternateRowStyles: { fillColor: PDF_BRAND.lightGray },
         didDrawPage: () => drawHeader(doc, logo, reportId, generatedStr),
     });
 
-    y = (doc as any).lastAutoTable.finalY + 10;
+    y = (doc as any).lastAutoTable.finalY + SECTION_GAP;
 
     const totalPages = doc.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {

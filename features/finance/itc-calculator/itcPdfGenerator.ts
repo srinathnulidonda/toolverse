@@ -11,7 +11,7 @@ export const PDF_BRAND = {
     companyName: "Toolverse",
     productName: "ITC Calculator",
     websiteUrl: "www.toolverse.com",
-    logoPath: "/logo.png",
+    logoPath: "/logo-dark.png",
     primary: [20, 92, 60] as [number, number, number],
     primaryDark: [13, 63, 41] as [number, number, number],
     dark: [17, 24, 39] as [number, number, number],
