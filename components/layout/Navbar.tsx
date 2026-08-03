@@ -39,7 +39,7 @@ export default function Navbar() {
     <header className="tv-nav" ref={navRef as any}>
       {/* Logo */}
       <Link href="/" className="tv-logo" aria-label="Toolverse home">
-        <img src="/logo.png" alt="Toolverse" className="tv-logo-image" />
+        <img src="/logo-light.png" alt="Toolverse" className="tv-logo-image" />
       </Link>
 
       {/* Centre nav container */}
