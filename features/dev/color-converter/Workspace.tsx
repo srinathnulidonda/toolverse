@@ -8,12 +8,8 @@ import ColorPalette from "./ColorPalette";
 import ColorHistory from "./ColorHistory";
 import ColorShades from "./ColorShades";
 import { useHistoryStore } from "@/lib/useHistoryStore";
-import type { HistoryEntry } from "./colorStore";
-import "./style/ColorHistory.css";
-import "./style/ColorPalette.css";
-import "./style/ColorPreview.css";
-import "./style/ColorShades.css";
-import "./style/Workspace.css";
+import type { HistoryEntry } from "./ts/colorStore";
+import styles from "./style/Workspace.module.css";
 
 type ViewTab = "convert" | "palette" | "shades" | "history";
 
@@ -84,29 +80,29 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="cc-root">
+      <div className={styles.ccRoot}>
         {/*  Top Chrome  */}
-        <div className="cc-chrome">
-          <div className="cc-chrome-left">
-            <div className="cc-title">
+        <div className={styles.ccChrome}>
+          <div className={styles.ccChromeLeft}>
+            <div className={styles.ccTitle}>
               <i className="ti ti-palette" />
               Color Converter
             </div>
             <div
-              className="cc-current-color"
+              className={styles.ccCurrentColor}
               style={{ background: currentColor }}
               title={currentColor}
             />
           </div>
 
-          <div className="cc-chrome-right">
-            <div className="cc-preset-group">
-              <span className="cc-preset-label">Presets:</span>
+          <div className={styles.ccChromeRight}>
+            <div className={styles.ccPresetGroup}>
+              <span className={styles.ccPresetLabel}>Presets:</span>
               {PRESET_COLORS.slice(0, 4).map((preset) => (
                 <button
                   key={preset.id}
                   type="button"
-                  className="cc-preset-btn"
+                  className={styles.ccPresetBtn}
                   onClick={() => loadPreset(preset)}
                   title={preset.name}
                   style={{ background: preset.hex }}
@@ -117,29 +113,29 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  View Tabs  */}
-        <div className="cc-tabs-bar">
-          <nav className="cc-tabs" role="tablist">
+        <div className={styles.ccTabsBar}>
+          <nav className={styles.ccTabs} role="tablist">
             {VIEW_TABS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 role="tab"
-                className={`cc-tab${viewTab === tab.id ? " active" : ""}`}
+                className={`${styles.ccTab} ${viewTab === tab.id ? styles.active : ""}`}
                 onClick={() => setViewTab(tab.id)}
                 aria-selected={viewTab === tab.id}
               >
                 <i className={`ti ${tab.icon}`} />
                 {tab.label}
-                {typeof window !== 'undefined' && tab.id === "history" && history.length > 0 && (
-                  <span className="cc-badge">{history.length}</span>
-                )}
+                {typeof window !== "undefined" && tab.id === "history" && history.length > 0 ? (
+                  <span className={styles.ccBadge}>{history.length}</span>
+                ) : null}
               </button>
             ))}
           </nav>
         </div>
 
         {/*  Tab Content  */}
-        <div className="cc-tab-content">
+        <div className={styles.ccTabContent}>
           {viewTab === "convert" && (
             <ColorPreview color={currentColor} onColorChange={handleColorChange} />
           )}
@@ -165,7 +161,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Footer  */}
-        <div className="cc-footer">
+        <div className={styles.ccFooter}>
           <i className="ti ti-shield-lock" />
           <span>Everything runs in your browser — no data ever leaves this page.</span>
         </div>

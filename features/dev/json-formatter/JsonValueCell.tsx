@@ -2,6 +2,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import styles from "./style/JsonTree.module.css";
 
 type JsonValueCellProps = {
   value: unknown; // primitive (string, number, boolean, null, undefined)
@@ -30,21 +31,21 @@ export function JsonValueCell({
 
   const type = getType(value);
 
-  let cls = "jt-prim-string";
+  let cls = styles.jtPrimString;
   let display: string;
   if (type === "string") {
-    cls = "jt-prim-string";
+    cls = styles.jtPrimString;
     // Escape quotes and backslashes for display
     display = `"${(value as string).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
   } else if (type === "number") {
-    cls = "jt-prim-number";
+    cls = styles.jtPrimNumber;
     display = String(value);
   } else if (type === "boolean") {
-    cls = "jt-prim-boolean";
+    cls = styles.jtPrimBoolean;
     display = String(value);
   } else {
     // null or undefined
-    cls = "jt-prim-null";
+    cls = styles.jtPrimNull;
     display = value === null ? "null" : "undefined";
   }
 
@@ -65,16 +66,16 @@ export function JsonValueCell({
   );
 
   return (
-    <div className="jt-row jt-prim-row">
+    <div className={`${styles.jtRow} ${styles.jtPrimRow}`}>
       {nodeKey !== undefined && (
-        <span className="jt-key-label">
-          &ldquo;{nodeKey}&rdquo;<span className="jt-colon">:</span>&nbsp;
+        <span className={styles.jtKeyLabel}>
+          &ldquo;{nodeKey}&rdquo;<span className={styles.jtColon}>:</span>&nbsp;
         </span>
       )}
-      <span className={`jt-primitive ${cls}`}>{display}</span>
-      {!isLast && <span className="jt-comma">,</span>}
+      <span className={`${styles.jtPrimitive} ${cls}`}>{display}</span>
+      {!isLast && <span className={styles.jtComma}>,</span>}
       <button
-        className="jt-path-btn"
+        className={styles.jtPathBtn}
         onClick={handlePathClick}
         title={`Copy path: ${path || "$"}`}
         aria-label={`Copy path ${path || "$"}`}

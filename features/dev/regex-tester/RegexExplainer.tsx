@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { explainPattern, generateCode, type RegexFlags, type CodeLanguage } from "./utils";
+import { explainPattern, generateCode, type RegexFlags, type CodeLanguage } from "./ts/utils";
+import styles from "./style/RegexExplainer.module.css";
 
 interface RegexExplainerProps {
   pattern: string;
@@ -369,12 +370,12 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
 
   return (
     <>
-      <div className="rxe-root">
+      <div className={styles.rxeRoot}>
         {/* Section Switcher */}
-        <div className="rxe-section-switcher">
+        <div className={styles.rxeSectionSwitcher}>
           <button
             type="button"
-            className={`rxe-switch-btn${activeSection === "examples" ? " active" : ""}`}
+            className={`${styles.rxeSwitchBtn}${activeSection === "examples" ? ` ${styles.active}` : ""}`}
             onClick={() => setActiveSection("examples")}
           >
             <i className="ti ti-bulb" />
@@ -382,7 +383,7 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
           </button>
           <button
             type="button"
-            className={`rxe-switch-btn${activeSection === "reference" ? " active" : ""}`}
+            className={`${styles.rxeSwitchBtn}${activeSection === "reference" ? ` ${styles.active}` : ""}`}
             onClick={() => setActiveSection("reference")}
           >
             <i className="ti ti-book" />
@@ -392,28 +393,28 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
 
         {/* Worked Examples Section */}
         {activeSection === "examples" && (
-          <div className="rxe-section">
-            <div className="rxe-section-header">
-              <div className="rxe-section-title">
+          <div className={styles.rxeSection}>
+            <div className={styles.rxeSectionHeader}>
+              <div className={styles.rxeSectionTitle}>
                 <i className="ti ti-bulb" />
                 Real-World Examples
               </div>
-              <span className="rxe-meta-text">Click "Try it" to load into tester</span>
+              <span className={styles.rxeMetaText}>Click "Try it" to load into tester</span>
             </div>
 
-            <div className="rxe-examples-grid">
+            <div className={styles.rxeExamplesGrid}>
               {WORKED_EXAMPLES.map((ex) => (
-                <div key={ex.id} className="rxe-example-card">
-                  <div className="rxe-example-header">
-                    <div className="rxe-example-icon">
+                <div key={ex.id} className={styles.rxeExampleCard}>
+                  <div className={styles.rxeExampleHeader}>
+                    <div className={styles.rxeExampleIcon}>
                       <i className={`ti ${ex.icon}`} />
                     </div>
-                    <h4 className="rxe-example-title">{ex.title}</h4>
+                    <h4 className={styles.rxeExampleTitle}>{ex.title}</h4>
                   </div>
 
-                  <p className="rxe-example-desc">{ex.explanation}</p>
+                  <p className={styles.rxeExampleDesc}>{ex.explanation}</p>
 
-                  <div className="rxe-example-pattern">
+                  <div className={styles.rxeExamplePattern}>
                     <code>
                       /{ex.pattern}/
                       {Object.entries(ex.flags)
@@ -423,7 +424,7 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
                     </code>
                     <button
                       type="button"
-                      className={`rxe-mini-copy${copiedExampleId === ex.id ? " copied" : ""}`}
+                      className={`${styles.rxeMiniCopy}${copiedExampleId === ex.id ? ` ${styles.copied}` : ""}`}
                       onClick={() => handleCopyExample(ex.pattern, ex.id)}
                       title="Copy pattern"
                     >
@@ -431,14 +432,14 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
                     </button>
                   </div>
 
-                  <div className="rxe-example-test">
-                    <span className="rxe-test-label">Test string:</span>
-                    <span className="rxe-test-text">{ex.test}</span>
+                  <div className={styles.rxeExampleTest}>
+                    <span className={styles.rxeTestLabel}>Test string:</span>
+                    <span className={styles.rxeTestText}>{ex.test}</span>
                   </div>
 
                   <button
                     type="button"
-                    className="rxe-try-btn"
+                    className={styles.rxeTryBtn}
                     onClick={() => handleTryExample(ex.pattern, ex.test, ex.flags)}
                   >
                     <i className="ti ti-player-play" />
@@ -454,16 +455,16 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
         {activeSection === "reference" && (
           <>
             {/* Code Generation */}
-            <div className="rxe-section">
-              <div className="rxe-section-header">
-                <div className="rxe-section-title">
+            <div className={styles.rxeSection}>
+              <div className={styles.rxeSectionHeader}>
+                <div className={styles.rxeSectionTitle}>
                   <i className="ti ti-code" />
                   Code Generation
                 </div>
                 {codeSnippet && (
                   <button
                     type="button"
-                    className={`rxe-copy-btn${copiedCode ? " copied" : ""}`}
+                    className={`${styles.rxeCopyBtn}${copiedCode ? ` ${styles.copied}` : ""}`}
                     onClick={handleCopyCode}
                   >
                     <i className={`ti ${copiedCode ? "ti-check" : "ti-copy"}`} />
@@ -472,12 +473,12 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
                 )}
               </div>
 
-              <div className="rxe-language-selector">
+              <div className={styles.rxeLanguageSelector}>
                 {languages.map((lang) => (
                   <button
                     key={lang.id}
                     type="button"
-                    className={`rxe-lang-btn${selectedLanguage === lang.id ? " active" : ""}`}
+                    className={`${styles.rxeLangBtn}${selectedLanguage === lang.id ? ` ${styles.active}` : ""}`}
                     onClick={() => setSelectedLanguage(lang.id)}
                   >
                     <i className={`ti ${lang.icon}`} />
@@ -487,13 +488,13 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
               </div>
 
               {codeSnippet ? (
-                <div className="rxe-code-block">
-                  <pre className="rxe-code">
+                <div className={styles.rxeCodeBlock}>
+                  <pre className={styles.rxeCode}>
                     <code>{codeSnippet}</code>
                   </pre>
                 </div>
               ) : (
-                <div className="rxe-empty-code">
+                <div className={styles.rxeEmptyCode}>
                   <i className="ti ti-code-off" />
                   <p>Enter a regex pattern in the Test tab, or try an example above</p>
                 </div>
@@ -502,22 +503,22 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
 
             {/* Pattern Breakdown */}
             {explanation && explanation.length > 0 && (
-              <div className="rxe-section">
-                <div className="rxe-section-header">
-                  <div className="rxe-section-title">
+              <div className={styles.rxeSection}>
+                <div className={styles.rxeSectionHeader}>
+                  <div className={styles.rxeSectionTitle}>
                     <i className="ti ti-analyze" />
                     Your Pattern Breakdown
                   </div>
                 </div>
 
-                <div className="rxe-breakdown-list">
+                <div className={styles.rxeBreakdownList}>
                   {explanation.map((node, idx) => (
-                    <div key={idx} className="rxe-breakdown-item">
-                      <div className="rxe-breakdown-header">
-                        <code className="rxe-breakdown-syntax">{node.value}</code>
-                        <span className={`rxe-breakdown-type ${node.type}`}>{node.type}</span>
+                    <div key={idx} className={styles.rxeBreakdownItem}>
+                      <div className={styles.rxeBreakdownHeader}>
+                        <code className={styles.rxeBreakdownSyntax}>{node.value}</code>
+                        <span className={`${styles.rxeBreakdownType} ${styles[node.type]}`}>{node.type}</span>
                       </div>
-                      <p className="rxe-breakdown-desc">{node.description}</p>
+                      <p className={styles.rxeBreakdownDesc}>{node.description}</p>
                     </div>
                   ))}
                 </div>
@@ -525,28 +526,28 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
             )}
 
             {/* Regex Reference with Interactive Examples */}
-            <div className="rxe-section">
-              <div className="rxe-section-header">
-                <div className="rxe-section-title">
+            <div className={styles.rxeSection}>
+              <div className={styles.rxeSectionHeader}>
+                <div className={styles.rxeSectionTitle}>
                   <i className="ti ti-book" />
                   Interactive Syntax Reference
                 </div>
-                <span className="rxe-meta-text">Click any row to try it</span>
+                <span className={styles.rxeMetaText}>Click any row to try it</span>
               </div>
 
-              <div className="rxe-reference-grid">
+              <div className={styles.rxeReferenceGrid}>
                 {REGEX_REFERENCE.map((category) => (
-                  <div key={category.category} className="rxe-ref-category">
-                    <h4 className="rxe-ref-category-title">
+                  <div key={category.category} className={styles.rxeRefCategory}>
+                    <h4 className={styles.rxeRefCategoryTitle}>
                       <i className={`ti ${category.icon}`} />
                       {category.category}
                     </h4>
-                    <div className="rxe-ref-items">
+                    <div className={styles.rxeRefItems}>
                       {category.items.map((item, idx) => (
                         <button
                           key={idx}
                           type="button"
-                          className="rxe-ref-item"
+                          className={styles.rxeRefItem}
                           onClick={() =>
                             handleTryExample(
                               item.example.pattern,
@@ -556,9 +557,9 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
                           }
                           title={`Try: /${item.example.pattern}/`}
                         >
-                          <code className="rxe-ref-syntax">{item.syntax}</code>
-                          <span className="rxe-ref-desc">{item.desc}</span>
-                          <i className="ti ti-player-play rxe-ref-play" />
+                          <code className={styles.rxeRefSyntax}>{item.syntax}</code>
+                          <span className={styles.rxeRefDesc}>{item.desc}</span>
+                          <i className={`ti ti-player-play ${styles.rxeRefPlay}`} />
                         </button>
                       ))}
                     </div>
@@ -568,17 +569,17 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
             </div>
 
             {/* Flags Explanation */}
-            <div className="rxe-section">
-              <div className="rxe-section-header">
-                <div className="rxe-section-title">
+            <div className={styles.rxeSection}>
+              <div className={styles.rxeSectionHeader}>
+                <div className={styles.rxeSectionTitle}>
                   <i className="ti ti-flag" />
                   Active Flags
                 </div>
               </div>
 
-              <div className="rxe-flags-list">
+              <div className={styles.rxeFlagsList}>
                 {Object.entries(flags).filter(([, v]) => v).length === 0 ? (
-                  <div className="rxe-no-flags">
+                  <div className={styles.rxeNoFlags}>
                     <i className="ti ti-flag-off" />
                     <p>No flags enabled — go to the Test tab to toggle flags</p>
                   </div>
@@ -620,15 +621,15 @@ export default function RegexExplainer({ pattern, flags, onLoadExample }: RegexE
                       }[flag as keyof RegexFlags];
 
                       return flagInfo ? (
-                        <div key={flag} className="rxe-flag-card">
-                          <div className="rxe-flag-header">
+                        <div key={flag} className={styles.rxeFlagCard}>
+                          <div className={styles.rxeFlagHeader}>
                             <i className={`ti ${flagInfo.icon}`} />
-                            <div className="rxe-flag-info">
-                              <code className="rxe-flag-code">{flag}</code>
-                              <span className="rxe-flag-label">{flagInfo.label}</span>
+                            <div className={styles.rxeFlagInfo}>
+                              <code className={styles.rxeFlagCode}>{flag}</code>
+                              <span className={styles.rxeFlagLabel}>{flagInfo.label}</span>
                             </div>
                           </div>
-                          <p className="rxe-flag-desc">{flagInfo.desc}</p>
+                          <p className={styles.rxeFlagDesc}>{flagInfo.desc}</p>
                         </div>
                       ) : null;
                     })

@@ -1,4 +1,4 @@
-// features/dev/uuid-generator/Workspace.tsx
+/* features/dev/uuid-generator/Workspace.tsx */
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
@@ -8,12 +8,9 @@ import HistoryList from "@/components/shared/HistoryList";
 import UuidGenerator from "./UuidGenerator";
 import UuidBatch from "./UuidBatch";
 import UuidAnalyzer from "./UuidAnalyzer";
-import type { UuidVersion, UuidFormat, UuidCase } from "./utils";
-import { VERSION_INFO, formatTimestamp } from "./utils";
-import "./style/UuidAnalyzer.css";
-import "./style/UuidBatch.css";
-import "./style/UuidGenerator.css";
-import "./style/Workspace.css";
+import type { UuidVersion, UuidFormat, UuidCase } from "./ts/utils";
+import { VERSION_INFO, formatTimestamp } from "./ts/utils";
+import styles from "./style/Workspace.module.css";
 
 interface UuidHistoryEntry {
   id: string;
@@ -114,17 +111,17 @@ export default function UuidGeneratorWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="ug-workspace-root">
+      <div className={styles.ugWorkspaceRoot}>
         {/*  Top Chrome  */}
-        <div className="ug-chrome">
-          <div className="ug-chrome-left">
+        <div className={styles.ugChrome}>
+          <div className={styles.ugChromeLeft}>
             {/*  Version Selector  */}
-            <div className="ug-pill-group" role="group" aria-label="UUID version">
+            <div className={styles.ugPillGroup} role="group" aria-label="UUID version">
               {(["v4", "v7", "v1", "v6", "v3", "v5", "nil"] as UuidVersion[]).map((v) => (
                 <button
                   key={v}
                   type="button"
-                  className={`ug-pill${version === v ? " active" : ""}`}
+                  className={`${styles.ugPill}${version === v ? ` ${styles.active}` : ""}`}
                   onClick={() => setVersion(v)}
                   aria-pressed={version === v}
                 >
@@ -135,13 +132,13 @@ export default function UuidGeneratorWorkspace({ tool }: { tool: Tool }) {
 
             {/*  Format Selector  */}
             {viewTab !== "analyze" && (
-              <div className="ug-format-group">
-                <label className="ug-format-label" htmlFor="uuid-format">
+              <div className={styles.ugFormatGroup}>
+                <label className={styles.ugFormatLabel} htmlFor="uuid-format">
                   Format:
                 </label>
                 <select
                   id="uuid-format"
-                  className="ug-select"
+                  className={styles.ugSelect}
                   value={format}
                   onChange={(e) => setFormat(e.target.value as UuidFormat)}
                 >
@@ -157,31 +154,31 @@ export default function UuidGeneratorWorkspace({ tool }: { tool: Tool }) {
 
             {/*  Case Toggle  */}
             {viewTab !== "analyze" && (
-              <div className="ug-case-group">
+              <div className={styles.ugCaseGroup}>
                 <button
                   type="button"
-                  className={`ug-case-btn${uuidCase === "lowercase" ? " active" : ""}`}
+                  className={`${styles.ugCaseBtn}${uuidCase === "lowercase" ? ` ${styles.active}` : ""}`}
                   onClick={() => setUuidCase("lowercase")}
                   title="Lowercase"
                 >
                   <i className="ti ti-letter-case-lower" />
-                  <span className="ug-case-label">aa</span>
+                  <span className={styles.ugCaseLabel}>aa</span>
                 </button>
                 <button
                   type="button"
-                  className={`ug-case-btn${uuidCase === "uppercase" ? " active" : ""}`}
+                  className={`${styles.ugCaseBtn}${uuidCase === "uppercase" ? ` ${styles.active}` : ""}`}
                   onClick={() => setUuidCase("uppercase")}
                   title="Uppercase"
                 >
                   <i className="ti ti-letter-case-upper" />
-                  <span className="ug-case-label">AA</span>
+                  <span className={styles.ugCaseLabel}>AA</span>
                 </button>
               </div>
             )}
           </div>
 
-          <div className="ug-chrome-right">
-            <div className="ug-info-badge">
+          <div className={styles.ugChromeRight}>
+            <div className={styles.ugInfoBadge}>
               <i className="ti ti-shield-lock" />
               <span>Client-side only</span>
             </div>
@@ -189,14 +186,14 @@ export default function UuidGeneratorWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  View Tabs  */}
-        <div className="ug-tabs-bar">
-          <nav className="ug-tabs" role="tablist" aria-label="UUID tool views">
+        <div className={styles.ugTabsBar}>
+          <nav className={styles.ugTabs} role="tablist" aria-label="UUID tool views">
             {VIEW_TABS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 role="tab"
-                className={`ug-tab${viewTab === tab.id ? " active" : ""}`}
+                className={`${styles.ugTab}${viewTab === tab.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewTab(tab.id)}
                 aria-selected={viewTab === tab.id}
                 aria-controls={`ug-panel-${tab.id}`}
@@ -204,7 +201,7 @@ export default function UuidGeneratorWorkspace({ tool }: { tool: Tool }) {
                 <i className={`ti ${tab.icon}`} />
                 <span>{tab.label}</span>
                 {typeof window !== 'undefined' && tab.id === "history" && history.length > 0 && (
-                  <span className="ug-tab-badge">{history.length}</span>
+                  <span className={styles.ugTabBadge}>{history.length}</span>
                 )}
               </button>
             ))}
@@ -212,7 +209,7 @@ export default function UuidGeneratorWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Tab Content  */}
-        <div className="ug-tab-content">
+        <div className={styles.ugTabContent}>
           {viewTab === "single" && (
             <div role="tabpanel" id="ug-panel-single" aria-labelledby="tab-single">
               <UuidGenerator
@@ -298,8 +295,8 @@ export default function UuidGeneratorWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Footer  */}
-        <div className="ug-footer">
-          <div className="ug-footer-info">
+        <div className={styles.ugFooter}>
+          <div className={styles.ugFooterInfo}>
             <i className="ti ti-info-circle" />
             <span>
               UUIDs are generated using cryptographically secure random numbers. All processing

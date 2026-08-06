@@ -1,0 +1,159 @@
+/* features/dev/jwt-decoder/style/TokenVisualizer.module.css */
+.tvRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.tvVisual {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    height: 80px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+}
+
+.tvPart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 60px;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.tvPart:hover {
+    filter: brightness(1.1);
+    z-index: 1;
+    transform: scale(1.02);
+}
+
+.tvPartHeader {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.tvPartPayload {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.tvPartSignature {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.tvPartLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tvPartSize {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    font-family: var(--font-mono);
+}
+
+.tvDot {
+    display: flex;
+    align-items: center;
+    padding: 0 2px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-disabled);
+    background: var(--bg-surface);
+}
+
+.tvStats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.tvStat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.tvStatLabel {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tvStatValue {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.tvBreakdown {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 0.5px solid var(--border-faint);
+}
+
+.tvBreakdownItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.tvBreakdownColor {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.tvBreakdownColorHeader {
+    background: #3b82f6;
+}
+
+.tvBreakdownColorPayload {
+    background: #10b981;
+}
+
+.tvBreakdownColorSignature {
+    background: #8b5cf6;
+}
+
+@media (max-width: 768px) {
+    .tvStats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tvVisual {
+        height: 60px;
+    }
+
+    .tvPartLabel {
+        font-size: 9px;
+    }
+
+    .tvPartSize {
+        font-size: 11px;
+    }
+}

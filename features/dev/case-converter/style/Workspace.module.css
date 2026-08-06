@@ -1,0 +1,317 @@
+/* features\dev\case-converter\style\Workspace.module.css */
+.ccRoot {
+    --cc-radius-sm: 6px;
+    --cc-radius-md: 8px;
+    --cc-radius-lg: 12px;
+    --cc-radius-xl: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--cc-radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+/*  Chrome  */
+.ccChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.ccChromeLeft,
+.ccChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ccTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.ccTitle i {
+    font-size: 16px;
+    color: var(--brand);
+}
+
+.ccInputBadge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 99px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.ccBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--cc-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ccBtn i {
+    font-size: 13px;
+}
+
+.ccBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ccBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/*  Tabs  */
+.ccTabsBar {
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.ccTabs {
+    display: flex;
+    padding: 0 16px;
+}
+
+.ccTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.ccTab i {
+    font-size: 14px;
+}
+
+.ccTab:hover {
+    color: var(--text);
+}
+
+.ccTab.active {
+    color: var(--text);
+}
+
+.ccTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.ccBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/*  Options Bar  */
+.ccOptionsBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border-bottom: 0.5px solid var(--border-faint);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.ccOptionsGroup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ccOptionsLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ccCheckbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ccCheckbox input {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 0.5px solid var(--border);
+    cursor: pointer;
+    accent-color: var(--brand);
+}
+
+.ccCheckboxLabel {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.ccOptionsDivider {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+}
+
+.ccToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ccToggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.ccToggleTrack {
+    width: 32px;
+    height: 18px;
+    background: var(--border);
+    border-radius: 99px;
+    position: relative;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.ccToggle input:checked+.ccToggleTrack {
+    background: var(--brand);
+}
+
+.ccToggleThumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.15s;
+}
+
+.ccToggle input:checked+.ccToggleTrack .ccToggleThumb {
+    transform: translateX(14px);
+}
+
+.ccToggleLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/*  Tab Content  */
+.ccTabContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*  Footer  */
+.ccFooter {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 16px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    font-size: 11px;
+    color: var(--text-disabled);
+}
+
+.ccFooter i {
+    font-size: 13px;
+}
+
+/*  Responsive  */
+.ccLabel {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .ccLabel {
+        display: none;
+    }
+
+    .ccChrome {
+        padding: 10px 12px;
+    }
+
+    .ccOptionsBar {
+        padding: 10px 12px;
+    }
+
+    .ccOptionsGroup {
+        gap: 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ccBtn,
+    .ccTab,
+    .ccToggleTrack,
+    .ccToggleThumb {
+        transition: none;
+    }
+}

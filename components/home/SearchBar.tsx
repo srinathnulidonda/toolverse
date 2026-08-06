@@ -39,6 +39,7 @@ export default function SearchBar() {
       >
         {/* Search icon */}
         <span
+          className="hero-search-icon"
           style={{
             position: "absolute",
             left: "16px",
@@ -110,7 +111,27 @@ export default function SearchBar() {
 
         @media (max-width: 480px) {
           .hero-search-form {
-            max-width: 100% !important;
+            max-width: 260px !important;
+          }
+
+          .hero-search-icon {
+            left: 12px !important;
+          }
+
+          .hero-search-icon svg {
+            width: 12px !important;
+            height: 12px !important;
+          }
+
+          .hero-search-input {
+            padding: 8px 14px 8px 32px !important;
+            font-size: 12px !important;
+          }
+        }
+
+        @media (max-width: 340px) {
+          .hero-search-form {
+            max-width: 250px !important;
           }
         }
       `}</style>

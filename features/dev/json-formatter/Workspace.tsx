@@ -3,14 +3,11 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
-import { smartParse } from "./smartParse";
+import { smartParse } from "./ts/smartParse";
 import JsonTree from "./JsonTree";
 import JsonDiff from "./JsonDiff";
 import JsonStats from "./JsonStats";
-import "./style/JsonDiff.css";
-import "./style/JsonStats.css";
-import "./style/JsonTree.css";
-import "./style/Workspace.css";
+import styles from "./style/Workspace.module.css";
 
 type Mode = "format" | "minify";
 type Indent = 2 | 4 | "tab";
@@ -49,13 +46,13 @@ function highlightJson(json: string) {
     }
 
     // Determine the class for the matched token
-    let cls = "jf-number";
+    let cls = styles.jfNumber;
     if (/^"/.test(match[0])) {
-      cls = /:\s*$/.test(match[0]) ? "jf-key" : "jf-string";
+      cls = /:\s*$/.test(match[0]) ? styles.jfKey : styles.jfString;
     } else if (/true|false/.test(match[0])) {
-      cls = "jf-boolean";
+      cls = styles.jfBoolean;
     } else if (match[0] === "null") {
-      cls = "jf-null";
+      cls = styles.jfNull;
     }
 
     // Add the matched token as a span element
@@ -285,15 +282,15 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="jf-root" role="main" aria-label="JSON Formatter">
+      <div className={styles.jfRoot} role="main" aria-label="JSON Formatter">
         {/*  Top Chrome  */}
-        <div className="jf-chrome">
+        <div className={styles.jfChrome}>
           {/* Left: Mode + Indent controls */}
-          <div className="jf-chrome-left">
-            <div className="jf-pill-group" role="group" aria-label="Output mode">
+          <div className={styles.jfChromeLeft}>
+            <div className={styles.jfPillGroup} role="group" aria-label="Output mode">
               <button
                 type="button"
-                className={`jf-pill${mode === "format" ? " active" : ""}`}
+                className={`${styles.jfPill}${mode === "format" ? " active" : ""}`}
                 onClick={() => setMode("format")}
                 aria-pressed={mode === "format"}
               >
@@ -301,7 +298,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
               </button>
               <button
                 type="button"
-                className={`jf-pill${mode === "minify" ? " active" : ""}`}
+                className={`${styles.jfPill}${mode === "minify" ? " active" : ""}`}
                 onClick={() => setMode("minify")}
                 aria-pressed={mode === "minify"}
               >
@@ -310,12 +307,12 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
             </div>
 
             {mode === "format" && (
-              <div className="jf-pill-group jf-indent-group" role="group" aria-label="Indent size">
+              <div className={`${styles.jfPillGroup} ${styles.jfIndentGroup}`} role="group" aria-label="Indent size">
                 {([2, 4, "tab"] as Indent[]).map((v) => (
                   <button
                     key={String(v)}
                     type="button"
-                    className={`jf-pill${indent === v ? " active" : ""}`}
+                    className={`${styles.jfPill}${indent === v ? " active" : ""}`}
                     onClick={() => setIndent(v)}
                     aria-pressed={indent === v}
                     aria-label={v === "tab" ? "Tab indent" : `${v} space indent`}
@@ -328,36 +325,36 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
 
             <button
               type="button"
-              className={`jf-icon-btn${sortKeys ? " active" : ""}`}
+              className={`${styles.jfIconBtn}${sortKeys ? " active" : ""}`}
               onClick={() => setSortKeys((s) => !s)}
               title="Sort keys A–Z"
               aria-pressed={sortKeys}
             >
               <i className="ti ti-sort-ascending-letters" aria-hidden="true" />
-              <span className="jf-icon-btn-label">Sort</span>
+              <span className={styles.jfIconBtnLabel}>Sort</span>
             </button>
 
             <button
               type="button"
-              className="jf-icon-btn"
+              className={styles.jfIconBtn}
               onClick={loadSample}
               title="Load example JSON"
             >
               <i className="ti ti-wand" aria-hidden="true" />
-              <span className="jf-icon-btn-label">Example</span>
+              <span className={styles.jfIconBtnLabel}>Example</span>
             </button>
           </div>
 
           {/* Right: Actions */}
-          <div className="jf-chrome-right">
+          <div className={styles.jfChromeRight}>
             {validJson && (
-              <div className="jf-export-row">
-                <span className="jf-export-label">Export</span>
+              <div className={styles.jfExportRow}>
+                <span className={styles.jfExportLabel}>Export</span>
                 {(["csv", "yaml", "toml"] as ConvertTarget[]).map((t) => (
                   <button
                     key={t}
                     type="button"
-                    className="jf-chip"
+                    className={styles.jfChip}
                     onClick={() => handleConvert(t)}
                     title={`Download as ${t.toUpperCase()}`}
                   >
@@ -369,7 +366,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
 
             <button
               type="button"
-              className={`jf-action-btn${copied ? " success" : ""}`}
+              className={`${styles.jfActionBtn}${copied ? " success" : ""}`}
               onClick={handleCopy}
               disabled={!output}
               aria-label={copied ? "Copied!" : "Copy output"}
@@ -380,18 +377,18 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
 
             <button
               type="button"
-              className="jf-action-btn"
+              className={styles.jfActionBtn}
               onClick={() => handleDownload()}
               disabled={!output}
               aria-label="Download JSON"
             >
               <i className="ti ti-download" aria-hidden="true" />
-              <span className="jf-action-label">Save</span>
+              <span className={styles.jfActionLabel}>Save</span>
             </button>
 
             <button
               type="button"
-              className="jf-icon-btn jf-clear-btn"
+              className={`${styles.jfIconBtn} ${styles.jfClearBtn}`}
               onClick={handleClear}
               disabled={!input && !diffRight}
               title="Clear all"
@@ -402,17 +399,17 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Mobile panel switcher  */}
-        <div className="jf-mobile-tabs" role="tablist" aria-label="Panel selector">
+        <div className={styles.jfMobileTabs} role="tablist" aria-label="Panel selector">
           <button
             type="button"
             role="tab"
             aria-selected={mobilePanel === "input"}
-            className={`jf-mobile-tab${mobilePanel === "input" ? " active" : ""}`}
+            className={`${styles.jfMobileTab}${mobilePanel === "input" ? " active" : ""}`}
             onClick={() => setMobilePanel("input")}
           >
             Input
             {input.trim() && (
-              <span className={`jf-mobile-badge ${hasError ? "error" : "valid"}`}>
+              <span className={`${styles.jfMobileBadge} ${hasError ? "error" : "valid"}`}>
                 {hasError ? (
                   <i className="ti ti-alert-circle" aria-hidden="true" />
                 ) : (
@@ -425,61 +422,61 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
             type="button"
             role="tab"
             aria-selected={mobilePanel === "output"}
-            className={`jf-mobile-tab${mobilePanel === "output" ? " active" : ""}`}
+            className={`${styles.jfMobileTab}${mobilePanel === "output" ? " active" : ""}`}
             onClick={() => setMobilePanel("output")}
           >
             Output
             {validJson && mode === "minify" && savings > 0 && (
-              <span className="jf-mobile-savings">{savings}% smaller</span>
+              <span className={styles.jfMobileSavings}>{savings}% smaller</span>
             )}
           </button>
         </div>
 
         {/*  Smart parse hint  */}
         {validJson && parseResult.hint && (
-          <div className="jf-hint" role="status">
+          <div className={styles.jfHint} role="status">
             <i className="ti ti-sparkles" aria-hidden="true" />
             {parseResult.hint}
           </div>
         )}
         {pathHint && (
-          <div className="jf-hint jf-hint-path" role="status">
+          <div className={`${styles.jfHint} ${styles.jfHintPath}`} role="status">
             <i className="ti ti-copy" aria-hidden="true" />
             Path copied: <code>{pathHint}</code>
           </div>
         )}
 
         {/*  Main panels  */}
-        <div className="jf-body">
+        <div className={styles.jfBody}>
           {/* Input Panel */}
           <div
-            className={`jf-panel jf-panel-input${mobilePanel === "input" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.jfPanel} ${styles.jfPanelInput}${mobilePanel === "input" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
-            <div className="jf-panel-header">
-              <div className="jf-panel-label">
+            <div className={styles.jfPanelHeader}>
+              <div className={styles.jfPanelLabel}>
                 <i className="ti ti-pencil" aria-hidden="true" />
                 Input
               </div>
-              <div className="jf-panel-meta">
-                {input.length > 0 && <span className="jf-meta-text">{fmtSize(input)}</span>}
+              <div className={styles.jfPanelMeta}>
+                {input.length > 0 && <span className={styles.jfMetaText}>{fmtSize(input)}</span>}
                 {input.trim() &&
                   (hasError ? (
-                    <span className="jf-status-badge error">
+                    <span className={`${styles.jfStatusBadge} ${styles.error}`}>
                       <i className="ti ti-alert-circle" aria-hidden="true" />
                       Invalid
                     </span>
                   ) : (
-                    <span className="jf-status-badge valid">
+                    <span className={`${styles.jfStatusBadge} ${styles.valid}`}>
                       <i className="ti ti-check" aria-hidden="true" />
                       Valid
                     </span>
                   ))}
               </div>
             </div>
-            <div className="jf-textarea-wrap">
+            <div className={styles.jfTextareaWrap}>
               <textarea
                 ref={textareaRef}
-                className="jf-textarea"
+                className={styles.jfTextarea}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={"Paste JSON, a JS object, key=value pairs, YAML, or CSV…"}
@@ -491,10 +488,10 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                 aria-describedby={hasError ? "jf-error-msg" : undefined}
               />
               {!input && (
-                <div className="jf-placeholder-hints" aria-hidden="true">
+                <div className={styles.jfPlaceholderHints} aria-hidden="true">
                   <span>
-                    <span className="jf-hint-kw">{"{"}</span>name: 'Alice'
-                    <span className="jf-hint-kw">{"}"}</span> ← unquoted keys
+                    <span className={styles.jfHintKw}>{"{"}</span>name: 'Alice'
+                    <span className={styles.jfHintKw}>{"}"}</span> ← unquoted keys
                   </span>
                   <span>name = Alice ← key=value pairs</span>
                   <span>name: Alice ← YAML-like</span>
@@ -502,12 +499,12 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
               )}
             </div>
             {hasError && (
-              <div className="jf-error-bar" id="jf-error-msg" role="alert">
+              <div className={styles.jfErrorBar} id="jf-error-msg" role="alert">
                 <i className="ti ti-alert-circle" aria-hidden="true" />
                 <div>
                   <strong>Parse error</strong>
                   <span>{parseResult.error}</span>
-                  <span className="jf-error-tip">
+                  <span className={styles.jfErrorTip}>
                     Auto-fixes: unquoted keys, trailing commas, single quotes, key=value pairs.
                     Check for mismatched brackets.
                   </span>
@@ -517,14 +514,14 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           </div>
 
           {/* Divider (desktop only) */}
-          <div className="jf-divider" aria-hidden="true" />
+          <div className={styles.jfDivider} aria-hidden="true" />
 
           {/* Output Panel */}
           <div
-            className={`jf-panel jf-panel-output${mobilePanel === "output" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.jfPanel} ${styles.jfPanelOutput}${mobilePanel === "output" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
-            <div className="jf-panel-header">
-              <nav className="jf-tabs" role="tablist" aria-label="Output view">
+            <div className={styles.jfPanelHeader}>
+              <nav className={styles.jfTabs} role="tablist" aria-label="Output view">
                 {VIEW_TABS.map((tab) => (
                   <button
                     key={tab.id}
@@ -533,7 +530,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                     id={`jf-tab-${tab.id}`}
                     aria-selected={viewTab === tab.id}
                     aria-controls={`jf-tabpanel-${tab.id}`}
-                    className={`jf-tab${viewTab === tab.id ? " active" : ""}`}
+                    className={`${styles.jfTab}${viewTab === tab.id ? " active" : ""}`}
                     onClick={() => setViewTab(tab.id)}
                   >
                     <i className={`ti ${tab.icon}`} aria-hidden="true" />
@@ -541,17 +538,17 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                   </button>
                 ))}
               </nav>
-              <div className="jf-panel-meta">
-                {output && <span className="jf-meta-text">{fmtSize(output)}</span>}
+              <div className={styles.jfPanelMeta}>
+                {output && <span className={styles.jfMetaText}>{fmtSize(output)}</span>}
                 {validJson && mode === "minify" && savings > 0 && (
-                  <span className="jf-savings-pill">{savings}% smaller</span>
+                  <span className={styles.jfSavingsPill}>{savings}% smaller</span>
                 )}
               </div>
             </div>
 
             {/* Tab panels */}
             <div
-              className="jf-tab-content"
+              className={styles.jfTabContent}
               role="tabpanel"
               id={`jf-tabpanel-${viewTab}`}
               aria-labelledby={`jf-tab-${viewTab}`}
@@ -560,13 +557,13 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
               {viewTab === "code" && (
                 <>
                   {!input.trim() && (
-                    <div className="jf-empty">
+                    <div className={styles.jfEmpty}>
                       <i className="ti ti-code" aria-hidden="true" />
                       <p>Formatted output appears here</p>
                     </div>
                   )}
                   {validJson && (
-                    <pre className="jf-output" aria-label="Formatted JSON output">
+                    <pre className={styles.jfOutput} aria-label="Formatted JSON output">
                       {highlighted}
                     </pre>
                   )}
@@ -577,7 +574,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
               {viewTab === "tree" && (
                 <>
                   {!validJson && (
-                    <div className="jf-empty">
+                    <div className={styles.jfEmpty}>
                       <i className="ti ti-hierarchy-2" aria-hidden="true" />
                       <p>Valid JSON required for tree view</p>
                     </div>
@@ -590,16 +587,16 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
 
               {/* Diff */}
               {viewTab === "diff" && (
-                <div className="jf-diff-wrapper">
-                  <div className="jf-diff-inputs">
-                    <div className="jf-diff-slot">
-                      <label className="jf-diff-label" htmlFor="jf-diff-left">
+                <div className={styles.jfDiffWrapper}>
+                  <div className={styles.jfDiffInputs}>
+                    <div className={styles.jfDiffSlot}>
+                      <label className={styles.jfDiffLabel} htmlFor="jf-diff-left">
                         <i className="ti ti-arrow-left" aria-hidden="true" />
                         Original
                       </label>
                       <textarea
                         id="jf-diff-left"
-                        className="jf-textarea jf-diff-ta"
+                        className={`${styles.jfTextarea} ${styles.jfDiffTa}`}
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Paste first JSON…"
@@ -607,14 +604,14 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                         aria-label="Left side for diff comparison"
                       />
                     </div>
-                    <div className="jf-diff-slot">
-                      <label className="jf-diff-label" htmlFor="jf-diff-right">
+                    <div className={styles.jfDiffSlot}>
+                      <label className={styles.jfDiffLabel} htmlFor="jf-diff-right">
                         <i className="ti ti-arrow-right" aria-hidden="true" />
                         Modified
                       </label>
                       <textarea
                         id="jf-diff-right"
-                        className="jf-textarea jf-diff-ta"
+                        className={`${styles.jfTextarea} ${styles.jfDiffTa}`}
                         value={diffRight}
                         onChange={(e) => setDiffRight(e.target.value)}
                         placeholder="Paste second JSON to compare…"
@@ -623,7 +620,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                       />
                     </div>
                   </div>
-                  <div className="jf-diff-result">
+                  <div className={styles.jfDiffResult}>
                     <JsonDiff leftText={output || input} rightText={diffRight} />
                   </div>
                 </div>
@@ -633,7 +630,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
               {viewTab === "stats" && (
                 <>
                   {!validJson && (
-                    <div className="jf-empty">
+                    <div className={styles.jfEmpty}>
                       <i className="ti ti-chart-bar" aria-hidden="true" />
                       <p>Valid JSON required for stats</p>
                     </div>
@@ -646,10 +643,10 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Mobile bottom action bar  */}
-        <div className="jf-mobile-actions" role="toolbar" aria-label="Output actions">
+        <div className={styles.jfMobileActions} role="toolbar" aria-label="Output actions">
           <button
             type="button"
-            className={`jf-mob-action${copied ? " success" : ""}`}
+            className={`${styles.jfMobAction}${copied ? " success" : ""}`}
             onClick={handleCopy}
             disabled={!output}
           >
@@ -658,7 +655,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
           </button>
           <button
             type="button"
-            className="jf-mob-action"
+            className={styles.jfMobAction}
             onClick={() => handleDownload()}
             disabled={!output}
           >
@@ -666,10 +663,10 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
             Save
           </button>
           {validJson && (
-            <div className="jf-mob-more" ref={moreRef}>
+            <div className={styles.jfMobMore} ref={moreRef}>
               <button
                 type="button"
-                className="jf-mob-action"
+                className={styles.jfMobAction}
                 onClick={() => setShowMoreMenu((v) => !v)}
                 aria-haspopup="menu"
                 aria-expanded={showMoreMenu}
@@ -678,25 +675,25 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                 More
               </button>
               {showMoreMenu && (
-                <div className="jf-mob-menu" role="menu">
-                  <div className="jf-mob-menu-label">Export as</div>
+                <div className={styles.jfMobMenu} role="menu">
+                  <div className={styles.jfMobMenuLabel}>Export as</div>
                   {(["csv", "yaml", "toml"] as ConvertTarget[]).map((t) => (
                     <button
                       key={t}
                       type="button"
                       role="menuitem"
-                      className="jf-mob-menu-item"
+                      className={styles.jfMobMenuItem}
                       onClick={() => handleConvert(t)}
                     >
                       <i className="ti ti-file-export" aria-hidden="true" />
                       {t.toUpperCase()}
                     </button>
                   ))}
-                  <div className="jf-mob-menu-divider" />
+                  <div className={styles.jfMobMenuDivider} />
                   <button
                     type="button"
                     role="menuitem"
-                    className={`jf-mob-menu-item${sortKeys ? " checked" : ""}`}
+                    className={`${styles.jfMobMenuItem}${sortKeys ? " checked" : ""}`}
                     onClick={() => {
                       setSortKeys((s) => !s);
                       setShowMoreMenu(false);
@@ -708,7 +705,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
                   <button
                     type="button"
                     role="menuitem"
-                    className="jf-mob-menu-item danger"
+                    className={`${styles.jfMobMenuItem} ${styles.danger}`}
                     onClick={() => {
                       handleClear();
                       setShowMoreMenu(false);

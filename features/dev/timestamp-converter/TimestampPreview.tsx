@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { getCodeSnippets, type ConversionResult, type TimestampOptions } from "./utils";
+import { getCodeSnippets, type ConversionResult, type TimestampOptions } from "./ts/utils";
+import styles from "./style/TimestampPreview.module.css";
 
 interface TimestampPreviewProps {
   input: string;
@@ -44,51 +45,51 @@ export default function TimestampPreview({
 
   return (
     <>
-      <div className="tp-root">
+      <div className={styles.tpRoot}>
         {/*  Mobile Tabs  */}
-        <div className="tp-mobile-tabs">
+        <div className={styles.tpMobileTabs}>
           <button
             type="button"
-            className={`tp-mobile-tab${mobileView === "input" ? " active" : ""}`}
+            className={`${styles.tpMobileTab}${mobileView === "input" ? ` ${styles.active}` : ""}`}
             onClick={() => onMobileViewChange("input")}
             role="tab"
             aria-selected={mobileView === "input"}
           >
             <i className="ti ti-pencil" />
-            <span className="tp-tab-text">Input</span>
+            <span className={styles.tpTabText}>Input</span>
           </button>
           <button
             type="button"
-            className={`tp-mobile-tab${mobileView === "output" ? " active" : ""}`}
+            className={`${styles.tpMobileTab}${mobileView === "output" ? ` ${styles.active}` : ""}`}
             onClick={() => onMobileViewChange("output")}
             role="tab"
             aria-selected={mobileView === "output"}
           >
             <i className="ti ti-calendar" />
-            <span className="tp-tab-text">Formats</span>
-            {result && <span className="tp-mobile-dot" />}
+            <span className={styles.tpTabText}>Formats</span>
+            {result && <span className={styles.tpMobileDot} />}
           </button>
         </div>
 
         {/*  Panels  */}
-        <div className="tp-panels">
+        <div className={styles.tpPanels}>
           {/* Input Panel */}
           <div
-            className={`tp-panel tp-panel-input${mobileView === "input" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.tpPanel} ${styles.tpPanelInput}${mobileView === "input" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
-            <div className="tp-panel-header">
-              <div className="tp-panel-label">
+            <div className={styles.tpPanelHeader}>
+              <div className={styles.tpPanelLabel}>
                 <i className="ti ti-pencil" />
-                <span className="tp-label-text">Input</span>
+                <span className={styles.tpLabelText}>Input</span>
               </div>
-              <div className="tp-panel-meta">
-                {options.unit && <span className="tp-unit-pill">{options.unit}</span>}
+              <div className={styles.tpPanelMeta}>
+                {options.unit && <span className={styles.tpUnitPill}>{options.unit}</span>}
               </div>
             </div>
-            <div className="tp-panel-body">
+            <div className={styles.tpPanelBody}>
               <input
                 type="text"
-                className="tp-input"
+                className={styles.tpInput}
                 value={input}
                 onChange={(e) => onInputChange(e.target.value)}
                 placeholder="Unix timestamp or date string..."
@@ -98,25 +99,25 @@ export default function TimestampPreview({
               />
 
               {error && (
-                <div className="tp-error-bar" role="alert">
+                <div className={styles.tpErrorBar} role="alert">
                   <i className="ti ti-alert-circle" />
                   <span>{error}</span>
                 </div>
               )}
 
               {!input && (
-                <div className="tp-input-hints">
-                  <div className="tp-hint-item">
+                <div className={styles.tpInputHints}>
+                  <div className={styles.tpHintItem}>
                     <i className="ti ti-hash" />
                     <code>1704067200</code>
                     <span>Unix timestamp</span>
                   </div>
-                  <div className="tp-hint-item">
+                  <div className={styles.tpHintItem}>
                     <i className="ti ti-calendar" />
                     <code>2024-01-15</code>
                     <span>ISO date</span>
                   </div>
-                  <div className="tp-hint-item">
+                  <div className={styles.tpHintItem}>
                     <i className="ti ti-clock" />
                     <code>2024-01-15T10:30:00Z</code>
                     <span>ISO datetime</span>
@@ -125,18 +126,18 @@ export default function TimestampPreview({
               )}
 
               {result && (
-                <div className="tp-quick-info">
-                  <div className="tp-quick-item">
-                    <span className="tp-quick-label">Day of Week</span>
-                    <span className="tp-quick-value">{result.components.weekday}</span>
+                <div className={styles.tpQuickInfo}>
+                  <div className={styles.tpQuickItem}>
+                    <span className={styles.tpQuickLabel}>Day of Week</span>
+                    <span className={styles.tpQuickValue}>{result.components.weekday}</span>
                   </div>
-                  <div className="tp-quick-item">
-                    <span className="tp-quick-label">Month</span>
-                    <span className="tp-quick-value">{result.components.monthName}</span>
+                  <div className={styles.tpQuickItem}>
+                    <span className={styles.tpQuickLabel}>Month</span>
+                    <span className={styles.tpQuickValue}>{result.components.monthName}</span>
                   </div>
-                  <div className="tp-quick-item">
-                    <span className="tp-quick-label">Timezone</span>
-                    <span className="tp-quick-value">{options.timezone}</span>
+                  <div className={styles.tpQuickItem}>
+                    <span className={styles.tpQuickLabel}>Timezone</span>
+                    <span className={styles.tpQuickValue}>{options.timezone}</span>
                   </div>
                 </div>
               )}
@@ -144,50 +145,50 @@ export default function TimestampPreview({
           </div>
 
           {/* Divider */}
-          <div className="tp-divider" aria-hidden="true">
-            <div className="tp-divider-icon">
+          <div className={styles.tpDivider} aria-hidden="true">
+            <div className={styles.tpDividerIcon}>
               <i className="ti ti-arrow-right" />
             </div>
           </div>
 
           {/* Output Panel */}
           <div
-            className={`tp-panel tp-panel-output${mobileView === "output" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.tpPanel} ${styles.tpPanelOutput}${mobileView === "output" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
-            <div className="tp-panel-header">
-              <div className="tp-panel-label">
+            <div className={styles.tpPanelHeader}>
+              <div className={styles.tpPanelLabel}>
                 <i className="ti ti-calendar" />
-                <span className="tp-label-text">Date Formats</span>
+                <span className={styles.tpLabelText}>Date Formats</span>
               </div>
             </div>
-            <div className="tp-panel-body">
+            <div className={styles.tpPanelBody}>
               {!result ? (
-                <div className="tp-empty">
-                  <div className="tp-empty-icon">
+                <div className={styles.tpEmpty}>
+                  <div className={styles.tpEmptyIcon}>
                     <i className="ti ti-clock-edit" />
                   </div>
-                  <p className="tp-empty-title">Formats appear here</p>
-                  <p className="tp-empty-desc">Enter a timestamp on the left to see all formats</p>
+                  <p className={styles.tpEmptyTitle}>Formats appear here</p>
+                  <p className={styles.tpEmptyDesc}>Enter a timestamp on the left to see all formats</p>
                 </div>
               ) : (
-                <div className="tp-formats-content">
+                <div className={styles.tpFormatsContent}>
                   {/* Relative Time Highlight */}
-                  <div className="tp-relative-card">
+                  <div className={styles.tpRelativeCard}>
                     <i className="ti ti-history" />
-                    <span className="tp-relative-text">{result.relative}</span>
+                    <span className={styles.tpRelativeText}>{result.relative}</span>
                   </div>
 
                   {/* Formats List */}
-                  <div className="tp-formats-list">
-                    <div className="tp-format-item">
-                      <div className="tp-format-label">
+                  <div className={styles.tpFormatsList}>
+                    <div className={styles.tpFormatItem}>
+                      <div className={styles.tpFormatLabel}>
                         <i className="ti ti-hash" />
                         Unix (seconds)
                       </div>
-                      <div className="tp-format-row">
-                        <code className="tp-format-value">{result.unix}</code>
+                      <div className={styles.tpFormatRow}>
+                        <code className={styles.tpFormatValue}>{result.unix}</code>
                         <button
-                          className={`tp-copy-icon${copiedKey === "unix" ? " done" : ""}`}
+                          className={`${styles.tpCopyIcon}${copiedKey === "unix" ? ` ${styles.done}` : ""}`}
                           onClick={() => copy(result.unix.toString(), "unix")}
                         >
                           <i className={`ti ${copiedKey === "unix" ? "ti-check" : "ti-copy"}`} />
@@ -195,15 +196,15 @@ export default function TimestampPreview({
                       </div>
                     </div>
 
-                    <div className="tp-format-item">
-                      <div className="tp-format-label">
+                    <div className={styles.tpFormatItem}>
+                      <div className={styles.tpFormatLabel}>
                         <i className="ti ti-hash" />
                         Unix (ms)
                       </div>
-                      <div className="tp-format-row">
-                        <code className="tp-format-value">{result.unixMs}</code>
+                      <div className={styles.tpFormatRow}>
+                        <code className={styles.tpFormatValue}>{result.unixMs}</code>
                         <button
-                          className={`tp-copy-icon${copiedKey === "unixMs" ? " done" : ""}`}
+                          className={`${styles.tpCopyIcon}${copiedKey === "unixMs" ? ` ${styles.done}` : ""}`}
                           onClick={() => copy(result.unixMs.toString(), "unixMs")}
                         >
                           <i className={`ti ${copiedKey === "unixMs" ? "ti-check" : "ti-copy"}`} />
@@ -211,15 +212,15 @@ export default function TimestampPreview({
                       </div>
                     </div>
 
-                    <div className="tp-format-item">
-                      <div className="tp-format-label">
+                    <div className={styles.tpFormatItem}>
+                      <div className={styles.tpFormatLabel}>
                         <i className="ti ti-calendar-time" />
                         ISO 8601
                       </div>
-                      <div className="tp-format-row">
-                        <code className="tp-format-value">{result.iso}</code>
+                      <div className={styles.tpFormatRow}>
+                        <code className={styles.tpFormatValue}>{result.iso}</code>
                         <button
-                          className={`tp-copy-icon${copiedKey === "iso" ? " done" : ""}`}
+                          className={`${styles.tpCopyIcon}${copiedKey === "iso" ? ` ${styles.done}` : ""}`}
                           onClick={() => copy(result.iso, "iso")}
                         >
                           <i className={`ti ${copiedKey === "iso" ? "ti-check" : "ti-copy"}`} />
@@ -227,15 +228,15 @@ export default function TimestampPreview({
                       </div>
                     </div>
 
-                    <div className="tp-format-item">
-                      <div className="tp-format-label">
+                    <div className={styles.tpFormatItem}>
+                      <div className={styles.tpFormatLabel}>
                         <i className="ti ti-world" />
                         UTC
                       </div>
-                      <div className="tp-format-row">
-                        <code className="tp-format-value">{result.utc}</code>
+                      <div className={styles.tpFormatRow}>
+                        <code className={styles.tpFormatValue}>{result.utc}</code>
                         <button
-                          className={`tp-copy-icon${copiedKey === "utc" ? " done" : ""}`}
+                          className={`${styles.tpCopyIcon}${copiedKey === "utc" ? ` ${styles.done}` : ""}`}
                           onClick={() => copy(result.utc, "utc")}
                         >
                           <i className={`ti ${copiedKey === "utc" ? "ti-check" : "ti-copy"}`} />
@@ -243,15 +244,15 @@ export default function TimestampPreview({
                       </div>
                     </div>
 
-                    <div className="tp-format-item">
-                      <div className="tp-format-label">
+                    <div className={styles.tpFormatItem}>
+                      <div className={styles.tpFormatLabel}>
                         <i className="ti ti-map-pin" />
                         Local Time
                       </div>
-                      <div className="tp-format-row">
-                        <code className="tp-format-value">{result.local}</code>
+                      <div className={styles.tpFormatRow}>
+                        <code className={styles.tpFormatValue}>{result.local}</code>
                         <button
-                          className={`tp-copy-icon${copiedKey === "local" ? " done" : ""}`}
+                          className={`${styles.tpCopyIcon}${copiedKey === "local" ? ` ${styles.done}` : ""}`}
                           onClick={() => copy(result.local, "local")}
                         >
                           <i className={`ti ${copiedKey === "local" ? "ti-check" : "ti-copy"}`} />
@@ -259,15 +260,15 @@ export default function TimestampPreview({
                       </div>
                     </div>
 
-                    <div className="tp-format-item">
-                      <div className="tp-format-label">
+                    <div className={styles.tpFormatItem}>
+                      <div className={styles.tpFormatLabel}>
                         <i className="ti ti-calendar-event" />
                         Full Date
                       </div>
-                      <div className="tp-format-row">
-                        <code className="tp-format-value">{result.formatted.full}</code>
+                      <div className={styles.tpFormatRow}>
+                        <code className={styles.tpFormatValue}>{result.formatted.full}</code>
                         <button
-                          className={`tp-copy-icon${copiedKey === "full" ? " done" : ""}`}
+                          className={`${styles.tpCopyIcon}${copiedKey === "full" ? ` ${styles.done}` : ""}`}
                           onClick={() => copy(result.formatted.full, "full")}
                         >
                           <i className={`ti ${copiedKey === "full" ? "ti-check" : "ti-copy"}`} />
@@ -277,10 +278,10 @@ export default function TimestampPreview({
                   </div>
 
                   {/* Code Snippets */}
-                  <div className="tp-code-section">
+                  <div className={styles.tpCodeSection}>
                     <button
                       type="button"
-                      className="tp-code-toggle"
+                      className={styles.tpCodeToggle}
                       onClick={() => setShowCodeSnippets(!showCodeSnippets)}
                     >
                       <i className={`ti ti-chevron-${showCodeSnippets ? "down" : "right"}`} />
@@ -289,22 +290,22 @@ export default function TimestampPreview({
                     </button>
 
                     {showCodeSnippets && codeSnippets && (
-                      <div className="tp-code-content">
-                        <div className="tp-lang-tabs">
+                      <div className={styles.tpCodeContent}>
+                        <div className={styles.tpLangTabs}>
                           {Object.keys(codeSnippets).map((lang) => (
                             <button
                               key={lang}
-                              className={`tp-lang-tab${selectedLang === lang ? " active" : ""}`}
+                              className={`${styles.tpLangTab}${selectedLang === lang ? ` ${styles.active}` : ""}`}
                               onClick={() => setSelectedLang(lang)}
                             >
                               {lang}
                             </button>
                           ))}
                         </div>
-                        <div className="tp-code-block">
-                          <pre className="tp-code-pre">{codeSnippets[selectedLang]}</pre>
+                        <div className={styles.tpCodeBlock}>
+                          <pre className={styles.tpCodePre}>{codeSnippets[selectedLang]}</pre>
                           <button
-                            className={`tp-copy-icon tp-code-copy${copiedKey === "code" ? " done" : ""}`}
+                            className={`${styles.tpCopyIcon} ${styles.tpCodeCopy}${copiedKey === "code" ? ` ${styles.done}` : ""}`}
                             onClick={() => copy(codeSnippets[selectedLang], "code")}
                           >
                             <i className={`ti ${copiedKey === "code" ? "ti-check" : "ti-copy"}`} />

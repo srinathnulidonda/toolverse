@@ -1,0 +1,379 @@
+/* features/dev/hash-generator/style/HashAnalysis.module.css */
+.haRoot {
+    flex: 1;
+    padding: 16px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: var(--bg-surface);
+}
+
+.haEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px 24px;
+}
+
+.haEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+}
+
+.haEmptyText {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin: 0;
+    text-align: center;
+}
+
+.haSection {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.haSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.haSectionHeader i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.haMetricsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1px;
+    background: var(--border);
+}
+
+.haMetric {
+    background: var(--bg-card);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+}
+
+.haMetricValue {
+    font-size: 18px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--text);
+    line-height: 1;
+}
+
+.haMetricLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.haSecurityGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+}
+
+.haSecurityItem {
+    background: var(--bg-card);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+}
+
+.haSecurityCount {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    line-height: 1;
+}
+
+.haSecurityLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.haSecurityItemSecure .haSecurityCount,
+.haSecurityItemSecure .haSecurityLabel {
+    color: #22c55e;
+}
+
+.haSecurityItemDeprecated .haSecurityCount,
+.haSecurityItemDeprecated .haSecurityLabel {
+    color: #ef4444;
+}
+
+.haSecurityItemRecommended .haSecurityCount,
+.haSecurityItemRecommended .haSecurityLabel {
+    color: #3b82f6;
+}
+
+.haComparison {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.haComparisonItem {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.haComparisonHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.haComparisonName {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.haComparisonName i {
+    font-size: 14px;
+}
+
+.haDeprecatedBadge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 0.5px solid #fecaca;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+@media (prefers-color-scheme: dark) {
+    .haDeprecatedBadge {
+        background: #1f1517;
+        color: #f87171;
+        border-color: #3c1518;
+    }
+}
+
+.haComparisonTime {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.haComparisonBar {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-surface);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.haComparisonFill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.haComparisonDetails {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    color: var(--text-tertiary);
+}
+
+.haComparisonBits,
+.haComparisonStrength,
+.haComparisonEntropy {
+    font-family: var(--font-mono);
+}
+
+.haDistribution {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.haDistributionItem {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+    align-items: center;
+    gap: 12px;
+}
+
+.haDistributionLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+}
+
+.haDistributionBar {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.haDistributionFill {
+    height: 100%;
+    background: var(--brand);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.haDistributionCount {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-align: right;
+    font-family: var(--font-mono);
+}
+
+.haRecommendations {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.haRecommendation {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.haRecommendation i {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.haRecommendationWarning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 0.5px solid #fde68a;
+}
+
+.haRecommendationWarning i {
+    color: #d97706;
+}
+
+.haRecommendationInfo {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.haRecommendationInfo i {
+    color: var(--brand);
+}
+
+.haRecommendationPerformance {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 0.5px solid #d1fae5;
+}
+
+.haRecommendationPerformance i {
+    color: #059669;
+}
+
+@media (prefers-color-scheme: dark) {
+    .haRecommendationWarning {
+        background: #451a03;
+        color: #fbbf24;
+        border-color: #78350f;
+    }
+
+    .haRecommendationWarning i {
+        color: #f59e0b;
+    }
+
+    .haRecommendationPerformance {
+        background: #022c22;
+        color: #6ee7b7;
+        border-color: #065f46;
+    }
+
+    .haRecommendationPerformance i {
+        color: #10b981;
+    }
+}
+
+@media (max-width: 768px) {
+    .haRoot {
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .haMetricsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .haSecurityGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .haDistributionItem {
+        grid-template-columns: 60px 1fr 60px;
+        gap: 8px;
+    }
+
+    .haComparisonDetails {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}

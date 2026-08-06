@@ -1,9 +1,11 @@
 // features/dev/random-string-generator/HistoryView.tsx
+
 "use client";
 
 import { useState, useMemo } from "react";
-import type { GeneratedString } from "./utils";
-import { formatNumber } from "./utils";
+import type { GeneratedString } from "./ts/utils";
+import { formatNumber } from "./ts/utils";
+import styles from "./style/HistoryView.module.css";
 
 interface HistoryViewProps {
   history: GeneratedString[];
@@ -129,28 +131,28 @@ export default function HistoryView({
 
   return (
     <>
-      <div className="hv-root">
+      <div className={styles.hvRoot}>
         {/*  Header  */}
-        <div className="hv-header">
-          <div className="hv-header-left">
-            <div className="hv-title">
+        <div className={styles.hvHeader}>
+          <div className={styles.hvHeaderLeft}>
+            <div className={styles.hvTitle}>
               <i className="ti ti-history" />
               <span>Generation History</span>
               {history.length > 0 && (
-                <span className="hv-count-badge">{formatNumber(history.length)}</span>
+                <span className={styles.hvCountBadge}>{formatNumber(history.length)}</span>
               )}
             </div>
           </div>
-          <div className="hv-header-actions">
+          <div className={styles.hvHeaderActions}>
             {favorites.length > 0 && (
-              <button type="button" className="hv-action-btn" onClick={onClearFavorites}>
+              <button type="button" className={styles.hvActionBtn} onClick={onClearFavorites}>
                 <i className="ti ti-star-off" />
                 Clear Favorites
               </button>
             )}
             <button
               type="button"
-              className="hv-action-btn hv-clear-btn"
+              className={`${styles.hvActionBtn} ${styles.hvClearBtn}`}
               onClick={onClear}
               disabled={history.length === 0}
             >
@@ -162,33 +164,33 @@ export default function HistoryView({
 
         {/*  Stats Bar  */}
         {history.length > 0 && (
-          <div className="hv-stats-bar">
-            <div className="hv-stat">
+          <div className={styles.hvStatsBar}>
+            <div className={styles.hvStat}>
               <i className="ti ti-hash" />
-              <div className="hv-stat-content">
-                <span className="hv-stat-value">{formatNumber(stats.total)}</span>
-                <span className="hv-stat-label">Total</span>
+              <div className={styles.hvStatContent}>
+                <span className={styles.hvStatValue}>{formatNumber(stats.total)}</span>
+                <span className={styles.hvStatLabel}>Total</span>
               </div>
             </div>
-            <div className="hv-stat">
+            <div className={styles.hvStat}>
               <i className="ti ti-star" />
-              <div className="hv-stat-content">
-                <span className="hv-stat-value">{formatNumber(stats.favoriteCount)}</span>
-                <span className="hv-stat-label">Favorites</span>
+              <div className={styles.hvStatContent}>
+                <span className={styles.hvStatValue}>{formatNumber(stats.favoriteCount)}</span>
+                <span className={styles.hvStatLabel}>Favorites</span>
               </div>
             </div>
-            <div className="hv-stat">
+            <div className={styles.hvStat}>
               <i className="ti ti-shield-check" />
-              <div className="hv-stat-content">
-                <span className="hv-stat-value">{stats.avgEntropy.toFixed(1)}</span>
-                <span className="hv-stat-label">Avg Entropy</span>
+              <div className={styles.hvStatContent}>
+                <span className={styles.hvStatValue}>{stats.avgEntropy.toFixed(1)}</span>
+                <span className={styles.hvStatLabel}>Avg Entropy</span>
               </div>
             </div>
-            <div className="hv-stat">
+            <div className={styles.hvStat}>
               <i className="ti ti-text-size" />
-              <div className="hv-stat-content">
-                <span className="hv-stat-value">{formatNumber(stats.totalChars)}</span>
-                <span className="hv-stat-label">Total Chars</span>
+              <div className={styles.hvStatContent}>
+                <span className={styles.hvStatValue}>{formatNumber(stats.totalChars)}</span>
+                <span className={styles.hvStatLabel}>Total Chars</span>
               </div>
             </div>
           </div>
@@ -196,12 +198,12 @@ export default function HistoryView({
 
         {/*  Controls  */}
         {history.length > 0 && (
-          <div className="hv-controls">
-            <div className="hv-search">
+          <div className={styles.hvControls}>
+            <div className={styles.hvSearch}>
               <i className="ti ti-search" />
               <input
                 type="text"
-                className="hv-search-input"
+                className={styles.hvSearchInput}
                 placeholder="Search history..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -209,7 +211,7 @@ export default function HistoryView({
               {searchQuery && (
                 <button
                   type="button"
-                  className="hv-search-clear"
+                  className={styles.hvSearchClear}
                   onClick={() => setSearchQuery("")}
                 >
                   <i className="ti ti-x" />
@@ -217,11 +219,11 @@ export default function HistoryView({
               )}
             </div>
 
-            <div className="hv-filters">
-              <div className="hv-filter-group">
+            <div className={styles.hvFilters}>
+              <div className={styles.hvFilterGroup}>
                 <button
                   type="button"
-                  className={`hv-filter-btn${filter === "all" ? " active" : ""}`}
+                  className={`${styles.hvFilterBtn}${filter === "all" ? ` ${styles.active}` : ""}`}
                   onClick={() => setFilter("all")}
                 >
                   <i className="ti ti-list" />
@@ -229,19 +231,19 @@ export default function HistoryView({
                 </button>
                 <button
                   type="button"
-                  className={`hv-filter-btn${filter === "favorites" ? " active" : ""}`}
+                  className={`${styles.hvFilterBtn}${filter === "favorites" ? ` ${styles.active}` : ""}`}
                   onClick={() => setFilter("favorites")}
                 >
                   <i className="ti ti-star" />
                   Favorites
                   {favorites.length > 0 && (
-                    <span className="hv-filter-count">{favorites.length}</span>
+                    <span className={styles.hvFilterCount}>{favorites.length}</span>
                   )}
                 </button>
               </div>
 
               <select
-                className="hv-sort-select"
+                className={styles.hvSortSelect}
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortBy)}
               >
@@ -256,51 +258,51 @@ export default function HistoryView({
 
         {/*  Content  */}
         {history.length === 0 ? (
-          <div className="hv-empty">
-            <div className="hv-empty-icon">
+          <div className={styles.hvEmpty}>
+            <div className={styles.hvEmptyIcon}>
               <i className="ti ti-history-off" />
             </div>
-            <p className="hv-empty-title">No History Yet</p>
-            <p className="hv-empty-desc">
+            <p className={styles.hvEmptyTitle}>No History Yet</p>
+            <p className={styles.hvEmptyDesc}>
               Your generated strings will appear here. History is stored locally in your browser and
               never leaves your device.
             </p>
           </div>
         ) : filteredAndSorted.length === 0 ? (
-          <div className="hv-empty">
-            <div className="hv-empty-icon">
+          <div className={styles.hvEmpty}>
+            <div className={styles.hvEmptyIcon}>
               <i className="ti ti-search-off" />
             </div>
-            <p className="hv-empty-title">No Results</p>
-            <p className="hv-empty-desc">
+            <p className={styles.hvEmptyTitle}>No Results</p>
+            <p className={styles.hvEmptyDesc}>
               {searchQuery
                 ? `No strings matching "${searchQuery}"`
                 : "No favorites yet. Click the star icon to save your favorite strings."}
             </p>
           </div>
         ) : (
-          <div className="hv-list">
-            <div className="hv-list-header">
-              <span className="hv-list-count">
+          <div className={styles.hvList}>
+            <div className={styles.hvListHeader}>
+              <span className={styles.hvListCount}>
                 {formatNumber(filteredAndSorted.length)} result
                 {filteredAndSorted.length !== 1 ? "s" : ""}
               </span>
             </div>
-            <div className="hv-items">
+            <div className={styles.hvItems}>
               {filteredAndSorted.map((item) => {
                 const isFavorite = favorites.includes(item.value);
                 return (
-                  <div key={item.id} className="hv-item">
-                    <div className="hv-item-header">
-                      <div className="hv-item-meta">
-                        <span className="hv-item-time">{formatTimestamp(item.timestamp)}</span>
-                        <span className="hv-item-separator">·</span>
-                        <span className="hv-item-length">{item.value.length} chars</span>
+                  <div key={item.id} className={styles.hvItem}>
+                    <div className={styles.hvItemHeader}>
+                      <div className={styles.hvItemMeta}>
+                        <span className={styles.hvItemTime}>{formatTimestamp(item.timestamp)}</span>
+                        <span className={styles.hvItemSeparator}>·</span>
+                        <span className={styles.hvItemLength}>{item.value.length} chars</span>
                       </div>
-                      <div className="hv-item-actions">
+                      <div className={styles.hvItemActions}>
                         <button
                           type="button"
-                          className={`hv-icon-btn hv-favorite-btn${isFavorite ? " active" : ""}`}
+                          className={`${styles.hvIconBtn} ${styles.hvFavoriteBtn}${isFavorite ? ` ${styles.active}` : ""}`}
                           onClick={() => onToggleFavorite(item.value)}
                           title={isFavorite ? "Remove from favorites" : "Add to favorites"}
                         >
@@ -308,7 +310,7 @@ export default function HistoryView({
                         </button>
                         <button
                           type="button"
-                          className="hv-icon-btn"
+                          className={styles.hvIconBtn}
                           onClick={() => onRestore(item)}
                           title="Restore settings"
                         >
@@ -316,7 +318,7 @@ export default function HistoryView({
                         </button>
                         <button
                           type="button"
-                          className="hv-icon-btn hv-delete-btn"
+                          className={`${styles.hvIconBtn} ${styles.hvDeleteBtn}`}
                           onClick={() => onRemove(item.id)}
                           title="Remove from history"
                         >
@@ -325,11 +327,11 @@ export default function HistoryView({
                       </div>
                     </div>
 
-                    <div className="hv-item-value-row">
-                      <code className="hv-item-value">{item.value}</code>
+                    <div className={styles.hvItemValueRow}>
+                      <code className={styles.hvItemValue}>{item.value}</code>
                       <button
                         type="button"
-                        className={`hv-copy-btn${copiedId === item.id ? " copied" : ""}`}
+                        className={`${styles.hvCopyBtn}${copiedId === item.id ? ` ${styles.copied}` : ""}`}
                         onClick={() => handleCopy(item.value, item.id)}
                       >
                         <i className={`ti ${copiedId === item.id ? "ti-check" : "ti-copy"}`} />
@@ -337,15 +339,15 @@ export default function HistoryView({
                       </button>
                     </div>
 
-                    <div className="hv-item-footer">
-                      <div className="hv-item-strength">
+                    <div className={styles.hvItemFooter}>
+                      <div className={styles.hvItemStrength}>
                         <span
-                          className="hv-strength-dot"
+                          className={styles.hvStrengthDot}
                           style={{ background: strengthColor(item.strength) }}
                         />
-                        <span className="hv-strength-label">{item.strength}</span>
+                        <span className={styles.hvStrengthLabel}>{item.strength}</span>
                       </div>
-                      <div className="hv-item-entropy">
+                      <div className={styles.hvItemEntropy}>
                         <i className="ti ti-lock" />
                         {item.entropy.toFixed(1)} bits
                       </div>

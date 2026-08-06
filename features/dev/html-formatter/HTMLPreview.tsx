@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import styles from "./style/HTMLPreview.module.css";
 
 interface HTMLPreviewProps {
   html: string;
@@ -22,15 +23,15 @@ export default function HTMLPreview({ html, onError }: HTMLPreviewProps) {
 
   return (
     <>
-      <div className="hp-root">
+      <div className={styles.hpRoot}>
         {/*  Toolbar  */}
-        <div className="hp-toolbar">
-          <div className="hp-toolbar-left">
+        <div className={styles.hpToolbar}>
+          <div className={styles.hpToolbarLeft}>
             <i className="ti ti-eye" />
             <span>Live Preview</span>
           </div>
 
-          <div className="hp-mode-group">
+          <div className={styles.hpModeGroup}>
             {(
               Object.entries(VIEWPORT_CONFIG) as [
                 PreviewMode,
@@ -40,45 +41,45 @@ export default function HTMLPreview({ html, onError }: HTMLPreviewProps) {
               <button
                 key={mode}
                 type="button"
-                className={`hp-mode-btn ${previewMode === mode ? "active" : ""}`}
+                className={`${styles.hpModeBtn}${previewMode === mode ? ` ${styles.active}` : ""}`}
                 onClick={() => setPreviewMode(mode)}
                 title={cfg.label}
               >
                 <i className={`ti ${cfg.icon}`} />
-                <span className="hp-mode-label">{cfg.label}</span>
+                <span className={styles.hpModeLabel}>{cfg.label}</span>
               </button>
             ))}
           </div>
         </div>
 
         {/*  Canvas  */}
-        <div className="hp-canvas">
+        <div className={styles.hpCanvas}>
           {isLoading && (
-            <div className="hp-overlay">
-              <div className="hp-spinner">
+            <div className={styles.hpOverlay}>
+              <div className={styles.hpSpinner}>
                 <i className="ti ti-loader" />
               </div>
               <span>Rendering…</span>
             </div>
           )}
 
-          <div className="hp-shell" style={{ maxWidth: VIEWPORT_CONFIG[previewMode].width }}>
+          <div className={styles.hpShell} style={{ maxWidth: VIEWPORT_CONFIG[previewMode].width }}>
             {/* Browser chrome */}
-            <div className="hp-browser-bar">
-              <div className="hp-browser-dots">
-                <span className="dot red" />
-                <span className="dot amber" />
-                <span className="dot green" />
+            <div className={styles.hpBrowserBar}>
+              <div className={styles.hpBrowserDots}>
+                <span className={`${styles.dot} ${styles.red}`} />
+                <span className={`${styles.dot} ${styles.amber}`} />
+                <span className={`${styles.dot} ${styles.green}`} />
               </div>
-              <div className="hp-browser-url">
+              <div className={styles.hpBrowserUrl}>
                 <i className="ti ti-lock" />
                 <span>preview</span>
               </div>
-              <div className="hp-browser-spacer" />
+              <div className={styles.hpBrowserSpacer} />
             </div>
 
             <iframe
-              className="hp-iframe"
+              className={styles.hpIframe}
               title="HTML Preview"
               srcDoc={html}
               sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"

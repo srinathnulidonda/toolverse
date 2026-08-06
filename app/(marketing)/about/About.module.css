@@ -4,82 +4,42 @@
   min-height: 100vh;
 }
 
-.aboutHero {
-  position: relative;
-  padding: 60px 0 40px;
-  background: var(--bg);
-  overflow: hidden;
-}
-
-.aboutHeroContainer {
+.container {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 80px;
-  position: relative;
-  z-index: 1;
+  padding: 0 clamp(20px, 4vw, 80px);
+}
+
+.aboutHero {
+  padding: clamp(56px, 9vw, 100px) 0 clamp(40px, 6vw, 72px);
+  background: var(--bg);
 }
 
 .aboutHeroContent {
-  max-width: 800px;
+  max-width: 720px;
   margin: 0 auto;
   text-align: center;
 }
 
-.aboutHeroBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: var(--bg-card);
-  border: 0.5px solid var(--border);
-  border-radius: 99px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-bottom: 32px;
-}
-
-.badgeDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--brand);
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.5;
-  }
-}
-
 .aboutHeroTitle {
-  font-size: 64px;
+  font-size: clamp(28px, 5.5vw, 56px);
   font-weight: 700;
-  letter-spacing: -2.5px;
-  line-height: 1.1;
+  letter-spacing: -2px;
+  line-height: 1.12;
   color: var(--text);
-  margin: 0 0 24px;
+  margin: 0 0 20px;
 }
 
-.heroGradientText {
-  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-hover) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.heroAccentText {
+  color: var(--brand);
 }
 
 .aboutHeroDescription {
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: clamp(14.5px, 1.6vw, 17.5px);
+  line-height: 1.65;
   color: var(--text-secondary);
-  max-width: 640px;
-  margin: 0 auto 40px;
+  max-width: 600px;
+  margin: 0 auto 32px;
 }
 
 .aboutHeroActions {
@@ -87,6 +47,7 @@
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
+  margin-bottom: 32px;
 }
 
 .heroBtnPrimary,
@@ -94,8 +55,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 24px;
-  font-size: 15px;
+  padding: 13px 22px;
+  font-size: 14.5px;
   font-weight: 600;
   border-radius: 12px;
   text-decoration: none;
@@ -107,13 +68,12 @@
   background: var(--brand);
   color: white;
   border: 1.5px solid transparent;
-  box-shadow: 0 2px 8px -2px rgba(20, 92, 60, 0.3);
 }
 
 .heroBtnPrimary:hover {
   background: var(--brand-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(20, 92, 60, 0.4);
+  text-decoration: none;
 }
 
 .heroBtnSecondary {
@@ -126,259 +86,930 @@
   background: var(--bg-surface);
   border-color: var(--text-disabled);
   transform: translateY(-1px);
+  text-decoration: none;
 }
 
-/* STATS SECTION */
-.aboutStats {
-  padding: 40px 0 80px;
-  background: var(--bg);
-}
-
-.aboutStatsContainer {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 80px;
-}
-
-.statsRow {
+.trustIndicators {
   display: flex;
-  gap: 10px;
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.statCard {
-  flex: 1;
-  background: var(--bg-card);
-  border: 0.5px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 8px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 5px;
-  transition: background 0.2s;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.statCard:hover {
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
   background: var(--bg-surface);
-}
-
-.statCard i {
-  font-size: 17px;
-  color: var(--brand);
-  margin-bottom: 2px;
-}
-
-.statValue {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.2px;
-  line-height: 1.2;
-}
-
-.statLabel {
-  font-size: 10.5px;
+  border: 0.5px solid var(--border);
+  border-radius: 99px;
+  font-size: 12px;
   color: var(--text-secondary);
   font-weight: 500;
-  line-height: 1.3;
+}
+
+.trustItem i {
+  font-size: 14px;
+  color: var(--text-tertiary);
 }
 
 .sectionHeader {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: clamp(32px, 5vw, 56px);
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .sectionBadge {
   display: inline-flex;
-  padding: 6px 14px;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px;
   background: var(--bg-surface);
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   border-radius: 99px;
   border: 0.5px solid var(--border);
   margin-bottom: 20px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+}
+
+.sectionBadge i {
+  font-size: 13px;
+  color: var(--text-tertiary);
 }
 
 .sectionTitle {
-  font-size: 40px;
+  font-size: clamp(22px, 3.6vw, 36px);
   font-weight: 700;
-  letter-spacing: -1.5px;
+  letter-spacing: -1.2px;
   color: var(--text);
-  margin: 0 0 16px;
+  margin: 0 0 14px;
+  line-height: 1.25;
 }
 
 .sectionDescription {
-  font-size: 17px;
+  font-size: clamp(13.5px, 1.3vw, 15.5px);
   color: var(--text-secondary);
   margin: 0 auto;
-  max-width: 600px;
+  max-width: 560px;
+  line-height: 1.6;
 }
 
-/* VALUES SECTION */
-.aboutValues {
-  padding: 100px 0;
+/* ---------- Mission & Widget (same background as rest of page) ---------- */
+.missionSection,
+.widgetSection {
+  padding: clamp(48px, 8vw, 88px) 0;
   background: var(--bg);
-  border-top: 0.5px solid var(--border);
+}
+
+.missionGrid,
+.widgetGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+
+.widgetGrid {
+  grid-template-columns: 0.9fr 1.1fr;
+}
+
+.missionBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: 99px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 18px;
+}
+
+.missionBadge i {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.missionTitle {
+  font-size: clamp(22px, 3.4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -1.1px;
+  color: var(--text);
+  margin: 0 0 16px;
+  line-height: 1.28;
+}
+
+.missionDescription {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 28px;
+}
+
+.missionMetrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.missionMetric {
+  text-align: left;
+}
+
+.missionMetric strong {
+  display: block;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.8px;
+  margin-bottom: 4px;
+}
+
+.missionMetric span {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.missionVisual,
+.widgetVisual {
+  width: 100%;
+}
+
+.visualCard {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.visualCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: var(--bg-surface);
   border-bottom: 0.5px solid var(--border);
 }
 
-.aboutValuesContainer {
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 80px;
+.visualCardDots {
+  display: flex;
+  gap: 6px;
+}
+
+.visualCardDots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: block;
+}
+
+.dotRed {
+  background: #ff5f56;
+}
+
+.dotYellow {
+  background: #ffbd2e;
+}
+
+.dotGreen {
+  background: #27c93f;
+}
+
+.visualCardTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.visualCardBody {
+  padding: clamp(28px, 4vw, 40px) 24px;
+}
+
+.processFlow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.flowStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  min-width: 110px;
+  flex: 1;
+}
+
+.flowStep i {
+  font-size: 22px;
+  color: var(--text-secondary);
+}
+
+.flowStep span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.flowArrow {
+  color: var(--text-disabled);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.flowNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 18px;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.flowNote i {
+  font-size: 15px;
+  color: var(--text-tertiary);
+}
+
+.widgetMockup {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.widgetMockupHeader {
+  display: flex;
+  gap: 4px;
+  padding: 10px;
+  background: var(--bg-surface);
+  border-bottom: 0.5px solid var(--border);
+}
+
+.widgetTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.widgetTabActive {
+  background: var(--bg-card);
+  color: var(--text);
+}
+
+.widgetMockupBody {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.widgetTaskRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+}
+
+.widgetCheckbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.widgetCheckbox.checked {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+
+.widgetCheckbox.checked i {
+  font-size: 11px;
+}
+
+.widgetTaskText {
+  flex: 1;
+  font-size: 12.5px;
+  color: var(--text);
+  min-width: 0;
+}
+
+.widgetTaskText.done {
+  color: var(--text-tertiary);
+  text-decoration: line-through;
+}
+
+.priorityDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.priorityHigh {
+  background: #e05252;
+}
+
+.priorityMedium {
+  background: #f59e0b;
+}
+
+.priorityLow {
+  background: var(--text-disabled);
+}
+
+.widgetFeatureList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.widgetFeatureItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+.widgetFeatureItem i {
+  font-size: 16px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* ---------- Values, Use Cases, Comparison, Open Source (all same bg, no divider lines) ---------- */
+.aboutValues,
+.useCasesSection,
+.featuresSection,
+.openSourceSection {
+  padding: clamp(48px, 8vw, 88px) 0;
+  background: var(--bg);
 }
 
 .valuesGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 .valueCard {
   background: var(--bg-card);
   border: 0.5px solid var(--border);
   border-radius: 16px;
-  padding: 36px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 28px;
+  transition: border-color 0.2s, transform 0.2s;
 }
 
 .valueCard:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  border-color: var(--text-disabled);
 }
 
-/* Updated to match BrowseCategories style */
+/* Icon + Title on the same line */
 .valueHeader {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 14px;
+  margin-bottom: 14px;
 }
 
-.valueIcon {
-  font-size: 15px;
-  color: var(--text-secondary);
+.valueIconWrapper {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
+.valueIconWrapper i {
+  font-size: 21px;
+  color: var(--text-secondary);
+}
+
 .valueTitle {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
   color: var(--text);
   margin: 0;
   letter-spacing: -0.3px;
 }
 
 .valueDescription {
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 13.5px;
+  line-height: 1.65;
   color: var(--text-secondary);
-  margin: 0;
+  margin: 0 0 16px;
 }
 
-.aboutCTA {
-  padding: 100px 0 120px;
+.valueFooter {
+  margin-top: 4px;
+}
+
+.valueTag {
+  display: inline-block;
+  padding: 4px 10px;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.useCasesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.useCaseCard {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  padding: 26px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.useCaseCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--text-disabled);
+}
+
+.useCaseHeader {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 16px;
+}
+
+.useCaseIconWrapper {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.useCaseIconWrapper i {
+  font-size: 19px;
+  color: var(--text-secondary);
+}
+
+.useCaseTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.useCaseDescription {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0 0 18px;
+}
+
+.useCaseTools {
+  padding-top: 16px;
+  border-top: 0.5px solid var(--border);
+}
+
+.useCaseToolsLabel {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 9px;
+}
+
+.useCaseToolsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.useCaseTool {
+  padding: 5px 10px;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.comparisonWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.comparisonCard {
+  width: 100%;
+  max-width: 860px;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.comparisonHead {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+}
+
+.comparisonHeadCell {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-bottom: 0.5px solid var(--border);
+}
+
+.comparisonHeadCell:first-child {
+  align-items: flex-start;
+}
+
+.comparisonHeadLabel {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.comparisonHeadActive {
+  background: var(--brand-light);
+}
+
+.comparisonBrand {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand-text);
+  letter-spacing: -0.3px;
+}
+
+.comparisonBadge {
+  padding: 2px 9px;
+  background: var(--brand);
+  color: white;
+  border-radius: 99px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.comparisonOtherLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+.comparisonBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.comparisonRow {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  border-bottom: 0.5px solid var(--border-faint);
+}
+
+.comparisonRow:last-child {
+  border-bottom: none;
+}
+
+.comparisonCell {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.comparisonCell:first-child {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.comparisonCellActive {
+  background: var(--brand-light);
+}
+
+.featureName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.featureValue {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.featureValueStrong {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--brand-text);
+}
+
+.iconCheck {
+  font-size: 17px;
+  color: var(--brand);
+}
+
+.iconCross {
+  font-size: 17px;
+  color: var(--text-disabled);
+}
+
+/* ---------- Open Source — Centered Content ---------- */
+.openSourceContent {
+  max-width: 620px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.openSourceBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 99px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 20px;
+}
+
+.openSourceBadge i {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.openSourceTitle {
+  font-size: clamp(22px, 3.4vw, 30px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--text);
+  margin: 0 0 16px;
+  line-height: 1.3;
+}
+
+.openSourceDescription {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+}
+
+.openSourceActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.openSourceBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--brand);
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.openSourceBtn:hover {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.openSourceBtnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.openSourceBtnSecondary:hover {
+  background: var(--bg-surface);
+  border-color: var(--text-disabled);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* ---------- Help Section (Original Design) ---------- */
+.helpSection {
+  padding: 0 0 clamp(48px, 7vw, 88px);
   background: var(--bg);
 }
 
-.aboutCTAContainer {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 80px;
-}
-
-.ctaContent {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 56px 64px;
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 64px;
-  align-items: center;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 20px 40px -10px rgba(0, 0, 0, 0.1);
-  position: relative;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.ctaContent::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--border) 30%,
-    var(--border) 70%,
-    transparent
-  );
-  opacity: 0.4;
-}
-
-.ctaContent:hover {
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 24px 48px -12px rgba(0, 0, 0, 0.15);
-}
-
-.ctaLeft {
+.helpCard {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  gap: 20px;
+  max-width: 860px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 28px;
 }
 
-.ctaEyebrow {
+.helpIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.helpIcon i {
+  font-size: 22px;
+  color: var(--text-secondary);
+}
+
+.helpContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.helpTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.helpText {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.helpActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.helpLinkSecondary {
+  padding: 9px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.helpLinkSecondary:hover {
+  background: var(--bg-surface);
+  border-color: var(--text-disabled);
+  text-decoration: none;
+}
+
+.helpLinkPrimary {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
-  background: var(--brand-light);
-  border: 1px solid var(--brand-border);
-  border-radius: 6px;
-  font-size: 11px;
+  padding: 9px 16px;
+  background: var(--brand);
+  color: white;
+  border-radius: 9px;
+  font-size: 13px;
   font-weight: 600;
-  color: var(--brand);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  width: fit-content;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
 
-.ctaEyebrow i {
-  font-size: 12px;
+.helpLinkPrimary:hover {
+  background: var(--brand-hover);
+  text-decoration: none;
+}
+
+/* ---------- CTA Section (Original Design) ---------- */
+.aboutCTA {
+  padding: 0 0 clamp(56px, 8vw, 100px);
+  background: var(--bg);
+}
+
+.ctaCard {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(36px, 5vw, 56px) clamp(24px, 5vw, 48px);
 }
 
 .ctaTitle {
-  font-size: 36px;
+  font-size: clamp(22px, 3.6vw, 32px);
   font-weight: 700;
-  letter-spacing: -1.2px;
+  letter-spacing: -1.1px;
   color: var(--text);
-  margin: 0;
-  line-height: 1.2;
+  margin: 0 0 14px;
+  line-height: 1.25;
 }
 
 .ctaDescription {
-  font-size: 16px;
+  font-size: 14.5px;
   color: var(--text-secondary);
-  margin: 0;
-  line-height: 1.6;
+  margin: 0 auto 28px;
+  line-height: 1.65;
+  max-width: 460px;
 }
 
 .ctaActions {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -387,210 +1018,175 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 28px;
-  font-size: 15px;
+  padding: 13px 26px;
+  font-size: 14px;
   font-weight: 600;
   color: white;
   background: var(--brand);
-  border: none;
-  border-radius: 10px;
+  border-radius: 11px;
   text-decoration: none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing: -0.2px;
-  box-shadow: 0 2px 8px -2px rgba(20, 92, 60, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.ctaPrimaryButton::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-  transition: left 0.5s;
-}
-
-.ctaPrimaryButton:hover::before {
-  left: 100%;
+  transition: all 0.2s;
 }
 
 .ctaPrimaryButton:hover {
   background: var(--brand-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px -2px rgba(20, 92, 60, 0.4);
-}
-
-.ctaPrimaryButton i {
-  font-size: 16px;
-  transition: transform 0.2s;
-}
-
-.ctaPrimaryButton:hover i {
-  transform: translateX(2px);
+  text-decoration: none;
 }
 
 .ctaSecondaryButton {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 14px 24px;
-  font-size: 14px;
+  padding: 13px 22px;
+  font-size: 13.5px;
   font-weight: 500;
   color: var(--text-secondary);
   background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
   text-decoration: none;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s;
 }
 
 .ctaSecondaryButton:hover {
   color: var(--text);
   border-color: var(--text-disabled);
   background: var(--bg-surface);
-}
-
-.ctaRight {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 0;
-}
-
-.ctaFeature {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: transparent;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.ctaFeature:hover {
-  transform: translateX(-2px);
-}
-
-.ctaFeatureIcon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  background: transparent;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.ctaFeatureIcon i {
-  font-size: 20px;
-  color: var(--text-secondary);
-  transition: color 0.2s;
-}
-
-.ctaFeature:hover .ctaFeatureIcon i {
-  color: var(--brand);
-}
-
-.ctaFeatureContent {
-  flex: 1;
-  min-width: 0;
-}
-
-.ctaFeatureTitle {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  margin: 0 0 2px;
-  letter-spacing: -0.2px;
-}
-
-.ctaFeatureText {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin: 0;
-  line-height: 1.4;
-}
-
-@media (max-width: 1400px) {
-  .aboutHeroContainer,
-  .aboutStatsContainer,
-  .aboutValuesContainer,
-  .aboutCTAContainer {
-    padding: 0 60px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .valuesGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  text-decoration: none;
 }
 
 @media (max-width: 1024px) {
-  .ctaContent {
+
+  .missionGrid,
+  .widgetGrid {
     grid-template-columns: 1fr;
-    gap: 48px;
-    padding: 48px 40px;
+  }
+
+  .widgetVisual {
+    order: 2;
+  }
+
+  .widgetContent {
+    order: 1;
+  }
+
+  .comparisonHeadCell,
+  .comparisonCell {
+    padding: 13px 14px;
   }
 }
 
 @media (max-width: 768px) {
-  .aboutHero {
-    padding: 40px 0 30px;
-  }
-
-  .aboutHeroContainer,
-  .aboutStatsContainer,
-  .aboutValuesContainer,
-  .aboutCTAContainer {
-    padding: 0 24px;
-  }
-
-  .aboutHeroTitle {
-    font-size: 40px;
-    letter-spacing: -1.5px;
-  }
-
-  .aboutStats {
-    padding: 30px 0 60px;
-  }
-
-  .statsRow {
-    gap: 8px;
-  }
-
-  .aboutValues {
-    padding: 60px 0;
-  }
-
-  .valuesGrid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .sectionHeader {
-    margin-bottom: 40px;
+  .container {
+    padding: 0 clamp(16px, 5vw, 40px);
   }
 
   .sectionTitle {
-    font-size: 28px;
-  }
-
-  .aboutCTA {
-    padding: 60px 0 80px;
-  }
-
-  .ctaContent {
-    padding: 40px 28px;
-    gap: 32px;
-  }
-
-  .ctaTitle {
-    font-size: 28px;
     letter-spacing: -0.8px;
+  }
+
+  .missionMetrics {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .missionMetric {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 16px 8px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .missionMetric strong {
+    font-size: 21px;
+    margin-bottom: 0;
+    letter-spacing: -0.5px;
+  }
+
+  .missionMetric span {
+    font-size: 10.5px;
+    line-height: 1.35;
+  }
+
+  .processFlow {
+    flex-direction: column;
+  }
+
+  .flowStep {
+    width: 100%;
+  }
+
+  .flowArrow {
+    transform: rotate(90deg);
+  }
+
+  .comparisonCard {
+    border-radius: 12px;
+  }
+
+  .comparisonHead,
+  .comparisonRow {
+    grid-template-columns: 1.3fr 1fr 1fr;
+  }
+
+  .comparisonHeadCell,
+  .comparisonCell {
+    padding: 12px 10px;
+  }
+
+  .comparisonHeadLabel {
+    font-size: 10px;
+  }
+
+  .comparisonBrand,
+  .comparisonOtherLabel {
+    font-size: 11.5px;
+  }
+
+  .comparisonBadge {
+    font-size: 8px;
+    padding: 2px 7px;
+  }
+
+  .featureName {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .featureValue,
+  .featureValueStrong {
+    font-size: 11px;
+  }
+
+  .iconCheck,
+  .iconCross {
+    font-size: 15px;
+  }
+
+  .valueHeader {
+    gap: 12px;
+  }
+
+  .valueIconWrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .helpCard {
+    flex-direction: column;
+    text-align: center;
+    padding: 22px 18px;
+  }
+
+  .helpActions {
+    width: 100%;
+    justify-content: center;
   }
 
   .ctaActions {
@@ -603,8 +1199,96 @@
     width: 100%;
     justify-content: center;
   }
+}
 
-  .ctaRight {
-    gap: 20px;
+@media (max-width: 480px) {
+
+  .heroBtnPrimary,
+  .heroBtnSecondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .missionMetrics {
+    gap: 8px;
+  }
+
+  .missionMetric {
+    padding: 12px 6px;
+    border-radius: 10px;
+  }
+
+  .missionMetric strong {
+    font-size: 18px;
+  }
+
+  .missionMetric span {
+    font-size: 9.5px;
+    line-height: 1.3;
+  }
+
+  .comparisonHead,
+  .comparisonRow {
+    grid-template-columns: 1.1fr 0.9fr 0.9fr;
+  }
+
+  .comparisonHeadCell,
+  .comparisonCell {
+    padding: 10px 6px;
+  }
+
+  .comparisonHeadLabel {
+    font-size: 9px;
+  }
+
+  .comparisonBrand,
+  .comparisonOtherLabel {
+    font-size: 10px;
+  }
+
+  .comparisonBadge {
+    font-size: 7px;
+    padding: 1px 5px;
+  }
+
+  .featureName {
+    font-size: 10px;
+  }
+
+  .featureValue,
+  .featureValueStrong {
+    font-size: 10px;
+  }
+
+  .iconCheck,
+  .iconCross {
+    font-size: 14px;
+  }
+
+  .valueCard,
+  .useCaseCard {
+    padding: 20px;
+  }
+
+  .helpLinkSecondary,
+  .helpLinkPrimary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .valueCard,
+  .useCaseCard,
+  .heroBtnPrimary,
+  .heroBtnSecondary,
+  .ctaPrimaryButton,
+  .ctaSecondaryButton,
+  .openSourceBtn,
+  .openSourceBtnSecondary,
+  .helpLinkPrimary,
+  .helpLinkSecondary {
+    transition: none;
   }
 }

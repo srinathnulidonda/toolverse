@@ -2,7 +2,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { HistoryEntry } from "./regexStore";
+import type { HistoryEntry } from "./ts/regexStore";
+import styles from "./style/RegexHistory.module.css";
 
 interface RegexHistoryProps {
   history: HistoryEntry[];
@@ -66,14 +67,14 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
 
   return (
     <>
-      <div className="rxh-root">
+      <div className={styles.rxhRoot}>
         {/* Header */}
-        <div className="rxh-header">
-          <div className="rxh-search-wrap">
+        <div className={styles.rxhHeader}>
+          <div className={styles.rxhSearchWrap}>
             <i className="ti ti-search" />
             <input
               type="text"
-              className="rxh-search-input"
+              className={styles.rxhSearchInput}
               placeholder="Search history..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -81,7 +82,7 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
             {searchQuery && (
               <button
                 type="button"
-                className="rxh-clear-search"
+                className={styles.rxhClearSearch}
                 onClick={() => setSearchQuery("")}
                 aria-label="Clear search"
               >
@@ -90,11 +91,11 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
             )}
           </div>
 
-          <div className="rxh-header-actions">
-            <div className="rxh-sort-group">
+          <div className={styles.rxhHeaderActions}>
+            <div className={styles.rxhSortGroup}>
               <button
                 type="button"
-                className={`rxh-sort-btn${sortBy === "recent" ? " active" : ""}`}
+                className={`${styles.rxhSortBtn}${sortBy === "recent" ? ` ${styles.active}` : ""}`}
                 onClick={() => setSortBy("recent")}
               >
                 <i className="ti ti-clock" />
@@ -102,7 +103,7 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
               </button>
               <button
                 type="button"
-                className={`rxh-sort-btn${sortBy === "matches" ? " active" : ""}`}
+                className={`${styles.rxhSortBtn}${sortBy === "matches" ? ` ${styles.active}` : ""}`}
                 onClick={() => setSortBy("matches")}
               >
                 <i className="ti ti-trending-up" />
@@ -112,7 +113,7 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
 
             <button
               type="button"
-              className="rxh-clear-all-btn"
+              className={styles.rxhClearAllBtn}
               onClick={onClear}
               disabled={history.length === 0}
             >
@@ -124,20 +125,20 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
 
         {/* Stats Bar */}
         {history.length > 0 && (
-          <div className="rxh-stats-bar">
-            <div className="rxh-stat">
+          <div className={styles.rxhStatsBar}>
+            <div className={styles.rxhStat}>
               <i className="ti ti-history" />
               <span>
                 <strong>{stats.total}</strong> {stats.total === 1 ? "entry" : "entries"}
               </span>
             </div>
-            <div className="rxh-stat">
+            <div className={styles.rxhStat}>
               <i className="ti ti-check" />
               <span>
                 <strong>{stats.totalMatches}</strong> total matches
               </span>
             </div>
-            <div className="rxh-stat">
+            <div className={styles.rxhStat}>
               <i className="ti ti-chart-line" />
               <span>
                 <strong>{stats.avgMatches}</strong> avg matches
@@ -148,36 +149,36 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
 
         {/* History List */}
         {filteredHistory.length === 0 ? (
-          <div className="rxh-empty">
-            <div className="rxh-empty-icon">
+          <div className={styles.rxhEmpty}>
+            <div className={styles.rxhEmptyIcon}>
               <i className="ti ti-history-off" />
             </div>
-            <p className="rxh-empty-title">{searchQuery ? "No matches found" : "No history yet"}</p>
-            <p className="rxh-empty-desc">
+            <p className={styles.rxhEmptyTitle}>{searchQuery ? "No matches found" : "No history yet"}</p>
+            <p className={styles.rxhEmptyDesc}>
               {searchQuery
                 ? "Try adjusting your search query"
                 : "Your regex test history will appear here"}
             </p>
           </div>
         ) : (
-          <div className="rxh-list">
+          <div className={styles.rxhList}>
             {filteredHistory.map((entry) => (
-              <div key={entry.id} className="rxh-entry">
-                <div className="rxh-entry-header">
-                  <div className="rxh-entry-info">
-                    <span className="rxh-timestamp">
+              <div key={entry.id} className={styles.rxhEntry}>
+                <div className={styles.rxhEntryHeader}>
+                  <div className={styles.rxhEntryInfo}>
+                    <span className={styles.rxhTimestamp}>
                       <i className="ti ti-clock" />
                       {formatTimestamp(entry.timestamp)}
                     </span>
-                    <span className="rxh-match-count">
+                    <span className={styles.rxhMatchCount}>
                       <i className="ti ti-check" />
                       {entry.matchCount} {entry.matchCount === 1 ? "match" : "matches"}
                     </span>
                   </div>
-                  <div className="rxh-entry-actions">
+                  <div className={styles.rxhEntryActions}>
                     <button
                       type="button"
-                      className="rxh-restore-btn"
+                      className={styles.rxhRestoreBtn}
                       onClick={() => onRestore(entry)}
                       title="Restore this pattern"
                       aria-label="Restore this pattern"
@@ -187,7 +188,7 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
                     </button>
                     <button
                       type="button"
-                      className="rxh-delete-btn"
+                      className={styles.rxhDeleteBtn}
                       onClick={() => onDelete(entry.id)}
                       title="Delete entry"
                       aria-label="Delete entry"
@@ -197,10 +198,10 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
                   </div>
                 </div>
 
-                <div className="rxh-entry-body">
-                  <div className="rxh-pattern-row">
-                    <span className="rxh-label">Pattern:</span>
-                    <code className="rxh-pattern">
+                <div className={styles.rxhEntryBody}>
+                  <div className={styles.rxhPatternRow}>
+                    <span className={styles.rxhLabel}>Pattern:</span>
+                    <code className={styles.rxhPattern}>
                       /{entry.pattern}/
                       {Object.entries(entry.flags)
                         .filter(([, v]) => v)
@@ -209,9 +210,9 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
                     </code>
                   </div>
 
-                  <div className="rxh-test-row">
-                    <span className="rxh-label">Test:</span>
-                    <code className="rxh-test">
+                  <div className={styles.rxhTestRow}>
+                    <span className={styles.rxhLabel}>Test:</span>
+                    <code className={styles.rxhTest}>
                       {entry.testString.length > 120
                         ? entry.testString.substring(0, 120) + "..."
                         : entry.testString}
@@ -219,13 +220,13 @@ export default function RegexHistory({ history, onRestore, onClear, onDelete }: 
                   </div>
 
                   {Object.entries(entry.flags).some(([, v]) => v) && (
-                    <div className="rxh-flags-row">
-                      <span className="rxh-label">Flags:</span>
-                      <div className="rxh-flags">
+                    <div className={styles.rxhFlagsRow}>
+                      <span className={styles.rxhLabel}>Flags:</span>
+                      <div className={styles.rxhFlags}>
                         {Object.entries(entry.flags)
                           .filter(([, v]) => v)
                           .map(([flag]) => (
-                            <span key={flag} className="rxh-flag-chip">
+                            <span key={flag} className={styles.rxhFlagChip}>
                               {flag}
                             </span>
                           ))}

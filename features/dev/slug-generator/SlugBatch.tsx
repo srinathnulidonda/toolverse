@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { generateSlug, formatBytes, type SlugOptions } from "./utils";
+import { generateSlug, formatBytes, type SlugOptions } from "./ts/utils";
+import styles from "./style/SlugBatch.module.css";
 
 interface BatchItem {
   id: string;
@@ -99,19 +100,19 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
 
   return (
     <>
-      <div className="sb-root">
+      <div className={styles.sbRoot}>
         {/*  Input Section  */}
-        <div className="sb-section">
-          <div className="sb-section-header">
-            <div className="sb-section-label">
+        <div className={styles.sbSection}>
+          <div className={styles.sbSectionHeader}>
+            <div className={styles.sbSectionLabel}>
               <i className="ti ti-files" />
               Batch Input
             </div>
-            <div className="sb-section-actions">
-              <div className="sb-separator-group">
-                <span className="sb-separator-label">Split by:</span>
+            <div className={styles.sbSectionActions}>
+              <div className={styles.sbSeparatorGroup}>
+                <span className={styles.sbSeparatorLabel}>Split by:</span>
                 <select
-                  className="sb-select"
+                  className={styles.sbSelect}
                   value={separator}
                   onChange={(e) => setSeparator(e.target.value as any)}
                   disabled={processing}
@@ -123,7 +124,7 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
               </div>
               <button
                 type="button"
-                className="sb-btn"
+                className={styles.sbBtn}
                 onClick={handleClear}
                 disabled={!batchInput && items.length === 0}
               >
@@ -133,15 +134,15 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
             </div>
           </div>
           <textarea
-            className="sb-textarea"
+            className={styles.sbTextarea}
             value={batchInput}
             onChange={(e) => setBatchInput(e.target.value)}
             placeholder="Enter multiple texts (one per line)...&#10;&#10;Example:&#10;How to Build Web Apps&#10;Product Launch 2024&#10;SEO Best Practices"
             rows={10}
             disabled={processing}
           />
-          <div className="sb-input-footer">
-            <span className="sb-input-count">
+          <div className={styles.sbInputFooter}>
+            <span className={styles.sbInputCount}>
               {
                 batchInput
                   .split(separator === "newline" ? "\n" : separator === "comma" ? "," : ";")
@@ -151,7 +152,7 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
             </span>
             <button
               type="button"
-              className="sb-btn sb-btn-primary"
+              className={`${styles.sbBtn} ${styles.sbBtnPrimary}`}
               onClick={handleProcess}
               disabled={!batchInput.trim() || processing}
             >
@@ -163,19 +164,19 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
 
         {/*  Results Section  */}
         {items.length > 0 && (
-          <div className="sb-section">
-            <div className="sb-section-header">
-              <div className="sb-section-label">
+          <div className={styles.sbSection}>
+            <div className={styles.sbSectionHeader}>
+              <div className={styles.sbSectionLabel}>
                 <i className="ti ti-list-check" />
                 Results
-                <span className="sb-results-badge">
+                <span className={styles.sbResultsBadge}>
                   {doneCount}/{items.length}
                 </span>
               </div>
-              <div className="sb-section-actions">
+              <div className={styles.sbSectionActions}>
                 <button
                   type="button"
-                  className="sb-btn"
+                  className={styles.sbBtn}
                   onClick={handleCopyAll}
                   disabled={doneCount === 0}
                 >
@@ -184,7 +185,7 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
                 </button>
                 <button
                   type="button"
-                  className="sb-btn"
+                  className={styles.sbBtn}
                   onClick={handleDownloadAll}
                   disabled={doneCount === 0}
                 >
@@ -194,26 +195,26 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
               </div>
             </div>
 
-            <div className="sb-results">
+            <div className={styles.sbResults}>
               {items.map((item, idx) => (
-                <div key={item.id} className={`sb-result-item status-${item.status}`}>
-                  <div className="sb-result-header">
-                    <div className="sb-result-index">#{idx + 1}</div>
-                    <div className="sb-result-status">
+                <div key={item.id} className={`${styles.sbResultItem} ${styles[`status${item.status.charAt(0).toUpperCase()}${item.status.slice(1)}`]}`}>
+                  <div className={styles.sbResultHeader}>
+                    <div className={styles.sbResultIndex}>#{idx + 1}</div>
+                    <div className={styles.sbResultStatus}>
                       {item.status === "pending" && (
-                        <span className="sb-status-badge pending">
+                        <span className={`${styles.sbStatusBadge} ${styles.pending}`}>
                           <i className="ti ti-clock" />
                           Pending
                         </span>
                       )}
                       {item.status === "processing" && (
-                        <span className="sb-status-badge processing">
+                        <span className={`${styles.sbStatusBadge} ${styles.processing}`}>
                           <i className="ti ti-loader" />
                           Processing
                         </span>
                       )}
                       {item.status === "done" && (
-                        <span className="sb-status-badge done">
+                        <span className={`${styles.sbStatusBadge} ${styles.done}`}>
                           <i className="ti ti-check" />
                           Done
                         </span>
@@ -222,7 +223,7 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
                     {item.status === "done" && (
                       <button
                         type="button"
-                        className="sb-icon-btn"
+                        className={styles.sbIconBtn}
                         onClick={() => navigator.clipboard.writeText(item.output)}
                         title="Copy result"
                       >
@@ -230,15 +231,15 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
                       </button>
                     )}
                   </div>
-                  <div className="sb-result-content">
-                    <div className="sb-result-input">
-                      <span className="sb-result-label">Input:</span>
-                      <div className="sb-result-text">{item.input}</div>
+                  <div className={styles.sbResultContent}>
+                    <div className={styles.sbResultInput}>
+                      <span className={styles.sbResultLabel}>Input:</span>
+                      <div className={styles.sbResultText}>{item.input}</div>
                     </div>
                     {item.status === "done" && (
-                      <div className="sb-result-output">
-                        <span className="sb-result-label">Slug:</span>
-                        <code className="sb-result-code">{item.output}</code>
+                      <div className={styles.sbResultOutput}>
+                        <span className={styles.sbResultLabel}>Slug:</span>
+                        <code className={styles.sbResultCode}>{item.output}</code>
                       </div>
                     )}
                   </div>
@@ -250,12 +251,12 @@ export default function SlugBatch({ options, onComplete }: SlugBatchProps) {
 
         {/*  Empty State  */}
         {items.length === 0 && !batchInput && (
-          <div className="sb-empty">
-            <div className="sb-empty-icon">
+          <div className={styles.sbEmpty}>
+            <div className={styles.sbEmptyIcon}>
               <i className="ti ti-files" />
             </div>
-            <p className="sb-empty-title">Batch Slug Generation</p>
-            <p className="sb-empty-desc">
+            <p className={styles.sbEmptyTitle}>Batch Slug Generation</p>
+            <p className={styles.sbEmptyDesc}>
               Process multiple texts at once. Enter one per line above.
             </p>
           </div>

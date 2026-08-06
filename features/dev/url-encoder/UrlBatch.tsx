@@ -2,8 +2,9 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { encodeUrl, decodeUrl, type Mode, type EncodingOptions } from "./utils";
+import { encodeUrl, decodeUrl, type Mode, type EncodingOptions } from "./ts/utils";
 import { formatBytes } from "@/utils";
+import styles from "./style/UrlBatch.module.css";
 
 interface BatchItem {
   id: string;
@@ -131,19 +132,19 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
 
   return (
     <>
-      <div className="ubt-root">
+      <div className={styles.ubtRoot}>
         {/*  Input Section  */}
-        <div className="ubt-section">
-          <div className="ubt-section-header">
-            <div className="ubt-section-label">
+        <div className={styles.ubtSection}>
+          <div className={styles.ubtSectionHeader}>
+            <div className={styles.ubtSectionLabel}>
               <i className="ti ti-files" />
               Batch Input
             </div>
-            <div className="ubt-section-actions">
-              <div className="ubt-separator-group">
-                <span className="ubt-separator-label">Split by:</span>
+            <div className={styles.ubtSectionActions}>
+              <div className={styles.ubtSeparatorGroup}>
+                <span className={styles.ubtSeparatorLabel}>Split by:</span>
                 <select
-                  className="ubt-select"
+                  className={styles.ubtSelect}
                   value={separator}
                   onChange={(e) => setSeparator(e.target.value as any)}
                   disabled={processing}
@@ -155,7 +156,7 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
               </div>
               <button
                 type="button"
-                className="ubt-btn"
+                className={styles.ubtBtn}
                 onClick={handleClear}
                 disabled={!batchInput && items.length === 0}
               >
@@ -165,7 +166,7 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
             </div>
           </div>
           <textarea
-            className="ubt-textarea"
+            className={styles.ubtTextarea}
             value={batchInput}
             onChange={(e) => setBatchInput(e.target.value)}
             placeholder={`Enter multiple ${mode === "encode" ? "URLs" : "encoded strings"} (one per line)...`}
@@ -173,13 +174,13 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
             disabled={processing}
             spellCheck={false}
           />
-          <div className="ubt-input-footer">
-            <span className="ubt-input-count">
+          <div className={styles.ubtInputFooter}>
+            <span className={styles.ubtInputCount}>
               {inputCount} {inputCount === 1 ? "item" : "items"}
             </span>
             <button
               type="button"
-              className="ubt-btn ubt-btn-primary"
+              className={`${styles.ubtBtn} ${styles.ubtBtnPrimary}`}
               onClick={handleProcess}
               disabled={!batchInput.trim() || processing}
             >
@@ -191,20 +192,20 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
 
         {/*  Results Section  */}
         {items.length > 0 && (
-          <div className="ubt-section">
-            <div className="ubt-section-header">
-              <div className="ubt-section-label">
+          <div className={styles.ubtSection}>
+            <div className={styles.ubtSectionHeader}>
+              <div className={styles.ubtSectionLabel}>
                 <i className="ti ti-list-check" />
                 Results
-                <span className="ubt-results-badge">
+                <span className={styles.ubtResultsBadge}>
                   {doneCount}/{items.length}
                 </span>
-                {errorCount > 0 && <span className="ubt-error-badge">{errorCount} errors</span>}
+                {errorCount > 0 && <span className={styles.ubtErrorBadge}>{errorCount} errors</span>}
               </div>
-              <div className="ubt-section-actions">
+              <div className={styles.ubtSectionActions}>
                 <button
                   type="button"
-                  className="ubt-btn"
+                  className={styles.ubtBtn}
                   onClick={handleCopyAll}
                   disabled={doneCount === 0}
                 >
@@ -213,7 +214,7 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
                 </button>
                 <button
                   type="button"
-                  className="ubt-btn"
+                  className={styles.ubtBtn}
                   onClick={handleDownloadAll}
                   disabled={doneCount === 0}
                 >
@@ -223,44 +224,44 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
               </div>
             </div>
 
-            <div className="ubt-results">
+            <div className={styles.ubtResults}>
               {items.map((item, idx) => (
-                <div key={item.id} className={`ubt-result-item status-${item.status}`}>
-                  <div className="ubt-result-header">
-                    <div className="ubt-result-index">#{idx + 1}</div>
-                    <div className="ubt-result-status">
+                <div key={item.id} className={`${styles.ubtResultItem} ${styles[`status${item.status.charAt(0).toUpperCase() + item.status.slice(1)}`]}`}>
+                  <div className={styles.ubtResultHeader}>
+                    <div className={styles.ubtResultIndex}>#{idx + 1}</div>
+                    <div className={styles.ubtResultStatus}>
                       {item.status === "pending" && (
-                        <span className="ubt-status-badge pending">
+                        <span className={`${styles.ubtStatusBadge} ${styles.pending}`}>
                           <i className="ti ti-clock" />
                           Pending
                         </span>
                       )}
                       {item.status === "processing" && (
-                        <span className="ubt-status-badge processing">
+                        <span className={`${styles.ubtStatusBadge} ${styles.processing}`}>
                           <i className="ti ti-loader" />
                           Processing
                         </span>
                       )}
                       {item.status === "done" && (
-                        <span className="ubt-status-badge done">
+                        <span className={`${styles.ubtStatusBadge} ${styles.done}`}>
                           <i className="ti ti-check" />
                           Done
                         </span>
                       )}
                       {item.status === "error" && (
-                        <span className="ubt-status-badge error">
+                        <span className={`${styles.ubtStatusBadge} ${styles.error}`}>
                           <i className="ti ti-alert-circle" />
                           Error
                         </span>
                       )}
                     </div>
-                    <div className="ubt-result-sizes">
+                    <div className={styles.ubtResultSizes}>
                       {formatBytes(item.inputSize)} → {formatBytes(item.outputSize)}
                     </div>
                     {item.status === "done" && (
                       <button
                         type="button"
-                        className="ubt-icon-btn"
+                        className={styles.ubtIconBtn}
                         onClick={() => navigator.clipboard.writeText(item.output)}
                         title="Copy result"
                       >
@@ -268,25 +269,25 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
                       </button>
                     )}
                   </div>
-                  <div className="ubt-result-content">
-                    <div className="ubt-result-input">
-                      <span className="ubt-result-label">Input:</span>
-                      <code className="ubt-result-code">
+                  <div className={styles.ubtResultContent}>
+                    <div className={styles.ubtResultInput}>
+                      <span className={styles.ubtResultLabel}>Input:</span>
+                      <code className={styles.ubtResultCode}>
                         {item.input.substring(0, 80)}
                         {item.input.length > 80 ? "..." : ""}
                       </code>
                     </div>
                     {item.status === "done" && (
-                      <div className="ubt-result-output">
-                        <span className="ubt-result-label">Output:</span>
-                        <code className="ubt-result-code">
+                      <div className={styles.ubtResultOutput}>
+                        <span className={styles.ubtResultLabel}>Output:</span>
+                        <code className={styles.ubtResultCode}>
                           {item.output.substring(0, 80)}
                           {item.output.length > 80 ? "..." : ""}
                         </code>
                       </div>
                     )}
                     {item.status === "error" && item.error && (
-                      <div className="ubt-result-error">
+                      <div className={styles.ubtResultError}>
                         <i className="ti ti-alert-triangle" />
                         {item.error}
                       </div>
@@ -300,12 +301,12 @@ export default function UrlBatch({ mode, options }: UrlBatchProps) {
 
         {/*  Empty State  */}
         {items.length === 0 && !batchInput && (
-          <div className="ubt-empty">
-            <div className="ubt-empty-icon">
+          <div className={styles.ubtEmpty}>
+            <div className={styles.ubtEmptyIcon}>
               <i className="ti ti-files" />
             </div>
-            <p className="ubt-empty-title">Batch {mode === "encode" ? "Encode" : "Decode"}</p>
-            <p className="ubt-empty-desc">
+            <p className={styles.ubtEmptyTitle}>Batch {mode === "encode" ? "Encode" : "Decode"}</p>
+            <p className={styles.ubtEmptyDesc}>
               Process multiple {mode === "encode" ? "URLs" : "encoded strings"} at once. Enter one
               per line above.
             </p>

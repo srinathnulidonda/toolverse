@@ -4,6 +4,7 @@
 import { useCallback, useState } from "react";
 import { JsonValueCell } from "./JsonValueCell";
 import { JsonObjectNode } from "./JsonObjectNode";
+import styles from "./style/JsonTree.module.css";
 
 type JsonArrayNodeProps = {
   value: unknown[];
@@ -48,17 +49,17 @@ export function JsonArrayNode({
   );
 
   return (
-    <div className="jt-node">
-      <div className="jt-row">
+    <div className={styles.jtNode}>
+      <div className={styles.jtRow}>
         {nodeKey !== undefined && (
-          <span className="jt-key-label">
-            &ldquo;{nodeKey}&rdquo;<span className="jt-colon">:</span>&nbsp;
+          <span className={styles.jtKeyLabel}>
+            &ldquo;{nodeKey}&rdquo;<span className={styles.jtColon}>:</span>&nbsp;
           </span>
         )}
-        <span className="jt-bracket">{bracket[0]}</span>
+        <span className={styles.jtBracket}>{bracket[0]}</span>
         {!isEmpty && (
           <button
-            className="jt-toggle"
+            className={styles.jtToggle}
             onClick={toggle}
             aria-label={collapsed ? `Expand array` : `Collapse array`}
             aria-expanded={!collapsed}
@@ -67,14 +68,14 @@ export function JsonArrayNode({
               className={`ti ${collapsed ? "ti-chevron-right" : "ti-chevron-down"}`}
               aria-hidden="true"
             />
-            {collapsed && <span className="jt-collapsed-pill">{countLabel}</span>}
+            {collapsed && <span className={styles.jtCollapsedPill}>{countLabel}</span>}
           </button>
         )}
-        {collapsed && !isEmpty && <span className="jt-bracket">{bracket[1]}</span>}
-        {(!collapsed || isEmpty) && isEmpty && <span className="jt-bracket">{bracket[1]}</span>}
-        {!isLast && (collapsed || isEmpty) && <span className="jt-comma">,</span>}
+        {collapsed && !isEmpty && <span className={styles.jtBracket}>{bracket[1]}</span>}
+        {(!collapsed || isEmpty) && isEmpty && <span className={styles.jtBracket}>{bracket[1]}</span>}
+        {!isLast && (collapsed || isEmpty) && <span className={styles.jtComma}>,</span>}
         <button
-          className="jt-path-btn"
+          className={styles.jtPathBtn}
           onClick={handlePathClick}
           title={`Copy path: ${path || "$"}`}
           aria-label={`Copy JSONPath ${path || "$"}`}
@@ -85,7 +86,7 @@ export function JsonArrayNode({
 
       {!collapsed && !isEmpty && (
         <>
-          <div className="jt-children">
+          <div className={styles.jtChildren}>
             {entries.map(([k, v], i) => {
               if (v === null) {
                 return (
@@ -138,9 +139,9 @@ export function JsonArrayNode({
               }
             })}
           </div>
-          <div className="jt-row">
-            <span className="jt-bracket">{bracket[1]}</span>
-            {!isLast && <span className="jt-comma">,</span>}
+          <div className={styles.jtRow}>
+            <span className={styles.jtBracket}>{bracket[1]}</span>
+            {!isLast && <span className={styles.jtComma}>,</span>}
           </div>
         </>
       )}

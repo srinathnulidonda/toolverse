@@ -1,7 +1,7 @@
 // features/social/og-preview/Templates.tsx
 "use client";
-
-import type { Template } from "./types";
+import type { Template } from "./ts/types";
+import styles from "./style/Templates.module.css";
 
 const TEMPLATES: Template[] = [
   {
@@ -158,35 +158,39 @@ type TemplatesProps = {
 export default function Templates({ onSelect }: TemplatesProps) {
   return (
     <>
-      <div className="tpl-root">
-        <div className="tpl-header">
+      <div className={styles.tplRoot}>
+        <div className={styles.tplHeader}>
           <i className="ti ti-template" aria-hidden="true" />
-          <div className="tpl-header-text">
-            <h3 className="tpl-title">Quick Start Templates</h3>
-            <p className="tpl-subtitle">
+          <div className={styles.tplHeaderText}>
+            <h3 className={styles.tplTitle}>Quick Start Templates</h3>
+            <p className={styles.tplSubtitle}>
               Select a template to get started with pre-filled meta tags
             </p>
           </div>
         </div>
 
-        <div className="tpl-grid">
+        <div className={styles.tplGrid}>
           {TEMPLATES.map((template) => (
-            <button key={template.id} className="tpl-card" onClick={() => onSelect(template)}>
-              <div className="tpl-card-icon">
+            <button
+              key={template.id}
+              className={styles.tplCard}
+              onClick={() => onSelect(template)}
+            >
+              <div className={styles.tplCardIcon}>
                 <i className={`ti ${template.icon}`} aria-hidden="true" />
               </div>
-              <div className="tpl-card-content">
-                <div className="tpl-card-name">{template.name}</div>
-                <div className="tpl-card-desc">{template.description}</div>
+              <div className={styles.tplCardContent}>
+                <div className={styles.tplCardName}>{template.name}</div>
+                <div className={styles.tplCardDesc}>{template.description}</div>
               </div>
-              <div className="tpl-card-arrow">
+              <div className={styles.tplCardArrow}>
                 <i className="ti ti-arrow-right" aria-hidden="true" />
               </div>
             </button>
           ))}
         </div>
 
-        <div className="tpl-footer">
+        <div className={styles.tplFooter}>
           <i className="ti ti-info-circle" aria-hidden="true" />
           <span>
             Templates use placeholder images from Unsplash. Replace with your own images for
@@ -194,175 +198,6 @@ export default function Templates({ onSelect }: TemplatesProps) {
           </span>
         </div>
       </div>
-
-      <style>{`
-        .tpl-root {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-        }
-
-        .tpl-header {
-          display: flex;
-          gap: 14px;
-          padding: 20px;
-          background: var(--bg-card);
-          border: 0.5px solid var(--border);
-          border-radius: 12px;
-        }
-        .tpl-header > i {
-          width: 48px;
-          height: 48px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: var(--brand-light);
-          color: var(--brand-text);
-          border-radius: 10px;
-          font-size: 22px;
-          flex-shrink: 0;
-        }
-        .tpl-header-text {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-        .tpl-title {
-          font-size: 16px;
-          font-weight: 600;
-          color: var(--text);
-          margin: 0;
-          line-height: 1.3;
-        }
-        .tpl-subtitle {
-          font-size: 13px;
-          color: var(--text-tertiary);
-          margin: 0;
-          line-height: 1.5;
-        }
-
-        .tpl-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 12px;
-        }
-
-        .tpl-card {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 14px;
-          background: var(--bg-card);
-          border: 0.5px solid var(--border);
-          border-radius: 10px;
-          cursor: pointer;
-          transition: all 0.15s;
-          text-align: left;
-        }
-        .tpl-card:hover {
-          background: var(--bg-surface);
-          border-color: var(--brand);
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .tpl-card:active {
-          transform: translateY(0);
-        }
-
-        .tpl-card-icon {
-          width: 44px;
-          height: 44px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: var(--bg-surface);
-          border: 0.5px solid var(--border);
-          border-radius: 8px;
-          font-size: 20px;
-          color: var(--text-secondary);
-          flex-shrink: 0;
-          transition: all 0.15s;
-        }
-        .tpl-card:hover .tpl-card-icon {
-          background: var(--brand-light);
-          border-color: var(--brand-border);
-          color: var(--brand-text);
-        }
-
-        .tpl-card-content {
-          flex: 1;
-          min-width: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 3px;
-        }
-        .tpl-card-name {
-          font-size: 13px;
-          font-weight: 600;
-          color: var(--text);
-          line-height: 1.3;
-        }
-        .tpl-card-desc {
-          font-size: 11.5px;
-          color: var(--text-tertiary);
-          line-height: 1.4;
-        }
-
-        .tpl-card-arrow {
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: var(--bg-surface);
-          border-radius: 6px;
-          font-size: 14px;
-          color: var(--text-disabled);
-          flex-shrink: 0;
-          transition: all 0.15s;
-        }
-        .tpl-card:hover .tpl-card-arrow {
-          background: var(--brand);
-          color: white;
-          transform: translateX(2px);
-        }
-
-        .tpl-footer {
-          display: flex;
-          align-items: flex-start;
-          gap: 8px;
-          padding: 12px 14px;
-          background: var(--brand-light);
-          border: 0.5px solid var(--brand-border);
-          border-radius: 8px;
-          font-size: 11.5px;
-          color: var(--brand-text);
-          line-height: 1.5;
-        }
-        .tpl-footer i {
-          font-size: 14px;
-          margin-top: 1px;
-          flex-shrink: 0;
-        }
-
-        @media (max-width: 768px) {
-          .tpl-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .tpl-header {
-            flex-direction: column;
-            gap: 12px;
-            text-align: center;
-          }
-          .tpl-header > i {
-            margin: 0 auto;
-          }
-        }
-      `}</style>
     </>
   );
 }

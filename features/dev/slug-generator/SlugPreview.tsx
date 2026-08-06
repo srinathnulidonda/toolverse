@@ -2,7 +2,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { analyzeSlug, validateSlug, type SlugOptions } from "./utils";
+import { analyzeSlug, validateSlug, type SlugOptions } from "./ts/utils";
+import styles from "./style/SlugPreview.module.css";
 
 interface SlugPreviewProps {
   input: string;
@@ -41,61 +42,61 @@ export default function SlugPreview({
 
   return (
     <>
-      <div className="sp-root">
+      <div className={styles.spRoot}>
         {/*  Mobile Tabs  */}
-        <div className="sp-mobile-tabs">
+        <div className={styles.spMobileTabs}>
           <button
             type="button"
-            className={`sp-mobile-tab${mobileView === "input" ? " active" : ""}`}
+            className={`${styles.spMobileTab}${mobileView === "input" ? ` ${styles.active}` : ""}`}
             onClick={() => onMobileViewChange("input")}
             role="tab"
             aria-selected={mobileView === "input"}
           >
             <i className="ti ti-pencil" />
-            <span className="sp-tab-text">Input</span>
-            {input && <span className="sp-tab-count">{input.length}</span>}
+            <span className={styles.spTabText}>Input</span>
+            {input && <span className={styles.spTabCount}>{input.length}</span>}
           </button>
           <button
             type="button"
-            className={`sp-mobile-tab${mobileView === "output" ? " active" : ""}`}
+            className={`${styles.spMobileTab}${mobileView === "output" ? ` ${styles.active}` : ""}`}
             onClick={() => onMobileViewChange("output")}
             role="tab"
             aria-selected={mobileView === "output"}
           >
             <i className="ti ti-sparkles" />
-            <span className="sp-tab-text">Output</span>
-            {output && <span className="sp-mobile-dot" />}
+            <span className={styles.spTabText}>Output</span>
+            {output && <span className={styles.spMobileDot} />}
             {analysis && (
-              <span className={`sp-tab-score ${analysis.readability}`}>{analysis.score}</span>
+              <span className={`${styles.spTabScore} ${styles[analysis.readability]}`}>{analysis.score}</span>
             )}
           </button>
         </div>
 
         {/*  Panels  */}
-        <div className="sp-panels">
+        <div className={styles.spPanels}>
           {/* Input Panel */}
           <div
-            className={`sp-panel sp-panel-input${mobileView === "input" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.spPanel} ${styles.spPanelInput}${mobileView === "input" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
-            <div className="sp-panel-header">
-              <div className="sp-panel-label">
+            <div className={styles.spPanelHeader}>
+              <div className={styles.spPanelLabel}>
                 <i className="ti ti-pencil" />
-                <span className="sp-label-text">Input Text</span>
+                <span className={styles.spLabelText}>Input Text</span>
               </div>
-              <div className="sp-panel-meta">
+              <div className={styles.spPanelMeta}>
                 {input && (
                   <>
-                    <span className="sp-meta-text">{input.length} chars</span>
-                    <span className="sp-meta-text sp-meta-mobile-hide">
+                    <span className={styles.spMetaText}>{input.length} chars</span>
+                    <span className={`${styles.spMetaText} ${styles.spMetaMobileHide}`}>
                       {input.split(/\s+/).filter(Boolean).length} words
                     </span>
                   </>
                 )}
               </div>
             </div>
-            <div className="sp-panel-body">
+            <div className={styles.spPanelBody}>
               <textarea
-                className="sp-textarea"
+                className={styles.spTextarea}
                 value={input}
                 onChange={(e) => onInputChange(e.target.value)}
                 placeholder="Enter text to convert to a URL-friendly slug...&#10;&#10;Examples:&#10;• Blog Post Title&#10;• Product Name&#10;• Category Description"
@@ -106,27 +107,27 @@ export default function SlugPreview({
           </div>
 
           {/* Divider */}
-          <div className="sp-divider" aria-hidden="true">
-            <div className="sp-divider-icon">
+          <div className={styles.spDivider} aria-hidden="true">
+            <div className={styles.spDividerIcon}>
               <i className="ti ti-arrow-right" />
             </div>
           </div>
 
           {/* Output Panel */}
           <div
-            className={`sp-panel sp-panel-output${mobileView === "output" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.spPanel} ${styles.spPanelOutput}${mobileView === "output" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
-            <div className="sp-panel-header">
-              <div className="sp-panel-label">
+            <div className={styles.spPanelHeader}>
+              <div className={styles.spPanelLabel}>
                 <i className="ti ti-sparkles" />
-                <span className="sp-label-text">Generated Slug</span>
+                <span className={styles.spLabelText}>Generated Slug</span>
               </div>
-              <div className="sp-panel-meta">
+              <div className={styles.spPanelMeta}>
                 {output && (
                   <>
-                    <span className="sp-meta-text">{output.length} chars</span>
+                    <span className={styles.spMetaText}>{output.length} chars</span>
                     {reductionPercent > 0 && (
-                      <span className="sp-reduction-pill sp-meta-mobile-hide">
+                      <span className={`${styles.spReductionPill} ${styles.spMetaMobileHide}`}>
                         -{reductionPercent}%
                       </span>
                     )}
@@ -134,35 +135,35 @@ export default function SlugPreview({
                 )}
               </div>
             </div>
-            <div className="sp-panel-body">
+            <div className={styles.spPanelBody}>
               {!output ? (
-                <div className="sp-empty">
-                  <div className="sp-empty-icon">
+                <div className={styles.spEmpty}>
+                  <div className={styles.spEmptyIcon}>
                     <i className="ti ti-link" />
                   </div>
-                  <p className="sp-empty-title">Generated slug appears here</p>
-                  <p className="sp-empty-desc">
+                  <p className={styles.spEmptyTitle}>Generated slug appears here</p>
+                  <p className={styles.spEmptyDesc}>
                     Start typing on the left to see your URL-friendly slug
                   </p>
                 </div>
               ) : (
-                <div className="sp-output-content">
+                <div className={styles.spOutputContent}>
                   {/* URL Preview */}
-                  <div className="sp-url-preview">
-                    <div className="sp-url-bar">
+                  <div className={styles.spUrlPreview}>
+                    <div className={styles.spUrlBar}>
                       <i className="ti ti-lock" />
-                      <span className="sp-url-domain">example.com/</span>
-                      <span className="sp-url-slug">{output}</span>
+                      <span className={styles.spUrlDomain}>example.com/</span>
+                      <span className={styles.spUrlSlug}>{output}</span>
                     </div>
                   </div>
 
                   {/* Slug Display */}
-                  <div className="sp-slug-display">
-                    <div className="sp-slug-value">{output}</div>
+                  <div className={styles.spSlugDisplay}>
+                    <div className={styles.spSlugValue}>{output}</div>
                     {validation && !validation.valid && (
-                      <div className="sp-validation-errors">
+                      <div className={styles.spValidationErrors}>
                         {validation.errors.map((err, i) => (
-                          <div key={i} className="sp-error-item">
+                          <div key={i} className={styles.spErrorItem}>
                             <i className="ti ti-alert-circle" />
                             {err}
                           </div>
@@ -173,23 +174,23 @@ export default function SlugPreview({
 
                   {/* Analysis Score */}
                   {analysis && (
-                    <div className="sp-analysis-card">
-                      <div className="sp-analysis-header">
-                        <div className="sp-score-container">
+                    <div className={styles.spAnalysisCard}>
+                      <div className={styles.spAnalysisHeader}>
+                        <div className={styles.spScoreContainer}>
                           <div
-                            className={`sp-score-circle score-${analysis.readability}`}
+                            className={`${styles.spScoreCircle} ${styles[`score${analysis.readability.charAt(0).toUpperCase()}${analysis.readability.slice(1)}`]}`}
                             style={{
                               background: `conic-gradient(var(--brand) ${analysis.score * 3.6}deg, var(--border) 0deg)`,
                             }}
                           >
-                            <div className="sp-score-inner">
-                              <div className="sp-score-value">{analysis.score}</div>
-                              <div className="sp-score-label">score</div>
+                            <div className={styles.spScoreInner}>
+                              <div className={styles.spScoreValue}>{analysis.score}</div>
+                              <div className={styles.spScoreLabel}>score</div>
                             </div>
                           </div>
-                          <div className="sp-score-info">
-                            <div className="sp-score-title">SEO Quality</div>
-                            <div className={`sp-score-badge ${analysis.readability}`}>
+                          <div className={styles.spScoreInfo}>
+                            <div className={styles.spScoreTitle}>SEO Quality</div>
+                            <div className={`${styles.spScoreBadge} ${styles[analysis.readability]}`}>
                               {analysis.readability.charAt(0).toUpperCase() +
                                 analysis.readability.slice(1)}
                             </div>
@@ -197,35 +198,35 @@ export default function SlugPreview({
                         </div>
                       </div>
 
-                      <div className="sp-analysis-stats">
-                        <div className="sp-stat-item">
+                      <div className={styles.spAnalysisStats}>
+                        <div className={styles.spStatItem}>
                           <i className="ti ti-ruler-2" />
-                          <span className="sp-stat-value">{analysis.length}</span>
-                          <span className="sp-stat-label">characters</span>
+                          <span className={styles.spStatValue}>{analysis.length}</span>
+                          <span className={styles.spStatLabel}>characters</span>
                         </div>
-                        <div className="sp-stat-item">
+                        <div className={styles.spStatItem}>
                           <i className="ti ti-text-size" />
-                          <span className="sp-stat-value">{analysis.wordCount}</span>
-                          <span className="sp-stat-label">words</span>
+                          <span className={styles.spStatValue}>{analysis.wordCount}</span>
+                          <span className={styles.spStatLabel}>words</span>
                         </div>
                         {analysis.hasNumbers && (
-                          <div className="sp-stat-item">
+                          <div className={styles.spStatItem}>
                             <i className="ti ti-123" />
-                            <span className="sp-stat-label">has numbers</span>
+                            <span className={styles.spStatLabel}>has numbers</span>
                           </div>
                         )}
                       </div>
 
                       {/* Keywords */}
                       {analysis.keywords.length > 0 && (
-                        <div className="sp-keywords">
-                          <div className="sp-keywords-label">Keywords</div>
-                          <div className="sp-keywords-list">
+                        <div className={styles.spKeywords}>
+                          <div className={styles.spKeywordsLabel}>Keywords</div>
+                          <div className={styles.spKeywordsList}>
                             {analysis.keywords.map((kw, i) => (
-                              <div key={i} className="sp-keyword-tag">
+                              <div key={i} className={styles.spKeywordTag}>
                                 {kw.word}
                                 {kw.count > 1 && (
-                                  <span className="sp-keyword-count">×{kw.count}</span>
+                                  <span className={styles.spKeywordCount}>×{kw.count}</span>
                                 )}
                               </div>
                             ))}
@@ -235,28 +236,28 @@ export default function SlugPreview({
 
                       {/* Issues & Suggestions */}
                       {(analysis.seoIssues.length > 0 || analysis.suggestions.length > 0) && (
-                        <div className="sp-feedback">
+                        <div className={styles.spFeedback}>
                           {analysis.seoIssues.length > 0 && (
-                            <div className="sp-issues">
-                              <div className="sp-issues-title">
+                            <div className={styles.spIssues}>
+                              <div className={styles.spIssuesTitle}>
                                 <i className="ti ti-alert-triangle" />
                                 Issues
                               </div>
                               {analysis.seoIssues.map((issue, i) => (
-                                <div key={i} className="sp-issue-item">
+                                <div key={i} className={styles.spIssueItem}>
                                   • {issue}
                                 </div>
                               ))}
                             </div>
                           )}
                           {analysis.suggestions.length > 0 && (
-                            <div className="sp-suggestions">
-                              <div className="sp-suggestions-title">
+                            <div className={styles.spSuggestions}>
+                              <div className={styles.spSuggestionsTitle}>
                                 <i className="ti ti-bulb" />
                                 Suggestions
                               </div>
                               {analysis.suggestions.map((suggestion, i) => (
-                                <div key={i} className="sp-suggestion-item">
+                                <div key={i} className={styles.spSuggestionItem}>
                                   • {suggestion}
                                 </div>
                               ))}

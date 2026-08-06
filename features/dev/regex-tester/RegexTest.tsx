@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { executePattern, analyzePattern, type RegexFlags, type Match } from "./utils";
+import { executePattern, analyzePattern, type RegexFlags, type Match } from "./ts/utils";
+import styles from "./style/RegexTest.module.css";
 
 interface RegexTestProps {
   pattern: string;
@@ -106,28 +107,28 @@ export default function RegexTest({
 
   return (
     <>
-      <div className="rxt-root">
+      <div className={styles.rxtRoot}>
         {/* Pattern Input */}
-        <div className="rxt-section">
-          <div className="rxt-section-header">
-            <div className="rxt-section-title">
+        <div className={styles.rxtSection}>
+          <div className={styles.rxtSectionHeader}>
+            <div className={styles.rxtSectionTitle}>
               <i className="ti ti-code" />
               Regular Expression
             </div>
-            <div className="rxt-section-actions">
+            <div className={styles.rxtSectionActions}>
               {analysis.valid && pattern && (
-                <span className={`rxt-complexity-badge ${analysis.complexity}`}>
+                <span className={`${styles.rxtComplexityBadge} ${styles[analysis.complexity]}`}>
                   <i className="ti ti-gauge" />
                   {analysis.complexity}
                 </span>
               )}
               {pattern && (
                 <>
-                  <span className="rxt-meta-text">{pattern.length} chars</span>
+                  <span className={styles.rxtMetaText}>{pattern.length} chars</span>
                   {onSave && (
                     <button
                       type="button"
-                      className="rxt-icon-btn"
+                      className={styles.rxtIconBtn}
                       onClick={onSave}
                       title="Save to library"
                     >
@@ -136,7 +137,7 @@ export default function RegexTest({
                   )}
                   <button
                     type="button"
-                    className="rxt-icon-btn"
+                    className={styles.rxtIconBtn}
                     onClick={() => onPatternChange("")}
                     title="Clear"
                   >
@@ -147,17 +148,17 @@ export default function RegexTest({
             </div>
           </div>
 
-          <div className="rxt-pattern-wrap">
-            <span className="rxt-slash">/</span>
+          <div className={styles.rxtPatternWrap}>
+            <span className={styles.rxtSlash}>/</span>
             <textarea
-              className="rxt-pattern-input"
+              className={styles.rxtPatternInput}
               value={pattern}
               onChange={(e) => onPatternChange(e.target.value)}
               placeholder="Enter your regex pattern..."
               spellCheck={false}
               rows={2}
             />
-            <span className="rxt-slash">
+            <span className={styles.rxtSlash}>
               /
               {Object.entries(flags)
                 .filter(([, v]) => v)
@@ -170,7 +171,7 @@ export default function RegexTest({
           {pattern && (
             <>
               {result.error && (
-                <div className="rxt-error-bar">
+                <div className={styles.rxtErrorBar}>
                   <i className="ti ti-alert-circle" />
                   <div>
                     <strong>Pattern Error</strong>
@@ -180,7 +181,7 @@ export default function RegexTest({
               )}
 
               {!result.error && analysis.performanceWarnings.length > 0 && (
-                <div className="rxt-warning-bar">
+                <div className={styles.rxtWarningBar}>
                   <i className="ti ti-alert-triangle" />
                   <div>
                     <strong>Performance Warning</strong>
@@ -190,7 +191,7 @@ export default function RegexTest({
               )}
 
               {!result.error && analysis.suggestions.length > 0 && (
-                <div className="rxt-info-bar">
+                <div className={styles.rxtInfoBar}>
                   <i className="ti ti-bulb" />
                   <div>
                     <strong>Suggestion</strong>
@@ -203,21 +204,21 @@ export default function RegexTest({
         </div>
 
         {/* Test String Input */}
-        <div className="rxt-section">
-          <div className="rxt-section-header">
-            <div className="rxt-section-title">
+        <div className={styles.rxtSection}>
+          <div className={styles.rxtSectionHeader}>
+            <div className={styles.rxtSectionTitle}>
               <i className="ti ti-file-text" />
               Test String
             </div>
-            <div className="rxt-section-actions">
+            <div className={styles.rxtSectionActions}>
               {testString && (
                 <>
-                  <span className="rxt-meta-text">
+                  <span className={styles.rxtMetaText}>
                     {testString.length} chars · {testString.split("\n").length} lines
                   </span>
                   <button
                     type="button"
-                    className="rxt-icon-btn"
+                    className={styles.rxtIconBtn}
                     onClick={() => setTestString("")}
                     title="Clear"
                   >
@@ -230,7 +231,7 @@ export default function RegexTest({
 
           <textarea
             ref={textareaRef}
-            className="rxt-textarea"
+            className={styles.rxtTextarea}
             value={testString}
             onChange={(e) => setTestString(e.target.value)}
             placeholder="Enter or paste text to test against your pattern..."
@@ -241,30 +242,30 @@ export default function RegexTest({
 
         {/* Match Statistics */}
         {testString && pattern && !result.error && (
-          <div className="rxt-stats-bar">
-            <div className="rxt-stats-grid">
-              <div className="rxt-stat">
-                <span className="rxt-stat-value">{stats.totalMatches}</span>
-                <span className="rxt-stat-label">Matches</span>
+          <div className={styles.rxtStatsBar}>
+            <div className={styles.rxtStatsGrid}>
+              <div className={styles.rxtStat}>
+                <span className={styles.rxtStatValue}>{stats.totalMatches}</span>
+                <span className={styles.rxtStatLabel}>Matches</span>
               </div>
-              <div className="rxt-stat">
-                <span className="rxt-stat-value">{stats.uniqueMatches}</span>
-                <span className="rxt-stat-label">Unique</span>
+              <div className={styles.rxtStat}>
+                <span className={styles.rxtStatValue}>{stats.uniqueMatches}</span>
+                <span className={styles.rxtStatLabel}>Unique</span>
               </div>
-              <div className="rxt-stat">
-                <span className="rxt-stat-value">{stats.avgLength}</span>
-                <span className="rxt-stat-label">Avg Length</span>
+              <div className={styles.rxtStat}>
+                <span className={styles.rxtStatValue}>{stats.avgLength}</span>
+                <span className={styles.rxtStatLabel}>Avg Length</span>
               </div>
-              <div className="rxt-stat">
-                <span className="rxt-stat-value">{stats.performance}ms</span>
-                <span className="rxt-stat-label">Execution</span>
+              <div className={styles.rxtStat}>
+                <span className={styles.rxtStatValue}>{stats.performance}ms</span>
+                <span className={styles.rxtStatLabel}>Execution</span>
               </div>
             </div>
 
             {result.matches.length > 0 && (
               <button
                 type="button"
-                className={`rxt-copy-all-btn${copiedId === "all-matches" ? " copied" : ""}`}
+                className={`${styles.rxtCopyAllBtn}${copiedId === "all-matches" ? ` ${styles.copied}` : ""}`}
                 onClick={handleCopyAllMatches}
               >
                 <i className={`ti ${copiedId === "all-matches" ? "ti-check" : "ti-copy"}`} />
@@ -276,20 +277,20 @@ export default function RegexTest({
 
         {/* Highlighted Result */}
         {testString && pattern && !result.error && highlightedText && (
-          <div className="rxt-section">
-            <div className="rxt-section-header">
-              <div className="rxt-section-title">
+          <div className={styles.rxtSection}>
+            <div className={styles.rxtSectionHeader}>
+              <div className={styles.rxtSectionTitle}>
                 <i className="ti ti-highlight" />
                 Match Highlighting
                 {result.matches.length > 0 && (
-                  <span className="rxt-match-count-badge">{result.matches.length}</span>
+                  <span className={styles.rxtMatchCountBadge}>{result.matches.length}</span>
                 )}
               </div>
-              <div className="rxt-section-actions">
-                <div className="rxt-highlight-mode-group">
+              <div className={styles.rxtSectionActions}>
+                <div className={styles.rxtHighlightModeGroup}>
                   <button
                     type="button"
-                    className={`rxt-mode-btn${highlightMode === "inline" ? " active" : ""}`}
+                    className={`${styles.rxtModeBtn}${highlightMode === "inline" ? ` ${styles.active}` : ""}`}
                     onClick={() => setHighlightMode("inline")}
                   >
                     <i className="ti ti-text-wrap" />
@@ -297,7 +298,7 @@ export default function RegexTest({
                   </button>
                   <button
                     type="button"
-                    className={`rxt-mode-btn${highlightMode === "lines" ? " active" : ""}`}
+                    className={`${styles.rxtModeBtn}${highlightMode === "lines" ? ` ${styles.active}` : ""}`}
                     onClick={() => setHighlightMode("lines")}
                   >
                     <i className="ti ti-list" />
@@ -307,19 +308,19 @@ export default function RegexTest({
               </div>
             </div>
 
-            <div className="rxt-highlight-result">
+            <div className={styles.rxtHighlightResult}>
               {result.matches.length === 0 ? (
-                <div className="rxt-no-matches">
+                <div className={styles.rxtNoMatches}>
                   <i className="ti ti-search-off" />
                   <p>No matches found</p>
                 </div>
               ) : highlightMode === "inline" ? (
-                <div className="rxt-highlight-inline">
+                <div className={styles.rxtHighlightInline}>
                   {highlightedText.map((part, i) =>
                     part.match ? (
                       <mark
                         key={i}
-                        className="rxt-match-highlight"
+                        className={styles.rxtMatchHighlight}
                         title={`Match ${(part.matchIndex ?? 0) + 1}`}
                       >
                         {part.text}
@@ -330,7 +331,7 @@ export default function RegexTest({
                   )}
                 </div>
               ) : (
-                <div className="rxt-highlight-lines">
+                <div className={styles.rxtHighlightLines}>
                   {testString.split("\n").map((line, lineIdx) => {
                     const lineMatches = result.matches.filter((m) => {
                       const beforeLine = testString.split("\n").slice(0, lineIdx).join("\n");
@@ -342,12 +343,12 @@ export default function RegexTest({
                     return (
                       <div
                         key={lineIdx}
-                        className={`rxt-line${lineMatches.length > 0 ? " has-match" : ""}`}
+                        className={`${styles.rxtLine}${lineMatches.length > 0 ? ` ${styles.hasMatch}` : ""}`}
                       >
-                        <span className="rxt-line-num">{lineIdx + 1}</span>
-                        <span className="rxt-line-text">{line || " "}</span>
+                        <span className={styles.rxtLineNum}>{lineIdx + 1}</span>
+                        <span className={styles.rxtLineText}>{line || " "}</span>
                         {lineMatches.length > 0 && (
-                          <span className="rxt-line-badge">{lineMatches.length}</span>
+                          <span className={styles.rxtLineBadge}>{lineMatches.length}</span>
                         )}
                       </div>
                     );
@@ -360,24 +361,24 @@ export default function RegexTest({
 
         {/* Matches Table */}
         {result.matches.length > 0 && (
-          <div className="rxt-section">
-            <div className="rxt-section-header">
-              <div className="rxt-section-title">
+          <div className={styles.rxtSection}>
+            <div className={styles.rxtSectionHeader}>
+              <div className={styles.rxtSectionTitle}>
                 <i className="ti ti-table" />
                 Match Details
               </div>
-              <label className="rxt-toggle-label">
+              <label className={styles.rxtToggleLabel}>
                 <input
                   type="checkbox"
                   checked={showGroups}
                   onChange={(e) => setShowGroups(e.target.checked)}
                 />
-                <span className="rxt-toggle-text">Show groups</span>
+                <span className={styles.rxtToggleText}>Show groups</span>
               </label>
             </div>
 
-            <div className="rxt-table-wrap">
-              <table className="rxt-table">
+            <div className={styles.rxtTableWrap}>
+              <table className={styles.rxtTable}>
                 <thead>
                   <tr>
                     <th>#</th>
@@ -392,34 +393,34 @@ export default function RegexTest({
                 <tbody>
                   {result.matches.map((match, idx) => (
                     <tr key={idx}>
-                      <td className="rxt-td-num">{idx + 1}</td>
-                      <td className="rxt-td-match">
+                      <td className={styles.rxtTdNum}>{idx + 1}</td>
+                      <td className={styles.rxtTdMatch}>
                         <code>{match.match}</code>
                       </td>
-                      <td className="rxt-td-pos">{match.index}</td>
-                      <td className="rxt-td-len">{match.length}</td>
-                      <td className="rxt-td-loc">
+                      <td className={styles.rxtTdPos}>{match.index}</td>
+                      <td className={styles.rxtTdLen}>{match.length}</td>
+                      <td className={styles.rxtTdLoc}>
                         {match.lineNumber}:{match.columnNumber}
                       </td>
                       {showGroups && (
-                        <td className="rxt-td-groups">
+                        <td className={styles.rxtTdGroups}>
                           {match.groups.length > 0 ? (
-                            <div className="rxt-groups-list">
+                            <div className={styles.rxtGroupsList}>
                               {match.groups.map((g, gIdx) => (
-                                <span key={gIdx} className="rxt-group-chip">
+                                <span key={gIdx} className={styles.rxtGroupChip}>
                                   {g.name ?? gIdx + 1}: {g.value || "(empty)"}
                                 </span>
                               ))}
                             </div>
                           ) : (
-                            <em className="rxt-empty">—</em>
+                            <em className={styles.rxtEmpty}>—</em>
                           )}
                         </td>
                       )}
-                      <td className="rxt-td-actions">
+                      <td className={styles.rxtTdActions}>
                         <button
                           type="button"
-                          className={`rxt-copy-btn-mini${copiedId === `match-${idx}` ? " copied" : ""}`}
+                          className={`${styles.rxtCopyBtnMini}${copiedId === `match-${idx}` ? ` ${styles.copied}` : ""}`}
                           onClick={() => handleCopy(match.match, `match-${idx}`)}
                           title="Copy match"
                         >

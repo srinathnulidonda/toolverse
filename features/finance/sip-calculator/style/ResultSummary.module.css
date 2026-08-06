@@ -1,0 +1,434 @@
+/* features/finance/sip-calculator/style/ResultSummary.module.css */
+.sipResultSummary {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    font-family: var(--font-sans);
+}
+
+.sipStatusBanner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid;
+    border-radius: var(--radius-lg);
+    transition: all 0.12s;
+}
+
+.sipStatusIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .sipStatusIcon {
+        background: rgba(0, 0, 0, 0.2);
+    }
+}
+
+.sipStatusContent {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sipStatusLabel {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.75;
+}
+
+.sipStatusValue {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.sipResultCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.sipResultCard {
+    padding: 16px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.12s;
+}
+
+.sipResultCard:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.sipCardIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.sipCardPrimary {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.sipCardPrimary .sipCardIcon {
+    background: rgba(5, 150, 105, 0.15);
+    color: var(--brand);
+}
+
+@media (prefers-color-scheme: dark) {
+    .sipCardPrimary .sipCardIcon {
+        background: rgba(2, 102, 71, 0.15);
+        color: var(--brand);
+    }
+}
+
+.sipCardPrimary .sipCardValue {
+    color: var(--brand-text);
+}
+
+.sipCardSecondary {
+    background: rgba(13, 110, 253, 0.05);
+    border-color: rgba(13, 110, 253, 0.2);
+}
+
+.sipCardSecondary .sipCardIcon {
+    background: rgba(13, 110, 253, 0.1);
+    color: #0D6EFD;
+}
+
+.sipCardSecondary .sipCardValue {
+    color: #0D6EFD;
+}
+
+@media (prefers-color-scheme: dark) {
+    .sipCardSecondary {
+        background: rgba(30, 136, 229, 0.08);
+        border-color: rgba(30, 136, 229, 0.2);
+    }
+
+    .sipCardSecondary .sipCardIcon {
+        color: #64B5F6;
+    }
+
+    .sipCardSecondary .sipCardValue {
+        color: #64B5F6;
+    }
+}
+
+.sipCardContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.sipCardLabel {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.sipCardValue {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    line-height: 1;
+}
+
+.sipInflationSection {
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    border: 0.5px solid var(--border);
+}
+
+.sipInflationHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 12px 0;
+    font-family: var(--font-sans);
+}
+
+.sipInflationHeading i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.sipInflationGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.sipInflationItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sipInflationLabel {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.sipInflationValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.sipBreakdownSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sipBreakdownHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    font-family: var(--font-sans);
+}
+
+.sipBreakdownHeading i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.sipBreakdownList {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border-faint);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.sipBreakdownItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    background: var(--bg-card);
+    gap: 12px;
+}
+
+.sipBreakdownLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    flex: 1;
+}
+
+.sipBreakdownLabel i {
+    font-size: 15px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.sipBreakdownValue {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+.sipBreakdownDivider {
+    height: 0.5px;
+    background: var(--border);
+}
+
+.sipItemTotal {
+    background: var(--brand-light);
+}
+
+.sipItemTotal .sipBreakdownLabel {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.sipItemTotal .sipBreakdownValue {
+    color: var(--brand-text);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.sipResultActions {
+    display: flex;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.sipActionBtn {
+    flex: 1;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.sipActionBtn i {
+    font-size: 15px;
+}
+
+.sipActionBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+    border-color: var(--brand-border);
+}
+
+.sipActionBtn.success,
+.success {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.sipActionBtn.primary,
+.primary {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+    font-weight: 600;
+}
+
+.sipActionBtn.primary:hover:not(:disabled),
+.primary:hover:not(:disabled) {
+    background: var(--brand-hover);
+    border-color: var(--brand-hover);
+    color: white;
+}
+
+.sipActionBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.sipBtnTextFull {
+    display: inline;
+}
+
+.sipSpin {
+    animation: sipSpinRotate 0.8s linear infinite;
+}
+
+@keyframes sipSpinRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .sipResultSummary {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .sipResultCards {
+        grid-template-columns: 1fr;
+    }
+
+    .sipCardValue {
+        font-size: 18px;
+    }
+
+    .sipBreakdownLabel {
+        font-size: 12px;
+    }
+
+    .sipBreakdownValue {
+        font-size: 12.5px;
+    }
+
+    .sipResultActions {
+        gap: 6px;
+    }
+
+    .sipActionBtn {
+        flex: 0 0 auto;
+        width: auto;
+        height: 32px;
+        padding: 0 12px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .sipActionBtn i {
+        font-size: 13px;
+    }
+
+    .sipBtnTextFull {
+        display: none;
+    }
+
+    .sipActionBtn.primary,
+    .primary {
+        flex: 1;
+        padding: 0 10px;
+        white-space: nowrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sipStatusBanner,
+    .sipResultCard,
+    .sipActionBtn,
+    .sipSpin {
+        transition: none;
+        animation: none;
+    }
+}

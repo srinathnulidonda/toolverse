@@ -2,7 +2,8 @@
 "use client";
 
 import { useMemo } from "react";
-import type { DecodedToken } from "./jwtParser";
+import type { DecodedToken } from "./ts/jwtParser";
+import styles from "./style/TokenVisualizer.module.css";
 
 interface TokenVisualizerProps {
   token: DecodedToken;
@@ -39,54 +40,54 @@ export default function TokenVisualizer({ token }: TokenVisualizerProps) {
 
   return (
     <>
-      <div className="tv-root">
-        <div className="tv-visual">
-          <div className="tv-part tv-part--header" style={{ flex: stats.header.percent }}>
-            <div className="tv-part-label">Header</div>
-            <div className="tv-part-size">{stats.header.size}B</div>
+      <div className={styles.tvRoot}>
+        <div className={styles.tvVisual}>
+          <div className={`${styles.tvPart} ${styles.tvPartHeader}`} style={{ flex: stats.header.percent }}>
+            <div className={styles.tvPartLabel}>Header</div>
+            <div className={styles.tvPartSize}>{stats.header.size}B</div>
           </div>
-          <div className="tv-dot">·</div>
-          <div className="tv-part tv-part--payload" style={{ flex: stats.payload.percent }}>
-            <div className="tv-part-label">Payload</div>
-            <div className="tv-part-size">{stats.payload.size}B</div>
+          <div className={styles.tvDot}>·</div>
+          <div className={`${styles.tvPart} ${styles.tvPartPayload}`} style={{ flex: stats.payload.percent }}>
+            <div className={styles.tvPartLabel}>Payload</div>
+            <div className={styles.tvPartSize}>{stats.payload.size}B</div>
           </div>
-          <div className="tv-dot">·</div>
-          <div className="tv-part tv-part--signature" style={{ flex: stats.signature.percent }}>
-            <div className="tv-part-label">Signature</div>
-            <div className="tv-part-size">{stats.signature.size}B</div>
-          </div>
-        </div>
-
-        <div className="tv-stats">
-          <div className="tv-stat">
-            <div className="tv-stat-label">Total Size</div>
-            <div className="tv-stat-value">{stats.total} bytes</div>
-          </div>
-          <div className="tv-stat">
-            <div className="tv-stat-label">Header Claims</div>
-            <div className="tv-stat-value">{stats.header.claims}</div>
-          </div>
-          <div className="tv-stat">
-            <div className="tv-stat-label">Payload Claims</div>
-            <div className="tv-stat-value">{stats.payload.claims}</div>
-          </div>
-          <div className="tv-stat">
-            <div className="tv-stat-label">Algorithm</div>
-            <div className="tv-stat-value">{token.metadata.algorithm}</div>
+          <div className={styles.tvDot}>·</div>
+          <div className={`${styles.tvPart} ${styles.tvPartSignature}`} style={{ flex: stats.signature.percent }}>
+            <div className={styles.tvPartLabel}>Signature</div>
+            <div className={styles.tvPartSize}>{stats.signature.size}B</div>
           </div>
         </div>
 
-        <div className="tv-breakdown">
-          <div className="tv-breakdown-item">
-            <div className="tv-breakdown-color tv-breakdown-color--header"></div>
+        <div className={styles.tvStats}>
+          <div className={styles.tvStat}>
+            <div className={styles.tvStatLabel}>Total Size</div>
+            <div className={styles.tvStatValue}>{stats.total} bytes</div>
+          </div>
+          <div className={styles.tvStat}>
+            <div className={styles.tvStatLabel}>Header Claims</div>
+            <div className={styles.tvStatValue}>{stats.header.claims}</div>
+          </div>
+          <div className={styles.tvStat}>
+            <div className={styles.tvStatLabel}>Payload Claims</div>
+            <div className={styles.tvStatValue}>{stats.payload.claims}</div>
+          </div>
+          <div className={styles.tvStat}>
+            <div className={styles.tvStatLabel}>Algorithm</div>
+            <div className={styles.tvStatValue}>{token.metadata.algorithm}</div>
+          </div>
+        </div>
+
+        <div className={styles.tvBreakdown}>
+          <div className={styles.tvBreakdownItem}>
+            <div className={`${styles.tvBreakdownColor} ${styles.tvBreakdownColorHeader}`}></div>
             <span>Header ({stats.header.percent.toFixed(1)}%)</span>
           </div>
-          <div className="tv-breakdown-item">
-            <div className="tv-breakdown-color tv-breakdown-color--payload"></div>
+          <div className={styles.tvBreakdownItem}>
+            <div className={`${styles.tvBreakdownColor} ${styles.tvBreakdownColorPayload}`}></div>
             <span>Payload ({stats.payload.percent.toFixed(1)}%)</span>
           </div>
-          <div className="tv-breakdown-item">
-            <div className="tv-breakdown-color tv-breakdown-color--signature"></div>
+          <div className={styles.tvBreakdownItem}>
+            <div className={`${styles.tvBreakdownColor} ${styles.tvBreakdownColorSignature}`}></div>
             <span>Signature ({stats.signature.percent.toFixed(1)}%)</span>
           </div>
         </div>

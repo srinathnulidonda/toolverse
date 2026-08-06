@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { convertTimestamp, type TimestampOptions } from "./utils";
+import { convertTimestamp, type TimestampOptions } from "./ts/utils";
+import styles from "./style/TimestampBatch.module.css";
 
 interface BatchItem {
   id: string;
@@ -102,39 +103,39 @@ export default function TimestampBatch({ options, onComplete }: TimestampBatchPr
 
   return (
     <>
-      <div className="tb-root">
+      <div className={styles.tbRoot}>
         {/*  Input Section  */}
-        <div className="tb-section">
-          <div className="tb-section-header">
-            <div className="tb-section-label">
+        <div className={styles.tbSection}>
+          <div className={styles.tbSectionHeader}>
+            <div className={styles.tbSectionLabel}>
               <i className="ti ti-files" />
               Batch Input
             </div>
             <button
               type="button"
-              className="tb-btn"
+              className={styles.tbBtn}
               onClick={handleClear}
               disabled={!batchInput && items.length === 0}
             >
               <i className="ti ti-trash" />
-              <span className="tb-btn-text">Clear</span>
+              <span className={styles.tbBtnText}>Clear</span>
             </button>
           </div>
           <textarea
-            className="tb-textarea"
+            className={styles.tbTextarea}
             value={batchInput}
             onChange={(e) => setBatchInput(e.target.value)}
             placeholder="Enter multiple timestamps or dates (one per line)...&#10;&#10;1704067200&#10;2024-01-15&#10;2024-06-01T10:30:00Z"
             rows={8}
             disabled={processing}
           />
-          <div className="tb-input-footer">
-            <span className="tb-input-count">
+          <div className={styles.tbInputFooter}>
+            <span className={styles.tbInputCount}>
               {batchInput.split("\n").filter((s) => s.trim()).length} items
             </span>
             <button
               type="button"
-              className="tb-btn tb-btn-primary"
+              className={`${styles.tbBtn} ${styles.tbBtnPrimary}`}
               onClick={handleProcess}
               disabled={!batchInput.trim() || processing}
             >
@@ -146,87 +147,87 @@ export default function TimestampBatch({ options, onComplete }: TimestampBatchPr
 
         {/*  Results Section  */}
         {items.length > 0 && (
-          <div className="tb-section">
-            <div className="tb-section-header">
-              <div className="tb-section-label">
+          <div className={styles.tbSection}>
+            <div className={styles.tbSectionHeader}>
+              <div className={styles.tbSectionLabel}>
                 <i className="ti ti-list-check" />
-                <span className="tb-label-text">Results</span>
-                <span className="tb-results-badge">
+                <span className={styles.tbLabelText}>Results</span>
+                <span className={styles.tbResultsBadge}>
                   {doneCount}/{items.length}
                 </span>
-                {errorCount > 0 && <span className="tb-error-badge">{errorCount} errors</span>}
+                {errorCount > 0 && <span className={styles.tbErrorBadge}>{errorCount} errors</span>}
               </div>
-              <div className="tb-section-actions">
+              <div className={styles.tbSectionActions}>
                 <button
                   type="button"
-                  className="tb-btn"
+                  className={styles.tbBtn}
                   onClick={handleCopyAll}
                   disabled={doneCount === 0}
                 >
                   <i className="ti ti-copy" />
-                  <span className="tb-btn-text">Copy</span>
+                  <span className={styles.tbBtnText}>Copy</span>
                 </button>
                 <button
                   type="button"
-                  className="tb-btn"
+                  className={styles.tbBtn}
                   onClick={handleDownloadCsv}
                   disabled={doneCount === 0}
                 >
                   <i className="ti ti-download" />
-                  <span className="tb-btn-text">CSV</span>
+                  <span className={styles.tbBtnText}>CSV</span>
                 </button>
               </div>
             </div>
 
-            <div className="tb-results">
+            <div className={styles.tbResults}>
               {items.map((item, idx) => (
-                <div key={item.id} className={`tb-result-item status-${item.status}`}>
-                  <div className="tb-result-header">
-                    <div className="tb-result-index">#{idx + 1}</div>
+                <div key={item.id} className={`${styles.tbResultItem} ${styles[`status-${item.status}`]}`}>
+                  <div className={styles.tbResultHeader}>
+                    <div className={styles.tbResultIndex}>#{idx + 1}</div>
                     {item.status === "pending" && (
-                      <span className="tb-status-badge pending">
+                      <span className={`${styles.tbStatusBadge} ${styles.pending}`}>
                         <i className="ti ti-clock" />
                         Pending
                       </span>
                     )}
                     {item.status === "processing" && (
-                      <span className="tb-status-badge processing">
+                      <span className={`${styles.tbStatusBadge} ${styles.processing}`}>
                         <i className="ti ti-loader" />
                         Processing
                       </span>
                     )}
                     {item.status === "done" && (
-                      <span className="tb-status-badge done">
+                      <span className={`${styles.tbStatusBadge} ${styles.done}`}>
                         <i className="ti ti-check" />
                         Done
                       </span>
                     )}
                     {item.status === "error" && (
-                      <span className="tb-status-badge error">
+                      <span className={`${styles.tbStatusBadge} ${styles.error}`}>
                         <i className="ti ti-alert-circle" />
                         Error
                       </span>
                     )}
                   </div>
-                  <div className="tb-result-content">
-                    <div className="tb-result-input">
-                      <span className="tb-result-label">Input:</span>
+                  <div className={styles.tbResultContent}>
+                    <div className={styles.tbResultInput}>
+                      <span className={styles.tbResultLabel}>Input:</span>
                       <code>{item.input}</code>
                     </div>
                     {item.status === "done" && (
                       <>
-                        <div className="tb-result-output">
-                          <span className="tb-result-label">ISO:</span>
+                        <div className={styles.tbResultOutput}>
+                          <span className={styles.tbResultLabel}>ISO:</span>
                           <code>{item.iso}</code>
                         </div>
-                        <div className="tb-result-relative">
+                        <div className={styles.tbResultRelative}>
                           <i className="ti ti-history" />
                           {item.relative}
                         </div>
                       </>
                     )}
                     {item.status === "error" && (
-                      <div className="tb-result-error">
+                      <div className={styles.tbResultError}>
                         <i className="ti ti-alert-triangle" />
                         Invalid timestamp format
                       </div>
@@ -240,12 +241,12 @@ export default function TimestampBatch({ options, onComplete }: TimestampBatchPr
 
         {/*  Empty State  */}
         {items.length === 0 && !batchInput && (
-          <div className="tb-empty">
-            <div className="tb-empty-icon">
+          <div className={styles.tbEmpty}>
+            <div className={styles.tbEmptyIcon}>
               <i className="ti ti-files" />
             </div>
-            <p className="tb-empty-title">Batch Timestamp Conversion</p>
-            <p className="tb-empty-desc">
+            <p className={styles.tbEmptyTitle}>Batch Timestamp Conversion</p>
+            <p className={styles.tbEmptyDesc}>
               Convert multiple timestamps at once. Enter one per line above.
             </p>
           </div>

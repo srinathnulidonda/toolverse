@@ -3,7 +3,8 @@
 import { logger } from "@/lib/logger";
 
 import { useState, useMemo } from "react";
-import { SAMPLE_PATTERNS, type RegexPattern, type PatternCategory } from "./utils";
+import { SAMPLE_PATTERNS, type RegexPattern, type PatternCategory } from "./ts/utils";
+import styles from "./style/RegexLibrary.module.css";
 
 interface RegexLibraryProps {
   patterns: RegexPattern[];
@@ -104,30 +105,30 @@ export default function RegexLibrary({
 
   return (
     <>
-      <div className="rxl-root">
+      <div className={styles.rxlRoot}>
         {/* Header */}
-        <div className="rxl-header">
-          <div className="rxl-search-wrap">
+        <div className={styles.rxlHeader}>
+          <div className={styles.rxlSearchWrap}>
             <i className="ti ti-search" />
             <input
               type="text"
-              className="rxl-search-input"
+              className={styles.rxlSearchInput}
               placeholder="Search patterns..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
-              <button type="button" className="rxl-clear-search" onClick={() => setSearchQuery("")}>
+              <button type="button" className={styles.rxlClearSearch} onClick={() => setSearchQuery("")}>
                 <i className="ti ti-x" />
               </button>
             )}
           </div>
 
-          <div className="rxl-header-actions">
-            <div className="rxl-view-toggle">
+          <div className={styles.rxlHeaderActions}>
+            <div className={styles.rxlViewToggle}>
               <button
                 type="button"
-                className={`rxl-view-btn${view === "grid" ? " active" : ""}`}
+                className={`${styles.rxlViewBtn}${view === "grid" ? ` ${styles.active}` : ""}`}
                 onClick={() => setView("grid")}
                 title="Grid view"
               >
@@ -135,7 +136,7 @@ export default function RegexLibrary({
               </button>
               <button
                 type="button"
-                className={`rxl-view-btn${view === "list" ? " active" : ""}`}
+                className={`${styles.rxlViewBtn}${view === "list" ? ` ${styles.active}` : ""}`}
                 onClick={() => setView("list")}
                 title="List view"
               >
@@ -145,7 +146,7 @@ export default function RegexLibrary({
 
             <button
               type="button"
-              className="rxl-action-btn"
+              className={styles.rxlActionBtn}
               onClick={() => setShowImportDialog(true)}
             >
               <i className="ti ti-upload" />
@@ -154,7 +155,7 @@ export default function RegexLibrary({
 
             <button
               type="button"
-              className="rxl-action-btn"
+              className={styles.rxlActionBtn}
               onClick={handleExport}
               disabled={patterns.length === 0}
             >
@@ -165,19 +166,19 @@ export default function RegexLibrary({
         </div>
 
         {/* Categories */}
-        <div className="rxl-categories">
+        <div className={styles.rxlCategories}>
           {categories.map((cat) => (
             <button
               key={cat.id}
               type="button"
-              className={`rxl-category-btn${selectedCategory === cat.id ? " active" : ""}`}
+              className={`${styles.rxlCategoryBtn}${selectedCategory === cat.id ? ` ${styles.active}` : ""}`}
               onClick={() => setSelectedCategory(cat.id)}
             >
               <i className={`ti ${cat.icon}`} />
               <span>{cat.label}</span>
-              {cat.id === "all" && <span className="rxl-category-count">{allPatterns.length}</span>}
+              {cat.id === "all" && <span className={styles.rxlCategoryCount}>{allPatterns.length}</span>}
               {cat.id === "favorites" && allPatterns.filter((p) => p.favorite).length > 0 && (
-                <span className="rxl-category-count">
+                <span className={styles.rxlCategoryCount}>
                   {allPatterns.filter((p) => p.favorite).length}
                 </span>
               )}
@@ -187,28 +188,28 @@ export default function RegexLibrary({
 
         {/* Patterns Grid/List */}
         {filteredPatterns.length === 0 ? (
-          <div className="rxl-empty">
-            <div className="rxl-empty-icon">
+          <div className={styles.rxlEmpty}>
+            <div className={styles.rxlEmptyIcon}>
               <i className="ti ti-inbox" />
             </div>
-            <p className="rxl-empty-title">No patterns found</p>
-            <p className="rxl-empty-desc">
+            <p className={styles.rxlEmptyTitle}>No patterns found</p>
+            <p className={styles.rxlEmptyDesc}>
               {searchQuery
                 ? "Try adjusting your search query"
                 : "Save your first pattern to get started"}
             </p>
           </div>
         ) : (
-          <div className={`rxl-patterns${view === "list" ? " list-view" : " grid-view"}`}>
+          <div className={`${styles.rxlPatterns}${view === "list" ? ` ${styles.listView}` : ` ${styles.gridView}`}`}>
             {filteredPatterns.map((pattern) => (
-              <div key={pattern.id} className="rxl-pattern-card">
-                <div className="rxl-card-header">
-                  <div className="rxl-card-title-row">
-                    <h3 className="rxl-card-title">{pattern.name}</h3>
-                    <div className="rxl-card-actions">
+              <div key={pattern.id} className={styles.rxlPatternCard}>
+                <div className={styles.rxlCardHeader}>
+                  <div className={styles.rxlCardTitleRow}>
+                    <h3 className={styles.rxlCardTitle}>{pattern.name}</h3>
+                    <div className={styles.rxlCardActions}>
                       <button
                         type="button"
-                        className={`rxl-icon-btn rxl-favorite-btn${pattern.favorite ? " active" : ""}`}
+                        className={`${styles.rxlIconBtn} ${styles.rxlFavoriteBtn}${pattern.favorite ? ` ${styles.active}` : ""}`}
                         onClick={() => onToggleFavorite(pattern.id)}
                         title={pattern.favorite ? "Remove from favorites" : "Add to favorites"}
                       >
@@ -217,7 +218,7 @@ export default function RegexLibrary({
                       {isCustomPattern(pattern) && (
                         <button
                           type="button"
-                          className="rxl-icon-btn rxl-delete-btn"
+                          className={`${styles.rxlIconBtn} ${styles.rxlDeleteBtn}`}
                           onClick={() => onDeletePattern(pattern.id)}
                           title="Delete pattern"
                         >
@@ -226,12 +227,12 @@ export default function RegexLibrary({
                       )}
                     </div>
                   </div>
-                  <p className="rxl-card-desc">{pattern.description}</p>
+                  <p className={styles.rxlCardDesc}>{pattern.description}</p>
                 </div>
 
-                <div className="rxl-card-body">
-                  <div className="rxl-pattern-display">
-                    <code className="rxl-pattern-code">
+                <div className={styles.rxlCardBody}>
+                  <div className={styles.rxlPatternDisplay}>
+                    <code className={styles.rxlPatternCode}>
                       /{pattern.pattern}/
                       {Object.entries(pattern.flags)
                         .filter(([, v]) => v)
@@ -241,9 +242,9 @@ export default function RegexLibrary({
                   </div>
 
                   {pattern.tags.length > 0 && (
-                    <div className="rxl-tags">
+                    <div className={styles.rxlTags}>
                       {pattern.tags.map((tag) => (
-                        <span key={tag} className="rxl-tag">
+                        <span key={tag} className={styles.rxlTag}>
                           {tag}
                         </span>
                       ))}
@@ -251,13 +252,13 @@ export default function RegexLibrary({
                   )}
                 </div>
 
-                <div className="rxl-card-footer">
-                  <span className="rxl-category-label">
+                <div className={styles.rxlCardFooter}>
+                  <span className={styles.rxlCategoryLabel}>
                     {categories.find((c) => c.id === pattern.category)?.label}
                   </span>
                   <button
                     type="button"
-                    className="rxl-load-btn"
+                    className={styles.rxlLoadBtn}
                     onClick={() => onLoadPattern(pattern)}
                   >
                     <i className="ti ti-player-play" />
@@ -271,26 +272,26 @@ export default function RegexLibrary({
 
         {/* Import Dialog */}
         {showImportDialog && (
-          <div className="rxl-dialog-overlay" onClick={() => setShowImportDialog(false)}>
-            <div className="rxl-dialog" onClick={(e) => e.stopPropagation()}>
-              <div className="rxl-dialog-header">
-                <h3 className="rxl-dialog-title">
+          <div className={styles.rxlDialogOverlay} onClick={() => setShowImportDialog(false)}>
+            <div className={styles.rxlDialog} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.rxlDialogHeader}>
+                <h3 className={styles.rxlDialogTitle}>
                   <i className="ti ti-upload" />
                   Import Patterns
                 </h3>
                 <button
                   type="button"
-                  className="rxl-dialog-close"
+                  className={styles.rxlDialogClose}
                   onClick={() => setShowImportDialog(false)}
                 >
                   <i className="ti ti-x" />
                 </button>
               </div>
 
-              <div className="rxl-dialog-body">
-                <p className="rxl-dialog-desc">Paste your exported JSON patterns below:</p>
+              <div className={styles.rxlDialogBody}>
+                <p className={styles.rxlDialogDesc}>Paste your exported JSON patterns below:</p>
                 <textarea
-                  className="rxl-import-textarea"
+                  className={styles.rxlImportTextarea}
                   value={importText}
                   onChange={(e) => setImportText(e.target.value)}
                   placeholder='[{"name":"My Pattern","pattern":"..."}]'
@@ -298,17 +299,17 @@ export default function RegexLibrary({
                 />
               </div>
 
-              <div className="rxl-dialog-footer">
+              <div className={styles.rxlDialogFooter}>
                 <button
                   type="button"
-                  className="rxl-dialog-btn rxl-cancel-btn"
+                  className={`${styles.rxlDialogBtn} ${styles.rxlCancelBtn}`}
                   onClick={() => setShowImportDialog(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className="rxl-dialog-btn rxl-import-btn"
+                  className={`${styles.rxlDialogBtn} ${styles.rxlImportBtn}`}
                   onClick={handleImport}
                   disabled={!importText.trim()}
                 >

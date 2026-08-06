@@ -1,0 +1,636 @@
+/* features/dev/url-encoder/style/Workspace.module.css */
+.uewRoot {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 650px;
+}
+
+/*  Chrome  */
+.uewChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.uewChromeLeft,
+.uewChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.uewPillGroup {
+    display: flex;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.uewPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border: none;
+    border-right: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.uewPill:last-child {
+    border-right: none;
+}
+
+.uewPill i {
+    font-size: 13px;
+}
+
+.uewPill:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.uewPill.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.uewMethodCluster {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.uewMethodFull {
+    display: inline;
+}
+
+.uewMethodShort {
+    display: none;
+}
+
+.uewIconBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 11px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.uewIconBtn i {
+    font-size: 13px;
+}
+
+.uewIconBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.uewIconBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.uewIconBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.uewClearBtn:hover:not(:disabled) {
+    color: #b91c1c;
+    border-color: currentColor;
+    background: var(--error-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+    .uewClearBtn:hover:not(:disabled) {
+        color: #f87171;
+    }
+}
+
+.uewExamples {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.uewExamplesLabel {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-disabled);
+    margin-right: 2px;
+}
+
+.uewExampleBtn {
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 99px;
+    border: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.uewExampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.uewActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.uewActionBtn i {
+    font-size: 13px;
+}
+
+.uewActionBtn:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.uewActionBtn.success {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+/*  Method Info Panel  */
+.uewMethodInfo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+}
+
+.uewMethodCard {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.12s;
+}
+
+.uewMethodCard:hover {
+    border-color: var(--brand-border);
+}
+
+.uewMethodCard.active {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.uewMethodCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.uewMethodCardIcon {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.uewMethodCardName {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.uewMethodCardDesc {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.uewMethodCardExample {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--brand);
+    background: var(--bg-surface);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/*  Tabs Bar  */
+.uewTabsBar {
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.uewTabs {
+    display: flex;
+    padding: 0 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.uewTabs::-webkit-scrollbar {
+    display: none;
+}
+
+.uewTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 38px;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.uewTab i {
+    font-size: 13px;
+}
+
+.uewTab:hover {
+    color: var(--text);
+}
+
+.uewTab.active {
+    color: var(--text);
+}
+
+.uewTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.uewBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/*  Options Bar  */
+.uewOptionsBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border-faint);
+    background: var(--bg-surface);
+}
+
+.uewToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.uewToggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.uewToggleTrack {
+    width: 32px;
+    height: 18px;
+    background: var(--border);
+    border-radius: 99px;
+    position: relative;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.uewToggle input:checked+.uewToggleTrack {
+    background: var(--brand);
+}
+
+.uewToggleThumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.15s;
+}
+
+.uewToggle input:checked+.uewToggleTrack .uewToggleThumb {
+    transform: translateX(14px);
+}
+
+.uewToggleLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/*  Content  */
+.uewContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.uewOutputTabs {
+    display: flex;
+    border-bottom: 0.5px solid var(--border-faint);
+    background: var(--bg-surface);
+    padding: 0 14px;
+}
+
+.uewOutputTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 36px;
+    padding: 0 11px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.uewOutputTab i {
+    font-size: 12.5px;
+}
+
+.uewOutputTab:hover {
+    color: var(--text-secondary);
+}
+
+.uewOutputTab.active {
+    color: var(--text);
+}
+
+.uewOutputTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 8px;
+    right: 8px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+/*  Stats Bar  */
+.uewStatsBar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.uewStat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+}
+
+.uewStatLabel {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-disabled);
+}
+
+.uewStatValue {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.uewStatValue.mono {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+}
+
+.uewStatValue.warn {
+    color: #f59e0b;
+}
+
+.uewStatValue.good {
+    color: var(--brand);
+}
+
+.uewSafety {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.uewSafety i {
+    font-size: 13px;
+}
+
+.uewSafety.levelSafe {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.uewSafety.levelCaution {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uewSafety.levelCaution {
+        background: #1c1400;
+        color: #fcd34d;
+    }
+}
+
+.uewSafety.levelWarning {
+    background: #fff7ed;
+    color: #9a3412;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uewSafety.levelWarning {
+        background: #1f1005;
+        color: #fdba74;
+    }
+}
+
+.uewSafety.levelDanger {
+    background: var(--error-bg);
+    color: #991b1b;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uewSafety.levelDanger {
+        color: #f87171;
+    }
+}
+
+/*  Footer  */
+.uewFooter {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    font-size: 11px;
+    color: var(--text-disabled);
+}
+
+.uewFooter i {
+    font-size: 13px;
+}
+
+/*  Responsive  */
+.uewLabel {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .uewLabel {
+        display: none;
+    }
+
+    .uewChrome {
+        padding: 8px 10px;
+    }
+
+    .uewMethodFull {
+        display: none;
+    }
+
+    .uewMethodShort {
+        display: inline;
+    }
+
+    .uewExamplesLabel {
+        display: none;
+    }
+
+    .uewMethodInfo {
+        grid-template-columns: 1fr;
+    }
+
+    .uewOptionsBar {
+        padding: 8px 10px;
+        gap: 12px;
+    }
+
+    .uewStatsBar {
+        gap: 5px;
+    }
+
+    .uewSafety {
+        margin-left: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .uewPill,
+    .uewIconBtn,
+    .uewActionBtn,
+    .uewTab,
+    .uewToggleTrack,
+    .uewToggleThumb,
+    .uewMethodCard {
+        transition: none;
+    }
+}

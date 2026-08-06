@@ -2,7 +2,7 @@
 "use client";
 
 import { useMemo, useState, useCallback } from "react";
-import { generateShades, generateTints, generateTones, hexToRgb, rgbToHsl } from "./utils";
+import { generateShades, generateTints, generateTones, hexToRgb, rgbToHsl } from "./ts/utils";
 
 interface ColorShadesProps {
   baseColor: string;
@@ -10,6 +10,8 @@ interface ColorShadesProps {
 }
 
 type ShadeType = "shades" | "tints" | "tones";
+
+import styles from "./style/ColorShades.module.css";
 
 export default function ColorShades({ baseColor, onColorSelect }: ColorShadesProps) {
   const [selectedType, setSelectedType] = useState<ShadeType>("shades");
@@ -63,40 +65,40 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
 
   return (
     <>
-      <div className="cs-root">
+      <div className={styles.csRoot}>
         {/*  Controls  */}
-        <div className="cs-controls">
-          <div className="cs-type-selector">
+        <div className={styles.csControls}>
+          <div className={styles.csTypeSelector}>
             {TYPES.map((type) => (
               <button
                 key={type.id}
                 type="button"
-                className={`cs-type-btn${selectedType === type.id ? " active" : ""}`}
+                className={`${styles.csTypeBtn}${selectedType === type.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setSelectedType(type.id)}
               >
                 <i className={`ti ${type.icon}`} />
-                <div className="cs-type-text">
-                  <span className="cs-type-label">{type.label}</span>
-                  <span className="cs-type-desc">{type.description}</span>
+                <div className={styles.csTypeText}>
+                  <span className={styles.csTypeLabel}>{type.label}</span>
+                  <span className={styles.csTypeDesc}>{type.description}</span>
                 </div>
               </button>
             ))}
           </div>
 
-          <div className="cs-count-control">
-            <label className="cs-count-label">
+          <div className={styles.csCountControl}>
+            <label className={styles.csCountLabel}>
               <i className="ti ti-adjustments-horizontal" />
               Count: {count}
             </label>
             <input
               type="range"
-              className="cs-range"
+              className={styles.csRange}
               min="5"
               max="15"
               value={count}
               onChange={(e) => setCount(Number(e.target.value))}
             />
-            <div className="cs-range-marks">
+            <div className={styles.csRangeMarks}>
               <span>5</span>
               <span>10</span>
               <span>15</span>
@@ -105,19 +107,19 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
         </div>
 
         {/*  Color Grid  */}
-        <div className="cs-display">
-          <div className="cs-display-header">
-            <div className="cs-display-label">
+        <div className={styles.csDisplay}>
+          <div className={styles.csDisplayHeader}>
+            <div className={styles.csDisplayLabel}>
               <i className="ti ti-palette" />
               {colors.length} Colors
             </div>
-            <button type="button" className="cs-copy-all-btn" onClick={handleCopyAll}>
+            <button type="button" className={styles.csCopyAllBtn} onClick={handleCopyAll}>
               <i className="ti ti-copy" />
               Copy All
             </button>
           </div>
 
-          <div className="cs-grid">
+          <div className={styles.csGrid}>
             {colors.map((color, idx) => {
               const rgb = hexToRgb(color);
               const hsl = rgb ? rgbToHsl(rgb.r, rgb.g, rgb.b) : null;
@@ -126,24 +128,24 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                 (selectedType === "shades" && idx === Math.floor(count / 2));
 
               return (
-                <div key={idx} className="cs-color-item">
+                <div key={idx} className={styles.csColorItem}>
                   <div
-                    className="cs-color-swatch"
+                    className={styles.csColorSwatch}
                     style={{ background: color }}
                     onClick={() => onColorSelect(color)}
                     role="button"
                     tabIndex={0}
                   >
                     {isBase && (
-                      <div className="cs-base-badge">
+                      <div className={styles.csBaseBadge}>
                         <i className="ti ti-star-filled" />
                       </div>
                     )}
                   </div>
-                  <div className="cs-color-details">
-                    <code className="cs-color-hex">{color.toUpperCase()}</code>
+                  <div className={styles.csColorDetails}>
+                    <code className={styles.csColorHex}>{color.toUpperCase()}</code>
                     {hsl && (
-                      <div className="cs-color-hsl">
+                      <div className={styles.csColorHsl}>
                         {selectedType === "shades" && `L: ${hsl.l}%`}
                         {selectedType === "tints" && `L: ${hsl.l}%`}
                         {selectedType === "tones" && `S: ${hsl.s}%`}
@@ -151,7 +153,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     )}
                     <button
                       type="button"
-                      className={`cs-copy-btn${copiedColor === color ? " copied" : ""}`}
+                      className={`${styles.csCopyBtn}${copiedColor === color ? ` ${styles.copied}` : ""}`}
                       onClick={() => handleCopyColor(color)}
                     >
                       <i className={`ti ${copiedColor === color ? "ti-check" : "ti-copy"}`} />
@@ -164,12 +166,12 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
         </div>
 
         {/*  CSS Export  */}
-        <div className="cs-export">
-          <div className="cs-export-header">
+        <div className={styles.csExport}>
+          <div className={styles.csExportHeader}>
             <i className="ti ti-file-code" />
             CSS Variables
           </div>
-          <div className="cs-export-code">
+          <div className={styles.csExportCode}>
             <code>
               {`:root {\n`}
               {colors.map((c, i) => `  --shade-${i + 1}: ${c};\n`).join("")}
@@ -178,7 +180,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
           </div>
           <button
             type="button"
-            className="cs-export-copy-btn"
+            className={styles.csExportCopyBtn}
             onClick={() => {
               const css = `:root {\n${colors.map((c, i) => `  --shade-${i + 1}: ${c};`).join("\n")}\n}`;
               navigator.clipboard.writeText(css);

@@ -6,17 +6,10 @@ import Link from "next/link";
 import { categories, faqs } from "./data";
 import styles from "./FAQ.module.css";
 
-interface FAQContentProps {}
-
 export default function FAQContent() {
-  // Initial state values
-  const initialActiveCategory = "all";
-  const initialSearchQuery = "";
-  const initialOpenItems: number[] = [];
-
-  const [activeCategory, setActiveCategory] = useState<string>(initialActiveCategory);
-  const [searchQuery, setSearchQuery] = useState<string>(initialSearchQuery);
-  const [openItems, setOpenItems] = useState<number[]>(initialOpenItems);
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [openItems, setOpenItems] = useState<number[]>([]);
 
   const filteredFaqs = faqs.filter((faq) => {
     const matchesCategory = activeCategory === "all" || faq.category === activeCategory;
@@ -33,138 +26,154 @@ export default function FAQContent() {
     );
   };
 
-  return (
-    <>
-      {/* Main */}
-      <section className={styles.faqMain}>
-        <div className={styles.faqMainContainer}>
-          {/* Search */}
-          <div className={styles.faqSearchWrapper}>
-            <span className={styles.faqSearchIcon}>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </span>
-            <input
-              type="text"
-              placeholder="Search for answers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={styles.faqSearchInput}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className={styles.faqSearchClear}
-                aria-label="Clear search"
-              >
-                <i className="ti ti-x" />
-              </button>
-            )}
-          </div>
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setActiveCategory("all");
+  };
 
-          {/* Categories */}
-          <div className={styles.faqCategories}>
+  const activeCategoryLabel =
+    categories.find((cat) => cat.id === activeCategory)?.label || "All Questions";
+
+  return (
+    <section className={styles.faqMain}>
+      <div className={styles.container}>
+        <div className={styles.faqGrid}>
+          {/* Categories Sidebar — Desktop */}
+          <aside className={styles.categoriesSidebar}>
+            <h2 className={styles.sidebarTitle}>Categories</h2>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`${styles.faqCategoryBtn} ${
-                  activeCategory === cat.id ? styles.active : ""
-                }`}
+                className={`${styles.categoryBtn} ${activeCategory === cat.id ? styles.active : ""
+                  }`}
               >
                 <i className={`ti ${cat.icon}`} />
                 <span className={styles.categoryLabel}>{cat.label}</span>
                 <span className={styles.categoryCount}>{cat.count}</span>
               </button>
             ))}
-          </div>
+          </aside>
 
-          {/* FAQ List */}
-          {filteredFaqs.length === 0 ? (
-            <div className={styles.faqEmpty}>
-              <div className={styles.emptyIcon}>
-                <i className="ti ti-search-off" />
-              </div>
-              <h3 className={styles.emptyTitle}>No results found</h3>
-              <p className={styles.emptyDescription}>
-                We couldn't find any questions matching <strong>"{searchQuery}"</strong>. Try
-                different keywords or browse all questions.
-              </p>
-              <button
-                onClick={() => {
-                  setSearchQuery("");
-                  setActiveCategory("all");
-                }}
-                className={styles.emptyResetBtn}
-              >
-                <i className="ti ti-refresh" />
-                Clear filters
-              </button>
-            </div>
-          ) : (
-            <div className={styles.faqItemsWrapper}>
-              {filteredFaqs.map((faq, index) => (
-                <div
-                  key={index}
-                  className={`${styles.faqItem} ${openItems.includes(index) ? styles.open : ""}`}
+          {/* Content Area */}
+          <div className={styles.contentArea}>
+            {/* Mobile Category Pills */}
+            <div className={styles.mobileCategoryPills}>
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`${styles.mobilePillBtn} ${activeCategory === cat.id ? styles.active : ""
+                    }`}
                 >
-                  <button
-                    onClick={() => toggleItem(index)}
-                    className={styles.faqQuestionBtn}
-                    aria-expanded={openItems.includes(index)}
-                  >
-                    <div className={styles.faqQuestionContent}>
-                      <div className={styles.faqQuestionIcon}>
-                        <i className="ti ti-help" />
-                      </div>
-                      <span className={styles.faqQuestionText}>{faq.question}</span>
-                    </div>
-                    <i
-                      className={`ti ti-chevron-down ${styles.faqChevron} ${
-                        openItems.includes(index) ? styles.rotate : ""
-                      }`}
-                    />
-                  </button>
-                  <div
-                    className={styles.faqAnswerWrapper}
-                    style={{
-                      maxHeight: openItems.includes(index) ? "500px" : "0",
-                    }}
-                  >
-                    <div className={styles.faqAnswer}>{faq.answer}</div>
-                  </div>
-                </div>
+                  <i className={`ti ${cat.icon}`} />
+                  <span>{cat.label}</span>
+                  <span className={styles.mobilePillCount}>{cat.count}</span>
+                </button>
               ))}
             </div>
-          )}
 
-          {/* CTA */}
-          <div className={styles.faqCTA}>
-            <div className={styles.faqCTAIcon}>
-              <i className="ti ti-message-circle" />
+            {/* Results Header */}
+            {(searchQuery || activeCategory !== "all") && filteredFaqs.length > 0 && (
+              <div className={styles.resultsHeader}>
+                <div className={styles.resultsCount}>
+                  <strong>{filteredFaqs.length}</strong>{" "}
+                  {filteredFaqs.length === 1 ? "question" : "questions"} found
+                  {searchQuery && ` for "${searchQuery}"`}
+                  {activeCategory !== "all" && ` in ${activeCategoryLabel}`}
+                </div>
+                {(searchQuery || activeCategory !== "all") && (
+                  <button onClick={handleClearFilters} className={styles.resultsClearBtn}>
+                    <i className="ti ti-x" />
+                    Clear
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* FAQ List */}
+            {filteredFaqs.length === 0 ? (
+              <div className={styles.faqEmpty}>
+                <div className={styles.emptyIcon}>
+                  <i className="ti ti-search-off" />
+                </div>
+                <h3 className={styles.emptyTitle}>No results found</h3>
+                <p className={styles.emptyDescription}>
+                  We couldn't find any questions matching{" "}
+                  {searchQuery && <strong>"{searchQuery}"</strong>}
+                  {searchQuery && activeCategory !== "all" && " "}
+                  {activeCategory !== "all" && (
+                    <>
+                      in <strong>{activeCategoryLabel}</strong>
+                    </>
+                  )}
+                  . Try different keywords or browse all questions.
+                </p>
+                <button onClick={handleClearFilters} className={styles.emptyResetBtn}>
+                  <i className="ti ti-refresh" />
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              <div className={styles.faqItemsWrapper}>
+                {filteredFaqs.map((faq, index) => (
+                  <div
+                    key={index}
+                    className={`${styles.faqItem} ${openItems.includes(index) ? styles.open : ""
+                      }`}
+                  >
+                    <button
+                      onClick={() => toggleItem(index)}
+                      className={styles.faqQuestionBtn}
+                      aria-expanded={openItems.includes(index)}
+                    >
+                      <div className={styles.faqQuestionContent}>
+                        <span className={styles.faqQuestionText}>{faq.question}</span>
+                      </div>
+                      <i
+                        className={`ti ti-chevron-down ${styles.faqChevron} ${openItems.includes(index) ? styles.rotate : ""
+                          }`}
+                      />
+                    </button>
+                    <div
+                      className={styles.faqAnswerWrapper}
+                      style={{
+                        maxHeight: openItems.includes(index) ? "500px" : "0",
+                      }}
+                    >
+                      <div className={styles.faqAnswer}>{faq.answer}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Help / CTA */}
+            <div className={styles.helpSection}>
+              <div className={styles.helpCard}>
+                <div className={styles.helpIcon}>
+                  <i className="ti ti-message-circle" />
+                </div>
+                <div className={styles.helpContent}>
+                  <h3 className={styles.helpTitle}>Still have questions?</h3>
+                  <p className={styles.helpText}>
+                    Can't find the answer you're looking for? Our support team is ready to help.
+                  </p>
+                </div>
+                <div className={styles.helpActions}>
+                  <Link href="/about" className={styles.helpLinkSecondary}>
+                    Learn More
+                  </Link>
+                  <Link href="/contact" className={styles.helpLinkPrimary}>
+                    Contact Support
+                    <i className="ti ti-arrow-right" />
+                  </Link>
+                </div>
+              </div>
             </div>
-            <h3 className={styles.faqCTATitle}>Still have questions?</h3>
-            <p className={styles.faqCTADescription}>
-              Can't find the answer you're looking for? Our support team is ready to help.
-            </p>
-            <Link href="/contact" className={styles.faqCTAButton}>
-              Contact Support
-              <i className="ti ti-arrow-right" />
-            </Link>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

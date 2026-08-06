@@ -1,0 +1,362 @@
+/* features/dev/jwt-decoder/style/SecurityAnalyzer.module.css */
+.saRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow: auto;
+    padding: 16px;
+}
+
+.saScoreCard {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-surface) 100%);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.saScoreVisual {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.saScoreGrade {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    font-family: var(--font-sans);
+}
+
+.saScoreGrade--a {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.saScoreGrade--b {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.saScoreGrade--c {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.saScoreGrade--d {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+}
+
+.saScoreGrade--f {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.saScoreDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.saScoreValue {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1;
+}
+
+.saScoreLabel {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.saScoreSummary {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+}
+
+.saSummaryItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.saSummaryItem i {
+    font-size: 14px;
+}
+
+.saSummaryItemCritical {
+    color: #dc2626;
+}
+
+.saSummaryItemWarning {
+    color: #d97706;
+}
+
+.saSummaryItemInfo {
+    color: #2563eb;
+}
+
+.saSummaryItemSuccess {
+    color: #059669;
+}
+
+@media (prefers-color-scheme: dark) {
+    .saSummaryItemCritical {
+        color: #f87171;
+    }
+
+    .saSummaryItemWarning {
+        color: #fbbf24;
+    }
+
+    .saSummaryItemInfo {
+        color: #60a5fa;
+    }
+
+    .saSummaryItemSuccess {
+        color: #34d399;
+    }
+}
+
+.saIssues {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saIssuesHeader,
+.saPracticesHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+}
+
+.saIssuesHeader i,
+.saPracticesHeader i {
+    font-size: 14px;
+}
+
+.saIssuesList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.saIssue {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-left: 3px solid;
+    border-radius: var(--radius-md);
+}
+
+.saIssue--critical {
+    border-left-color: #dc2626;
+    background: rgba(220, 38, 38, 0.03);
+}
+
+.saIssue--warning {
+    border-left-color: #d97706;
+    background: rgba(217, 119, 6, 0.03);
+}
+
+.saIssue--info {
+    border-left-color: #2563eb;
+    background: rgba(37, 99, 235, 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+    .saIssue--critical {
+        border-left-color: #f87171;
+        background: rgba(248, 113, 113, 0.05);
+    }
+
+    .saIssue--warning {
+        border-left-color: #fbbf24;
+        background: rgba(251, 191, 36, 0.05);
+    }
+
+    .saIssue--info {
+        border-left-color: #60a5fa;
+        background: rgba(96, 165, 250, 0.05);
+    }
+}
+
+.saIssueHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.saIssueIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+}
+
+.saIssue--critical .saIssueIcon {
+    color: #dc2626;
+}
+
+.saIssue--warning .saIssueIcon {
+    color: #d97706;
+}
+
+.saIssue--info .saIssueIcon {
+    color: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+    .saIssue--critical .saIssueIcon {
+        color: #f87171;
+    }
+
+    .saIssue--warning .saIssueIcon {
+        color: #fbbf24;
+    }
+
+    .saIssue--info .saIssueIcon {
+        color: #60a5fa;
+    }
+}
+
+.saIssueTitle {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.saIssueBadge {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.saIssueBadge--critical {
+    background: #dc2626;
+    color: white;
+}
+
+.saIssueBadge--warning {
+    background: #d97706;
+    color: white;
+}
+
+.saIssueBadge--info {
+    background: #2563eb;
+    color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    .saIssueBadge--critical {
+        background: #f87171;
+        color: #1a1a17;
+    }
+
+    .saIssueBadge--warning {
+        background: #fbbf24;
+        color: #1a1a17;
+    }
+
+    .saIssueBadge--info {
+        background: #60a5fa;
+        color: #1a1a17;
+    }
+}
+
+.saIssueDescription {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    padding-left: 28px;
+}
+
+.saIssueRecommendation {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 12px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    color: var(--brand-text);
+    line-height: 1.5;
+    margin-left: 28px;
+}
+
+.saIssueRecommendation i {
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.saPractices {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.saPracticesList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.saPractice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.saPractice i {
+    font-size: 14px;
+    color: var(--brand);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+@media (max-width: 768px) {
+    .saScoreCard {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .saScoreVisual {
+        padding-bottom: 16px;
+        border-bottom: 0.5px solid var(--border-faint);
+    }
+}

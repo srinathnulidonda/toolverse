@@ -3,18 +3,14 @@
 
 import { useState, useCallback } from "react";
 import type { Tool } from "@/lib/tools";
-import type { GeneratorOptions, GeneratedString, PresetType } from "./utils";
-import { DEFAULT_OPTIONS, PRESETS } from "./utils";
-import { useStringStore } from "./stringStore";
+import type { GeneratorOptions, GeneratedString, PresetType } from "./ts/utils";
+import { DEFAULT_OPTIONS, PRESETS } from "./ts/utils";
+import { useStringStore } from "./ts/stringStore";
 import GeneratorPanel from "./GeneratorPanel";
 import BatchGenerator from "./BatchGenerator";
 import PatternGenerator from "./PatternGenerator";
 import HistoryView from "./HistoryView";
-import "./style/BatchGenerator.css";
-import "./style/GeneratorPanel.css";
-import "./style/HistoryView.css";
-import "./style/PatternGenerator.css";
-import "./style/Workspace.css";
+import styles from "./style/Workspace.module.css";
 
 type ViewTab = "single" | "batch" | "pattern" | "history";
 
@@ -95,30 +91,30 @@ export default function RandomStringGeneratorWorkspace({ tool }: { tool: Tool })
 
   return (
     <>
-      <div className="rsg-root">
+      <div className={styles.rsgRoot}>
         {/*  Top Chrome  */}
-        <div className="rsg-chrome">
-          <div className="rsg-chrome-left">
-            <span className="rsg-preset-label">Presets:</span>
+        <div className={styles.rsgChrome}>
+          <div className={styles.rsgChromeLeft}>
+            <span className={styles.rsgPresetLabel}>Presets:</span>
             {Object.entries(PRESETS)
               .slice(0, 4)
               .map(([key, preset]) => (
                 <button
                   key={key}
                   type="button"
-                  className="rsg-preset-btn"
+                  className={styles.rsgPresetBtn}
                   onClick={() => loadPreset(key as PresetType)}
                   title={preset.label}
                 >
                   <i className={`ti ${preset.icon}`} />
-                  <span className="rsg-preset-text">{preset.label}</span>
+                  <span className={styles.rsgPresetText}>{preset.label}</span>
                 </button>
               ))}
           </div>
 
-          <div className="rsg-chrome-right">
+          <div className={styles.rsgChromeRight}>
             {history.length > 0 && (
-              <div className="rsg-history-badge">
+              <div className={styles.rsgHistoryBadge}>
                 <i className="ti ti-history" />
                 {history.length}
               </div>
@@ -127,8 +123,8 @@ export default function RandomStringGeneratorWorkspace({ tool }: { tool: Tool })
         </div>
 
         {/*  View Tabs  */}
-        <div className="rsg-tabs-bar">
-          <nav className="rsg-tabs" role="tablist" aria-label="View selector">
+        <div className={styles.rsgTabsBar}>
+          <nav className={styles.rsgTabs} role="tablist" aria-label="View selector">
             {VIEW_TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -136,13 +132,13 @@ export default function RandomStringGeneratorWorkspace({ tool }: { tool: Tool })
                 role="tab"
                 aria-selected={viewTab === tab.id}
                 aria-controls={`rsg-panel-${tab.id}`}
-                className={`rsg-tab${viewTab === tab.id ? " active" : ""}`}
+                className={`${styles.rsgTab}${viewTab === tab.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewTab(tab.id)}
               >
                 <i className={`ti ${tab.icon}`} />
                 <span>{tab.label}</span>
                 {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className="rsg-tab-badge">{history.length}</span>
+                  <span className={styles.rsgTabBadge}>{history.length}</span>
                 )}
               </button>
             ))}
@@ -150,9 +146,9 @@ export default function RandomStringGeneratorWorkspace({ tool }: { tool: Tool })
         </div>
 
         {/*  Tab Content  */}
-        <div className="rsg-tab-content">
+        <div className={styles.rsgTabContent}>
           {viewTab === "single" && (
-            <div id="rsg-panel-single" role="tabpanel" className="rsg-panel">
+            <div id="rsg-panel-single" role="tabpanel" className={styles.rsgPanel}>
               <GeneratorPanel
                 options={options}
                 onOptionsChange={setOptions}
@@ -162,19 +158,19 @@ export default function RandomStringGeneratorWorkspace({ tool }: { tool: Tool })
           )}
 
           {viewTab === "batch" && (
-            <div id="rsg-panel-batch" role="tabpanel" className="rsg-panel">
+            <div id="rsg-panel-batch" role="tabpanel" className={styles.rsgPanel}>
               <BatchGenerator options={options} onGenerate={handleBatchGenerate} />
             </div>
           )}
 
           {viewTab === "pattern" && (
-            <div id="rsg-panel-pattern" role="tabpanel" className="rsg-panel">
+            <div id="rsg-panel-pattern" role="tabpanel" className={styles.rsgPanel}>
               <PatternGenerator onGenerate={handlePatternGenerate} />
             </div>
           )}
 
           {viewTab === "history" && (
-            <div id="rsg-panel-history" role="tabpanel" className="rsg-panel">
+            <div id="rsg-panel-history" role="tabpanel" className={styles.rsgPanel}>
               <HistoryView
                 history={history}
                 favorites={favorites}
@@ -189,7 +185,7 @@ export default function RandomStringGeneratorWorkspace({ tool }: { tool: Tool })
         </div>
 
         {/*  Footer  */}
-        <div className="rsg-footer">
+        <div className={styles.rsgFooter}>
           <i className="ti ti-shield-lock" />
           <span>
             Generated using cryptographically secure random values (crypto.getRandomValues). All

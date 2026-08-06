@@ -1,0 +1,362 @@
+/* features/dev/uuid-generator/style/Workspace.module.css */
+.ugWorkspaceRoot {
+    --ug-radius-sm: 6px;
+    --ug-radius-md: 8px;
+    --ug-radius-lg: 12px;
+    --ug-radius-xl: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--ug-radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+/*  Chrome  */
+.ugChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.ugChromeLeft,
+.ugChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/*  Pill Group (Version Selector)  */
+.ugPillGroup {
+    display: flex;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--ug-radius-md);
+    overflow: hidden;
+}
+
+.ugPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 30px;
+    padding: 0 11px;
+    border: none;
+    border-right: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+}
+
+.ugPill:last-child {
+    border-right: none;
+}
+
+.ugPill:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.ugPill.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+/*  Format Group  */
+.ugFormatGroup {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ugFormatLabel {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.ugSelect {
+    height: 30px;
+    padding: 0 10px;
+    border-radius: var(--ug-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.12s;
+}
+
+.ugSelect:focus {
+    border-color: var(--brand-border);
+}
+
+/*  Case Group  */
+.ugCaseGroup {
+    display: flex;
+    gap: 2px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--ug-radius-md);
+    overflow: hidden;
+    padding: 2px;
+}
+
+.ugCaseBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 9px;
+    border: none;
+    border-radius: calc(var(--ug-radius-md) - 2px);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ugCaseBtn i {
+    font-size: 12px;
+}
+
+.ugCaseLabel {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.02em;
+}
+
+.ugCaseBtn:hover {
+    color: var(--text);
+}
+
+.ugCaseBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+/*  Info Badge  */
+.ugInfoBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+    font-size: 10.5px;
+    font-weight: 600;
+}
+
+.ugInfoBadge i {
+    font-size: 11px;
+}
+
+/*  Tabs Bar  */
+.ugTabsBar {
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.ugTabs {
+    display: flex;
+    padding: 0 14px;
+    gap: 4px;
+}
+
+.ugTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 40px;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+    white-space: nowrap;
+}
+
+.ugTab i {
+    font-size: 14px;
+}
+
+.ugTab:hover {
+    color: var(--text);
+}
+
+.ugTab.active {
+    color: var(--text);
+}
+
+.ugTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.ugTabBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/*  Tab Content  */
+.ugTabContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.ugTabContent>div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*  Footer  */
+.ugFooter {
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    padding: 10px 14px;
+}
+
+.ugFooterInfo {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+}
+
+.ugFooterInfo i {
+    font-size: 13px;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+/*  Responsive  */
+@media (max-width: 900px) {
+    .ugChrome {
+        padding: 8px 12px;
+    }
+
+    .ugChromeLeft {
+        width: 100%;
+    }
+
+    .ugPillGroup {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .ugPill {
+        flex: 1;
+        justify-content: center;
+        padding: 0 8px;
+        font-size: 10px;
+    }
+
+    .ugFormatGroup {
+        flex: 1;
+    }
+
+    .ugSelect {
+        flex: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .ugWorkspaceRoot {
+        min-height: auto;
+        border-radius: var(--ug-radius-lg);
+    }
+
+    .ugTab span:not(.ugTabBadge) {
+        display: none;
+    }
+
+    .ugTab {
+        padding: 0 12px;
+    }
+
+    .ugInfoBadge span {
+        display: none;
+    }
+
+    .ugFormatLabel {
+        display: none;
+    }
+
+    .ugCaseLabel {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .ugPill {
+        font-size: 9px;
+        padding: 0 6px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ugPill,
+    .ugSelect,
+    .ugCaseBtn,
+    .ugTab {
+        transition: none;
+    }
+}
+
+/*  Focus visible states  */
+.ugPill:focus-visible,
+.ugSelect:focus-visible,
+.ugCaseBtn:focus-visible,
+.ugTab:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+    border-radius: var(--ug-radius-sm);
+}

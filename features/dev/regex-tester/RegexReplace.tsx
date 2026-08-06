@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { performReplace, type RegexFlags } from "./utils";
+import { performReplace, type RegexFlags } from "./ts/utils";
+import styles from "./style/RegexReplace.module.css";
 
 interface RegexReplaceProps {
   pattern: string;
@@ -72,23 +73,23 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
 
   return (
     <>
-      <div className="rxr-root">
+      <div className={styles.rxrRoot}>
         {/* Input Section */}
-        <div className="rxr-section">
-          <div className="rxr-section-header">
-            <div className="rxr-section-title">
+        <div className={styles.rxrSection}>
+          <div className={styles.rxrSectionHeader}>
+            <div className={styles.rxrSectionTitle}>
               <i className="ti ti-file-text" />
               Input Text
             </div>
-            <div className="rxr-section-actions">
+            <div className={styles.rxrSectionActions}>
               {testString && (
                 <>
-                  <span className="rxr-meta-text">
+                  <span className={styles.rxrMetaText}>
                     {testString.length} chars · {testString.split("\n").length} lines
                   </span>
                   <button
                     type="button"
-                    className="rxr-icon-btn"
+                    className={styles.rxrIconBtn}
                     onClick={() => setTestString("")}
                     title="Clear"
                   >
@@ -99,7 +100,7 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
             </div>
           </div>
           <textarea
-            className="rxr-textarea"
+            className={styles.rxrTextarea}
             value={testString}
             onChange={(e) => setTestString(e.target.value)}
             placeholder="Enter text to perform find and replace..."
@@ -109,24 +110,24 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
         </div>
 
         {/* Replacement Section */}
-        <div className="rxr-section">
-          <div className="rxr-section-header">
-            <div className="rxr-section-title">
+        <div className={styles.rxrSection}>
+          <div className={styles.rxrSectionHeader}>
+            <div className={styles.rxrSectionTitle}>
               <i className="ti ti-replace" />
               Replacement
             </div>
-            <div className="rxr-section-actions">
-              <div className="rxr-mode-group">
+            <div className={styles.rxrSectionActions}>
+              <div className={styles.rxrModeGroup}>
                 <button
                   type="button"
-                  className={`rxr-mode-btn${replaceMode === "standard" ? " active" : ""}`}
+                  className={`${styles.rxrModeBtn}${replaceMode === "standard" ? ` ${styles.active}` : ""}`}
                   onClick={() => setReplaceMode("standard")}
                 >
                   Text
                 </button>
                 <button
                   type="button"
-                  className={`rxr-mode-btn${replaceMode === "function" ? " active" : ""}`}
+                  className={`${styles.rxrModeBtn}${replaceMode === "function" ? ` ${styles.active}` : ""}`}
                   onClick={() => setReplaceMode("function")}
                   title="Advanced: Use function"
                 >
@@ -136,9 +137,9 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
             </div>
           </div>
 
-          <div className="rxr-replace-input-wrap">
+          <div className={styles.rxrReplaceInputWrap}>
             <textarea
-              className="rxr-textarea rxr-replace-input"
+              className={`${styles.rxrTextarea} ${styles.rxrReplaceInput}`}
               value={replacement}
               onChange={(e) => setReplacement(e.target.value)}
               placeholder={
@@ -151,17 +152,17 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
             />
 
             {replaceMode === "standard" && (
-              <div className="rxr-substitution-help">
-                <div className="rxr-help-title">
+              <div className={styles.rxrSubstitutionHelp}>
+                <div className={styles.rxrHelpTitle}>
                   <i className="ti ti-help-circle" />
                   Substitution Variables
                 </div>
-                <div className="rxr-vars-grid">
+                <div className={styles.rxrVarsGrid}>
                   {substitutionVars.map((v) => (
                     <button
                       key={v.var}
                       type="button"
-                      className="rxr-var-chip"
+                      className={styles.rxrVarChip}
                       onClick={() => setReplacement((prev) => prev + v.var)}
                       title={v.desc}
                     >
@@ -177,23 +178,23 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
 
         {/* Result Stats */}
         {result && (
-          <div className="rxr-stats-bar">
-            <div className="rxr-stats-items">
-              <div className="rxr-stat">
+          <div className={styles.rxrStatsBar}>
+            <div className={styles.rxrStatsItems}>
+              <div className={styles.rxrStat}>
                 <i className="ti ti-replace" />
                 <span>
                   <strong>{result.replacementCount}</strong> replacement
                   {result.replacementCount !== 1 ? "s" : ""}
                 </span>
               </div>
-              <div className="rxr-stat">
+              <div className={styles.rxrStat}>
                 <i className="ti ti-text-size" />
                 <span>
                   {result.original.length} → {result.replaced.length} chars
                 </span>
               </div>
               {result.original !== result.replaced && (
-                <div className="rxr-stat rxr-stat-change">
+                <div className={`${styles.rxrStat} ${styles.rxrStatChange}`}>
                   <i
                     className={`ti ${result.replaced.length > result.original.length ? "ti-arrow-up" : "ti-arrow-down"}`}
                   />
@@ -202,7 +203,7 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
               )}
             </div>
 
-            <label className="rxr-toggle-label">
+            <label className={styles.rxrToggleLabel}>
               <input
                 type="checkbox"
                 checked={showDiff}
@@ -215,19 +216,19 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
 
         {/* Result Output */}
         {result && (
-          <div className="rxr-section">
-            <div className="rxr-section-header">
-              <div className="rxr-section-title">
+          <div className={styles.rxrSection}>
+            <div className={styles.rxrSectionHeader}>
+              <div className={styles.rxrSectionTitle}>
                 <i className="ti ti-check" />
                 Result
                 {result.replacementCount > 0 && (
-                  <span className="rxr-count-badge">{result.replacementCount}</span>
+                  <span className={styles.rxrCountBadge}>{result.replacementCount}</span>
                 )}
               </div>
-              <div className="rxr-section-actions">
+              <div className={styles.rxrSectionActions}>
                 <button
                   type="button"
-                  className={`rxr-copy-btn${copiedKey === "result" ? " copied" : ""}`}
+                  className={`${styles.rxrCopyBtn}${copiedKey === "result" ? ` ${styles.copied}` : ""}`}
                   onClick={() => handleCopy(result.replaced, "result")}
                   disabled={!result.replaced}
                 >
@@ -238,28 +239,28 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
             </div>
 
             {showDiff && diff ? (
-              <div className="rxr-diff-view">
-                <div className="rxr-diff-header">
-                  <div className="rxr-diff-col">
-                    <span className="rxr-diff-label removed">Original</span>
+              <div className={styles.rxrDiffView}>
+                <div className={styles.rxrDiffHeader}>
+                  <div className={styles.rxrDiffCol}>
+                    <span className={`${styles.rxrDiffLabel} ${styles.removed}`}>Original</span>
                   </div>
-                  <div className="rxr-diff-col">
-                    <span className="rxr-diff-label added">Replaced</span>
+                  <div className={styles.rxrDiffCol}>
+                    <span className={`${styles.rxrDiffLabel} ${styles.added}`}>Replaced</span>
                   </div>
                 </div>
-                <div className="rxr-diff-lines">
+                <div className={styles.rxrDiffLines}>
                   {diff.map((line, idx) => (
-                    <div key={idx} className={`rxr-diff-row${line.changed ? " changed" : ""}`}>
-                      <div className="rxr-diff-col">
-                        <span className="rxr-line-num">{line.lineNum}</span>
-                        <span className="rxr-line-text">
-                          {line.original || <span className="rxr-empty-line">(empty)</span>}
+                    <div key={idx} className={`${styles.rxrDiffRow}${line.changed ? ` ${styles.changed}` : ""}`}>
+                      <div className={styles.rxrDiffCol}>
+                        <span className={styles.rxrLineNum}>{line.lineNum}</span>
+                        <span className={styles.rxrLineText}>
+                          {line.original || <span className={styles.rxrEmptyLine}>(empty)</span>}
                         </span>
                       </div>
-                      <div className="rxr-diff-col">
-                        <span className="rxr-line-num">{line.lineNum}</span>
-                        <span className="rxr-line-text">
-                          {line.replaced || <span className="rxr-empty-line">(empty)</span>}
+                      <div className={styles.rxrDiffCol}>
+                        <span className={styles.rxrLineNum}>{line.lineNum}</span>
+                        <span className={styles.rxrLineText}>
+                          {line.replaced || <span className={styles.rxrEmptyLine}>(empty)</span>}
                         </span>
                       </div>
                     </div>
@@ -267,8 +268,8 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
                 </div>
               </div>
             ) : (
-              <div className="rxr-result-output">
-                <pre className="rxr-output-text">{result.replaced}</pre>
+              <div className={styles.rxrResultOutput}>
+                <pre className={styles.rxrOutputText}>{result.replaced}</pre>
               </div>
             )}
           </div>
@@ -276,12 +277,12 @@ export default function RegexReplace({ pattern, flags }: RegexReplaceProps) {
 
         {/* Empty State */}
         {!pattern && (
-          <div className="rxr-empty">
-            <div className="rxr-empty-icon">
+          <div className={styles.rxrEmpty}>
+            <div className={styles.rxrEmptyIcon}>
               <i className="ti ti-replace" />
             </div>
-            <p className="rxr-empty-title">Find and Replace with Regex</p>
-            <p className="rxr-empty-desc">
+            <p className={styles.rxrEmptyTitle}>Find and Replace with Regex</p>
+            <p className={styles.rxrEmptyDesc}>
               Enter a regex pattern above to start finding and replacing text
             </p>
           </div>

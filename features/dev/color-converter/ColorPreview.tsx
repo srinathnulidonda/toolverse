@@ -2,12 +2,14 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { parseColor, getContrastRatio, getWCAGCompliance, getColorName } from "./utils";
+import { parseColor, getContrastRatio, getWCAGCompliance, getColorName } from "./ts/utils";
 
 interface ColorPreviewProps {
   color: string;
   onColorChange: (color: string, format: string) => void;
 }
+
+import styles from "./style/ColorPreview.module.css";
 
 export default function ColorPreview({ color, onColorChange }: ColorPreviewProps) {
   const [input, setInput] = useState(color);
@@ -57,25 +59,25 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
 
   return (
     <>
-      <div className="cp-root">
+      <div className={styles.cpRoot}>
         {/*  Input Section  */}
-        <div className="cp-input-section">
-          <div className="cp-input-row">
-            <div className="cp-picker-group">
-              <label className="cp-picker-label">Color Picker</label>
+        <div className={styles.cpInputSection}>
+          <div className={styles.cpInputRow}>
+            <div className={styles.cpPickerGroup}>
+              <label className={styles.cpPickerLabel}>Color Picker</label>
               <input
                 type="color"
-                className="cp-color-picker"
+                className={styles.cpColorPicker}
                 value={colorData?.hex || "#000000"}
                 onChange={(e) => handlePickerChange(e.target.value)}
               />
             </div>
 
-            <div className="cp-text-group">
-              <label className="cp-text-label">Or Enter Value</label>
+            <div className={styles.cpTextGroup}>
+              <label className={styles.cpTextLabel}>Or Enter Value</label>
               <input
                 type="text"
-                className="cp-text-input"
+                className={styles.cpTextInput}
                 value={input}
                 onChange={(e) => handleInputChange(e.target.value)}
                 placeholder="#3B82F6 or rgb(59, 130, 246)"
@@ -84,7 +86,7 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
           </div>
 
           {!colorData && input && (
-            <div className="cp-error">
+            <div className={styles.cpError}>
               <i className="ti ti-alert-circle" />
               Invalid color format. Try HEX (#3B82F6), RGB (rgb(59,130,246)), or HSL
               (hsl(217,91%,60%))
@@ -93,53 +95,53 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
         </div>
 
         {colorData ? (
-          <div className="cp-content">
+          <div className={styles.cpContent}>
             {/*  Preview Card  */}
-            <div className="cp-preview-card">
-              <div className="cp-preview-swatch" style={{ background: colorData.hex }}>
-                <div className="cp-preview-overlay">
-                  <span className="cp-preview-hex">{colorData.hex.toUpperCase()}</span>
-                  <span className="cp-preview-name">{colorName}</span>
+            <div className={styles.cpPreviewCard}>
+              <div className={styles.cpPreviewSwatch} style={{ background: colorData.hex }}>
+                <div className={styles.cpPreviewOverlay}>
+                  <span className={styles.cpPreviewHex}>{colorData.hex.toUpperCase()}</span>
+                  <span className={styles.cpPreviewName}>{colorName}</span>
                 </div>
               </div>
             </div>
 
             {/*  Format Cards  */}
-            <div className="cp-formats">
+            <div className={styles.cpFormats}>
               {/* HEX */}
-              <div className="cp-format-card">
-                <div className="cp-format-header">
-                  <div className="cp-format-icon">
+              <div className={styles.cpFormatCard}>
+                <div className={styles.cpFormatHeader}>
+                  <div className={styles.cpFormatIcon}>
                     <i className="ti ti-hash" />
                   </div>
-                  <div className="cp-format-info">
-                    <span className="cp-format-title">HEX</span>
-                    <span className="cp-format-desc">Hexadecimal</span>
+                  <div className={styles.cpFormatInfo}>
+                    <span className={styles.cpFormatTitle}>HEX</span>
+                    <span className={styles.cpFormatDesc}>Hexadecimal</span>
                   </div>
                   <button
                     type="button"
-                    className={`cp-copy-btn${copiedKey === "hex" ? " copied" : ""}`}
+                    className={[styles.cpCopyBtn, copiedKey === "hex" ? styles.copied : ""].filter(Boolean).join(" ")}
                     onClick={() => handleCopy(colorData.hex.toUpperCase(), "hex")}
                   >
                     <i className={`ti ${copiedKey === "hex" ? "ti-check" : "ti-copy"}`} />
                   </button>
                 </div>
-                <div className="cp-format-value">{colorData.hex.toUpperCase()}</div>
+                <div className={styles.cpFormatValue}>{colorData.hex.toUpperCase()}</div>
               </div>
 
               {/* RGB */}
-              <div className="cp-format-card">
-                <div className="cp-format-header">
-                  <div className="cp-format-icon cp-icon-rgb">
+              <div className={styles.cpFormatCard}>
+                <div className={styles.cpFormatHeader}>
+                  <div className={`${styles.cpFormatIcon} ${styles.cpIconRgb}`}>
                     <i className="ti ti-code" />
                   </div>
-                  <div className="cp-format-info">
-                    <span className="cp-format-title">RGB</span>
-                    <span className="cp-format-desc">Red, Green, Blue</span>
+                  <div className={styles.cpFormatInfo}>
+                    <span className={styles.cpFormatTitle}>RGB</span>
+                    <span className={styles.cpFormatDesc}>Red, Green, Blue</span>
                   </div>
                   <button
                     type="button"
-                    className={`cp-copy-btn${copiedKey === "rgb" ? " copied" : ""}`}
+                    className={[styles.cpCopyBtn, copiedKey === "rgb" ? styles.copied : ""].filter(Boolean).join(" ")}
                     onClick={() =>
                       handleCopy(
                         `rgb(${colorData.rgb.r}, ${colorData.rgb.g}, ${colorData.rgb.b})`,
@@ -150,29 +152,29 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     <i className={`ti ${copiedKey === "rgb" ? "ti-check" : "ti-copy"}`} />
                   </button>
                 </div>
-                <div className="cp-format-value">
+                <div className={styles.cpFormatValue}>
                   rgb({colorData.rgb.r}, {colorData.rgb.g}, {colorData.rgb.b})
                 </div>
-                <div className="cp-format-channels">
-                  <span className="cp-channel">R: {colorData.rgb.r}</span>
-                  <span className="cp-channel">G: {colorData.rgb.g}</span>
-                  <span className="cp-channel">B: {colorData.rgb.b}</span>
+                <div className={styles.cpFormatChannels}>
+                  <span className={styles.cpChannel}>R: {colorData.rgb.r}</span>
+                  <span className={styles.cpChannel}>G: {colorData.rgb.g}</span>
+                  <span className={styles.cpChannel}>B: {colorData.rgb.b}</span>
                 </div>
               </div>
 
               {/* HSL */}
-              <div className="cp-format-card">
-                <div className="cp-format-header">
-                  <div className="cp-format-icon cp-icon-hsl">
+              <div className={styles.cpFormatCard}>
+                <div className={styles.cpFormatHeader}>
+                  <div className={`${styles.cpFormatIcon} ${styles.cpIconHsl}`}>
                     <i className="ti ti-adjustments" />
                   </div>
-                  <div className="cp-format-info">
-                    <span className="cp-format-title">HSL</span>
-                    <span className="cp-format-desc">Hue, Saturation, Lightness</span>
+                  <div className={styles.cpFormatInfo}>
+                    <span className={styles.cpFormatTitle}>HSL</span>
+                    <span className={styles.cpFormatDesc}>Hue, Saturation, Lightness</span>
                   </div>
                   <button
                     type="button"
-                    className={`cp-copy-btn${copiedKey === "hsl" ? " copied" : ""}`}
+                    className={[styles.cpCopyBtn, copiedKey === "hsl" ? styles.copied : ""].filter(Boolean).join(" ")}
                     onClick={() =>
                       handleCopy(
                         `hsl(${colorData.hsl.h}, ${colorData.hsl.s}%, ${colorData.hsl.l}%)`,
@@ -183,29 +185,29 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     <i className={`ti ${copiedKey === "hsl" ? "ti-check" : "ti-copy"}`} />
                   </button>
                 </div>
-                <div className="cp-format-value">
+                <div className={styles.cpFormatValue}>
                   hsl({colorData.hsl.h}, {colorData.hsl.s}%, {colorData.hsl.l}%)
                 </div>
-                <div className="cp-format-channels">
-                  <span className="cp-channel">H: {colorData.hsl.h}°</span>
-                  <span className="cp-channel">S: {colorData.hsl.s}%</span>
-                  <span className="cp-channel">L: {colorData.hsl.l}%</span>
+                <div className={styles.cpFormatChannels}>
+                  <span className={styles.cpChannel}>H: {colorData.hsl.h}°</span>
+                  <span className={styles.cpChannel}>S: {colorData.hsl.s}%</span>
+                  <span className={styles.cpChannel}>L: {colorData.hsl.l}%</span>
                 </div>
               </div>
 
               {/* HSV */}
-              <div className="cp-format-card">
-                <div className="cp-format-header">
-                  <div className="cp-format-icon cp-icon-hsv">
+              <div className={styles.cpFormatCard}>
+                <div className={styles.cpFormatHeader}>
+                  <div className={`${styles.cpFormatIcon} ${styles.cpIconHsv}`}>
                     <i className="ti ti-color-swatch" />
                   </div>
-                  <div className="cp-format-info">
-                    <span className="cp-format-title">HSV</span>
-                    <span className="cp-format-desc">Hue, Saturation, Value</span>
+                  <div className={styles.cpFormatInfo}>
+                    <span className={styles.cpFormatTitle}>HSV</span>
+                    <span className={styles.cpFormatDesc}>Hue, Saturation, Value</span>
                   </div>
                   <button
                     type="button"
-                    className={`cp-copy-btn${copiedKey === "hsv" ? " copied" : ""}`}
+                    className={[styles.cpCopyBtn, copiedKey === "hsv" ? styles.copied : ""].filter(Boolean).join(" ")}
                     onClick={() =>
                       handleCopy(
                         `hsv(${colorData.hsv.h}, ${colorData.hsv.s}%, ${colorData.hsv.v}%)`,
@@ -216,29 +218,29 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     <i className={`ti ${copiedKey === "hsv" ? "ti-check" : "ti-copy"}`} />
                   </button>
                 </div>
-                <div className="cp-format-value">
+                <div className={styles.cpFormatValue}>
                   hsv({colorData.hsv.h}, {colorData.hsv.s}%, {colorData.hsv.v}%)
                 </div>
-                <div className="cp-format-channels">
-                  <span className="cp-channel">H: {colorData.hsv.h}°</span>
-                  <span className="cp-channel">S: {colorData.hsv.s}%</span>
-                  <span className="cp-channel">V: {colorData.hsv.v}%</span>
+                <div className={styles.cpFormatChannels}>
+                  <span className={styles.cpChannel}>H: {colorData.hsv.h}°</span>
+                  <span className={styles.cpChannel}>S: {colorData.hsv.s}%</span>
+                  <span className={styles.cpChannel}>V: {colorData.hsv.v}%</span>
                 </div>
               </div>
 
               {/* CMYK */}
-              <div className="cp-format-card">
-                <div className="cp-format-header">
-                  <div className="cp-format-icon cp-icon-cmyk">
+              <div className={styles.cpFormatCard}>
+                <div className={styles.cpFormatHeader}>
+                  <div className={`${styles.cpFormatIcon} ${styles.cpIconCmyk}`}>
                     <i className="ti ti-printer" />
                   </div>
-                  <div className="cp-format-info">
-                    <span className="cp-format-title">CMYK</span>
-                    <span className="cp-format-desc">Cyan, Magenta, Yellow, Black</span>
+                  <div className={styles.cpFormatInfo}>
+                    <span className={styles.cpFormatTitle}>CMYK</span>
+                    <span className={styles.cpFormatDesc}>Cyan, Magenta, Yellow, Black</span>
                   </div>
                   <button
                     type="button"
-                    className={`cp-copy-btn${copiedKey === "cmyk" ? " copied" : ""}`}
+                    className={[styles.cpCopyBtn, copiedKey === "cmyk" ? styles.copied : ""].filter(Boolean).join(" ")}
                     onClick={() =>
                       handleCopy(
                         `cmyk(${colorData.cmyk.c}%, ${colorData.cmyk.m}%, ${colorData.cmyk.y}%, ${colorData.cmyk.k}%)`,
@@ -249,39 +251,38 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                     <i className={`ti ${copiedKey === "cmyk" ? "ti-check" : "ti-copy"}`} />
                   </button>
                 </div>
-                <div className="cp-format-value">
-                  cmyk({colorData.cmyk.c}%, {colorData.cmyk.m}%, {colorData.cmyk.y}%,{" "}
-                  {colorData.cmyk.k}%)
+                <div className={styles.cpFormatValue}>
+                  cmyk({colorData.cmyk.c}%, {colorData.cmyk.m}%, {colorData.cmyk.y}%, {colorData.cmyk.k}%)
                 </div>
-                <div className="cp-format-channels">
-                  <span className="cp-channel">C: {colorData.cmyk.c}%</span>
-                  <span className="cp-channel">M: {colorData.cmyk.m}%</span>
-                  <span className="cp-channel">Y: {colorData.cmyk.y}%</span>
-                  <span className="cp-channel">K: {colorData.cmyk.k}%</span>
+                <div className={styles.cpFormatChannels}>
+                  <span className={styles.cpChannel}>C: {colorData.cmyk.c}%</span>
+                  <span className={styles.cpChannel}>M: {colorData.cmyk.m}%</span>
+                  <span className={styles.cpChannel}>Y: {colorData.cmyk.y}%</span>
+                  <span className={styles.cpChannel}>K: {colorData.cmyk.k}%</span>
                 </div>
               </div>
             </div>
 
             {/*  Accessibility Section  */}
-            <div className="cp-section">
-              <div className="cp-section-header">
+            <div className={styles.cpSection}>
+              <div className={styles.cpSectionHeader}>
                 <i className="ti ti-accessible" />
                 Accessibility (WCAG)
               </div>
-              <div className="cp-contrast-grid">
+              <div className={styles.cpContrastGrid}>
                 {/* White Background */}
-                <div className="cp-contrast-card">
-                  <div className="cp-contrast-demo" style={{ background: "#FFFFFF" }}>
+                <div className={styles.cpContrastCard}>
+                  <div className={styles.cpContrastDemo} style={{ background: "#FFFFFF" }}>
                     <span style={{ color: colorData.hex }}>Aa</span>
                   </div>
-                  <div className="cp-contrast-info">
-                    <div className="cp-contrast-label">On White</div>
-                    <div className="cp-contrast-ratio">{contrastWhite.toFixed(2)}:1</div>
-                    <div className="cp-wcag-badges">
-                      <span className={`cp-wcag-badge${wcagWhite.AA_normal ? " pass" : " fail"}`}>
+                  <div className={styles.cpContrastInfo}>
+                    <div className={styles.cpContrastLabel}>On White</div>
+                    <div className={styles.cpContrastRatio}>{contrastWhite.toFixed(2)}:1</div>
+                    <div className={styles.cpWcagBadges}>
+                      <span className={`${styles.cpWcagBadge}${wcagWhite.AA_normal ? "pass" : "fail"}`}>
                         AA
                       </span>
-                      <span className={`cp-wcag-badge${wcagWhite.AAA_normal ? " pass" : " fail"}`}>
+                      <span className={`${styles.cpWcagBadge}${wcagWhite.AAA_normal ? "pass" : "fail"}`}>
                         AAA
                       </span>
                     </div>
@@ -289,18 +290,18 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
                 </div>
 
                 {/* Black Background */}
-                <div className="cp-contrast-card">
-                  <div className="cp-contrast-demo" style={{ background: "#000000" }}>
+                <div className={styles.cpContrastCard}>
+                  <div className={styles.cpContrastDemo} style={{ background: "#000000" }}>
                     <span style={{ color: colorData.hex }}>Aa</span>
                   </div>
-                  <div className="cp-contrast-info">
-                    <div className="cp-contrast-label">On Black</div>
-                    <div className="cp-contrast-ratio">{contrastBlack.toFixed(2)}:1</div>
-                    <div className="cp-wcag-badges">
-                      <span className={`cp-wcag-badge${wcagBlack.AA_normal ? " pass" : " fail"}`}>
+                  <div className={styles.cpContrastInfo}>
+                    <div className={styles.cpContrastLabel}>On Black</div>
+                    <div className={styles.cpContrastRatio}>{contrastBlack.toFixed(2)}:1</div>
+                    <div className={styles.cpWcagBadges}>
+                      <span className={`${styles.cpWcagBadge}${wcagBlack.AA_normal ? "pass" : "fail"}`}>
                         AA
                       </span>
-                      <span className={`cp-wcag-badge${wcagBlack.AAA_normal ? " pass" : " fail"}`}>
+                      <span className={`${styles.cpWcagBadge}${wcagBlack.AAA_normal ? "pass" : "fail"}`}>
                         AAA
                       </span>
                     </div>
@@ -310,12 +311,12 @@ export default function ColorPreview({ color, onColorChange }: ColorPreviewProps
             </div>
           </div>
         ) : (
-          <div className="cp-empty">
-            <div className="cp-empty-icon">
+          <div className={styles.cpEmpty}>
+            <div className={styles.cpEmptyIcon}>
               <i className="ti ti-palette" />
             </div>
-            <p className="cp-empty-title">Convert Color Formats</p>
-            <p className="cp-empty-desc">
+            <p className={styles.cpEmptyTitle}>Convert Color Formats</p>
+            <p className={styles.cpEmptyDesc}>
               Pick a color or enter a value to see all format conversions and accessibility
               information
             </p>

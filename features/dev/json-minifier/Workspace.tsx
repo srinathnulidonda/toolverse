@@ -14,13 +14,13 @@ import {
   convertToCSV,
   convertToYAML,
   jsonPathQuery,
-} from "./jsonEngine";
+} from "./ts/jsonEngine";
 import JSONAnalysis from "./JSONAnalysis";
 import JSONBatch from "./JSONBatch";
-import { useJSONStore } from "./jsonStore";
-import "./style/JSONAnalysis.css";
-import "./style/JSONBatch.css";
-import "./style/Workspace.css";
+import { useJSONStore } from "./ts/jsonStore";
+import styles from "./style/JSONAnalysis.module.css";
+import batchStyles from "./style/JSONBatch.module.css";
+import workspaceStyles from "./style/Workspace.module.css";
 
 type TabView = "process" | "batch" | "analysis" | "transform" | "history";
 
@@ -142,13 +142,13 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="jw-root" ref={rootRef}>
+      <div className={workspaceStyles.jwRoot} ref={rootRef}>
         {/*  Chrome  */}
-        <div className="jw-chrome">
-          <div className="jw-chrome-left">
-            <div className="jw-title">
+        <div className={workspaceStyles.jwChrome}>
+          <div className={workspaceStyles.jwChromeLeft}>
+            <div className={workspaceStyles.jwTitle}>
               <div
-                className="jw-title-icon"
+                className={workspaceStyles.jwTitleIcon}
                 style={{
                   background: modeConfig[options.mode].color + "20",
                   color: modeConfig[options.mode].color,
@@ -157,17 +157,17 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                 <i className="ti ti-braces" />
               </div>
               JSON Tools
-              <span className="jw-title-badge">{options.mode}</span>
+              <span className={workspaceStyles.jwTitleBadge}>{options.mode}</span>
             </div>
           </div>
-          <div className="jw-chrome-right">
+          <div className={workspaceStyles.jwChromeRight}>
             {/* Mode pills */}
-            <div className="jw-mode-pills">
+            <div className={workspaceStyles.jwModePills}>
               {(["minify", "beautify", "sort", "validate"] as ProcessMode[]).map((m) => (
                 <button
                   key={m}
                   type="button"
-                  className={`jw-mode-pill ${options.mode === m ? "active" : ""}`}
+                  className={`${workspaceStyles.jwModePill} ${options.mode === m ? "active" : ""}`}
                   style={
                     options.mode === m
                       ? {
@@ -180,14 +180,14 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                   onClick={() => setOptions((p) => ({ ...p, mode: m }))}
                 >
                   <i className={`ti ${modeConfig[m].icon}`} />
-                  <span className="jw-mode-label">{m.charAt(0).toUpperCase() + m.slice(1)}</span>
+                  <span className={workspaceStyles.jwModeLabel}>{m.charAt(0).toUpperCase() + m.slice(1)}</span>
                 </button>
               ))}
             </div>
 
             <button
               type="button"
-              className={`jw-settings-btn ${showSettings ? "active" : ""}`}
+              className={`${workspaceStyles.jwSettingsBtn} ${showSettings ? "active" : ""}`}
               onClick={() => setShowSettings((s) => !s)}
             >
               <i className="ti ti-settings" />
@@ -198,15 +198,15 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Settings  */}
         {showSettings && (
-          <div className="jw-settings">
-            <div className="jw-settings-grid">
+          <div className={workspaceStyles.jwSettings}>
+            <div className={workspaceStyles.jwSettingsGrid}>
               {(options.mode === "beautify" ||
                 options.mode === "sort" ||
                 options.mode === "validate") && (
-                  <div className="jw-setting-group">
-                    <label className="jw-setting-label">Indent Style</label>
+                  <div className={workspaceStyles.jwSettingGroup}>
+                    <label className={workspaceStyles.jwSettingLabel}>Indent Style</label>
                     <select
-                      className="jw-select"
+                      className={workspaceStyles.jwSelect}
                       value={options.indentStyle}
                       onChange={(e) =>
                         setOptions((p) => ({ ...p, indentStyle: e.target.value as IndentStyle }))
@@ -219,10 +219,10 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                   </div>
                 )}
 
-              <div className="jw-setting-group">
-                <label className="jw-setting-label">Sort Order</label>
+              <div className={workspaceStyles.jwSettingGroup}>
+                <label className={workspaceStyles.jwSettingLabel}>Sort Order</label>
                 <select
-                  className="jw-select"
+                  className={workspaceStyles.jwSelect}
                   value={options.sortOrder}
                   onChange={(e) =>
                     setOptions((p) => ({ ...p, sortOrder: e.target.value as "asc" | "desc" }))
@@ -241,14 +241,14 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                 { key: "removeEmptyObjects", label: "Remove Empty Objects" },
                 { key: "escapedUnicode", label: "Escape Unicode" },
               ].map(({ key, label }) => (
-                <label key={key} className="jw-toggle">
+                <label key={key} className={workspaceStyles.jwToggle}>
                   <input
                     type="checkbox"
                     checked={options[key as keyof ProcessOptions] as boolean}
                     onChange={(e) => setOptions((p) => ({ ...p, [key]: e.target.checked }))}
                   />
-                  <div className="jw-toggle-track">
-                    <div className="jw-toggle-thumb" />
+                  <div className={workspaceStyles.jwToggleTrack}>
+                    <div className={workspaceStyles.jwToggleThumb} />
                   </div>
                   <span>{label}</span>
                 </label>
@@ -258,23 +258,23 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/*  Tabs  */}
-        <div className="jw-tabs-bar">
-          <nav className="jw-tabs">
+        <div className={workspaceStyles.jwTabsBar}>
+          <nav className={workspaceStyles.jwTabs}>
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
-                className={`jw-tab ${tabView === tab.id ? "active" : ""}`}
+                className={`${workspaceStyles.jwTab} ${tabView === tab.id ? "active" : ""}`}
                 onClick={() => setTabView(tab.id)}
                 title={tab.desc}
               >
                 <i className={`ti ${tab.icon}`} />
                 <span>{tab.label}</span>
                 {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className="jw-tab-badge">{history.length}</span>
+                  <span className={workspaceStyles.jwTabBadge}>{history.length}</span>
                 )}
                 {tab.id === "analysis" && result && result.issues.length > 0 && (
-                  <span className="jw-tab-dot" />
+                  <span className={workspaceStyles.jwTabDot} />
                 )}
               </button>
             ))}
@@ -282,19 +282,19 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Content  */}
-        <div className="jw-content">
+        <div className={workspaceStyles.jwContent}>
           {/*  Process Tab  */}
           {tabView === "process" && (
-            <div className="jw-process-view">
+            <div className={workspaceStyles.jwProcessView}>
               {/* Toolbar */}
-              <div className="jw-toolbar">
-                <div className="jw-toolbar-left">
-                  <span className="jw-toolbar-label">Samples:</span>
+              <div className={workspaceStyles.jwToolbar}>
+                <div className={workspaceStyles.jwToolbarLeft}>
+                  <span className={workspaceStyles.jwToolbarLabel}>Samples:</span>
                   {Object.entries(SAMPLE_TEMPLATES).map(([key, s]) => (
                     <button
                       key={key}
                       type="button"
-                      className="jw-sample-btn"
+                      className={workspaceStyles.jwSampleBtn}
                       onClick={() => loadSample(key as keyof typeof SAMPLE_TEMPLATES)}
                       title={s.description}
                     >
@@ -302,20 +302,20 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                     </button>
                   ))}
                 </div>
-                <div className="jw-toolbar-right">
+                <div className={workspaceStyles.jwToolbarRight}>
                   {result && (
-                    <div className="jw-export-chips">
-                      <span className="jw-export-label">Export:</span>
+                    <div className={workspaceStyles.jwExportChips}>
+                      <span className={workspaceStyles.jwExportLabel}>Export:</span>
                       <button
                         type="button"
-                        className="jw-export-chip"
+                        className={workspaceStyles.jwExportChip}
                         onClick={() => handleDownload(result.output, "json", "application/json")}
                       >
                         JSON
                       </button>
                       <button
                         type="button"
-                        className="jw-export-chip"
+                        className={workspaceStyles.jwExportChip}
                         onClick={() => {
                           try {
                             const csv = convertToCSV(JSON.parse(input));
@@ -327,7 +327,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                       </button>
                       <button
                         type="button"
-                        className="jw-export-chip"
+                        className={workspaceStyles.jwExportChip}
                         onClick={() => {
                           try {
                             const yaml = convertToYAML(JSON.parse(input));
@@ -343,49 +343,49 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
               </div>
 
               {/* Mobile switcher */}
-              <div className="jw-mobile-switcher">
+              <div className={workspaceStyles.jwMobileSwitcher}>
                 <button
                   type="button"
-                  className={`jw-sw-tab ${mobilePanel === "input" ? "active" : ""}`}
+                  className={`${workspaceStyles.jwSwTab} ${mobilePanel === "input" ? "active" : ""}`}
                   onClick={goToInput}
                 >
                   <i className="ti ti-braces" />
                   Input JSON
                 </button>
-                <div className="jw-sw-divider" />
+                <div className={workspaceStyles.jwSwDivider} />
                 <button
                   type="button"
-                  className={`jw-sw-tab ${mobilePanel === "output" ? "active" : ""}`}
+                  className={`${workspaceStyles.jwSwTab} ${mobilePanel === "output" ? "active" : ""}`}
                   onClick={goToOutput}
                 >
                   <i className="ti ti-sparkles" />
                   Result
-                  {result && mobilePanel !== "output" && <span className="jw-sw-dot" />}
+                  {result && mobilePanel !== "output" && <span className={workspaceStyles.jwSwDot} />}
                 </button>
               </div>
 
               {/* Body */}
-              <div className="jw-body">
+              <div className={workspaceStyles.jwBody}>
                 {/* Input */}
                 <div
-                  className={`jw-panel ${mobilePanel === "input" ? "mob-visible" : "mob-hidden"}`}
+                  className={`${workspaceStyles.jwPanel} ${mobilePanel === "input" ? workspaceStyles.mobVisible : workspaceStyles.mobHidden}`}
                 >
-                  <div className="jw-panel-bar">
-                    <div className="jw-panel-label">
+                  <div className={workspaceStyles.jwPanelBar}>
+                    <div className={workspaceStyles.jwPanelLabel}>
                       <i className="ti ti-braces" />
                       Input JSON
                     </div>
-                    <div className="jw-panel-actions">
+                    <div className={workspaceStyles.jwPanelActions}>
                       {input && (
                         <>
-                          <span className="jw-char-count">{input.length.toLocaleString()} ch</span>
+                          <span className={workspaceStyles.jwCharCount}>{input.length.toLocaleString()} ch</span>
                           {error ? (
-                            <span className="jw-error-badge">
+                            <span className={workspaceStyles.jwErrorBadge}>
                               <i className="ti ti-alert-circle" /> Invalid
                             </span>
                           ) : (
                             result && (
-                              <span className="jw-valid-badge">
+                              <span className={workspaceStyles.jwValidBadge}>
                                 <i className="ti ti-check" /> Valid
                               </span>
                             )
@@ -394,7 +394,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                       )}
                       <button
                         type="button"
-                        className="jw-icon-btn"
+                        className={workspaceStyles.jwIconBtn}
                         onClick={() => {
                           setInput("");
                           setError("");
@@ -407,21 +407,21 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                     </div>
                   </div>
                   <textarea
-                    className={`jw-textarea ${error ? "jw-textarea--error" : ""}`}
+                    className={`${workspaceStyles.jwTextarea} ${error ? workspaceStyles.jwTextareaError : ""}`}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Paste your JSON here…"
                     spellCheck={false}
                   />
                   {error && (
-                    <div className="jw-error-banner">
+                    <div className={workspaceStyles.jwErrorBanner}>
                       <i className="ti ti-alert-triangle" />
                       <span>{error}</span>
                     </div>
                   )}
                   {input && result && (
-                    <div className="jw-mob-cta">
-                      <button type="button" className="jw-cta-btn" onClick={goToOutput}>
+                    <div className={workspaceStyles.jwMobCta}>
+                      <button type="button" className={workspaceStyles.jwCtaBtn} onClick={goToOutput}>
                         <i className="ti ti-sparkles" />
                         View{" "}
                         {options.mode === "minify"
@@ -439,23 +439,23 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                 </div>
 
                 {/* Gutter */}
-                <div className="jw-gutter">
-                  <div className="jw-gutter-line" />
-                  <div className="jw-gutter-node">
+                <div className={workspaceStyles.jwGutter}>
+                  <div className={workspaceStyles.jwGutterLine} />
+                  <div className={workspaceStyles.jwGutterNode}>
                     <i
                       className={`ti ${modeConfig[options.mode].icon}`}
                       style={{ color: modeConfig[options.mode].color }}
                     />
                   </div>
-                  <div className="jw-gutter-line" />
+                  <div className={workspaceStyles.jwGutterLine} />
                 </div>
 
                 {/* Output */}
                 <div
-                  className={`jw-panel ${mobilePanel === "output" ? "mob-visible" : "mob-hidden"}`}
+                  className={`${workspaceStyles.jwPanel} ${mobilePanel === "output" ? workspaceStyles.mobVisible : workspaceStyles.mobHidden}`}
                 >
-                  <div className="jw-panel-bar">
-                    <div className="jw-panel-label">
+                  <div className={workspaceStyles.jwPanelBar}>
+                    <div className={workspaceStyles.jwPanelLabel}>
                       <i className={`ti ${modeConfig[options.mode].icon}`} />
                       {options.mode === "minify"
                         ? "Minified"
@@ -466,11 +466,11 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                             : "Validated"}{" "}
                       JSON
                     </div>
-                    <div className="jw-panel-actions">
+                    <div className={workspaceStyles.jwPanelActions}>
                       {result && (
                         <button
                           type="button"
-                          className={`jw-copy-btn ${copiedKey === "out" ? "copied" : ""}`}
+                          className={`${workspaceStyles.jwCopyBtn} ${copiedKey === "out" ? "copied" : ""}`}
                           onClick={() => handleCopy(result.output, "out")}
                         >
                           <i className={`ti ${copiedKey === "out" ? "ti-check" : "ti-copy"}`} />
@@ -481,22 +481,22 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                   </div>
 
                   {!result && !error && (
-                    <div className="jw-empty">
-                      <div className="jw-empty-icon">
+                    <div className={workspaceStyles.jwEmpty}>
+                      <div className={workspaceStyles.jwEmptyIcon}>
                         <i className="ti ti-braces" />
                       </div>
-                      <h3 className="jw-empty-title">JSON Tools</h3>
-                      <p className="jw-empty-desc">
+                      <h3 className={workspaceStyles.jwEmptyTitle}>JSON Tools</h3>
+                      <p className={workspaceStyles.jwEmptyDesc}>
                         Paste JSON on the left, load a sample, or drop a file to get started
                       </p>
-                      <div className="jw-empty-samples">
+                      <div className={workspaceStyles.jwEmptySamples}>
                         {Object.entries(SAMPLE_TEMPLATES)
                           .slice(0, 2)
                           .map(([key, s]) => (
                             <button
                               key={key}
                               type="button"
-                              className="jw-empty-sample-btn"
+                              className={workspaceStyles.jwEmptySampleBtn}
                               onClick={() => loadSample(key as keyof typeof SAMPLE_TEMPLATES)}
                             >
                               Try {s.name}
@@ -507,65 +507,65 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                   )}
 
                   {!result && error && (
-                    <div className="jw-empty">
-                      <div className="jw-empty-icon jw-empty-icon--error">
+                    <div className={workspaceStyles.jwEmpty}>
+                      <div className={`${workspaceStyles.jwEmptyIcon} ${workspaceStyles.jwEmptyIconError}`}>
                         <i className="ti ti-alert-triangle" />
                       </div>
-                      <h3 className="jw-empty-title">Invalid JSON</h3>
-                      <p className="jw-empty-desc">{error}</p>
+                      <h3 className={workspaceStyles.jwEmptyTitle}>Invalid JSON</h3>
+                      <p className={workspaceStyles.jwEmptyDesc}>{error}</p>
                     </div>
                   )}
 
                   {result && (
                     <>
-                      <pre className="jw-output">{result.output}</pre>
+                      <pre className={workspaceStyles.jwOutput}>{result.output}</pre>
 
-                      <div className="jw-stats-bar">
-                        <div className="jw-stat">
+                      <div className={workspaceStyles.jwStatsBar}>
+                        <div className={workspaceStyles.jwStat}>
                           <i className="ti ti-file" />
-                          <span className="jw-stat-label">Original</span>
-                          <span className="jw-stat-value">
+                          <span className={workspaceStyles.jwStatLabel}>Original</span>
+                          <span className={workspaceStyles.jwStatValue}>
                             {formatBytes(result.stats.original)}
                           </span>
                         </div>
-                        <div className="jw-stat">
+                        <div className={workspaceStyles.jwStat}>
                           <i className="ti ti-sparkles" />
-                          <span className="jw-stat-label">Result</span>
-                          <span className="jw-stat-value">
+                          <span className={workspaceStyles.jwStatLabel}>Result</span>
+                          <span className={workspaceStyles.jwStatValue}>
                             {formatBytes(result.stats.processed)}
                           </span>
                         </div>
                         {result.stats.savings !== 0 && (
                           <div
-                            className={`jw-stat jw-stat--highlight ${result.stats.savings > 0 ? "good" : "warn"}`}
+                            className={`${workspaceStyles.jwStat} ${workspaceStyles.jwStatHighlight} ${result.stats.savings > 0 ? "good" : "warn"}`}
                           >
                             <i
                               className={`ti ${result.stats.savings > 0 ? "ti-trending-down" : "ti-trending-up"}`}
                             />
-                            <span className="jw-stat-label">
+                            <span className={workspaceStyles.jwStatLabel}>
                               {result.stats.savings > 0 ? "Saved" : "Added"}
                             </span>
                             <span
-                              className={`jw-stat-value ${result.stats.savings > 0 ? "good" : "warn"}`}
+                              className={`${workspaceStyles.jwStatValue} ${result.stats.savings > 0 ? "good" : "warn"}`}
                             >
                               {formatBytes(Math.abs(result.stats.savings))} (
                               {Math.abs(result.stats.savingsPercent)}%)
                             </span>
                           </div>
                         )}
-                        <div className="jw-stat">
+                        <div className={workspaceStyles.jwStat}>
                           <i className="ti ti-key" />
-                          <span className="jw-stat-label">Keys</span>
-                          <span className="jw-stat-value">{result.stats.keys}</span>
+                          <span className={workspaceStyles.jwStatLabel}>Keys</span>
+                          <span className={workspaceStyles.jwStatValue}>{result.stats.keys}</span>
                         </div>
-                        <div className="jw-stat">
+                        <div className={workspaceStyles.jwStat}>
                           <i className="ti ti-layers" />
-                          <span className="jw-stat-label">Depth</span>
-                          <span className="jw-stat-value">{result.stats.depth}</span>
+                          <span className={workspaceStyles.jwStatLabel}>Depth</span>
+                          <span className={workspaceStyles.jwStatValue}>{result.stats.depth}</span>
                         </div>
                         <button
                           type="button"
-                          className="jw-download-btn"
+                          className={workspaceStyles.jwDownloadBtn}
                           onClick={() => handleDownload(result.output, "json", "application/json")}
                         >
                           <i className="ti ti-download" />
@@ -574,10 +574,10 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                       </div>
 
                       {/* Mobile actions */}
-                      <div className="jw-mob-actions">
+                      <div className={workspaceStyles.jwMobActions}>
                         <button
                           type="button"
-                          className={`jw-mob-btn ${copiedKey === "mob" ? "copied" : ""}`}
+                          className={`${workspaceStyles.jwMobBtn} ${copiedKey === "mob" ? "copied" : ""}`}
                           onClick={() => handleCopy(result.output, "mob")}
                         >
                           <i className={`ti ${copiedKey === "mob" ? "ti-check" : "ti-copy"}`} />
@@ -585,7 +585,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                         </button>
                         <button
                           type="button"
-                          className="jw-mob-btn"
+                          className={workspaceStyles.jwMobBtn}
                           onClick={() => handleDownload(result.output, "json", "application/json")}
                         >
                           <i className="ti ti-download" />
@@ -611,8 +611,8 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                 stats={result.stats}
               />
             ) : (
-              <div className="jw-tab-empty">
-                <div className="jw-tab-empty-icon">
+              <div className={workspaceStyles.jwTabEmpty}>
+                <div className={workspaceStyles.jwTabEmptyIcon}>
                   <i className="ti ti-chart-bar" />
                 </div>
                 <h3>JSON Analysis</h3>
@@ -622,7 +622,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                 </p>
                 <button
                   type="button"
-                  className="jw-tab-empty-btn"
+                  className={workspaceStyles.jwTabEmptyBtn}
                   onClick={() => setTabView("process")}
                 >
                   Go to Processor
@@ -632,24 +632,24 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
 
           {/*  Transform Tab  */}
           {tabView === "transform" && (
-            <div className="jw-transform-view">
-              <div className="jw-transform-header">
-                <div className="jw-transform-title">
+            <div className={workspaceStyles.jwTransformView}>
+              <div className={workspaceStyles.jwTransformHeader}>
+                <div className={workspaceStyles.jwTransformTitle}>
                   <i className="ti ti-transform" />
                   Transform & Query
                 </div>
               </div>
 
               {/* JSONPath Query */}
-              <div className="jw-transform-section">
-                <div className="jw-transform-section-title">
+              <div className={workspaceStyles.jwTransformSection}>
+                <div className={workspaceStyles.jwTransformSectionTitle}>
                   <i className="ti ti-search" />
                   JSONPath Query
                 </div>
-                <div className="jw-jsonpath-row">
+                <div className={workspaceStyles.jwJsonpathRow}>
                   <input
                     type="text"
-                    className="jw-jsonpath-input"
+                    className={workspaceStyles.jwJsonpathInput}
                     value={jsonPath}
                     onChange={(e) => setJsonPath(e.target.value)}
                     placeholder="e.g. $.data.users[0].name"
@@ -658,7 +658,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                   />
                   <button
                     type="button"
-                    className="jw-jsonpath-btn"
+                    className={workspaceStyles.jwJsonpathBtn}
                     onClick={runJsonPath}
                     disabled={!input.trim() || !jsonPath.trim()}
                   >
@@ -667,33 +667,33 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                   </button>
                 </div>
                 {pathResult && (
-                  <div className="jw-jsonpath-result">
-                    <div className="jw-jsonpath-result-header">
+                  <div className={workspaceStyles.jwJsonpathResult}>
+                    <div className={workspaceStyles.jwJsonpathResultHeader}>
                       <span>Result</span>
                       <button
                         type="button"
-                        className={`jw-copy-btn ${copiedKey === "path" ? "copied" : ""}`}
+                        className={`${workspaceStyles.jwCopyBtn} ${copiedKey === "path" ? "copied" : ""}`}
                         onClick={() => handleCopy(pathResult, "path")}
                       >
                         <i className={`ti ${copiedKey === "path" ? "ti-check" : "ti-copy"}`} />
                         {copiedKey === "path" ? "Copied!" : "Copy"}
                       </button>
                     </div>
-                    <pre className="jw-jsonpath-pre">{pathResult}</pre>
+                    <pre className={workspaceStyles.jwJsonpathPre}>{pathResult}</pre>
                   </div>
                 )}
               </div>
 
               {/* Convert */}
-              <div className="jw-transform-section">
-                <div className="jw-transform-section-title">
+              <div className={workspaceStyles.jwTransformSection}>
+                <div className={workspaceStyles.jwTransformSectionTitle}>
                   <i className="ti ti-arrows-exchange" />
                   Convert Format
                 </div>
-                <div className="jw-convert-grid">
+                <div className={workspaceStyles.jwConvertGrid}>
                   <button
                     type="button"
-                    className="jw-convert-card"
+                    className={workspaceStyles.jwConvertCard}
                     disabled={!result}
                     onClick={() => {
                       if (!result) return;
@@ -704,14 +704,14 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                     }}
                   >
                     <div
-                      className="jw-convert-card-icon"
+                      className={workspaceStyles.jwConvertCardIcon}
                       style={{ background: "#eff6ff", color: "#2563eb" }}
                     >
                       <i className="ti ti-table" />
                     </div>
-                    <div className="jw-convert-card-label">CSV</div>
-                    <div className="jw-convert-card-desc">Export as comma-separated values</div>
-                    <div className="jw-convert-card-action">
+                    <div className={workspaceStyles.jwConvertCardLabel}>CSV</div>
+                    <div className={workspaceStyles.jwConvertCardDesc}>Export as comma-separated values</div>
+                    <div className={workspaceStyles.jwConvertCardAction}>
                       <i className="ti ti-download" />
                       Download CSV
                     </div>
@@ -719,7 +719,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
 
                   <button
                     type="button"
-                    className="jw-convert-card"
+                    className={workspaceStyles.jwConvertCard}
                     disabled={!result}
                     onClick={() => {
                       if (!result) return;
@@ -730,14 +730,14 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                     }}
                   >
                     <div
-                      className="jw-convert-card-icon"
+                      className={workspaceStyles.jwConvertCardIcon}
                       style={{ background: "#faf5ff", color: "#7c3aed" }}
                     >
                       <i className="ti ti-file-code" />
                     </div>
-                    <div className="jw-convert-card-label">YAML</div>
-                    <div className="jw-convert-card-desc">Convert to human-readable YAML</div>
-                    <div className="jw-convert-card-action">
+                    <div className={workspaceStyles.jwConvertCardLabel}>YAML</div>
+                    <div className={workspaceStyles.jwConvertCardDesc}>Convert to human-readable YAML</div>
+                    <div className={workspaceStyles.jwConvertCardAction}>
                       <i className="ti ti-download" />
                       Download YAML
                     </div>
@@ -745,7 +745,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
 
                   <button
                     type="button"
-                    className="jw-convert-card"
+                    className={workspaceStyles.jwConvertCard}
                     disabled={!result}
                     onClick={() => {
                       if (!result) return;
@@ -753,14 +753,14 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                     }}
                   >
                     <div
-                      className="jw-convert-card-icon"
+                      className={workspaceStyles.jwConvertCardIcon}
                       style={{ background: "#f0fdf4", color: "#16a34a" }}
                     >
                       <i className="ti ti-copy" />
                     </div>
-                    <div className="jw-convert-card-label">Copy JSON</div>
-                    <div className="jw-convert-card-desc">Copy processed JSON to clipboard</div>
-                    <div className="jw-convert-card-action">
+                    <div className={workspaceStyles.jwConvertCardLabel}>Copy JSON</div>
+                    <div className={workspaceStyles.jwConvertCardDesc}>Copy processed JSON to clipboard</div>
+                    <div className={workspaceStyles.jwConvertCardAction}>
                       <i className={`ti ${copiedKey === "json-copy" ? "ti-check" : "ti-copy"}`} />
                       {copiedKey === "json-copy" ? "Copied!" : "Copy"}
                     </div>
@@ -768,7 +768,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
 
                   <button
                     type="button"
-                    className="jw-convert-card"
+                    className={workspaceStyles.jwConvertCard}
                     disabled={!result}
                     onClick={() => {
                       if (!result) return;
@@ -777,14 +777,14 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                     }}
                   >
                     <div
-                      className="jw-convert-card-icon"
+                      className={workspaceStyles.jwConvertCardIcon}
                       style={{ background: "#eff6ff", color: "#0284c7" }}
                     >
                       <i className="ti ti-brand-typescript" />
                     </div>
-                    <div className="jw-convert-card-label">TypeScript</div>
-                    <div className="jw-convert-card-desc">Export as typed TypeScript const</div>
-                    <div className="jw-convert-card-action">
+                    <div className={workspaceStyles.jwConvertCardLabel}>TypeScript</div>
+                    <div className={workspaceStyles.jwConvertCardDesc}>Export as typed TypeScript const</div>
+                    <div className={workspaceStyles.jwConvertCardAction}>
                       <i className="ti ti-download" />
                       Download .ts
                     </div>
@@ -793,12 +793,12 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
               </div>
 
               {!result && (
-                <div className="jw-transform-empty">
+                <div className={workspaceStyles.jwTransformEmpty}>
                   <i className="ti ti-transform" />
                   <p>Add valid JSON in the Process tab to enable transformations.</p>
                   <button
                     type="button"
-                    className="jw-tab-empty-btn"
+                    className={workspaceStyles.jwTabEmptyBtn}
                     onClick={() => setTabView("process")}
                   >
                     Go to Processor
@@ -810,10 +810,10 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
 
           {/*  History Tab  */}
           {tabView === "history" && (
-            <div className="jw-history">
+            <div className={workspaceStyles.jwHistory}>
               {history.length === 0 ? (
-                <div className="jw-tab-empty">
-                  <div className="jw-tab-empty-icon">
+                <div className={workspaceStyles.jwTabEmpty}>
+                  <div className={workspaceStyles.jwTabEmptyIcon}>
                     <i className="ti ti-history" />
                   </div>
                   <h3>No History Yet</h3>
@@ -821,23 +821,23 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                 </div>
               ) : (
                 <>
-                  <div className="jw-history-header">
-                    <div className="jw-history-title">
+                  <div className={workspaceStyles.jwHistoryHeader}>
+                    <div className={workspaceStyles.jwHistoryTitle}>
                       <i className="ti ti-history" />
                       History
-                      <span className="jw-history-count">{history.length}</span>
+                      <span className={workspaceStyles.jwHistoryCount}>{history.length}</span>
                     </div>
-                    <button type="button" className="jw-ghost-btn" onClick={clearHistory}>
+                    <button type="button" className={workspaceStyles.jwGhostBtn} onClick={clearHistory}>
                       <i className="ti ti-trash" />
                       Clear
                     </button>
                   </div>
-                  <div className="jw-history-list">
+                  <div className={workspaceStyles.jwHistoryList}>
                     {history.map((entry) => (
-                      <div key={entry.id} className="jw-history-item">
-                        <div className="jw-history-item-left">
+                      <div key={entry.id} className={workspaceStyles.jwHistoryItem}>
+                        <div className={workspaceStyles.jwHistoryItemLeft}>
                           <div
-                            className="jw-history-item-icon"
+                            className={workspaceStyles.jwHistoryItemIcon}
                             style={{
                               background: modeConfig[entry.options.mode]?.color + "20",
                               color: modeConfig[entry.options.mode]?.color,
@@ -846,19 +846,19 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                             <i className="ti ti-braces" />
                           </div>
                           <div>
-                            <div className="jw-history-item-title">{entry.title}</div>
-                            <div className="jw-history-item-meta">
+                            <div className={workspaceStyles.jwHistoryItemTitle}>{entry.title}</div>
+                            <div className={workspaceStyles.jwHistoryItemMeta}>
                               {new Date(entry.timestamp).toLocaleString()} ·{" "}
                               {formatBytes(entry.result.stats.original)} →{" "}
                               {formatBytes(entry.result.stats.processed)}
                             </div>
                           </div>
                         </div>
-                        <div className="jw-history-item-right">
-                          <span className="jw-history-mode">{entry.options.mode}</span>
+                        <div className={workspaceStyles.jwHistoryItemRight}>
+                          <span className={workspaceStyles.jwHistoryMode}>{entry.options.mode}</span>
                           {entry.result.stats.savingsPercent !== 0 && (
                             <span
-                              className={`jw-history-savings ${entry.result.stats.savings > 0 ? "good" : "warn"}`}
+                              className={`${workspaceStyles.jwHistorySavings} ${entry.result.stats.savings > 0 ? "good" : "warn"}`}
                             >
                               {entry.result.stats.savings > 0 ? "-" : "+"}
                               {Math.abs(entry.result.stats.savingsPercent)}%
@@ -866,7 +866,7 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
                           )}
                           <button
                             type="button"
-                            className="jw-icon-btn"
+                            className={workspaceStyles.jwIconBtn}
                             onClick={() => {
                               setInput(entry.input);
                               setTabView("process");
@@ -886,18 +886,18 @@ export default function JSONWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Footer  */}
-        <div className="jw-footer">
-          <div className="jw-footer-left">
+        <div className={workspaceStyles.jwFooter}>
+          <div className={workspaceStyles.jwFooterLeft}>
             <i className="ti ti-shield-lock" />
             <span>Runs entirely in your browser — nothing is sent to any server.</span>
           </div>
           {result && (
-            <div className="jw-footer-right">
+            <div className={workspaceStyles.jwFooterRight}>
               <span>{result.stats.keys} keys</span>
               <span>·</span>
               <span>depth {result.stats.depth}</span>
               <span>·</span>
-              <span className={result.analysis.isValid ? "jw-valid" : "jw-invalid"}>
+              <span className={result.analysis.isValid ? workspaceStyles.jwValid : workspaceStyles.jwInvalid}>
                 <i className={`ti ${result.analysis.isValid ? "ti-check" : "ti-x"}`} />
                 {result.analysis.isValid ? "Valid" : "Invalid"}
               </span>

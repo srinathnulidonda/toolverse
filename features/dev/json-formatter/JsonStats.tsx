@@ -1,6 +1,8 @@
 // features/dev/json-formatter/JsonStats.tsx
 "use client";
 
+import styles from "./style/JsonStats.module.css";
+
 type StatsProps = {
   value: unknown;
   rawText: string;
@@ -136,17 +138,17 @@ export default function JsonStats({ value, rawText }: StatsProps) {
 
   return (
     <>
-      <div className="jst-root" role="region" aria-label="JSON statistics">
-        <div className="jst-section">
-          <p className="jst-section-label">Structure</p>
-          <div className="jst-grid jst-grid-4">
+      <div className={styles.jstRoot} role="region" aria-label="JSON statistics">
+        <div className={styles.jstSection}>
+          <p className={styles.jstSectionLabel}>Structure</p>
+          <div className={`${styles.jstGrid} ${styles.jstGrid4}`}>
             {structure.map((item) => (
-              <div key={item.label} className="jst-card">
-                <div className="jst-card-header">
+              <div key={item.label} className={styles.jstCard}>
+                <div className={styles.jstCardHeader}>
                   <i className={`ti ${item.icon}`} aria-hidden="true" />
-                  <span className="jst-card-label">{item.label}</span>
+                  <span className={styles.jstCardLabel}>{item.label}</span>
                 </div>
-                <div className="jst-card-val" aria-label={`${item.label}: ${item.value}`}>
+                <div className={styles.jstCardVal} aria-label={`${item.label}: ${item.value}`}>
                   {item.value}
                 </div>
               </div>
@@ -154,16 +156,16 @@ export default function JsonStats({ value, rawText }: StatsProps) {
           </div>
         </div>
 
-        <div className="jst-section">
-          <p className="jst-section-label">Value types</p>
-          <div className="jst-grid jst-grid-6">
+        <div className={styles.jstSection}>
+          <p className={styles.jstSectionLabel}>Value types</p>
+          <div className={`${styles.jstGrid} ${styles.jstGrid6}`}>
             {types.map((item) => (
-              <div key={item.label} className="jst-card">
-                <div className="jst-card-header">
+              <div key={item.label} className={styles.jstCard}>
+                <div className={styles.jstCardHeader}>
                   <i className={`ti ${item.icon}`} aria-hidden="true" />
-                  <span className="jst-card-label">{item.label}</span>
+                  <span className={styles.jstCardLabel}>{item.label}</span>
                 </div>
-                <div className="jst-card-val" aria-label={`${item.label}: ${item.value}`}>
+                <div className={styles.jstCardVal} aria-label={`${item.label}: ${item.value}`}>
                   {item.value}
                 </div>
               </div>

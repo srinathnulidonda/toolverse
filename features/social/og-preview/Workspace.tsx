@@ -4,7 +4,7 @@ import { logger } from "@/lib/logger";
 
 import { useState, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
-import type { MetaData, HistoryItem, Template } from "./types";
+import type { MetaData, HistoryItem, Template } from "./ts/types";
 import MetaInputForm from "./MetaInputForm";
 import PlatformPreviews from "./PlatformPreviews";
 import ValidationPanel from "./ValidationPanel";

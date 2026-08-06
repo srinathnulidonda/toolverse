@@ -12,17 +12,13 @@ import {
   getCurrentTimestamp,
   type TimestampOptions,
   type TimeUnit,
-} from "./utils";
+} from "./ts/utils";
 import TimestampPreview from "./TimestampPreview";
 import TimestampBatch from "./TimestampBatch";
 import TimestampCompare from "./TimestampCompare";
 import TimestampHistory from "./TimestampHistory";
-import { useTimestampStore, type HistoryEntry } from "./timestampStore";
-import "./style/TimestampBatch.css";
-import "./style/TimestampCompare.css";
-import "./style/TimestampHistory.css";
-import "./style/TimestampPreview.css";
-import "./style/Workspace.css";
+import { useTimestampStore, type HistoryEntry } from "./ts/timestampStore";
+import styles from "./style/Workspace.module.css";
 
 type ViewTab = "single" | "batch" | "compare" | "history";
 
@@ -112,27 +108,27 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="tcv-root">
+      <div className={styles.tcvRoot}>
         {/*  Top Chrome  */}
-        <div className="tcv-chrome">
-          <div className="tcv-chrome-left">
-            <button className="tcv-preset-btn tcv-preset-primary" onClick={loadCurrent}>
+        <div className={styles.tcvChrome}>
+          <div className={styles.tcvChromeLeft}>
+            <button className={`${styles.tcvPresetBtn} ${styles.tcvPresetPrimary}`} onClick={loadCurrent}>
               <i className="ti ti-clock" />
-              <span className="tcv-preset-label">Now</span>
+              <span className={styles.tcvPresetLabel}>Now</span>
             </button>
-            <span className="tcv-cmd-label">Quick:</span>
+            <span className={styles.tcvCmdLabel}>Quick:</span>
             {SAMPLE_TIMESTAMPS.slice(1, 4).map((p) => (
-              <button key={p.id} className="tcv-preset-btn" onClick={() => loadSample(p)}>
-                <span className="tcv-preset-label">{p.label}</span>
+              <button key={p.id} className={styles.tcvPresetBtn} onClick={() => loadSample(p)}>
+                <span className={styles.tcvPresetLabel}>{p.label}</span>
               </button>
             ))}
           </div>
 
-          <div className="tcv-chrome-right">
+          <div className={styles.tcvChromeRight}>
             {viewTab === "single" && (
               <button
                 type="button"
-                className="tcv-icon-btn tcv-mobile-options-btn"
+                className={`${styles.tcvIconBtn} ${styles.tcvMobileOptionsBtn}`}
                 onClick={() => setShowMobileOptions(!showMobileOptions)}
                 aria-label="Toggle options"
               >
@@ -141,7 +137,7 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
             )}
             <button
               type="button"
-              className="tcv-icon-btn tcv-clear-btn"
+              className={`${styles.tcvIconBtn} ${styles.tcvClearBtn}`}
               onClick={handleClear}
               disabled={!input}
               title="Clear all"
@@ -152,14 +148,14 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Live Current Time Banner  */}
-        <div className="tcv-live">
-          <div className="tcv-live-header">
-            <div className="tcv-live-title">
+        <div className={styles.tcvLive}>
+          <div className={styles.tcvLiveHeader}>
+            <div className={styles.tcvLiveTitle}>
               <i className="ti ti-clock-hour-4" />
-              <span className="tcv-live-title-text">Current Unix Timestamp</span>
+              <span className={styles.tcvLiveTitleText}>Current Unix Timestamp</span>
             </div>
             <button
-              className={`tcv-copy-btn${copied ? " done" : ""}`}
+              className={`${styles.tcvCopyBtn}${copied ? ` ${styles.done}` : ""}`}
               disabled={currentTime === null}
               onClick={() => {
                 if (currentTime !== null) {
@@ -168,18 +164,18 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
               }}
             >
               <i className={`ti ${copied ? "ti-check" : "ti-copy"}`} />
-              <span className="tcv-copy-text">{copied ? "Copied" : "Copy"}</span>
+              <span className={styles.tcvCopyText}>{copied ? "Copied" : "Copy"}</span>
             </button>
           </div>
-          <div className="tcv-live-time" suppressHydrationWarning>
+          <div className={styles.tcvLiveTime} suppressHydrationWarning>
             {currentTime !== null ? currentTime : "--"}
           </div>
-          <div className="tcv-live-local">{currentTimeResult?.local}</div>
+          <div className={styles.tcvLiveLocal}>{currentTimeResult?.local}</div>
         </div>
 
         {/*  View Tabs  */}
-        <div className="tcv-tabs-bar">
-          <nav className="tcv-tabs" role="tablist">
+        <div className={styles.tcvTabsBar}>
+          <nav className={styles.tcvTabs} role="tablist">
             {[
               { id: "single" as const, label: "Convert", icon: "ti-arrows-transfer-up" },
               { id: "batch" as const, label: "Batch", icon: "ti-files" },
@@ -190,14 +186,14 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
                 key={tab.id}
                 type="button"
                 role="tab"
-                className={`tcv-tab${viewTab === tab.id ? " active" : ""}`}
+                className={`${styles.tcvTab}${viewTab === tab.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewTab(tab.id)}
                 aria-selected={viewTab === tab.id}
               >
                 <i className={`ti ${tab.icon}`} />
-                <span className="tcv-tab-label">{tab.label}</span>
+                <span className={styles.tcvTabLabel}>{tab.label}</span>
                 {tab.id === "history" && history.length > 0 && (
-                  <span className="tcv-badge">{history.length}</span>
+                  <span className={styles.tcvBadge}>{history.length}</span>
                 )}
               </button>
             ))}
@@ -206,30 +202,30 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Options Bar (Single view only)  */}
         {viewTab === "single" && (
-          <div className={`tcv-options-bar${showMobileOptions ? " mobile-visible" : ""}`}>
-            <div className="tcv-options-header">
-              <span className="tcv-options-title">
+          <div className={`${styles.tcvOptionsBar}${showMobileOptions ? ` ${styles.mobileVisible}` : ""}`}>
+            <div className={styles.tcvOptionsHeader}>
+              <span className={styles.tcvOptionsTitle}>
                 <i className="ti ti-adjustments" />
                 Options
               </span>
               <button
                 type="button"
-                className="tcv-mobile-close-btn"
+                className={styles.tcvMobileCloseBtn}
                 onClick={() => setShowMobileOptions(false)}
               >
                 <i className="ti ti-x" />
               </button>
             </div>
 
-            <div className="tcv-options-scroll">
-              <div className="tcv-options-row">
-                <span className="tcv-options-label">Input Unit</span>
-                <div className="tcv-unit-group">
+            <div className={styles.tcvOptionsScroll}>
+              <div className={styles.tcvOptionsRow}>
+                <span className={styles.tcvOptionsLabel}>Input Unit</span>
+                <div className={styles.tcvUnitGroup}>
                   {(["seconds", "milliseconds", "microseconds", "nanoseconds"] as TimeUnit[]).map(
                     (u) => (
                       <button
                         key={u}
-                        className={`tcv-unit-btn${options.unit === u ? " active" : ""}`}
+                        className={`${styles.tcvUnitBtn}${options.unit === u ? ` ${styles.active}` : ""}`}
                         onClick={() => setOptions((prev) => ({ ...prev, unit: u }))}
                       >
                         {u}
@@ -239,10 +235,10 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
                 </div>
               </div>
 
-              <div className="tcv-options-row">
-                <span className="tcv-options-label">Timezone</span>
+              <div className={styles.tcvOptionsRow}>
+                <span className={styles.tcvOptionsLabel}>Timezone</span>
                 <select
-                  className="tcv-select"
+                  className={styles.tcvSelect}
                   value={options.timezone}
                   onChange={(e) => setOptions((prev) => ({ ...prev, timezone: e.target.value }))}
                 >
@@ -254,8 +250,8 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
                 </select>
               </div>
 
-              <div className="tcv-options-row">
-                <label className="tcv-toggle">
+              <div className={styles.tcvOptionsRow}>
+                <label className={styles.tcvToggle}>
                   <input
                     type="checkbox"
                     checked={options.use24Hour}
@@ -263,10 +259,10 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
                       setOptions((prev) => ({ ...prev, use24Hour: e.target.checked }))
                     }
                   />
-                  <span className="tcv-toggle-track">
-                    <span className="tcv-toggle-thumb" />
+                  <span className={styles.tcvToggleTrack}>
+                    <span className={styles.tcvToggleThumb} />
                   </span>
-                  <span className="tcv-toggle-label">24-hour format</span>
+                  <span className={styles.tcvToggleLabel}>24-hour format</span>
                 </label>
               </div>
             </div>
@@ -274,7 +270,7 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/*  Tab Content  */}
-        <div className="tcv-tab-content">
+        <div className={styles.tcvTabContent}>
           {viewTab === "single" && (
             <TimestampPreview
               input={input}
@@ -306,10 +302,10 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Mobile Bottom Actions  */}
         {viewTab === "single" && result && (
-          <div className="tcv-mobile-actions">
+          <div className={styles.tcvMobileActions}>
             <button
               type="button"
-              className={`tcv-mob-action${copied ? " success" : ""}`}
+              className={`${styles.tcvMobAction}${copied ? ` ${styles.success}` : ""}`}
               onClick={() => handleCopy(result.iso)}
             >
               <i className={`ti ${copied ? "ti-check" : "ti-copy"}`} />
@@ -317,13 +313,13 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
             </button>
             <button
               type="button"
-              className="tcv-mob-action"
+              className={styles.tcvMobAction}
               onClick={() => handleCopy(result.unix.toString())}
             >
               <i className="ti ti-hash" />
               Copy Unix
             </button>
-            <button type="button" className="tcv-mob-action" onClick={handleClear}>
+            <button type="button" className={styles.tcvMobAction} onClick={handleClear}>
               <i className="ti ti-trash" />
               Clear
             </button>
@@ -331,7 +327,7 @@ export default function TimestampConverterWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/*  Footer  */}
-        <div className="tcv-footer">
+        <div className={styles.tcvFooter}>
           <i className="ti ti-shield-lock" />
           <span>Everything runs in your browser — no data ever leaves this page.</span>
         </div>

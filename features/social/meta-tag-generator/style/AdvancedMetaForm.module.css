@@ -1,0 +1,219 @@
+/* features/social/meta-tag-generator/style/AdvancedMetaForm.module.css */
+.amfRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.amfSection {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+}
+
+.amfSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 4px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.amfSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.amfSectionTitle i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.amfSection:not(:has(.amfSectionHeader)) .amfSectionTitle {
+    padding-bottom: 4px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.amfField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.amfRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.amfLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.amfInput,
+.amfSelect {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 11px;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+}
+
+.amfInput:focus,
+.amfSelect:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.amfSelect {
+    cursor: pointer;
+}
+
+.amfColorRow {
+    display: flex;
+    gap: 8px;
+}
+
+.amfColorPicker {
+    width: 42px;
+    height: 38px;
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.amfToggleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+}
+
+.amfToggleLabel {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.amfToggle {
+    width: 40px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--border);
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.amfToggle.on {
+    background: var(--brand);
+}
+
+.amfToggleThumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.amfToggle.on .amfToggleThumb {
+    transform: translateX(18px);
+}
+
+.amfSchemaGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.amfSchemaBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.amfSchemaBtn:hover {
+    background: var(--border-faint);
+}
+
+.amfSchemaBtn.active {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.amfSchemaBtn i {
+    font-size: 20px;
+    color: var(--text-secondary);
+}
+
+.amfSchemaBtn.active i {
+    color: var(--brand-text);
+}
+
+.amfSchemaBtn span {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.amfSchemaBtn.active span {
+    color: var(--brand-text);
+}
+
+.amfHint {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.amfHint i {
+    font-size: 13px;
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+    .amfRow {
+        grid-template-columns: 1fr;
+    }
+
+    .amfSchemaGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

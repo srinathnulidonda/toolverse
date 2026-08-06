@@ -1,4 +1,4 @@
-// features/dev/uuid-generator/UuidGenerator.tsx
+/* features/dev/uuid-generator/UuidGenerator.tsx */
 "use client";
 import { logger } from "@/lib/logger";
 
@@ -12,7 +12,8 @@ import {
   type UuidFormat,
   type UuidCase,
   type UuidGenerateOptions,
-} from "./utils";
+} from "./ts/utils";
+import styles from "./style/UuidGenerator.module.css";
 
 interface UuidGeneratorProps {
   version: UuidVersion;
@@ -100,27 +101,27 @@ export default function UuidGenerator({
 
   return (
     <>
-      <div className="ug-gen-root">
+      <div className={styles.ugGenRoot}>
         {/*  UUID Display  */}
-        <div className="ug-gen-display">
-          <div className="ug-gen-display-header">
-            <div className="ug-gen-display-label">
+        <div className={styles.ugGenDisplay}>
+          <div className={styles.ugGenDisplayHeader}>
+            <div className={styles.ugGenDisplayLabel}>
               <i className="ti ti-fingerprint" />
               Generated UUID
             </div>
-            <div className="ug-gen-display-actions">
+            <div className={styles.ugGenDisplayActions}>
               <button
                 type="button"
-                className="ug-gen-icon-btn"
+                className={styles.ugGenIconBtn}
                 onClick={handleGenerate}
                 disabled={!canGenerate || generating}
                 title="Generate new UUID"
               >
-                <i className={`ti ti-refresh${generating ? " ug-spinning" : ""}`} />
+                <i className={`ti ti-refresh${generating ? ` ${styles.ugSpinning}` : ""}`} />
               </button>
               <button
                 type="button"
-                className={`ug-gen-copy-btn${copied ? " success" : ""}`}
+                className={`${styles.ugGenCopyBtn}${copied ? ` ${styles.success}` : ""}`}
                 onClick={handleCopy}
                 disabled={!currentUuid}
                 title="Copy to clipboard"
@@ -131,11 +132,11 @@ export default function UuidGenerator({
             </div>
           </div>
 
-          <div className="ug-gen-uuid-box">
+          <div className={styles.ugGenUuidBox}>
             {currentUuid ? (
-              <code className="ug-gen-uuid">{currentUuid}</code>
+              <code className={styles.ugGenUuid}>{currentUuid}</code>
             ) : (
-              <span className="ug-gen-placeholder">
+              <span className={styles.ugGenPlaceholder}>
                 {needsNamespace ? "Enter namespace and name below" : "Click generate"}
               </span>
             )}
@@ -143,20 +144,20 @@ export default function UuidGenerator({
 
           {/*  Analysis  */}
           {analysis && analysis.isValid && (
-            <div className="ug-gen-analysis">
-              <div className="ug-gen-analysis-grid">
-                <div className="ug-gen-analysis-item">
-                  <span className="ug-gen-analysis-label">Version</span>
-                  <span className="ug-gen-analysis-value">{analysis.version}</span>
+            <div className={styles.ugGenAnalysis}>
+              <div className={styles.ugGenAnalysisGrid}>
+                <div className={styles.ugGenAnalysisItem}>
+                  <span className={styles.ugGenAnalysisLabel}>Version</span>
+                  <span className={styles.ugGenAnalysisValue}>{analysis.version}</span>
                 </div>
-                <div className="ug-gen-analysis-item">
-                  <span className="ug-gen-analysis-label">Variant</span>
-                  <span className="ug-gen-analysis-value">{analysis.variant}</span>
+                <div className={styles.ugGenAnalysisItem}>
+                  <span className={styles.ugGenAnalysisLabel}>Variant</span>
+                  <span className={styles.ugGenAnalysisValue}>{analysis.variant}</span>
                 </div>
                 {analysis.timestamp && (
-                  <div className="ug-gen-analysis-item ug-gen-analysis-wide">
-                    <span className="ug-gen-analysis-label">Timestamp</span>
-                    <span className="ug-gen-analysis-value ug-gen-timestamp">
+                  <div className={`${styles.ugGenAnalysisItem} ${styles.ugGenAnalysisWide}`}>
+                    <span className={styles.ugGenAnalysisLabel}>Timestamp</span>
+                    <span className={`${styles.ugGenAnalysisValue} ${styles.ugGenTimestamp}`}>
                       {analysis.timestampDate}
                     </span>
                   </div>
@@ -168,55 +169,55 @@ export default function UuidGenerator({
 
         {/*  Namespace Input (v3/v5)  */}
         {needsNamespace && (
-          <div className="ug-gen-namespace">
-            <div className="ug-gen-section-label">
+          <div className={styles.ugGenNamespace}>
+            <div className={styles.ugGenSectionLabel}>
               <i className="ti ti-network" />
               Namespace Configuration
             </div>
 
-            <div className="ug-gen-namespace-toggle">
-              <label className="ug-gen-radio">
+            <div className={styles.ugGenNamespaceToggle}>
+              <label className={styles.ugGenRadio}>
                 <input
                   type="radio"
                   name="namespace-type"
                   checked={!useCustomNamespace}
                   onChange={() => setUseCustomNamespace(false)}
                 />
-                <span className="ug-gen-radio-label">Standard Namespace</span>
+                <span className={styles.ugGenRadioLabel}>Standard Namespace</span>
               </label>
-              <label className="ug-gen-radio">
+              <label className={styles.ugGenRadio}>
                 <input
                   type="radio"
                   name="namespace-type"
                   checked={useCustomNamespace}
                   onChange={() => setUseCustomNamespace(true)}
                 />
-                <span className="ug-gen-radio-label">Custom Namespace</span>
+                <span className={styles.ugGenRadioLabel}>Custom Namespace</span>
               </label>
             </div>
 
             {useCustomNamespace ? (
-              <div className="ug-gen-input-group">
-                <label className="ug-gen-input-label" htmlFor="custom-namespace">
+              <div className={styles.ugGenInputGroup}>
+                <label className={styles.ugGenInputLabel} htmlFor="custom-namespace">
                   Custom Namespace UUID
                 </label>
                 <input
                   id="custom-namespace"
                   type="text"
-                  className="ug-gen-input"
+                  className={styles.ugGenInput}
                   value={customNamespace}
                   onChange={(e) => setCustomNamespace(e.target.value)}
                   placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                 />
               </div>
             ) : (
-              <div className="ug-gen-input-group">
-                <label className="ug-gen-input-label" htmlFor="std-namespace">
+              <div className={styles.ugGenInputGroup}>
+                <label className={styles.ugGenInputLabel} htmlFor="std-namespace">
                   Standard Namespace
                 </label>
                 <select
                   id="std-namespace"
-                  className="ug-gen-select"
+                  className={styles.ugGenSelect}
                   value={namespace}
                   onChange={(e) => setNamespace(e.target.value)}
                 >
@@ -228,19 +229,19 @@ export default function UuidGenerator({
               </div>
             )}
 
-            <div className="ug-gen-input-group">
-              <label className="ug-gen-input-label" htmlFor="uuid-name">
+            <div className={styles.ugGenInputGroup}>
+              <label className={styles.ugGenInputLabel} htmlFor="uuid-name">
                 Name
               </label>
               <input
                 id="uuid-name"
                 type="text"
-                className="ug-gen-input"
+                className={styles.ugGenInput}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="example.com"
               />
-              <span className="ug-gen-input-hint">
+              <span className={styles.ugGenInputHint}>
                 Same namespace + name always produces the same UUID
               </span>
             </div>
@@ -248,19 +249,19 @@ export default function UuidGenerator({
         )}
 
         {/*  Version Info  */}
-        <div className="ug-gen-info">
-          <div className="ug-gen-info-header">
+        <div className={styles.ugGenInfo}>
+          <div className={styles.ugGenInfoHeader}>
             <i className="ti ti-info-circle" />
             <span>About {VERSION_INFO[version].label}</span>
           </div>
-          <p className="ug-gen-info-desc">{VERSION_INFO[version].desc}</p>
-          <div className="ug-gen-info-meta">
-            <span className="ug-gen-info-tag">
+          <p className={styles.ugGenInfoDesc}>{VERSION_INFO[version].desc}</p>
+          <div className={styles.ugGenInfoMeta}>
+            <span className={styles.ugGenInfoTag}>
               <i className="ti ti-target" />
               {VERSION_INFO[version].useCase}
             </span>
             {VERSION_INFO[version].sortable && (
-              <span className="ug-gen-info-tag">
+              <span className={styles.ugGenInfoTag}>
                 <i className="ti ti-sort-ascending" />
                 Sortable
               </span>

@@ -2,7 +2,8 @@
 "use client";
 
 import { useMemo } from "react";
-import type { DecodedToken } from "./jwtParser";
+import type { DecodedToken } from "./ts/jwtParser";
+import styles from "./style/SecurityAnalyzer.module.css";
 
 interface SecurityAnalyzerProps {
   token: DecodedToken;
@@ -171,40 +172,40 @@ export default function SecurityAnalyzer({ token }: SecurityAnalyzerProps) {
 
   return (
     <>
-      <div className="sa-root">
+      <div className={styles.saRoot}>
         {/* Security Score */}
-        <div className="sa-score-card">
-          <div className="sa-score-visual">
-            <div className={`sa-score-grade sa-score-grade--${stats.grade.toLowerCase()}`}>
+        <div className={styles.saScoreCard}>
+          <div className={styles.saScoreVisual}>
+            <div className={`${styles.saScoreGrade} ${styles[`saScoreGrade--${stats.grade.toLowerCase()}`]}`}>
               {stats.grade}
             </div>
-            <div className="sa-score-details">
-              <div className="sa-score-value">{stats.score}/100</div>
-              <div className="sa-score-label">Security Score</div>
+            <div className={styles.saScoreDetails}>
+              <div className={styles.saScoreValue}>{stats.score}/100</div>
+              <div className={styles.saScoreLabel}>Security Score</div>
             </div>
           </div>
 
-          <div className="sa-score-summary">
+          <div className={styles.saScoreSummary}>
             {stats.critical > 0 && (
-              <div className="sa-summary-item sa-summary-item--critical">
+              <div className={`${styles.saSummaryItem} ${styles.saSummaryItemCritical}`}>
                 <i className="ti ti-alert-circle" />
                 {stats.critical} critical {stats.critical === 1 ? "issue" : "issues"}
               </div>
             )}
             {stats.warnings > 0 && (
-              <div className="sa-summary-item sa-summary-item--warning">
+              <div className={`${styles.saSummaryItem} ${styles.saSummaryItemWarning}`}>
                 <i className="ti ti-alert-triangle" />
                 {stats.warnings} {stats.warnings === 1 ? "warning" : "warnings"}
               </div>
             )}
             {stats.info > 0 && (
-              <div className="sa-summary-item sa-summary-item--info">
+              <div className={`${styles.saSummaryItem} ${styles.saSummaryItemInfo}`}>
                 <i className="ti ti-info-circle" />
                 {stats.info} {stats.info === 1 ? "suggestion" : "suggestions"}
               </div>
             )}
             {issues.length === 0 && (
-              <div className="sa-summary-item sa-summary-item--success">
+              <div className={`${styles.saSummaryItem} ${styles.saSummaryItemSuccess}`}>
                 <i className="ti ti-circle-check" />
                 No issues found
               </div>
@@ -214,28 +215,28 @@ export default function SecurityAnalyzer({ token }: SecurityAnalyzerProps) {
 
         {/* Issues List */}
         {issues.length > 0 && (
-          <div className="sa-issues">
-            <div className="sa-issues-header">
+          <div className={styles.saIssues}>
+            <div className={styles.saIssuesHeader}>
               <i className="ti ti-shield-check" />
               <span>Security Analysis</span>
             </div>
-            <div className="sa-issues-list">
+            <div className={styles.saIssuesList}>
               {issues.map((issue, idx) => (
-                <div key={idx} className={`sa-issue sa-issue--${issue.severity}`}>
-                  <div className="sa-issue-header">
-                    <div className="sa-issue-icon">
+                <div key={idx} className={`${styles.saIssue} ${styles[`saIssue--${issue.severity}`]}`}>
+                  <div className={styles.saIssueHeader}>
+                    <div className={styles.saIssueIcon}>
                       {issue.severity === "critical" && <i className="ti ti-alert-octagon" />}
                       {issue.severity === "warning" && <i className="ti ti-alert-triangle" />}
                       {issue.severity === "info" && <i className="ti ti-info-circle" />}
                     </div>
-                    <div className="sa-issue-title">{issue.title}</div>
-                    <div className={`sa-issue-badge sa-issue-badge--${issue.severity}`}>
+                    <div className={styles.saIssueTitle}>{issue.title}</div>
+                    <div className={`${styles.saIssueBadge} ${styles[`saIssueBadge--${issue.severity}`]}`}>
                       {issue.severity}
                     </div>
                   </div>
-                  <div className="sa-issue-description">{issue.description}</div>
+                  <div className={styles.saIssueDescription}>{issue.description}</div>
                   {issue.recommendation && (
-                    <div className="sa-issue-recommendation">
+                    <div className={styles.saIssueRecommendation}>
                       <i className="ti ti-bulb" />
                       <span>{issue.recommendation}</span>
                     </div>
@@ -247,33 +248,33 @@ export default function SecurityAnalyzer({ token }: SecurityAnalyzerProps) {
         )}
 
         {/* Best Practices */}
-        <div className="sa-practices">
-          <div className="sa-practices-header">
+        <div className={styles.saPractices}>
+          <div className={styles.saPracticesHeader}>
             <i className="ti ti-checklist" />
             <span>Best Practices</span>
           </div>
-          <div className="sa-practices-list">
-            <div className="sa-practice">
+          <div className={styles.saPracticesList}>
+            <div className={styles.saPractice}>
               <i className="ti ti-check" />
               <span>Use strong asymmetric algorithms (RS256, ES256)</span>
             </div>
-            <div className="sa-practice">
+            <div className={styles.saPractice}>
               <i className="ti ti-check" />
               <span>Set appropriate expiration times (15-60 min for access tokens)</span>
             </div>
-            <div className="sa-practice">
+            <div className={styles.saPractice}>
               <i className="ti ti-check" />
               <span>Include iss, aud, and jti claims</span>
             </div>
-            <div className="sa-practice">
+            <div className={styles.saPractice}>
               <i className="ti ti-check" />
               <span>Never store sensitive data in payload</span>
             </div>
-            <div className="sa-practice">
+            <div className={styles.saPractice}>
               <i className="ti ti-check" />
               <span>Verify signature on the server side</span>
             </div>
-            <div className="sa-practice">
+            <div className={styles.saPractice}>
               <i className="ti ti-check" />
               <span>Use HTTPS for token transmission</span>
             </div>

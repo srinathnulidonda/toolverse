@@ -2,8 +2,9 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { UrlParts } from "./utils";
-import { exportAsJson, exportAsCsv, copyToClipboard } from "./utils";
+import type { UrlParts } from "./ts/utils";
+import { exportAsJson, exportAsCsv, copyToClipboard } from "./ts/utils";
+import styles from "./style/UrlBreakdown.module.css";
 
 interface UrlBreakdownProps {
   urlParts: UrlParts | null;
@@ -22,12 +23,12 @@ export default function UrlBreakdown({ urlParts }: UrlBreakdownProps) {
 
   if (!urlParts) {
     return (
-      <div className="ub-empty">
-        <div className="ub-empty-icon">
+      <div className={styles.ubEmpty}>
+        <div className={styles.ubEmptyIcon}>
           <i className="ti ti-layout-list" />
         </div>
-        <p className="ub-empty-title">No URL to parse</p>
-        <p className="ub-empty-desc">Enter a valid URL to see its components</p>
+        <p className={styles.ubEmptyTitle}>No URL to parse</p>
+        <p className={styles.ubEmptyDesc}>Enter a valid URL to see its components</p>
       </div>
     );
   }
@@ -53,21 +54,21 @@ export default function UrlBreakdown({ urlParts }: UrlBreakdownProps) {
 
   return (
     <>
-      <div className="ub-root">
+      <div className={styles.ubRoot}>
         {/* Components Section */}
-        <section className="ub-section">
-          <header className="ub-section-header">Components</header>
-          <ul className="ub-list">
+        <section className={styles.ubSection}>
+          <header className={styles.ubSectionHeader}>Components</header>
+          <ul className={styles.ubList}>
             {components.map((comp, idx) => (
-              <li key={idx} className="ub-row">
-                <span className={`ub-icon ${comp.color || "default"}`}>
+              <li key={idx} className={styles.ubRow}>
+                <span className={`${styles.ubIcon} ${comp.color ? styles[comp.color] : styles.default}`}>
                   <i className={`ti ${comp.icon}`} />
                 </span>
-                <span className="ub-key">{comp.key}</span>
-                <span className="ub-value">{comp.value}</span>
+                <span className={styles.ubKey}>{comp.key}</span>
+                <span className={styles.ubValue}>{comp.value}</span>
                 <button
                   type="button"
-                  className={`ub-copy-btn${copiedKey === `comp-${idx}` ? " copied" : ""}`}
+                  className={`${styles.ubCopyBtn}${copiedKey === `comp-${idx}` ? ` ${styles.copied}` : ""}`}
                   onClick={() => handleCopy(comp.value, `comp-${idx}`)}
                   aria-label={`Copy ${comp.key}`}
                 >
@@ -80,14 +81,14 @@ export default function UrlBreakdown({ urlParts }: UrlBreakdownProps) {
 
         {/* Query Parameters */}
         {urlParts.searchParams.length > 0 && (
-          <section className="ub-section">
-            <header className="ub-section-header">
+          <section className={styles.ubSection}>
+            <header className={styles.ubSectionHeader}>
               Query parameters
-              <span className="ub-count-badge">{urlParts.searchParams.length}</span>
+              <span className={styles.ubCountBadge}>{urlParts.searchParams.length}</span>
             </header>
 
-            <div className="ub-table-wrap">
-              <table className="ub-table">
+            <div className={styles.ubTableWrap}>
+              <table className={styles.ubTable}>
                 <thead>
                   <tr>
                     <th>#</th>
@@ -99,15 +100,15 @@ export default function UrlBreakdown({ urlParts }: UrlBreakdownProps) {
                 <tbody>
                   {urlParts.searchParams.map(([key, value], idx) => (
                     <tr key={idx}>
-                      <td className="ub-table-num">{idx + 1}</td>
-                      <td className="ub-table-key">{key}</td>
-                      <td className="ub-table-value">
-                        {value || <em className="ub-table-empty">empty</em>}
+                      <td className={styles.ubTableNum}>{idx + 1}</td>
+                      <td className={styles.ubTableKey}>{key}</td>
+                      <td className={styles.ubTableValue}>
+                        {value || <em className={styles.ubTableEmpty}>empty</em>}
                       </td>
                       <td>
                         <button
                           type="button"
-                          className={`ub-copy-btn${copiedKey === `param-${idx}` ? " copied" : ""}`}
+                          className={`${styles.ubCopyBtn}${copiedKey === `param-${idx}` ? ` ${styles.copied}` : ""}`}
                           onClick={() => handleCopy(`${key}=${value}`, `param-${idx}`)}
                           aria-label={`Copy ${key}`}
                         >
@@ -122,10 +123,10 @@ export default function UrlBreakdown({ urlParts }: UrlBreakdownProps) {
               </table>
             </div>
 
-            <div className="ub-export-row">
+            <div className={styles.ubExportRow}>
               <button
                 type="button"
-                className="ub-export-btn"
+                className={styles.ubExportBtn}
                 onClick={() => handleCopy(exportAsJson(urlParts), "json")}
               >
                 <i className="ti ti-braces" />
@@ -133,7 +134,7 @@ export default function UrlBreakdown({ urlParts }: UrlBreakdownProps) {
               </button>
               <button
                 type="button"
-                className="ub-export-btn"
+                className={styles.ubExportBtn}
                 onClick={() => handleCopy(exportAsCsv(urlParts.searchParams), "csv")}
               >
                 <i className="ti ti-table" />

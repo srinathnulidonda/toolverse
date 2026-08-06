@@ -1,8 +1,9 @@
-// features/dev/uuid-generator/UuidAnalyzer.tsx
+/* features/dev/uuid-generator/UuidAnalyzer.tsx */
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { analyzeUuid, validateUuid, formatUuid, formatTimestamp, type UuidAnalysis } from "./utils";
+import { analyzeUuid, validateUuid, formatUuid, formatTimestamp, type UuidAnalysis } from "./ts/utils";
+import styles from "./style/UuidAnalyzer.module.css";
 
 export default function UuidAnalyzer() {
   const [input, setInput] = useState("");
@@ -45,22 +46,22 @@ export default function UuidAnalyzer() {
 
   return (
     <>
-      <div className="ua-root">
+      <div className={styles.uaRoot}>
         {/*  Input Section  */}
-        <div className="ua-input-section">
-          <div className="ua-input-header">
-            <div className="ua-input-label">
+        <div className={styles.uaInputSection}>
+          <div className={styles.uaInputHeader}>
+            <div className={styles.uaInputLabel}>
               <i className="ti ti-search" />
               UUID Input
             </div>
-            <div className="ua-input-actions">
-              <button type="button" className="ua-sample-btn" onClick={loadSample}>
+            <div className={styles.uaInputActions}>
+              <button type="button" className={styles.uaSampleBtn} onClick={loadSample}>
                 <i className="ti ti-wand" />
                 Sample
               </button>
               <button
                 type="button"
-                className="ua-clear-btn"
+                className={styles.uaClearBtn}
                 onClick={handleClear}
                 disabled={!input}
               >
@@ -70,7 +71,7 @@ export default function UuidAnalyzer() {
           </div>
 
           <textarea
-            className="ua-textarea"
+            className={styles.uaTextarea}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onBlur={handleAnalyze}
@@ -81,7 +82,7 @@ Example: 550e8400-e29b-41d4-a716-446655440000"
           />
 
           {validation && !validation.valid && (
-            <div className="ua-error-bar">
+            <div className={styles.uaErrorBar}>
               <i className="ti ti-alert-circle" />
               <span>{validation.error}</span>
             </div>
@@ -90,17 +91,17 @@ Example: 550e8400-e29b-41d4-a716-446655440000"
 
         {/*  Analysis Results  */}
         {analysis && (
-          <div className="ua-results">
+          <div className={styles.uaResults}>
             {/*  Validation Status  */}
-            <div className={`ua-status-card ${analysis.isValid ? "valid" : "invalid"}`}>
-              <div className="ua-status-icon">
+            <div className={`${styles.uaStatusCard} ${analysis.isValid ? styles.valid : styles.invalid}`}>
+              <div className={styles.uaStatusIcon}>
                 <i className={`ti ${analysis.isValid ? "ti-circle-check" : "ti-alert-triangle"}`} />
               </div>
-              <div className="ua-status-content">
-                <h3 className="ua-status-title">
+              <div className={styles.uaStatusContent}>
+                <h3 className={styles.uaStatusTitle}>
                   {analysis.isValid ? "Valid UUID" : "Invalid UUID"}
                 </h3>
-                <p className="ua-status-desc">
+                <p className={styles.uaStatusDesc}>
                   {analysis.isValid
                     ? "This UUID conforms to RFC 4122 standard"
                     : analysis.errors.join(", ")}
@@ -110,50 +111,50 @@ Example: 550e8400-e29b-41d4-a716-446655440000"
 
             {/*  Details Grid  */}
             {analysis.isValid && (
-              <div className="ua-details">
-                <div className="ua-details-header">
+              <div className={styles.uaDetails}>
+                <div className={styles.uaDetailsHeader}>
                   <i className="ti ti-info-circle" />
                   <span>UUID Details</span>
                 </div>
 
-                <div className="ua-details-grid">
-                  <div className="ua-detail-card">
-                    <div className="ua-detail-label">Version</div>
-                    <div className="ua-detail-value">
+                <div className={styles.uaDetailsGrid}>
+                  <div className={styles.uaDetailCard}>
+                    <div className={styles.uaDetailLabel}>Version</div>
+                    <div className={styles.uaDetailValue}>
                       <span
-                        className={`ua-version-badge ${getVersionBadgeColor(analysis.version)}`}
+                        className={`${styles.uaVersionBadge} ${styles[getVersionBadgeColor(analysis.version)]}`}
                       >
                         {analysis.version ? `v${analysis.version}` : "Unknown"}
                       </span>
                     </div>
                   </div>
 
-                  <div className="ua-detail-card">
-                    <div className="ua-detail-label">Variant</div>
-                    <div className="ua-detail-value">{analysis.variant}</div>
+                  <div className={styles.uaDetailCard}>
+                    <div className={styles.uaDetailLabel}>Variant</div>
+                    <div className={styles.uaDetailValue}>{analysis.variant}</div>
                   </div>
 
-                  <div className="ua-detail-card">
-                    <div className="ua-detail-label">Format</div>
-                    <div className="ua-detail-value ua-detail-mono">{analysis.format}</div>
+                  <div className={styles.uaDetailCard}>
+                    <div className={styles.uaDetailLabel}>Format</div>
+                    <div className={`${styles.uaDetailValue} ${styles.uaDetailMono}`}>{analysis.format}</div>
                   </div>
 
                   {analysis.timestamp && (
                     <>
-                      <div className="ua-detail-card ua-detail-wide">
-                        <div className="ua-detail-label">
+                      <div className={`${styles.uaDetailCard} ${styles.uaDetailWide}`}>
+                        <div className={styles.uaDetailLabel}>
                           <i className="ti ti-clock" />
                           Timestamp
                         </div>
-                        <div className="ua-detail-value ua-detail-mono">
+                        <div className={`${styles.uaDetailValue} ${styles.uaDetailMono}`}>
                           {analysis.timestampDate}
                         </div>
-                        <div className="ua-detail-sub">{formatTimestamp(analysis.timestamp)}</div>
+                        <div className={styles.uaDetailSub}>{formatTimestamp(analysis.timestamp)}</div>
                       </div>
 
-                      <div className="ua-detail-card">
-                        <div className="ua-detail-label">Unix Epoch</div>
-                        <div className="ua-detail-value ua-detail-mono">
+                      <div className={styles.uaDetailCard}>
+                        <div className={styles.uaDetailLabel}>Unix Epoch</div>
+                        <div className={`${styles.uaDetailValue} ${styles.uaDetailMono}`}>
                           {Math.floor(analysis.timestamp)}
                         </div>
                       </div>
@@ -161,16 +162,16 @@ Example: 550e8400-e29b-41d4-a716-446655440000"
                   )}
 
                   {analysis.clockSequence !== undefined && (
-                    <div className="ua-detail-card">
-                      <div className="ua-detail-label">Clock Sequence</div>
-                      <div className="ua-detail-value ua-detail-mono">{analysis.clockSequence}</div>
+                    <div className={styles.uaDetailCard}>
+                      <div className={styles.uaDetailLabel}>Clock Sequence</div>
+                      <div className={`${styles.uaDetailValue} ${styles.uaDetailMono}`}>{analysis.clockSequence}</div>
                     </div>
                   )}
 
                   {analysis.node && (
-                    <div className="ua-detail-card ua-detail-wide">
-                      <div className="ua-detail-label">Node (MAC Address)</div>
-                      <div className="ua-detail-value ua-detail-mono">{analysis.node}</div>
+                    <div className={`${styles.uaDetailCard} ${styles.uaDetailWide}`}>
+                      <div className={styles.uaDetailLabel}>Node (MAC Address)</div>
+                      <div className={`${styles.uaDetailValue} ${styles.uaDetailMono}`}>{analysis.node}</div>
                     </div>
                   )}
                 </div>
@@ -179,13 +180,13 @@ Example: 550e8400-e29b-41d4-a716-446655440000"
 
             {/*  Format Conversions  */}
             {analysis.isValid && input.trim() && (
-              <div className="ua-conversions">
-                <div className="ua-conversions-header">
+              <div className={styles.uaConversions}>
+                <div className={styles.uaConversionsHeader}>
                   <i className="ti ti-transform" />
                   <span>Format Conversions</span>
                 </div>
 
-                <div className="ua-conversion-list">
+                <div className={styles.uaConversionList}>
                   {[
                     { label: "Standard", format: "standard" as const },
                     { label: "No Hyphens", format: "no-hyphens" as const },
@@ -196,13 +197,13 @@ Example: 550e8400-e29b-41d4-a716-446655440000"
                   ].map(({ label, format }) => {
                     const converted = formatUuid(input.trim(), format, "lowercase");
                     return (
-                      <div key={format} className="ua-conversion-item">
-                        <div className="ua-conversion-label">{label}</div>
-                        <div className="ua-conversion-value-row">
-                          <code className="ua-conversion-value">{converted}</code>
+                      <div key={format} className={styles.uaConversionItem}>
+                        <div className={styles.uaConversionLabel}>{label}</div>
+                        <div className={styles.uaConversionValueRow}>
+                          <code className={styles.uaConversionValue}>{converted}</code>
                           <button
                             type="button"
-                            className="ua-copy-icon"
+                            className={styles.uaCopyIcon}
                             onClick={async () => {
                               await navigator.clipboard.writeText(converted);
                             }}
@@ -222,12 +223,12 @@ Example: 550e8400-e29b-41d4-a716-446655440000"
 
         {/*  Empty State  */}
         {!input.trim() && !analysis && (
-          <div className="ua-empty">
-            <div className="ua-empty-icon">
+          <div className={styles.uaEmpty}>
+            <div className={styles.uaEmptyIcon}>
               <i className="ti ti-scan" />
             </div>
-            <p className="ua-empty-title">Analyze UUID</p>
-            <p className="ua-empty-desc">
+            <p className={styles.uaEmptyTitle}>Analyze UUID</p>
+            <p className={styles.uaEmptyDesc}>
               Paste any UUID above to validate it, extract metadata, and convert between formats.
             </p>
           </div>

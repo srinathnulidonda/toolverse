@@ -1,0 +1,194 @@
+/* features/social/hashtag-generator/style/KeywordInput.module.css */
+
+.kiRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.kiHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.kiHeader i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.kiModeToggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 4px;
+    background: var(--bg-surface);
+    border-radius: 8px;
+}
+
+.kiModeBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.kiModeBtn i {
+    font-size: 14px;
+}
+
+.kiModeBtn:hover {
+    color: var(--text-secondary);
+    background: var(--border-faint);
+}
+
+.kiModeBtn.active {
+    background: var(--bg-card);
+    color: var(--brand);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.kiInputSection {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.kiLabel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.kiCharCount {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+}
+
+.kiInput,
+.kiTextarea {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.kiInput:focus,
+.kiTextarea:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.kiTextarea {
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.kiInput::placeholder,
+.kiTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.kiHint {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+}
+
+.kiGenerateBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.kiGenerateBtn i {
+    font-size: 16px;
+}
+
+.kiGenerateBtn:hover:not(:disabled) {
+    background: var(--brand-hover);
+}
+
+.kiGenerateBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.kiExamples {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 0.5px solid var(--border);
+}
+
+.kiExamplesLabel {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.kiExamplesList {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.kiExampleBtn {
+    padding: 4px 10px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.kiExampleBtn:hover {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+@keyframes kiSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.kiSpin {
+    animation: kiSpin 0.75s linear infinite;
+}

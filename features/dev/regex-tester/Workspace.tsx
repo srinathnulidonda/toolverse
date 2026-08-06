@@ -9,19 +9,14 @@ import {
   type RegexFlags,
   type ViewTab,
   type RegexPattern,
-} from "./utils";
-import { useRegexStore } from "./regexStore";
+} from "./ts/utils";
+import { useRegexStore } from "./ts/regexStore";
 import RegexTest from "./RegexTest";
 import RegexReplace from "./RegexReplace";
 import RegexLibrary from "./RegexLibrary";
 import RegexExplainer from "./RegexExplainer";
 import RegexHistory from "./RegexHistory";
-import "./style/RegexExplainer.css";
-import "./style/RegexHistory.css";
-import "./style/RegexLibrary.css";
-import "./style/RegexReplace.css";
-import "./style/RegexTest.css";
-import "./style/Workspace.css";
+import styles from "./style/Workspace.module.css";
 
 export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
   const [viewTab, setViewTab] = useState<ViewTab>("test");
@@ -143,17 +138,17 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="rxt-workspace">
+      <div className={styles.rxtWorkspace}>
         {/* Top Command Bar */}
-        <div className="rxt-command-bar">
-          <div className="rxt-cmd-left">
-            <div className="rxt-quick-actions">
-              <span className="rxt-quick-label">Quick:</span>
+        <div className={styles.rxtCommandBar}>
+          <div className={styles.rxtCmdLeft}>
+            <div className={styles.rxtQuickActions}>
+              <span className={styles.rxtQuickLabel}>Quick:</span>
               {quickActions.map((preset) => (
                 <button
                   key={preset.id}
                   type="button"
-                  className="rxt-quick-btn"
+                  className={styles.rxtQuickBtn}
                   onClick={() => handleLoadPattern(preset)}
                   title={preset.description}
                 >
@@ -173,9 +168,9 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
             </div>
           </div>
 
-          <div className="rxt-cmd-right">
+          <div className={styles.rxtCmdRight}>
             {pattern && (
-              <span className="rxt-pattern-indicator">
+              <span className={styles.rxtPatternIndicator}>
                 <code>
                   /{pattern.substring(0, 30)}
                   {pattern.length > 30 ? "..." : ""}/
@@ -186,47 +181,47 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Flags Bar */}
-        <div className="rxt-flags-bar">
-          <div className="rxt-flags-label">
+        <div className={styles.rxtFlagsBar}>
+          <div className={styles.rxtFlagsLabel}>
             <i className="ti ti-flag" />
             Flags
           </div>
-          <div className="rxt-flags-list">
+          <div className={styles.rxtFlagsList}>
             {FLAG_DEFINITIONS.map((f) => (
               <button
                 key={f.id}
                 type="button"
-                className={`rxt-flag-toggle${flags[f.id] ? " active" : ""}`}
+                className={`${styles.rxtFlagToggle}${flags[f.id] ? ` ${styles.active}` : ""}`}
                 onClick={() => toggleFlag(f.id)}
                 title={f.desc}
               >
                 <i className={`ti ${f.icon}`} />
-                <span className="rxt-flag-id">{f.id}</span>
-                <span className="rxt-flag-name">{f.label}</span>
+                <span className={styles.rxtFlagId}>{f.id}</span>
+                <span className={styles.rxtFlagName}>{f.label}</span>
               </button>
             ))}
           </div>
         </div>
 
         {/* View Tabs */}
-        <div className="rxt-tabs-bar">
-          <nav className="rxt-tabs" role="tablist">
+        <div className={styles.rxtTabsBar}>
+          <nav className={styles.rxtTabs} role="tablist">
             {VIEW_TABS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 role="tab"
-                className={`rxt-tab${viewTab === tab.id ? " active" : ""}`}
+                className={`${styles.rxtTab}${viewTab === tab.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewTab(tab.id)}
                 aria-selected={viewTab === tab.id}
               >
                 <i className={`ti ${tab.icon}`} />
                 {tab.label}
                 {tab.id === "library" && patterns.length > 0 && (
-                  <span className="rxt-tab-badge">{patterns.length}</span>
+                  <span className={styles.rxtTabBadge}>{patterns.length}</span>
                 )}
                 {typeof window !== 'undefined' && tab.id === "history" && history.length > 0 && (
-                  <span className="rxt-tab-badge">{history.length}</span>
+                  <span className={styles.rxtTabBadge}>{history.length}</span>
                 )}
               </button>
             ))}
@@ -234,7 +229,7 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Tab Content */}
-        <div className="rxt-tab-content">
+        <div className={styles.rxtTabContent}>
           {viewTab === "test" && (
             <RegexTest
               pattern={pattern}
@@ -275,14 +270,14 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Footer */}
-        <div className="rxt-footer">
-          <div className="rxt-footer-left">
+        <div className={styles.rxtFooter}>
+          <div className={styles.rxtFooterLeft}>
             <i className="ti ti-shield-lock" />
             <span>Everything runs in your browser — no data ever leaves this page.</span>
           </div>
           {pattern && (
-            <div className="rxt-footer-right">
-              <span className="rxt-footer-info">
+            <div className={styles.rxtFooterRight}>
+              <span className={styles.rxtFooterInfo}>
                 Pattern length: <strong>{pattern.length}</strong>
               </span>
             </div>
@@ -291,31 +286,31 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
 
         {/* Save Pattern Dialog */}
         {showSaveDialog && (
-          <div className="rxt-dialog-overlay" onClick={() => setShowSaveDialog(false)}>
-            <div className="rxt-dialog" onClick={(e) => e.stopPropagation()}>
-              <div className="rxt-dialog-header">
-                <h3 className="rxt-dialog-title">
+          <div className={styles.rxtDialogOverlay} onClick={() => setShowSaveDialog(false)}>
+            <div className={styles.rxtDialog} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.rxtDialogHeader}>
+                <h3 className={styles.rxtDialogTitle}>
                   <i className="ti ti-bookmark-plus" />
                   Save Pattern to Library
                 </h3>
                 <button
                   type="button"
-                  className="rxt-dialog-close"
+                  className={styles.rxtDialogClose}
                   onClick={() => setShowSaveDialog(false)}
                 >
                   <i className="ti ti-x" />
                 </button>
               </div>
 
-              <div className="rxt-dialog-body">
-                <div className="rxt-form-group">
-                  <label className="rxt-form-label" htmlFor="pattern-name">
+              <div className={styles.rxtDialogBody}>
+                <div className={styles.rxtFormGroup}>
+                  <label className={styles.rxtFormLabel} htmlFor="pattern-name">
                     Name
                   </label>
                   <input
                     id="pattern-name"
                     type="text"
-                    className="rxt-form-input"
+                    className={styles.rxtFormInput}
                     value={saveForm.name}
                     onChange={(e) => setSaveForm((prev) => ({ ...prev, name: e.target.value }))}
                     placeholder="e.g., Email Validator"
@@ -323,13 +318,13 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
                   />
                 </div>
 
-                <div className="rxt-form-group">
-                  <label className="rxt-form-label" htmlFor="pattern-desc">
+                <div className={styles.rxtFormGroup}>
+                  <label className={styles.rxtFormLabel} htmlFor="pattern-desc">
                     Description
                   </label>
                   <textarea
                     id="pattern-desc"
-                    className="rxt-form-textarea"
+                    className={styles.rxtFormTextarea}
                     value={saveForm.description}
                     onChange={(e) =>
                       setSaveForm((prev) => ({ ...prev, description: e.target.value }))
@@ -339,13 +334,13 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
                   />
                 </div>
 
-                <div className="rxt-form-group">
-                  <label className="rxt-form-label" htmlFor="pattern-category">
+                <div className={styles.rxtFormGroup}>
+                  <label className={styles.rxtFormLabel} htmlFor="pattern-category">
                     Category
                   </label>
                   <select
                     id="pattern-category"
-                    className="rxt-form-select"
+                    className={styles.rxtFormSelect}
                     value={saveForm.category}
                     onChange={(e) =>
                       setSaveForm((prev) => ({ ...prev, category: e.target.value as any }))
@@ -361,23 +356,23 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
                   </select>
                 </div>
 
-                <div className="rxt-form-group">
-                  <label className="rxt-form-label" htmlFor="pattern-tags">
+                <div className={styles.rxtFormGroup}>
+                  <label className={styles.rxtFormLabel} htmlFor="pattern-tags">
                     Tags (comma-separated)
                   </label>
                   <input
                     id="pattern-tags"
                     type="text"
-                    className="rxt-form-input"
+                    className={styles.rxtFormInput}
                     value={saveForm.tags}
                     onChange={(e) => setSaveForm((prev) => ({ ...prev, tags: e.target.value }))}
                     placeholder="e.g., email, validation, contact"
                   />
                 </div>
 
-                <div className="rxt-pattern-preview">
-                  <div className="rxt-preview-label">Pattern Preview</div>
-                  <code className="rxt-preview-code">
+                <div className={styles.rxtPatternPreview}>
+                  <div className={styles.rxtPreviewLabel}>Pattern Preview</div>
+                  <code className={styles.rxtPreviewCode}>
                     /{pattern}/
                     {Object.entries(flags)
                       .filter(([, v]) => v)
@@ -387,17 +382,17 @@ export default function RegexTesterWorkspace({ tool }: { tool: Tool }) {
                 </div>
               </div>
 
-              <div className="rxt-dialog-footer">
+              <div className={styles.rxtDialogFooter}>
                 <button
                   type="button"
-                  className="rxt-dialog-btn rxt-cancel-btn"
+                  className={`${styles.rxtDialogBtn} ${styles.rxtCancelBtn}`}
                   onClick={() => setShowSaveDialog(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
-                  className="rxt-dialog-btn rxt-save-btn"
+                  className={`${styles.rxtDialogBtn} ${styles.rxtSaveBtn}`}
                   onClick={handleSavePattern}
                   disabled={!saveForm.name.trim()}
                 >

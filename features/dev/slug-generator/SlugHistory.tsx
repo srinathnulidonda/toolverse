@@ -1,8 +1,9 @@
 // features/dev/slug-generator/SlugHistory.tsx
 "use client";
 
-import { formatBytes } from "./utils";
-import * as store from "./slugStore";
+import { formatBytes } from "./ts/utils";
+import * as store from "./ts/slugStore";
+import styles from "./style/SlugHistory.module.css";
 
 interface SlugHistoryProps {
   history: store.HistoryEntry[];
@@ -27,43 +28,43 @@ export default function SlugHistory({ history, onClear, onRestore }: SlugHistory
 
   return (
     <>
-      <div className="sh-root">
+      <div className={styles.shRoot}>
         {history.length === 0 ? (
-          <div className="sh-empty">
-            <div className="sh-empty-icon">
+          <div className={styles.shEmpty}>
+            <div className={styles.shEmptyIcon}>
               <i className="ti ti-history" />
             </div>
-            <p className="sh-empty-title">No History Yet</p>
-            <p className="sh-empty-desc">
+            <p className={styles.shEmptyTitle}>No History Yet</p>
+            <p className={styles.shEmptyDesc}>
               Your slug generation history will appear here. History is stored locally in your
               browser.
             </p>
           </div>
         ) : (
           <>
-            <div className="sh-header">
-              <div className="sh-header-label">
+            <div className={styles.shHeader}>
+              <div className={styles.shHeaderLabel}>
                 <i className="ti ti-history" />
                 History
-                <span className="sh-count-badge">{history.length}</span>
+                <span className={styles.shCountBadge}>{history.length}</span>
               </div>
-              <button type="button" className="sh-clear-btn" onClick={onClear}>
+              <button type="button" className={styles.shClearBtn} onClick={onClear}>
                 <i className="ti ti-trash" />
                 Clear All
               </button>
             </div>
 
-            <div className="sh-list">
+            <div className={styles.shList}>
               {history.map((entry) => (
-                <div key={entry.id} className="sh-item">
-                  <div className="sh-item-header">
-                    <div className="sh-item-time">
+                <div key={entry.id} className={styles.shItem}>
+                  <div className={styles.shItemHeader}>
+                    <div className={styles.shItemTime}>
                       <i className="ti ti-clock" />
                       {formatTimestamp(entry.timestamp)}
                     </div>
                     <button
                       type="button"
-                      className="sh-restore-btn"
+                      className={styles.shRestoreBtn}
                       onClick={() => onRestore(entry)}
                       title="Restore this slug"
                     >
@@ -72,31 +73,31 @@ export default function SlugHistory({ history, onClear, onRestore }: SlugHistory
                     </button>
                   </div>
 
-                  <div className="sh-item-content">
-                    <div className="sh-item-row">
-                      <span className="sh-item-label">Input:</span>
-                      <div className="sh-item-text">{entry.input}</div>
+                  <div className={styles.shItemContent}>
+                    <div className={styles.shItemRow}>
+                      <span className={styles.shItemLabel}>Input:</span>
+                      <div className={styles.shItemText}>{entry.input}</div>
                     </div>
-                    <div className="sh-item-row">
-                      <span className="sh-item-label">Slug:</span>
-                      <code className="sh-item-code">{entry.output}</code>
+                    <div className={styles.shItemRow}>
+                      <span className={styles.shItemLabel}>Slug:</span>
+                      <code className={styles.shItemCode}>{entry.output}</code>
                     </div>
                   </div>
 
-                  <div className="sh-item-footer">
-                    <div className="sh-item-options">
-                      <span className="sh-option-tag">
+                  <div className={styles.shItemFooter}>
+                    <div className={styles.shItemOptions}>
+                      <span className={styles.shOptionTag}>
                         {entry.options.separator === "-" && "Hyphen"}
                         {entry.options.separator === "_" && "Underscore"}
                         {entry.options.separator === "." && "Dot"}
                         {entry.options.separator === "" && "None"}
                       </span>
-                      <span className="sh-option-tag">{entry.options.caseStyle}</span>
+                      <span className={styles.shOptionTag}>{entry.options.caseStyle}</span>
                       {entry.options.removeStopWords && (
-                        <span className="sh-option-tag">No stop words</span>
+                        <span className={styles.shOptionTag}>No stop words</span>
                       )}
                       {entry.options.maxLength && (
-                        <span className="sh-option-tag">Max {entry.options.maxLength}</span>
+                        <span className={styles.shOptionTag}>Max {entry.options.maxLength}</span>
                       )}
                     </div>
                   </div>

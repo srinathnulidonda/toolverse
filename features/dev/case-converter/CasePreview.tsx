@@ -2,7 +2,8 @@
 "use client";
 
 import { useMemo, useState, useCallback } from "react";
-import { convertCase, CASE_FORMATS, type CaseType, type ConversionOptions } from "./utils";
+import { convertCase, CASE_FORMATS, type CaseType, type ConversionOptions } from "./ts/utils";
+import styles from "./style/CasePreview.module.css";
 
 interface CasePreviewProps {
   input: string;
@@ -52,22 +53,22 @@ export default function CasePreview({
 
   return (
     <>
-      <div className="cp-root">
+      <div className={styles.cpRoot}>
         {/*  Input Section  */}
-        <div className="cp-input-section">
-          <div className="cp-input-header">
-            <div className="cp-input-label">
+        <div className={styles.cpInputSection}>
+          <div className={styles.cpInputHeader}>
+            <div className={styles.cpInputLabel}>
               <i className="ti ti-pencil" />
               Input Text
             </div>
             {input && (
-              <button className="cp-clear-btn" onClick={() => onInputChange("")} title="Clear">
+              <button className={styles.cpClearBtn} onClick={() => onInputChange("")} title="Clear">
                 <i className="ti ti-x" />
               </button>
             )}
           </div>
           <textarea
-            className="cp-textarea"
+            className={styles.cpTextarea}
             value={input}
             onChange={(e) => onInputChange(e.target.value)}
             placeholder="Enter text to convert case..."
@@ -78,46 +79,46 @@ export default function CasePreview({
 
         {/*  Results Section  */}
         {results.length === 0 && !input ? (
-          <div className="cp-empty">
-            <div className="cp-empty-icon">
+          <div className={styles.cpEmpty}>
+            <div className={styles.cpEmptyIcon}>
               <i className="ti ti-letter-case" />
             </div>
-            <p className="cp-empty-title">Convert Text Case</p>
-            <p className="cp-empty-desc">
+            <p className={styles.cpEmptyTitle}>Convert Text Case</p>
+            <p className={styles.cpEmptyDesc}>
               Convert text between camelCase, snake_case, kebab-case, and more. Enter text above to
               get started.
             </p>
           </div>
         ) : results.length > 0 ? (
-          <div className="cp-results-section">
-            <div className="cp-results-header">
-              <div className="cp-results-label">
+          <div className={styles.cpResultsSection}>
+            <div className={styles.cpResultsHeader}>
+              <div className={styles.cpResultsLabel}>
                 <i className="ti ti-sparkles" />
                 Converted Cases
-                <span className="cp-results-count">{results.length}</span>
+                <span className={styles.cpResultsCount}>{results.length}</span>
               </div>
             </div>
-            <div className="cp-results">
+            <div className={styles.cpResults}>
               {results.map((result) => (
-                <div key={result.id} className="cp-result-card">
-                  <div className="cp-result-header">
-                    <div className="cp-result-info">
+                <div key={result.id} className={styles.cpResultCard}>
+                  <div className={styles.cpResultHeader}>
+                    <div className={styles.cpResultInfo}>
                       <i className={`ti ${result.icon}`} />
-                      <div className="cp-result-text">
-                        <span className="cp-result-label">{result.label}</span>
-                        <span className="cp-result-desc">{result.description}</span>
+                      <div className={styles.cpResultText}>
+                        <span className={styles.cpResultLabel}>{result.label}</span>
+                        <span className={styles.cpResultDesc}>{result.description}</span>
                       </div>
                     </div>
                     <button
-                      className={`cp-copy-btn${copiedKey === result.id ? " copied" : ""}`}
+                      className={`${styles.cpCopyBtn}${copiedKey === result.id ? " copied" : ""}`}
                       onClick={() => handleCopy(result.converted, result.id, result.id)}
                     >
                       <i className={`ti ${copiedKey === result.id ? "ti-check" : "ti-copy"}`} />
                       {copiedKey === result.id ? "Copied" : "Copy"}
                     </button>
                   </div>
-                  <div className="cp-result-value">{result.converted}</div>
-                  <div className="cp-result-example">Example: {result.example}</div>
+                  <div className={styles.cpResultValue}>{result.converted}</div>
+                  <div className={styles.cpResultExample}>Example: {result.example}</div>
                 </div>
               ))}
             </div>

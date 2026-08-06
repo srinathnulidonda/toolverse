@@ -1,0 +1,513 @@
+/* features/dev/uuid-generator/style/UuidAnalyzer.module.css */
+.uaRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+}
+
+/*  Input Section  */
+.uaInputSection {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.uaInputHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+}
+
+.uaInputLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.uaInputLabel i {
+    font-size: 13px;
+}
+
+.uaInputActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.uaSampleBtn,
+.uaClearBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.uaSampleBtn:hover,
+.uaClearBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.uaClearBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.uaSampleBtn i,
+.uaClearBtn i {
+    font-size: 12px;
+}
+
+.uaTextarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    resize: vertical;
+}
+
+.uaTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.uaErrorBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--error-bg);
+    border-top: 0.5px solid var(--border-faint);
+    color: #b91c1c;
+    font-size: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uaErrorBar {
+        color: #f87171;
+    }
+}
+
+.uaErrorBar i {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/*  Results  */
+.uaResults {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.uaStatusCard {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: var(--radius-lg);
+    border: 0.5px solid;
+}
+
+.uaStatusCard.valid {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.uaStatusCard.invalid {
+    background: var(--error-bg);
+    border-color: #f3d2d2;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uaStatusCard.invalid {
+        border-color: #5a2a2a;
+    }
+}
+
+.uaStatusIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.uaStatusCard.valid .uaStatusIcon {
+    background: var(--brand);
+    color: white;
+}
+
+.uaStatusCard.invalid .uaStatusIcon {
+    background: #dc2626;
+    color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uaStatusCard.invalid .uaStatusIcon {
+        background: #991b1b;
+    }
+}
+
+.uaStatusContent {
+    flex: 1;
+}
+
+.uaStatusTitle {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 4px;
+}
+
+.uaStatusCard.valid .uaStatusTitle {
+    color: var(--brand-text);
+}
+
+.uaStatusCard.invalid .uaStatusTitle {
+    color: #b91c1c;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uaStatusCard.invalid .uaStatusTitle {
+        color: #f87171;
+    }
+}
+
+.uaStatusDesc {
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.uaStatusCard.valid .uaStatusDesc {
+    color: var(--brand-text);
+    opacity: 0.85;
+}
+
+.uaStatusCard.invalid .uaStatusDesc {
+    color: #b91c1c;
+    opacity: 0.85;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uaStatusCard.invalid .uaStatusDesc {
+        color: #f87171;
+    }
+}
+
+/*  Details  */
+.uaDetails {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.uaDetailsHeader,
+.uaConversionsHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.uaDetailsHeader i,
+.uaConversionsHeader i {
+    font-size: 13px;
+}
+
+.uaDetailsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.uaDetailCard {
+    padding: 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.uaDetailWide {
+    grid-column: 1 / -1;
+}
+
+.uaDetailLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.uaDetailLabel i {
+    font-size: 11px;
+}
+
+.uaDetailValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.uaDetailMono {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    word-break: break-all;
+}
+
+.uaDetailSub {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: -2px;
+}
+
+.uaVersionBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.uaVersionBadge.brand {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.uaVersionBadge.success {
+    background: rgba(21, 128, 61, 0.1);
+    color: #15803d;
+    border: 0.5px solid rgba(21, 128, 61, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+    .uaVersionBadge.success {
+        background: rgba(74, 222, 128, 0.1);
+        color: #4ade80;
+        border-color: rgba(74, 222, 128, 0.2);
+    }
+}
+
+.uaVersionBadge.warning {
+    background: rgba(234, 179, 8, 0.1);
+    color: #a16207;
+    border: 0.5px solid rgba(234, 179, 8, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+    .uaVersionBadge.warning {
+        background: rgba(253, 224, 71, 0.1);
+        color: #fde047;
+        border-color: rgba(253, 224, 71, 0.2);
+    }
+}
+
+.uaVersionBadge.info {
+    background: rgba(59, 130, 246, 0.1);
+    color: #1d4ed8;
+    border: 0.5px solid rgba(59, 130, 246, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+    .uaVersionBadge.info {
+        background: rgba(96, 165, 250, 0.1);
+        color: #60a5fa;
+        border-color: rgba(96, 165, 250, 0.2);
+    }
+}
+
+.uaVersionBadge.neutral {
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    border: 0.5px solid var(--border);
+}
+
+/*  Conversions  */
+.uaConversions {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.uaConversionList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.uaConversionItem {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.uaConversionLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.uaConversionValueRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.uaConversionValue {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text);
+    word-break: break-all;
+    line-height: 1.6;
+}
+
+.uaCopyIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.uaCopyIcon:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.uaCopyIcon i {
+    font-size: 12px;
+}
+
+/*  Empty State  */
+.uaEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.uaEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.uaEmptyTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.uaEmptyDesc {
+    font-size: 12.5px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 360px;
+    line-height: 1.6;
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .uaRoot {
+        padding: 12px;
+    }
+
+    .uaDetailsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .uaStatusCard {
+        padding: 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .uaSampleBtn,
+    .uaClearBtn,
+    .uaCopyIcon {
+        transition: none;
+    }
+}

@@ -11,17 +11,13 @@ import {
   type SlugOptions,
   type CaseStyle,
   type Separator,
-} from "./utils";
+} from "./ts/utils";
 import SlugPreview from "./SlugPreview";
 import SlugBatch from "./SlugBatch";
 import SlugCompare from "./SlugCompare";
 import SlugHistory from "./SlugHistory";
-import { useSlugStore, type HistoryEntry } from "./slugStore";
-import "./style/SlugBatch.css";
-import "./style/SlugCompare.css";
-import "./style/SlugHistory.css";
-import "./style/SlugPreview.css";
-import "./style/Workspace.css";
+import { useSlugStore, type HistoryEntry } from "./ts/slugStore";
+import styles from "./style/Workspace.module.css";
 
 type ViewTab = "single" | "batch" | "compare" | "history";
 
@@ -109,29 +105,29 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="sg-root">
+      <div className={styles.sgRoot}>
         {/*  Top Chrome  */}
-        <div className="sg-chrome">
-          <div className="sg-chrome-left">
-            <span className="sg-cmd-label">Examples:</span>
+        <div className={styles.sgChrome}>
+          <div className={styles.sgChromeLeft}>
+            <span className={styles.sgCmdLabel}>Examples:</span>
             {SAMPLE_SLUGS.slice(0, 3).map((p) => (
               <button
                 key={p.id}
-                className="sg-preset-btn"
+                className={styles.sgPresetBtn}
                 onClick={() => loadSample(p)}
                 aria-label={`Load ${p.label} example`}
               >
                 <i className="ti ti-link" />
-                <span className="sg-preset-label">{p.label}</span>
+                <span className={styles.sgPresetLabel}>{p.label}</span>
               </button>
             ))}
           </div>
 
-          <div className="sg-chrome-right">
+          <div className={styles.sgChromeRight}>
             {viewTab === "single" && (
               <button
                 type="button"
-                className="sg-icon-btn sg-mobile-options-btn"
+                className={`${styles.sgIconBtn} ${styles.sgMobileOptionsBtn}`}
                 onClick={() => setShowMobileOptions(!showMobileOptions)}
                 aria-label="Toggle options"
               >
@@ -142,25 +138,25 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
               <>
                 <button
                   type="button"
-                  className={`sg-action-btn${copied ? " success" : ""}`}
+                  className={`${styles.sgActionBtn}${copied ? ` ${styles.success}` : ""}`}
                   onClick={() => handleCopy()}
                 >
                   <i className={`ti ${copied ? "ti-check" : "ti-copy"}`} />
-                  <span className="sg-label">{copied ? "Copied" : "Copy"}</span>
+                  <span className={styles.sgLabel}>{copied ? "Copied" : "Copy"}</span>
                 </button>
                 <button
                   type="button"
-                  className="sg-action-btn sg-desktop-only"
+                  className={`${styles.sgActionBtn} ${styles.sgDesktopOnly}`}
                   onClick={handleDownload}
                 >
                   <i className="ti ti-download" />
-                  <span className="sg-label">Save</span>
+                  <span className={styles.sgLabel}>Save</span>
                 </button>
               </>
             )}
             <button
               type="button"
-              className="sg-icon-btn sg-clear-btn"
+              className={`${styles.sgIconBtn} ${styles.sgClearBtn}`}
               onClick={handleClear}
               disabled={!input}
               title="Clear all"
@@ -172,8 +168,8 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  View Tabs  */}
-        <div className="sg-tabs-bar">
-          <nav className="sg-tabs" role="tablist" aria-label="Tool views">
+        <div className={styles.sgTabsBar}>
+          <nav className={styles.sgTabs} role="tablist" aria-label="Tool views">
             {[
               { id: "single" as const, label: "Single", icon: "ti-file" },
               { id: "batch" as const, label: "Batch", icon: "ti-files" },
@@ -184,15 +180,15 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                 key={tab.id}
                 type="button"
                 role="tab"
-                className={`sg-tab${viewTab === tab.id ? " active" : ""}`}
+                className={`${styles.sgTab}${viewTab === tab.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewTab(tab.id)}
                 aria-selected={viewTab === tab.id}
                 aria-controls={`sg-panel-${tab.id}`}
               >
                 <i className={`ti ${tab.icon}`} />
-                <span className="sg-tab-label">{tab.label}</span>
+                <span className={styles.sgTabLabel}>{tab.label}</span>
                 {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className="sg-badge">{history.length}</span>
+                  <span className={styles.sgBadge}>{history.length}</span>
                 )}
               </button>
             ))}
@@ -201,15 +197,15 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Options Bar (Single view only)  */}
         {viewTab === "single" && (
-          <div className={`sg-options-bar${showMobileOptions ? " mobile-visible" : ""}`}>
-            <div className="sg-options-header">
-              <span className="sg-options-title">
+          <div className={`${styles.sgOptionsBar}${showMobileOptions ? ` ${styles.mobileVisible}` : ""}`}>
+            <div className={styles.sgOptionsHeader}>
+              <span className={styles.sgOptionsTitle}>
                 <i className="ti ti-adjustments" />
                 Options
               </span>
               <button
                 type="button"
-                className="sg-mobile-close-btn"
+                className={styles.sgMobileCloseBtn}
                 onClick={() => setShowMobileOptions(false)}
                 aria-label="Close options"
               >
@@ -217,14 +213,14 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
               </button>
             </div>
 
-            <div className="sg-options-scroll">
-              <div className="sg-options-row">
-                <span className="sg-options-label">Separator</span>
-                <div className="sg-separator-group">
+            <div className={styles.sgOptionsScroll}>
+              <div className={styles.sgOptionsRow}>
+                <span className={styles.sgOptionsLabel}>Separator</span>
+                <div className={styles.sgSeparatorGroup}>
                   {(["-", "_", ".", ""] as Separator[]).map((sep) => (
                     <button
                       key={sep || "none"}
-                      className={`sg-sep-btn${options.separator === sep ? " active" : ""}`}
+                      className={`${styles.sgSepBtn}${options.separator === sep ? ` ${styles.active}` : ""}`}
                       onClick={() => setOptions((prev) => ({ ...prev, separator: sep }))}
                       aria-pressed={options.separator === sep}
                     >
@@ -237,14 +233,14 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                 </div>
               </div>
 
-              <div className="sg-options-row">
-                <span className="sg-options-label">Case Style</span>
-                <div className="sg-case-group">
+              <div className={styles.sgOptionsRow}>
+                <span className={styles.sgOptionsLabel}>Case Style</span>
+                <div className={styles.sgCaseGroup}>
                   {(["lowercase", "uppercase", "title", "camel", "pascal"] as CaseStyle[]).map(
                     (style) => (
                       <button
                         key={style}
-                        className={`sg-case-btn${options.caseStyle === style ? " active" : ""}`}
+                        className={`${styles.sgCaseBtn}${options.caseStyle === style ? ` ${styles.active}` : ""}`}
                         onClick={() => setOptions((prev) => ({ ...prev, caseStyle: style }))}
                         aria-pressed={options.caseStyle === style}
                       >
@@ -255,10 +251,10 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                 </div>
               </div>
 
-              <div className="sg-options-row">
+              <div className={styles.sgOptionsRow}>
                 <button
                   type="button"
-                  className="sg-advanced-toggle"
+                  className={styles.sgAdvancedToggle}
                   onClick={() => setShowAdvanced(!showAdvanced)}
                   aria-expanded={showAdvanced}
                 >
@@ -269,8 +265,8 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
 
               {showAdvanced && (
                 <>
-                  <div className="sg-options-row sg-advanced">
-                    <label className="sg-toggle">
+                  <div className={`${styles.sgOptionsRow} ${styles.sgAdvanced}`}>
+                    <label className={styles.sgToggle}>
                       <input
                         type="checkbox"
                         checked={options.removeSpecial}
@@ -278,12 +274,12 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                           setOptions((prev) => ({ ...prev, removeSpecial: e.target.checked }))
                         }
                       />
-                      <span className="sg-toggle-track">
-                        <span className="sg-toggle-thumb" />
+                      <span className={styles.sgToggleTrack}>
+                        <span className={styles.sgToggleThumb} />
                       </span>
-                      <span className="sg-toggle-label">Remove special characters</span>
+                      <span className={styles.sgToggleLabel}>Remove special characters</span>
                     </label>
-                    <label className="sg-toggle">
+                    <label className={styles.sgToggle}>
                       <input
                         type="checkbox"
                         checked={options.removeDiacritics}
@@ -291,12 +287,12 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                           setOptions((prev) => ({ ...prev, removeDiacritics: e.target.checked }))
                         }
                       />
-                      <span className="sg-toggle-track">
-                        <span className="sg-toggle-thumb" />
+                      <span className={styles.sgToggleTrack}>
+                        <span className={styles.sgToggleThumb} />
                       </span>
-                      <span className="sg-toggle-label">Remove diacritics (é → e)</span>
+                      <span className={styles.sgToggleLabel}>Remove diacritics (é → e)</span>
                     </label>
-                    <label className="sg-toggle">
+                    <label className={styles.sgToggle}>
                       <input
                         type="checkbox"
                         checked={options.removeStopWords}
@@ -304,12 +300,12 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                           setOptions((prev) => ({ ...prev, removeStopWords: e.target.checked }))
                         }
                       />
-                      <span className="sg-toggle-track">
-                        <span className="sg-toggle-thumb" />
+                      <span className={styles.sgToggleTrack}>
+                        <span className={styles.sgToggleThumb} />
                       </span>
-                      <span className="sg-toggle-label">Remove stop words (a, an, the...)</span>
+                      <span className={styles.sgToggleLabel}>Remove stop words (a, an, the...)</span>
                     </label>
-                    <label className="sg-toggle">
+                    <label className={styles.sgToggle}>
                       <input
                         type="checkbox"
                         checked={!options.preserveNumbers}
@@ -317,19 +313,19 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                           setOptions((prev) => ({ ...prev, preserveNumbers: !e.target.checked }))
                         }
                       />
-                      <span className="sg-toggle-track">
-                        <span className="sg-toggle-thumb" />
+                      <span className={styles.sgToggleTrack}>
+                        <span className={styles.sgToggleThumb} />
                       </span>
-                      <span className="sg-toggle-label">Remove numbers</span>
+                      <span className={styles.sgToggleLabel}>Remove numbers</span>
                     </label>
                   </div>
 
-                  <div className="sg-options-row sg-advanced">
-                    <span className="sg-options-label">Max Length</span>
-                    <div className="sg-length-controls">
+                  <div className={`${styles.sgOptionsRow} ${styles.sgAdvanced}`}>
+                    <span className={styles.sgOptionsLabel}>Max Length</span>
+                    <div className={styles.sgLengthControls}>
                       <input
                         type="number"
-                        className="sg-number-input"
+                        className={styles.sgNumberInput}
                         value={maxLengthInput}
                         onChange={(e) => updateMaxLength(e.target.value)}
                         placeholder="No limit"
@@ -337,7 +333,7 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                         max="200"
                       />
                       {options.maxLength && (
-                        <label className="sg-toggle sg-toggle-inline">
+                        <label className={`${styles.sgToggle} ${styles.sgToggleInline}`}>
                           <input
                             type="checkbox"
                             checked={options.smartTruncate}
@@ -345,10 +341,10 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
                               setOptions((prev) => ({ ...prev, smartTruncate: e.target.checked }))
                             }
                           />
-                          <span className="sg-toggle-track">
-                            <span className="sg-toggle-thumb" />
+                          <span className={styles.sgToggleTrack}>
+                            <span className={styles.sgToggleThumb} />
                           </span>
-                          <span className="sg-toggle-label">Smart truncate</span>
+                          <span className={styles.sgToggleLabel}>Smart truncate</span>
                         </label>
                       )}
                     </div>
@@ -358,13 +354,13 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
 
               {/* Alternative slugs */}
               {viewTab === "single" && alternatives.length > 0 && (
-                <div className="sg-alternatives">
-                  <span className="sg-alt-label">Alternative slugs:</span>
-                  <div className="sg-alt-list">
+                <div className={styles.sgAlternatives}>
+                  <span className={styles.sgAltLabel}>Alternative slugs:</span>
+                  <div className={styles.sgAltList}>
                     {alternatives.slice(0, 5).map((alt, i) => (
                       <button
                         key={i}
-                        className="sg-alt-chip"
+                        className={styles.sgAltChip}
                         onClick={() => handleCopy(alt)}
                         title="Click to copy"
                       >
@@ -379,7 +375,7 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/*  Tab Content  */}
-        <div className="sg-tab-content" id={`sg-panel-${viewTab}`} role="tabpanel">
+        <div className={styles.sgTabContent} id={`sg-panel-${viewTab}`} role="tabpanel">
           {viewTab === "single" && (
             <SlugPreview
               input={input}
@@ -410,20 +406,20 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Mobile Bottom Actions  */}
         {viewTab === "single" && output && (
-          <div className="sg-mobile-actions">
+          <div className={styles.sgMobileActions}>
             <button
               type="button"
-              className={`sg-mob-action${copied ? " success" : ""}`}
+              className={`${styles.sgMobAction}${copied ? ` ${styles.success}` : ""}`}
               onClick={() => handleCopy()}
             >
               <i className={`ti ${copied ? "ti-check" : "ti-copy"}`} />
               {copied ? "Copied" : "Copy"}
             </button>
-            <button type="button" className="sg-mob-action" onClick={handleDownload}>
+            <button type="button" className={styles.sgMobAction} onClick={handleDownload}>
               <i className="ti ti-download" />
               Save
             </button>
-            <button type="button" className="sg-mob-action" onClick={handleClear}>
+            <button type="button" className={styles.sgMobAction} onClick={handleClear}>
               <i className="ti ti-trash" />
               Clear
             </button>
@@ -431,7 +427,7 @@ export default function SlugGeneratorWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/*  Footer  */}
-        <div className="sg-footer">
+        <div className={styles.sgFooter}>
           <i className="ti ti-shield-lock" />
           <span>Everything runs in your browser — no data ever leaves this page.</span>
         </div>

@@ -45,6 +45,7 @@ export default function Hero() {
 
         {/* Headline */}
         <h1
+          className="hero-title"
           style={{
             fontSize: "clamp(28px, 4.5vw, 48px)",
             fontWeight: 700,
@@ -71,9 +72,7 @@ export default function Hero() {
             fontWeight: 400,
           }}
         >
-          51 privacy-first tools that run entirely in your browser.
-          <br />
-          No uploads. No waiting. No accounts required.
+          Built for speed — zero setup, zero friction.
         </p>
 
         {/* Search bar */}
@@ -87,7 +86,19 @@ export default function Hero() {
                 @media (max-width: 480px) {
                     .hero-section { padding: 16px 20px 36px !important; }
                     .hero-eyebrow { font-size: 10px !important; letter-spacing: 0.2px !important; margin-bottom: 10px !important; }
-                    .hero-body { font-size: 12px !important; line-height: 1.6 !important; margin-bottom: 20px !important; }
+                    .hero-title {
+                        font-size: 27px !important;
+                        letter-spacing: -0.6px !important;
+                        line-height: 1.2 !important;
+                        margin-bottom: 8px !important;
+                        white-space: nowrap !important;
+                    }
+                    .hero-body { font-size: 10px !important; line-height: 1.5 !important; margin-bottom: 18px !important; }
+                }
+
+                @media (max-width: 340px) {
+                    .hero-title { font-size: 25px !important; letter-spacing: -0.4px !important; margin-bottom: 6px !important; }
+                    .hero-body { font-size: 9.5px !important; }
                 }
             `}</style>
     </section>

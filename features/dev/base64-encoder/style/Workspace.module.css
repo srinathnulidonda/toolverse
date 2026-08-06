@@ -1,0 +1,366 @@
+/* features\dev\base64-encoder\style\Workspace.module.css */
+.root {
+    --b64-radius-sm: 6px;
+    --b64-radius-md: 8px;
+    --b64-radius-lg: 12px;
+    --b64-radius-xl: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--b64-radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+/*  Chrome  */
+.chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.chromeLeft,
+.chromeRight {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.pillGroup {
+    display: flex;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--b64-radius-md);
+    overflow: hidden;
+}
+
+.pillGhost {
+    background: transparent;
+    border-color: var(--border-faint);
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border: none;
+    border-right: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.pill:last-child {
+    border-right: none;
+}
+
+.pill i {
+    font-size: 13px;
+}
+
+.pill:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.pill.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.iconBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 11px;
+    border-radius: var(--b64-radius-md);
+    border: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.iconBtn i {
+    font-size: 13px;
+}
+
+.iconBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.iconBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.clearBtn:hover:not(:disabled) {
+    color: #b91c1c;
+    border-color: currentColor;
+    background: var(--error-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+    .clearBtn:hover:not(:disabled) {
+        color: #f87171;
+    }
+}
+
+.actionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--b64-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.actionBtn i {
+    font-size: 13px;
+}
+
+.actionBtn:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.actionBtn.success {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+/*  Tabs Bar  */
+.tabsBar {
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.tabs {
+    display: flex;
+    padding: 0 14px;
+}
+
+.tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 38px;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.tab i {
+    font-size: 13px;
+}
+
+.tab:hover {
+    color: var(--text);
+}
+
+.tab.active {
+    color: var(--text);
+}
+
+.tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/*  Options Bar  */
+.optionsBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border-faint);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggleTrack {
+    width: 32px;
+    height: 18px;
+    background: var(--border);
+    border-radius: 99px;
+    position: relative;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+
+.toggle input:checked+.toggleTrack {
+    background: var(--brand);
+}
+
+.toggleThumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.15s;
+}
+
+.toggle input:checked+.toggleTrack .toggleThumb {
+    transform: translateX(14px);
+}
+
+.toggleLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.selectWrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.selectLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.select {
+    height: 28px;
+    padding: 0 10px;
+    border-radius: var(--b64-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.select:focus {
+    outline: none;
+    border-color: var(--brand-border);
+}
+
+/*  Tab Content  */
+.tabContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*  Footer  */
+.footer {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    font-size: 11px;
+    color: var(--text-disabled);
+}
+
+.footer i {
+    font-size: 13px;
+}
+
+/*  Responsive  */
+.label {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .label {
+        display: none;
+    }
+
+    .chrome {
+        padding: 8px 10px;
+    }
+
+    .optionsBar {
+        padding: 8px 10px;
+        gap: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .pill,
+    .iconBtn,
+    .actionBtn,
+    .tab,
+    .toggleTrack,
+    .toggleThumb {
+        transition: none;
+    }
+}

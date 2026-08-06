@@ -1,0 +1,634 @@
+/* features/dev/json-minifier/style/JSONAnalysis.module.css */
+.jvaRoot {
+    flex: 1;
+    padding: 16px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--bg-surface);
+}
+
+/* Cards */
+.jvaCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.jvaCard {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.jvaCardIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.jvaCardBody {
+    min-width: 0;
+}
+
+.jvaCardLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+}
+
+.jvaCardValue {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* Section */
+.jvaSection {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.jvaSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jvaSectionHeader i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.jvaIssueCounts {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+}
+
+/* Size Analysis */
+.jvaSizeRows {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.jvaSizeRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.jvaSizeLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    width: 60px;
+    flex-shrink: 0;
+}
+
+.jvaSizeTrack {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-surface);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.jvaSizeFill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+}
+
+.jvaSizeFillOrig {
+    background: var(--border);
+}
+
+.jvaSizeFillProc {
+    background: #3b82f6;
+}
+
+.jvaSizeFillSave {
+    background: #22c55e;
+}
+
+.jvaSizeFillAdd {
+    background: #f59e0b;
+}
+
+.jvaSizeVal {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    width: 100px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.jvaSizeVal.good {
+    color: #16a34a;
+}
+
+.jvaSizeVal.warn {
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jvaSizeVal.good {
+        color: #4ade80;
+    }
+
+    .jvaSizeVal.warn {
+        color: #fbbf24;
+    }
+}
+
+/* Meta Grid */
+.jvaMetaGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1px;
+    background: var(--border);
+}
+
+.jvaMetaItem {
+    background: var(--bg-card);
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.jvaMetaLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.jvaMetaValue {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+/* Distribution */
+.jvaDist {
+    padding: 16px;
+}
+
+.jvaDistBar {
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 14px;
+    background: var(--bg-surface);
+}
+
+.jvaDistSegment {
+    height: 100%;
+    transition: width 0.4s ease;
+    min-width: 2px;
+}
+
+.jvaDistLegend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.jvaDistItem {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.jvaDistDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.jvaDistLabel {
+    font-weight: 500;
+}
+
+.jvaDistCount {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* Features */
+.jvaFeatures {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+}
+
+.jvaFeature {
+    background: var(--bg-card);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.jvaFeature i:first-child {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.jvaFeature span {
+    flex: 1;
+}
+
+.jvaFeature.on {
+    color: var(--text);
+}
+
+.jvaFeature.off {
+    color: var(--text-disabled);
+}
+
+.jvaFeature.on i:first-child {
+    color: var(--brand);
+}
+
+.jvaFeature.off i:first-child {
+    color: var(--text-disabled);
+}
+
+.jvaFeatureTick {
+    font-size: 13px !important;
+}
+
+.jvaFeature.on .jvaFeatureTick {
+    color: #22c55e !important;
+}
+
+.jvaFeature.off .jvaFeatureTick {
+    color: var(--border) !important;
+}
+
+.jvaFeature code {
+    font-size: 11px;
+    padding: 1px 5px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+    color: var(--brand);
+}
+
+/* Schema */
+.jvaSchemaWrap {
+    padding: 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    overflow: auto;
+}
+
+.jvaSchemaObject {
+    display: flex;
+    flex-direction: column;
+}
+
+.jvaSchemaBrace {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.jvaSchemaChildren {
+    padding-left: 16px;
+    border-left: 1.5px solid var(--border);
+    margin-left: 4px;
+}
+
+.jvaSchemaRow {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 1px 0;
+}
+
+.jvaSchemaKey {
+    color: var(--brand);
+}
+
+.jvaSchemaColon {
+    color: var(--text-tertiary);
+}
+
+.jvaSchemaEllipsis {
+    color: var(--text-disabled);
+}
+
+.jvaSchemaMore {
+    color: var(--text-disabled);
+    font-size: 11px;
+}
+
+.jvaSchemaType {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 4px;
+}
+
+.jvaSchemaTypeString {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.jvaSchemaTypeNumber {
+    background: #faf5ff;
+    color: #7c3aed;
+}
+
+.jvaSchemaTypeBoolean {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+.jvaSchemaTypeNull {
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+}
+
+.jvaSchemaTypeObject {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.jvaSchemaTypeArray {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jvaSchemaTypeString {
+        background: #0a1628;
+        color: #93c5fd;
+    }
+
+    .jvaSchemaTypeNumber {
+        background: #150e28;
+        color: #c4b5fd;
+    }
+
+    .jvaSchemaTypeBoolean {
+        background: #1c1008;
+        color: #fdba74;
+    }
+
+    .jvaSchemaTypeNull {
+        background: var(--bg-surface);
+        color: var(--text-tertiary);
+    }
+
+    .jvaSchemaTypeObject {
+        background: #1f1517;
+        color: #f87171;
+    }
+
+    .jvaSchemaTypeArray {
+        background: #022c22;
+        color: #4ade80;
+    }
+}
+
+/* Badges */
+.jvaBadge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.jvaBadgeError {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.jvaBadgeWarning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.jvaBadgeInfo {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jvaBadgeError {
+        background: #1f1517;
+        color: #f87171;
+    }
+
+    .jvaBadgeWarning {
+        background: #451a03;
+        color: #fbbf24;
+    }
+
+    .jvaBadgeInfo {
+        background: #0a1628;
+        color: #93c5fd;
+    }
+}
+
+/* Issues */
+.jvaIssues {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+}
+
+.jvaIssue {
+    background: var(--bg-card);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+}
+
+.jvaIssueIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.jvaIssueError .jvaIssueIcon {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.jvaIssueWarning .jvaIssueIcon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.jvaIssueInfo .jvaIssueIcon {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jvaIssueError .jvaIssueIcon {
+        background: #1f1517;
+        color: #f87171;
+    }
+
+    .jvaIssueWarning .jvaIssueIcon {
+        background: #451a03;
+        color: #fbbf24;
+    }
+
+    .jvaIssueInfo .jvaIssueIcon {
+        background: #0a1628;
+        color: #93c5fd;
+    }
+}
+
+.jvaIssueBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.jvaIssueMsg {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 3px;
+}
+
+.jvaIssueMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.jvaIssueMeta code {
+    font-size: 10px;
+    padding: 1px 5px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+}
+
+.jvaIssuesMore {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: center;
+    background: var(--bg-card);
+}
+
+/* Clean */
+.jvaClean {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.jvaCleanIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jvaCleanIcon {
+        background: #022c22;
+        color: #4ade80;
+    }
+}
+
+.jvaCleanTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.jvaCleanDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .jvaRoot {
+        padding: 12px;
+    }
+
+    .jvaCards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jvaMetaGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jvaDistLegend {
+        gap: 8px;
+    }
+}

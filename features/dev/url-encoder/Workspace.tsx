@@ -15,7 +15,7 @@ import {
   type Mode,
   type EncodeMethod,
   type EncodingOptions,
-} from "./utils";
+} from "./ts/utils";
 import UrlPreview from "./UrlPreview";
 import UrlBreakdown from "./UrlBreakdown";
 import UrlDiff from "./UrlDiff";
@@ -23,15 +23,8 @@ import UrlBatch from "./UrlBatch";
 import UrlCompare from "./UrlCompare";
 import UrlHistory from "./UrlHistory";
 import UrlSecurity from "./UrlSecurity";
-import { useUrlStore, type HistoryEntry } from "./urlStore";
-import "./style/UrlBatch.css";
-import "./style/UrlBreakdown.css";
-import "./style/UrlCompare.css";
-import "./style/UrlDiff.css";
-import "./style/UrlHistory.css";
-import "./style/UrlPreview.css";
-import "./style/UrlSecurity.css";
-import "./style/Workspace.css";
+import { useUrlStore, type HistoryEntry } from "./ts/urlStore";
+import styles from "./style/Workspace.module.css";
 
 type ViewTab = "single" | "batch" | "compare" | "security" | "history";
 type OutputTab = "result" | "breakdown" | "diff";
@@ -160,15 +153,15 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="uew-root">
+      <div className={styles.uewRoot}>
         {/*  Top Chrome  */}
-        <div className="uew-chrome">
-          <div className="uew-chrome-left">
+        <div className={styles.uewChrome}>
+          <div className={styles.uewChromeLeft}>
             {/* Mode Toggle */}
-            <div className="uew-pill-group" role="group" aria-label="Mode">
+            <div className={styles.uewPillGroup} role="group" aria-label="Mode">
               <button
                 type="button"
-                className={`uew-pill${mode === "encode" ? " active" : ""}`}
+                className={`${styles.uewPill}${mode === "encode" ? ` ${styles.active}` : ""}`}
                 onClick={() => switchMode("encode")}
               >
                 <i className="ti ti-lock" />
@@ -176,7 +169,7 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
               </button>
               <button
                 type="button"
-                className={`uew-pill${mode === "decode" ? " active" : ""}`}
+                className={`${styles.uewPill}${mode === "decode" ? ` ${styles.active}` : ""}`}
                 onClick={() => switchMode("decode")}
               >
                 <i className="ti ti-lock-open" />
@@ -186,25 +179,25 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
 
             {/* Method Selector - Encode only */}
             {mode === "encode" && viewTab === "single" && (
-              <div className="uew-method-cluster">
-                <div className="uew-pill-group">
+              <div className={styles.uewMethodCluster}>
+                <div className={styles.uewPillGroup}>
                   {ENCODE_METHODS.map((m) => (
                     <button
                       key={m.id}
                       type="button"
-                      className={`uew-pill${options.method === m.id ? " active" : ""}`}
+                      className={`${styles.uewPill}${options.method === m.id ? ` ${styles.active}` : ""}`}
                       onClick={() => setOptions((prev) => ({ ...prev, method: m.id }))}
                       title={m.desc}
                     >
                       <i className={`ti ${m.icon}`} />
-                      <span className="uew-method-full">{m.label}</span>
-                      <span className="uew-method-short">{m.short}</span>
+                      <span className={styles.uewMethodFull}>{m.label}</span>
+                      <span className={styles.uewMethodShort}>{m.short}</span>
                     </button>
                   ))}
                 </div>
                 <button
                   type="button"
-                  className={`uew-icon-btn${showMethodInfo ? " active" : ""}`}
+                  className={`${styles.uewIconBtn}${showMethodInfo ? ` ${styles.active}` : ""}`}
                   onClick={() => setShowMethodInfo((v) => !v)}
                   title="Method details"
                 >
@@ -216,26 +209,26 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
             {viewTab === "single" && (
               <button
                 type="button"
-                className="uew-icon-btn"
+                className={styles.uewIconBtn}
                 onClick={handleSwap}
                 disabled={!output}
                 title="Swap input/output"
               >
                 <i className="ti ti-arrows-right-left" />
-                <span className="uew-label">Swap</span>
+                <span className={styles.uewLabel}>Swap</span>
               </button>
             )}
           </div>
 
-          <div className="uew-chrome-right">
+          <div className={styles.uewChromeRight}>
             {viewTab === "single" && (
-              <div className="uew-examples">
-                <span className="uew-examples-label">Try:</span>
+              <div className={styles.uewExamples}>
+                <span className={styles.uewExamplesLabel}>Try:</span>
                 {Object.keys(SAMPLE_URLS).map((key) => (
                   <button
                     key={key}
                     type="button"
-                    className="uew-example-btn"
+                    className={styles.uewExampleBtn}
                     onClick={() => loadSample(key as keyof typeof SAMPLE_URLS)}
                   >
                     {key.charAt(0).toUpperCase() + key.slice(1)}
@@ -248,22 +241,22 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
               <>
                 <button
                   type="button"
-                  className={`uew-action-btn${copied ? " success" : ""}`}
+                  className={`${styles.uewActionBtn}${copied ? ` ${styles.success}` : ""}`}
                   onClick={handleCopy}
                 >
                   <i className={`ti ${copied ? "ti-check" : "ti-copy"}`} />
                   {copied ? "Copied" : "Copy"}
                 </button>
-                <button type="button" className="uew-action-btn" onClick={handleDownload}>
+                <button type="button" className={styles.uewActionBtn} onClick={handleDownload}>
                   <i className="ti ti-download" />
-                  <span className="uew-label">Save</span>
+                  <span className={styles.uewLabel}>Save</span>
                 </button>
               </>
             )}
 
             <button
               type="button"
-              className="uew-icon-btn uew-clear-btn"
+              className={`${styles.uewIconBtn} ${styles.uewClearBtn}`}
               onClick={handleClear}
               disabled={!input}
               title="Clear"
@@ -275,46 +268,46 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Method Info Panel  */}
         {showMethodInfo && mode === "encode" && viewTab === "single" && (
-          <div className="uew-method-info">
+          <div className={styles.uewMethodInfo}>
             {ENCODE_METHODS.map((m) => (
               <button
                 key={m.id}
                 type="button"
-                className={`uew-method-card${options.method === m.id ? " active" : ""}`}
+                className={`${styles.uewMethodCard}${options.method === m.id ? ` ${styles.active}` : ""}`}
                 onClick={() => {
                   setOptions((prev) => ({ ...prev, method: m.id }));
                   setShowMethodInfo(false);
                 }}
               >
-                <div className="uew-method-card-header">
-                  <div className="uew-method-card-icon">
+                <div className={styles.uewMethodCardHeader}>
+                  <div className={styles.uewMethodCardIcon}>
                     <i className={`ti ${m.icon}`} />
                   </div>
-                  <span className="uew-method-card-name">{m.label}</span>
+                  <span className={styles.uewMethodCardName}>{m.label}</span>
                 </div>
-                <p className="uew-method-card-desc">{m.desc}</p>
-                <code className="uew-method-card-example">{m.example}</code>
+                <p className={styles.uewMethodCardDesc}>{m.desc}</p>
+                <code className={styles.uewMethodCardExample}>{m.example}</code>
               </button>
             ))}
           </div>
         )}
 
         {/*  View Tabs  */}
-        <div className="uew-tabs-bar">
-          <nav className="uew-tabs" role="tablist">
+        <div className={styles.uewTabsBar}>
+          <nav className={styles.uewTabs} role="tablist">
             {VIEW_TABS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 role="tab"
-                className={`uew-tab${viewTab === tab.id ? " active" : ""}`}
+                className={`${styles.uewTab}${viewTab === tab.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewTab(tab.id)}
                 aria-selected={viewTab === tab.id}
               >
                 <i className={`ti ${tab.icon}`} />
                 {tab.label}
                 {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className="uew-badge">{history.length}</span>
+                  <span className={styles.uewBadge}>{history.length}</span>
                 )}
               </button>
             ))}
@@ -323,9 +316,9 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Options Bar - Single view only  */}
         {viewTab === "single" && (
-          <div className="uew-options-bar">
+          <div className={styles.uewOptionsBar}>
             {mode === "encode" && options.method === "query" && (
-              <label className="uew-toggle">
+              <label className={styles.uewToggle}>
                 <input
                   type="checkbox"
                   checked={options.spaceAsPlus}
@@ -333,15 +326,15 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
                     setOptions((prev) => ({ ...prev, spaceAsPlus: e.target.checked }))
                   }
                 />
-                <span className="uew-toggle-track">
-                  <span className="uew-toggle-thumb" />
+                <span className={styles.uewToggleTrack}>
+                  <span className={styles.uewToggleThumb} />
                 </span>
-                <span className="uew-toggle-label">Space as +</span>
+                <span className={styles.uewToggleLabel}>Space as +</span>
               </label>
             )}
 
             {mode === "decode" && (
-              <label className="uew-toggle">
+              <label className={styles.uewToggle}>
                 <input
                   type="checkbox"
                   checked={options.spaceAsPlus}
@@ -349,26 +342,26 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
                     setOptions((prev) => ({ ...prev, spaceAsPlus: e.target.checked }))
                   }
                 />
-                <span className="uew-toggle-track">
-                  <span className="uew-toggle-thumb" />
+                <span className={styles.uewToggleTrack}>
+                  <span className={styles.uewToggleThumb} />
                 </span>
-                <span className="uew-toggle-label">Treat + as space</span>
+                <span className={styles.uewToggleLabel}>Treat + as space</span>
               </label>
             )}
           </div>
         )}
 
         {/*  Tab Content  */}
-        <div className="uew-content">
+        <div className={styles.uewContent}>
           {viewTab === "single" && (
             <>
               {/* Sub-tabs for output view */}
-              <div className="uew-output-tabs">
+              <div className={styles.uewOutputTabs}>
                 {OUTPUT_TABS.map((tab) => (
                   <button
                     key={tab.id}
                     type="button"
-                    className={`uew-output-tab${outputTab === tab.id ? " active" : ""}`}
+                    className={`${styles.uewOutputTab}${outputTab === tab.id ? ` ${styles.active}` : ""}`}
                     onClick={() => setOutputTab(tab.id)}
                   >
                     <i className={`ti ${tab.icon}`} />
@@ -397,31 +390,31 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
 
               {/* Stats Bar */}
               {output && (
-                <div className="uew-stats-bar">
-                  <div className="uew-stat">
-                    <span className="uew-stat-label">Length</span>
-                    <span className="uew-stat-value">{output.length} ch</span>
+                <div className={styles.uewStatsBar}>
+                  <div className={styles.uewStat}>
+                    <span className={styles.uewStatLabel}>Length</span>
+                    <span className={styles.uewStatValue}>{output.length} ch</span>
                   </div>
-                  <div className="uew-stat">
-                    <span className="uew-stat-label">Delta</span>
+                  <div className={styles.uewStat}>
+                    <span className={styles.uewStatLabel}>Delta</span>
                     <span
-                      className={`uew-stat-value${stats.delta > 0 ? " warn" : stats.delta < 0 ? " good" : ""}`}
+                      className={`${styles.uewStatValue}${stats.delta > 0 ? ` ${styles.warn}` : stats.delta < 0 ? ` ${styles.good}` : ""}`}
                     >
                       {stats.delta >= 0 ? "+" : ""}
                       {stats.delta}
                     </span>
                   </div>
-                  <div className="uew-stat">
-                    <span className="uew-stat-label">Ratio</span>
-                    <span className="uew-stat-value">{stats.ratio}%</span>
+                  <div className={styles.uewStat}>
+                    <span className={styles.uewStatLabel}>Ratio</span>
+                    <span className={styles.uewStatValue}>{stats.ratio}%</span>
                   </div>
                   {mode === "encode" && (
-                    <div className="uew-stat">
-                      <span className="uew-stat-label">Method</span>
-                      <span className="uew-stat-value mono">{currentMethod.short}</span>
+                    <div className={styles.uewStat}>
+                      <span className={styles.uewStatLabel}>Method</span>
+                      <span className={`${styles.uewStatValue} ${styles.mono}`}>{currentMethod.short}</span>
                     </div>
                   )}
-                  <div className={`uew-safety level-${stats.safety.level}`}>
+                  <div className={`${styles.uewSafety} ${styles[`level${stats.safety.level.charAt(0).toUpperCase() + stats.safety.level.slice(1)}`]}`}>
                     <i className="ti ti-shield-check" />
                     <span>{stats.safety.score}/100</span>
                   </div>
@@ -449,7 +442,7 @@ export default function UrlEncoderWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Footer  */}
-        <div className="uew-footer">
+        <div className={styles.uewFooter}>
           <i className="ti ti-shield-lock" />
           <span>Everything runs in your browser — no data ever leaves this page.</span>
         </div>

@@ -5,6 +5,7 @@ import { JsonArrayNode } from "./JsonArrayNode";
 import { JsonObjectNode } from "./JsonObjectNode";
 import { JsonValueCell } from "./JsonValueCell";
 import type { Tool } from "@/lib/tools";
+import styles from "./style/JsonTree.module.css";
 
 type JsonTreeProps = {
   value: unknown;
@@ -16,7 +17,7 @@ export default function JsonTree({ value, onPathClick }: JsonTreeProps) {
   if (value === null) {
     return (
       <>
-        <div className="jt-root" role="tree" aria-label="JSON tree view">
+        <div className={styles.jtRoot} role="tree" aria-label="JSON tree view">
           <JsonValueCell value={null} path="$" depth={0} onPathClick={onPathClick} isLast />
         </div>
       </>
@@ -26,7 +27,7 @@ export default function JsonTree({ value, onPathClick }: JsonTreeProps) {
   if (Array.isArray(value)) {
     return (
       <>
-        <div className="jt-root" role="tree" aria-label="JSON tree view">
+        <div className={styles.jtRoot} role="tree" aria-label="JSON tree view">
           <JsonArrayNode value={value} path="$" depth={0} onPathClick={onPathClick} isLast />
         </div>
       </>
@@ -36,7 +37,7 @@ export default function JsonTree({ value, onPathClick }: JsonTreeProps) {
   if (typeof value === "object") {
     return (
       <>
-        <div className="jt-root" role="tree" aria-label="JSON tree view">
+        <div className={styles.jtRoot} role="tree" aria-label="JSON tree view">
           <JsonObjectNode
             value={value as Record<string, unknown>}
             path="$"
@@ -52,7 +53,7 @@ export default function JsonTree({ value, onPathClick }: JsonTreeProps) {
   // Primitive (string, number, boolean, undefined)
   return (
     <>
-      <div className="jt-root" role="tree" aria-label="JSON tree view">
+      <div className={styles.jtRoot} role="tree" aria-label="JSON tree view">
         <JsonValueCell value={value} path="$" depth={0} onPathClick={onPathClick} isLast />
       </div>
     </>

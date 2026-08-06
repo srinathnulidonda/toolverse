@@ -1,7 +1,8 @@
 // features/dev/timestamp-converter/TimestampHistory.tsx
 "use client";
 
-import * as store from "./timestampStore";
+import * as store from "./ts/timestampStore";
+import styles from "./style/TimestampHistory.module.css";
 
 interface TimestampHistoryProps {
   history: store.HistoryEntry[];
@@ -26,63 +27,63 @@ export default function TimestampHistory({ history, onClear, onRestore }: Timest
 
   return (
     <>
-      <div className="th-root">
+      <div className={styles.thRoot}>
         {history.length === 0 ? (
-          <div className="th-empty">
-            <div className="th-empty-icon">
+          <div className={styles.thEmpty}>
+            <div className={styles.thEmptyIcon}>
               <i className="ti ti-history" />
             </div>
-            <p className="th-empty-title">No History Yet</p>
-            <p className="th-empty-desc">
+            <p className={styles.thEmptyTitle}>No History Yet</p>
+            <p className={styles.thEmptyDesc}>
               Your conversion history will appear here, stored locally in your browser.
             </p>
           </div>
         ) : (
           <>
-            <div className="th-header">
-              <div className="th-header-label">
+            <div className={styles.thHeader}>
+              <div className={styles.thHeaderLabel}>
                 <i className="ti ti-history" />
-                <span className="th-label-text">History</span>
-                <span className="th-count-badge">{history.length}</span>
+                <span className={styles.thLabelText}>History</span>
+                <span className={styles.thCountBadge}>{history.length}</span>
               </div>
-              <button type="button" className="th-clear-btn" onClick={onClear}>
+              <button type="button" className={styles.thClearBtn} onClick={onClear}>
                 <i className="ti ti-trash" />
-                <span className="th-btn-text">Clear All</span>
+                <span className={styles.thBtnText}>Clear All</span>
               </button>
             </div>
 
-            <div className="th-list">
+            <div className={styles.thList}>
               {history.map((entry) => (
-                <div key={entry.id} className="th-item">
-                  <div className="th-item-header">
-                    <div className="th-item-time">
+                <div key={entry.id} className={styles.thItem}>
+                  <div className={styles.thItemHeader}>
+                    <div className={styles.thItemTime}>
                       <i className="ti ti-clock" />
                       {formatTimestamp(entry.createdAt)}
                     </div>
                     <button
                       type="button"
-                      className="th-restore-btn"
+                      className={styles.thRestoreBtn}
                       onClick={() => onRestore(entry)}
                     >
                       <i className="ti ti-arrow-back-up" />
-                      <span className="th-btn-text">Restore</span>
+                      <span className={styles.thBtnText}>Restore</span>
                     </button>
                   </div>
 
-                  <div className="th-item-content">
-                    <div className="th-item-row">
-                      <span className="th-item-label">Input:</span>
+                  <div className={styles.thItemContent}>
+                    <div className={styles.thItemRow}>
+                      <span className={styles.thItemLabel}>Input:</span>
                       <code>{entry.input}</code>
                     </div>
-                    <div className="th-item-row">
-                      <span className="th-item-label">Output:</span>
+                    <div className={styles.thItemRow}>
+                      <span className={styles.thItemLabel}>Output:</span>
                       <code>{entry.output}</code>
                     </div>
                   </div>
 
-                  <div className="th-item-footer">
-                    <span className="th-option-tag">{entry.options.unit}</span>
-                    <span className="th-option-tag">{entry.options.timezone}</span>
+                  <div className={styles.thItemFooter}>
+                    <span className={styles.thOptionTag}>{entry.options.unit}</span>
+                    <span className={styles.thOptionTag}>{entry.options.timezone}</span>
                   </div>
                 </div>
               ))}

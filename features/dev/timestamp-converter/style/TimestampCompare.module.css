@@ -1,0 +1,425 @@
+/* features/dev/timestamp-converter/style/TimestampCompare.module.css */
+.tcpRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+}
+
+.tcpControls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--tc-radius-lg, 12px);
+    flex-wrap: wrap;
+}
+
+.tcpControlsTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.tcpControlsTitle i {
+    font-size: 14px;
+    color: var(--brand);
+}
+
+.tcpActions {
+    display: flex;
+    gap: 6px;
+}
+
+.tcpBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: var(--tc-radius-md, 8px);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.tcpBtn i {
+    font-size: 12px;
+}
+
+.tcpBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.tcpBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/*  Result  */
+.tcpResult {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: var(--tc-radius-lg, 12px);
+}
+
+.tcpResult.reversed {
+    background: #fef3c7;
+    border-color: #fde68a;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tcpResult.reversed {
+        background: #451a03;
+        border-color: #78350f;
+    }
+}
+
+.tcpResultIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--brand);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.tcpResult.reversed .tcpResultIcon {
+    background: #d97706;
+}
+
+.tcpResultContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tcpResultLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand-text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.tcpResult.reversed .tcpResultLabel {
+    color: #92400e;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tcpResult.reversed .tcpResultLabel {
+        color: #fcd34d;
+    }
+}
+
+.tcpResultValue {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--brand-text);
+    letter-spacing: -0.5px;
+}
+
+.tcpResult.reversed .tcpResultValue {
+    color: #92400e;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tcpResult.reversed .tcpResultValue {
+        color: #fcd34d;
+    }
+}
+
+.tcpResultBreakdown {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tcpBreakdownItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 14px;
+    background: var(--bg-card);
+    border-radius: var(--tc-radius-md, 8px);
+    min-width: 60px;
+}
+
+.tcpBreakdownValue {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.tcpBreakdownLabel {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tcpTotalSeconds {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 0.5px solid var(--brand-border);
+}
+
+.tcpTotalLabel {
+    font-size: 11px;
+    color: var(--text-tertiary);
+}
+
+.tcpTotalSeconds code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text);
+    background: var(--bg-card);
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+/*  Inputs  */
+.tcpInputs {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+}
+
+.tcpInputPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--tc-radius-lg, 12px);
+}
+
+.tcpInputHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tcpInputLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.tcpInputLabel i {
+    font-size: 12px;
+    color: var(--brand);
+}
+
+.tcpNowBtn {
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 99px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.tcpNowBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.tcpInput {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--tc-radius-md, 8px);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+    transition: border-color 0.12s;
+}
+
+.tcpInput:focus {
+    outline: none;
+    border-color: var(--brand-border);
+}
+
+.tcpInput::placeholder {
+    color: var(--text-disabled);
+}
+
+.tcpInputPreview {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--brand-light);
+    border-radius: var(--tc-radius-md, 8px);
+    font-size: 11px;
+    color: var(--brand-text);
+}
+
+.tcpInputPreview i {
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.tcpInputError {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--error-bg);
+    border-radius: var(--tc-radius-md, 8px);
+    font-size: 11px;
+    color: #b91c1c;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tcpInputError {
+        color: #f87171;
+    }
+}
+
+.tcpInputError i {
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.tcpArrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-disabled);
+    font-size: 20px;
+}
+
+/*  Empty State  */
+.tcpEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.tcpEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.tcpEmptyTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.tcpEmptyDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 340px;
+    line-height: 1.6;
+}
+
+/*  Responsive  */
+@media (max-width: 900px) {
+    .tcpInputs {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .tcpArrow {
+        transform: rotate(90deg);
+        padding: 4px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .tcpRoot {
+        padding: 12px;
+    }
+
+    .tcpBtnText {
+        display: none;
+    }
+
+    .tcpControls {
+        padding: 8px 12px;
+    }
+
+    .tcpResult {
+        padding: 16px;
+    }
+
+    .tcpResultValue {
+        font-size: 22px;
+    }
+
+    .tcpBreakdownItem {
+        padding: 6px 10px;
+        min-width: 50px;
+    }
+
+    .tcpBreakdownValue {
+        font-size: 16px;
+    }
+
+    .tcpInputPanel {
+        padding: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .tcpBtn,
+    .tcpNowBtn {
+        transition: none;
+    }
+}

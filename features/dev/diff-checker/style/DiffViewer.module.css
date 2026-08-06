@@ -1,0 +1,346 @@
+/* features/dev/diff-checker/style/DiffViewer.module.css */
+
+/* Split View */
+.dvSplit {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    flex: 1;
+    overflow: hidden;
+    background: var(--bg-card);
+}
+
+.dvSplitPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.dvSplitHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dvSplitHeader i {
+    font-size: 13px;
+}
+
+.dvSplitStats {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+}
+
+.dvSplitContent {
+    flex: 1;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.dvSplitDivider {
+    background: var(--border);
+    position: relative;
+}
+
+.dvSplitDividerLine {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: var(--border);
+}
+
+@media (max-width: 768px) {
+    .dvSplit {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .dvSplitDivider {
+        display: none;
+    }
+}
+
+/* Unified View */
+.dvUnified {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    background: var(--bg-card);
+}
+
+.dvUnifiedHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+}
+
+.dvUnifiedTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dvUnifiedTitle i {
+    font-size: 13px;
+}
+
+.dvUnifiedStats {
+    display: flex;
+    gap: 6px;
+}
+
+.dvUnifiedContent {
+    flex: 1;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.dvLineIndicator {
+    width: 20px;
+    flex-shrink: 0;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 0 4px;
+}
+
+.dvLineAdd .dvLineIndicator {
+    color: #059669;
+}
+
+.dvLineRemove .dvLineIndicator {
+    color: #dc2626;
+}
+
+.dvLineModified .dvLineIndicator {
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvLineAdd .dvLineIndicator {
+        color: #34d399;
+    }
+
+    .dvLineRemove .dvLineIndicator {
+        color: #f87171;
+    }
+
+    .dvLineModified .dvLineIndicator {
+        color: #fbbf24;
+    }
+}
+
+.dvLineNums {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Shared Styles */
+.dvLine {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 2px 0;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.1s;
+}
+
+.dvLine:hover {
+    background: var(--bg-surface);
+}
+
+.dvLine:hover .dvLineActions {
+    opacity: 1;
+}
+
+.dvLineSelected {
+    background: var(--brand-light) !important;
+}
+
+.dvLineAdd {
+    background: rgba(5, 150, 105, 0.05);
+    border-left: 2px solid #059669;
+}
+
+.dvLineRemove {
+    background: rgba(220, 38, 38, 0.05);
+    border-left: 2px solid #dc2626;
+}
+
+.dvLineModified {
+    background: rgba(217, 119, 6, 0.05);
+    border-left: 2px solid #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvLineAdd {
+        background: rgba(52, 211, 153, 0.08);
+        border-left-color: #34d399;
+    }
+
+    .dvLineRemove {
+        background: rgba(248, 113, 113, 0.08);
+        border-left-color: #f87171;
+    }
+
+    .dvLineModified {
+        background: rgba(251, 191, 36, 0.08);
+        border-left-color: #fbbf24;
+    }
+}
+
+.dvLineNum {
+    width: 40px;
+    flex-shrink: 0;
+    color: var(--text-disabled);
+    font-size: 11px;
+    text-align: right;
+    user-select: none;
+    padding: 0 8px;
+}
+
+.dvLineContent {
+    flex: 1;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding-right: 40px;
+}
+
+.dvLineActions {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.1s, background 0.1s;
+}
+
+.dvLineActions:hover {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.dvStat {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 99px;
+    font-family: var(--font-mono);
+}
+
+.dvStatAdd {
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+    border: 0.5px solid rgba(5, 150, 105, 0.2);
+}
+
+.dvStatRemove {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border: 0.5px solid rgba(220, 38, 38, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvStatAdd {
+        background: rgba(52, 211, 153, 0.1);
+        color: #34d399;
+        border-color: rgba(52, 211, 153, 0.2);
+    }
+
+    .dvStatRemove {
+        background: rgba(248, 113, 113, 0.1);
+        color: #f87171;
+        border-color: rgba(248, 113, 113, 0.2);
+    }
+}
+
+.dvHighlight {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 1px 2px;
+    border-radius: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvHighlight {
+        background: #451a03;
+        color: #fbbf24;
+    }
+}
+
+.dvWordDiffAdd {
+    background: rgba(5, 150, 105, 0.2);
+    color: #059669;
+}
+
+.dvWordDiffRemove {
+    background: rgba(220, 38, 38, 0.2);
+    color: #dc2626;
+    text-decoration: line-through;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvWordDiffAdd {
+        background: rgba(52, 211, 153, 0.2);
+        color: #34d399;
+    }
+
+    .dvWordDiffRemove {
+        background: rgba(248, 113, 113, 0.2);
+        color: #f87171;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .dvLineNums {
+        gap: 4px;
+    }
+
+    .dvLineNum {
+        width: 25px;
+        padding: 0 6px;
+    }
+
+    .dvLineContent {
+        font-size: 12px;
+    }
+}

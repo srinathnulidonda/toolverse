@@ -2,7 +2,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { diffChars, type DiffChar } from "./utils";
+import { diffChars, type DiffChar } from "./ts/utils";
+import styles from "./style/UrlDiff.module.css";
 
 interface UrlDiffProps {
   input: string;
@@ -17,12 +18,12 @@ export default function UrlDiff({ input, output }: UrlDiffProps) {
 
   if (!diff) {
     return (
-      <div className="ud-empty">
-        <div className="ud-empty-icon">
+      <div className={styles.udEmpty}>
+        <div className={styles.udEmptyIcon}>
           <i className="ti ti-git-compare" />
         </div>
-        <p className="ud-empty-title">Character diff</p>
-        <p className="ud-empty-desc">Enter a URL to see input vs output side-by-side</p>
+        <p className={styles.udEmptyTitle}>Character diff</p>
+        <p className={styles.udEmptyDesc}>Enter a URL to see input vs output side-by-side</p>
       </div>
     );
   }
@@ -39,56 +40,56 @@ export default function UrlDiff({ input, output }: UrlDiffProps) {
 
   return (
     <>
-      <div className="ud-root">
+      <div className={styles.udRoot}>
         {/* Stats Header */}
-        <div className="ud-stats">
-          <div className="ud-stat-card">
-            <span className="ud-stat-label">Total chars</span>
-            <span className="ud-stat-value">{stats.total.toLocaleString()}</span>
+        <div className={styles.udStats}>
+          <div className={styles.udStatCard}>
+            <span className={styles.udStatLabel}>Total chars</span>
+            <span className={styles.udStatValue}>{stats.total.toLocaleString()}</span>
           </div>
-          <div className="ud-stat-card">
-            <span className="ud-stat-label">Changed</span>
-            <span className="ud-stat-value changed">{stats.changed.toLocaleString()}</span>
+          <div className={styles.udStatCard}>
+            <span className={styles.udStatLabel}>Changed</span>
+            <span className={`${styles.udStatValue} ${styles.changed}`}>{stats.changed.toLocaleString()}</span>
           </div>
-          <div className="ud-stat-card">
-            <span className="ud-stat-label">Unchanged</span>
-            <span className="ud-stat-value unchanged">{stats.unchanged.toLocaleString()}</span>
+          <div className={styles.udStatCard}>
+            <span className={styles.udStatLabel}>Unchanged</span>
+            <span className={`${styles.udStatValue} ${styles.unchanged}`}>{stats.unchanged.toLocaleString()}</span>
           </div>
-          <div className="ud-stat-card">
-            <span className="ud-stat-label">% Changed</span>
-            <span className="ud-stat-value">{stats.percentChanged}%</span>
+          <div className={styles.udStatCard}>
+            <span className={styles.udStatLabel}>% Changed</span>
+            <span className={styles.udStatValue}>{stats.percentChanged}%</span>
           </div>
         </div>
 
         {/* Diff Tracks */}
-        <div className="ud-diff-inner">
-          <div className="ud-diff-track">
-            <span className="ud-diff-rail input">INPUT</span>
-            <div className="ud-diff-chars">
+        <div className={styles.udDiffInner}>
+          <div className={styles.udDiffTrack}>
+            <span className={`${styles.udDiffRail} ${styles.input}`}>INPUT</span>
+            <div className={styles.udDiffChars}>
               {diff.input.map((c, i) => (
-                <span key={i} className={`ud-char${c.changed ? " removed" : ""}`}>
+                <span key={i} className={`${styles.udChar}${c.changed ? ` ${styles.removed}` : ""}`}>
                   {c.char === " " ? "·" : c.char}
                 </span>
               ))}
             </div>
           </div>
-          <div className="ud-diff-track">
-            <span className="ud-diff-rail output">OUTPUT</span>
-            <div className="ud-diff-chars">
+          <div className={styles.udDiffTrack}>
+            <span className={`${styles.udDiffRail} ${styles.output}`}>OUTPUT</span>
+            <div className={styles.udDiffChars}>
               {diff.output.map((c, i) => (
-                <span key={i} className={`ud-char${c.changed ? " added" : ""}`}>
+                <span key={i} className={`${styles.udChar}${c.changed ? ` ${styles.added}` : ""}`}>
                   {c.char === " " ? "·" : c.char}
                 </span>
               ))}
             </div>
           </div>
-          <div className="ud-diff-legend">
-            <span className="ud-legend-item removed">
-              <span className="ud-legend-swatch" />
+          <div className={styles.udDiffLegend}>
+            <span className={`${styles.udLegendItem} ${styles.removed}`}>
+              <span className={styles.udLegendSwatch} />
               Original chars changed
             </span>
-            <span className="ud-legend-item added">
-              <span className="ud-legend-swatch" />
+            <span className={`${styles.udLegendItem} ${styles.added}`}>
+              <span className={styles.udLegendSwatch} />
               New or modified chars
             </span>
           </div>

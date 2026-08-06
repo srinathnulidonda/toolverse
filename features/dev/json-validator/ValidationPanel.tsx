@@ -2,8 +2,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { ValidationResult } from "./validatorEngine";
-import { formatBytes } from "./validatorEngine";
+import type { ValidationResult } from "./ts/validatorEngine";
+import { formatBytes } from "./ts/validatorEngine";
+import styles from "./style/ValidationPanel.module.css";
 
 interface ValidationPanelProps {
   result: ValidationResult;
@@ -75,78 +76,78 @@ export default function ValidationPanel({ result }: ValidationPanelProps) {
     switch (activeTab) {
       case "stats":
         return (
-          <div className="vp-section">
-            <div className="vp-section-header">
+          <div className={styles.vpSection}>
+            <div className={styles.vpSectionHeader}>
               <i className="ti ti-chart-bar" />
               <span>JSON Statistics</span>
             </div>
-            <div className="vp-stats-grid">
-              <div className="vp-stat-item">
-                <span className="vp-stat-label">File Size</span>
-                <span className="vp-stat-value">{formatBytes(result.stats.size)}</span>
+            <div className={styles.vpStatsGrid}>
+              <div className={styles.vpStatItem}>
+                <span className={styles.vpStatLabel}>File Size</span>
+                <span className={styles.vpStatValue}>{formatBytes(result.stats.size)}</span>
               </div>
-              <div className="vp-stat-item">
-                <span className="vp-stat-label">Lines</span>
-                <span className="vp-stat-value">{result.stats.lines.toLocaleString()}</span>
+              <div className={styles.vpStatItem}>
+                <span className={styles.vpStatLabel}>Lines</span>
+                <span className={styles.vpStatValue}>{result.stats.lines.toLocaleString()}</span>
               </div>
-              <div className="vp-stat-item">
-                <span className="vp-stat-label">Max Depth</span>
-                <span className="vp-stat-value">{result.stats.depth}</span>
+              <div className={styles.vpStatItem}>
+                <span className={styles.vpStatLabel}>Max Depth</span>
+                <span className={styles.vpStatValue}>{result.stats.depth}</span>
               </div>
-              <div className="vp-stat-item">
-                <span className="vp-stat-label">Total Keys</span>
-                <span className="vp-stat-value">{result.stats.keys.toLocaleString()}</span>
+              <div className={styles.vpStatItem}>
+                <span className={styles.vpStatLabel}>Total Keys</span>
+                <span className={styles.vpStatValue}>{result.stats.keys.toLocaleString()}</span>
               </div>
-              <div className="vp-stat-item">
-                <span className="vp-stat-label">Objects</span>
-                <span className="vp-stat-value">{result.stats.objects}</span>
+              <div className={styles.vpStatItem}>
+                <span className={styles.vpStatLabel}>Objects</span>
+                <span className={styles.vpStatValue}>{result.stats.objects}</span>
               </div>
-              <div className="vp-stat-item">
-                <span className="vp-stat-label">Arrays</span>
-                <span className="vp-stat-value">{result.stats.arrays}</span>
+              <div className={styles.vpStatItem}>
+                <span className={styles.vpStatLabel}>Arrays</span>
+                <span className={styles.vpStatValue}>{result.stats.arrays}</span>
               </div>
-              <div className="vp-stat-item">
-                <span className="vp-stat-label">Strings</span>
-                <span className="vp-stat-value">{result.stats.strings}</span>
+              <div className={styles.vpStatItem}>
+                <span className={styles.vpStatLabel}>Strings</span>
+                <span className={styles.vpStatValue}>{result.stats.strings}</span>
               </div>
-              <div className="vp-stat-item">
-                <span className="vp-stat-label">Numbers</span>
-                <span className="vp-stat-value">{result.stats.numbers}</span>
+              <div className={styles.vpStatItem}>
+                <span className={styles.vpStatLabel}>Numbers</span>
+                <span className={styles.vpStatValue}>{result.stats.numbers}</span>
               </div>
             </div>
           </div>
         );
       case "metadata":
         return (
-          <div className="vp-section">
-            <div className="vp-section-header">
+          <div className={styles.vpSection}>
+            <div className={styles.vpSectionHeader}>
               <i className="ti ti-info-circle" />
               <span>Document Metadata</span>
             </div>
-            <div className="vp-metadata-grid">
-              <div className="vp-metadata-item">
-                <span className="vp-metadata-label">Top-Level Type</span>
-                <span className="vp-metadata-value">{result.metadata.topLevelType}</span>
+            <div className={styles.vpMetadataGrid}>
+              <div className={styles.vpMetadataItem}>
+                <span className={styles.vpMetadataLabel}>Top-Level Type</span>
+                <span className={styles.vpMetadataValue}>{result.metadata.topLevelType}</span>
               </div>
-              <div className="vp-metadata-item">
-                <span className="vp-metadata-label">Encoding</span>
-                <span className="vp-metadata-value">{result.metadata.encoding}</span>
+              <div className={styles.vpMetadataItem}>
+                <span className={styles.vpMetadataLabel}>Encoding</span>
+                <span className={styles.vpMetadataValue}>{result.metadata.encoding}</span>
               </div>
-              <div className="vp-metadata-item">
-                <span className="vp-metadata-label">Line Endings</span>
-                <span className="vp-metadata-value">{result.metadata.lineEndings}</span>
+              <div className={styles.vpMetadataItem}>
+                <span className={styles.vpMetadataLabel}>Line Endings</span>
+                <span className={styles.vpMetadataValue}>{result.metadata.lineEndings}</span>
               </div>
-              <div className="vp-metadata-item">
-                <span className="vp-metadata-label">Indent Style</span>
-                <span className="vp-metadata-value">
+              <div className={styles.vpMetadataItem}>
+                <span className={styles.vpMetadataLabel}>Indent Style</span>
+                <span className={styles.vpMetadataValue}>
                   {result.metadata.indentStyle}
                   {result.metadata.indentSize && ` (${result.metadata.indentSize})`}
                 </span>
               </div>
               {result.stats.duplicateKeys > 0 && (
-                <div className="vp-metadata-item">
-                  <span className="vp-metadata-label">Duplicate Keys</span>
-                  <span className="vp-metadata-value vp-metadata-value--error">
+                <div className={styles.vpMetadataItem}>
+                  <span className={styles.vpMetadataLabel}>Duplicate Keys</span>
+                  <span className={`${styles.vpMetadataValue} ${styles.vpMetadataValueError}`}>
                     {result.stats.duplicateKeys}
                   </span>
                 </div>
@@ -158,91 +159,91 @@ export default function ValidationPanel({ result }: ValidationPanelProps) {
         return (
           <>
             {result.errors.length > 0 && (
-              <div className="vp-section">
-                <div className="vp-section-header">
+              <div className={styles.vpSection}>
+                <div className={styles.vpSectionHeader}>
                   <i className="ti ti-alert-circle" />
                   <span>Errors ({result.errors.length})</span>
                 </div>
-                <div className="vp-issues">
+                <div className={styles.vpIssues}>
                   {result.errors.map((error, idx) => (
                     <div
                       key={idx}
-                      className={`vp-issue vp-issue--error vp-issue--${error.severity}`}
+                      className={`${styles.vpIssue} ${styles.vpIssueError} ${styles[`vpIssue${error.severity.charAt(0).toUpperCase()}${error.severity.slice(1)}`]}`}
                     >
-                      <div className="vp-issue-icon">
+                      <div className={styles.vpIssueIcon}>
                         <i className="ti ti-x" />
                       </div>
-                      <div className="vp-issue-content">
-                        <div className="vp-issue-message">{error.message}</div>
-                        <div className="vp-issue-meta">
+                      <div className={styles.vpIssueContent}>
+                        <div className={styles.vpIssueMessage}>{error.message}</div>
+                        <div className={styles.vpIssueMeta}>
                           {error.line && (
                             <span>
                               Line {error.line}
                               {error.column && `, Column ${error.column}`}
                             </span>
                           )}
-                          {error.path && <span className="vp-issue-path">{error.path}</span>}
+                          {error.path && <span className={styles.vpIssuePath}>{error.path}</span>}
                         </div>
                       </div>
-                      <div className="vp-issue-type">{error.type}</div>
+                      <div className={styles.vpIssueType}>{error.type}</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
             {result.securityIssues.length > 0 && (
-              <div className="vp-section">
-                <div className="vp-section-header">
+              <div className={styles.vpSection}>
+                <div className={styles.vpSectionHeader}>
                   <i className="ti ti-shield-exclamation" />
                   <span>Security Issues ({result.securityIssues.length})</span>
                 </div>
-                <div className="vp-issues">
+                <div className={styles.vpIssues}>
                   {result.securityIssues.map((issue, idx) => (
                     <div
                       key={idx}
-                      className={`vp-issue vp-issue--security vp-issue--${issue.severity}`}
+                      className={`${styles.vpIssue} ${styles.vpIssueSecurity} ${styles[`vpIssue${issue.severity.charAt(0).toUpperCase()}${issue.severity.slice(1)}`]}`}
                     >
-                      <div className="vp-issue-icon">
+                      <div className={styles.vpIssueIcon}>
                         <i className="ti ti-shield-x" />
                       </div>
-                      <div className="vp-issue-content">
-                        <div className="vp-issue-message">{issue.message}</div>
+                      <div className={styles.vpIssueContent}>
+                        <div className={styles.vpIssueMessage}>{issue.message}</div>
                         {issue.path && (
-                          <div className="vp-issue-meta">
-                            <span className="vp-issue-path">{issue.path}</span>
+                          <div className={styles.vpIssueMeta}>
+                            <span className={styles.vpIssuePath}>{issue.path}</span>
                           </div>
                         )}
                       </div>
-                      <div className="vp-issue-severity">{issue.severity}</div>
+                      <div className={styles.vpIssueSeverity}>{issue.severity}</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
             {result.warnings.length > 0 && (
-              <div className="vp-section">
-                <div className="vp-section-header">
+              <div className={styles.vpSection}>
+                <div className={styles.vpSectionHeader}>
                   <i className="ti ti-alert-triangle" />
                   <span>Warnings ({result.warnings.length})</span>
                 </div>
-                <div className="vp-issues">
+                <div className={styles.vpIssues}>
                   {result.warnings.map((warning, idx) => (
                     <div
                       key={idx}
-                      className={`vp-issue vp-issue--warning vp-issue--${warning.severity}`}
+                      className={`${styles.vpIssue} ${styles.vpIssueWarning} ${styles[`vpIssue${warning.severity.charAt(0).toUpperCase()}${warning.severity.slice(1)}`]}`}
                     >
-                      <div className="vp-issue-icon">
+                      <div className={styles.vpIssueIcon}>
                         <i className="ti ti-alert-triangle" />
                       </div>
-                      <div className="vp-issue-content">
-                        <div className="vp-issue-message">{warning.message}</div>
+                      <div className={styles.vpIssueContent}>
+                        <div className={styles.vpIssueMessage}>{warning.message}</div>
                         {warning.path && (
-                          <div className="vp-issue-meta">
-                            <span className="vp-issue-path">{warning.path}</span>
+                          <div className={styles.vpIssueMeta}>
+                            <span className={styles.vpIssuePath}>{warning.path}</span>
                           </div>
                         )}
                       </div>
-                      <div className="vp-issue-severity">{warning.severity}</div>
+                      <div className={styles.vpIssueSeverity}>{warning.severity}</div>
                     </div>
                   ))}
                 </div>
@@ -252,14 +253,14 @@ export default function ValidationPanel({ result }: ValidationPanelProps) {
         );
       case "suggestions":
         return (
-          <div className="vp-section">
-            <div className="vp-section-header">
+          <div className={styles.vpSection}>
+            <div className={styles.vpSectionHeader}>
               <i className="ti ti-bulb" />
               <span>Suggestions</span>
             </div>
-            <div className="vp-suggestions">
+            <div className={styles.vpSuggestions}>
               {result.suggestions.map((suggestion, idx) => (
-                <div key={idx} className="vp-suggestion">
+                <div key={idx} className={styles.vpSuggestion}>
                   <i className="ti ti-arrow-right" />
                   <span>{suggestion}</span>
                 </div>
@@ -274,12 +275,12 @@ export default function ValidationPanel({ result }: ValidationPanelProps) {
 
   return (
     <>
-      <div className="vp-root">
+      <div className={styles.vpRoot}>
         {/* Summary Cards */}
-        <div className="vp-summary">
-          <div className="vp-summary-card">
+        <div className={styles.vpSummary}>
+          <div className={styles.vpSummaryCard}>
             <div
-              className="vp-summary-icon"
+              className={styles.vpSummaryIcon}
               style={{
                 background: result.valid ? "#dcfce7" : "#fef2f2",
                 color: result.valid ? "#16a34a" : "#dc2626",
@@ -287,34 +288,34 @@ export default function ValidationPanel({ result }: ValidationPanelProps) {
             >
               <i className={`ti ${result.valid ? "ti-circle-check" : "ti-alert-circle"}`} />
             </div>
-            <div className="vp-summary-content">
-              <div className="vp-summary-label">Validation Status</div>
-              <div className="vp-summary-value">{result.valid ? "Valid" : "Invalid"}</div>
+            <div className={styles.vpSummaryContent}>
+              <div className={styles.vpSummaryLabel}>Validation Status</div>
+              <div className={styles.vpSummaryValue}>{result.valid ? "Valid" : "Invalid"}</div>
             </div>
           </div>
 
-          <div className="vp-summary-card">
+          <div className={styles.vpSummaryCard}>
             <div
-              className="vp-summary-icon"
+              className={styles.vpSummaryIcon}
               style={{
                 background: scoreGrade.color + "20",
                 color: scoreGrade.color,
               }}
             >
-              <span className="vp-grade">{scoreGrade.grade}</span>
+              <span className={styles.vpGrade}>{scoreGrade.grade}</span>
             </div>
-            <div className="vp-summary-content">
-              <div className="vp-summary-label">Quality Score</div>
-              <div className="vp-summary-value">
+            <div className={styles.vpSummaryContent}>
+              <div className={styles.vpSummaryLabel}>Quality Score</div>
+              <div className={styles.vpSummaryValue}>
                 {qualityScore}/100
-                <span className="vp-grade-label">{scoreGrade.label}</span>
+                <span className={styles.vpGradeLabel}>{scoreGrade.label}</span>
               </div>
             </div>
           </div>
 
-          <div className="vp-summary-card">
+          <div className={styles.vpSummaryCard}>
             <div
-              className="vp-summary-icon"
+              className={styles.vpSummaryIcon}
               style={{
                 background: summary.totalIssues === 0 ? "#dcfce7" : "#fef3c7",
                 color: summary.totalIssues === 0 ? "#16a34a" : "#d97706",
@@ -322,20 +323,20 @@ export default function ValidationPanel({ result }: ValidationPanelProps) {
             >
               <i className="ti ti-list-check" />
             </div>
-            <div className="vp-summary-content">
-              <div className="vp-summary-label">Total Issues</div>
-              <div className="vp-summary-value">{summary.totalIssues}</div>
+            <div className={styles.vpSummaryContent}>
+              <div className={styles.vpSummaryLabel}>Total Issues</div>
+              <div className={styles.vpSummaryValue}>{summary.totalIssues}</div>
             </div>
           </div>
         </div>
 
         {!isPerfect ? (
-          <div className="vp-tabs-wrapper">
-            <div className="vp-tab-bar">
+          <div className={styles.vpTabsWrapper}>
+            <div className={styles.vpTabBar}>
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  className={`vp-tab-button${activeTab === tab.id ? " active" : ""}`}
+                  className={`${styles.vpTabButton}${activeTab === tab.id ? " active" : ""}`}
                   onClick={() => setActiveTab(tab.id)}
                 >
                   <i className={`ti ${tab.icon}`} />
@@ -343,15 +344,15 @@ export default function ValidationPanel({ result }: ValidationPanelProps) {
                 </button>
               ))}
             </div>
-            <div className="vp-tab-content">{renderTabContent()}</div>
+            <div className={styles.vpTabContent}>{renderTabContent()}</div>
           </div>
         ) : (
-          <div className="vp-perfect">
-            <div className="vp-perfect-icon">
+          <div className={styles.vpPerfect}>
+            <div className={styles.vpPerfectIcon}>
               <i className="ti ti-circle-check" />
             </div>
-            <h3 className="vp-perfect-title">Perfect JSON!</h3>
-            <p className="vp-perfect-desc">
+            <h3 className={styles.vpPerfectTitle}>Perfect JSON!</h3>
+            <p className={styles.vpPerfectDesc}>
               Your JSON is valid, secure, and follows all best practices.
             </p>
           </div>

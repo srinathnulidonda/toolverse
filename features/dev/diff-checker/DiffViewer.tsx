@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
-import type { DiffResult, DiffLine, DiffViewMode, FileType } from "./diffEngine";
+import type { DiffResult, DiffLine, DiffViewMode, FileType } from "./ts/diffEngine";
+import styles from "./style/DiffViewer.module.css";
 
 interface DiffLineWithHighlighted extends DiffLine {
   highlighted?: boolean;
@@ -97,7 +98,7 @@ export default function DiffViewer({
         <>
           {parts.map((part, i) =>
             part.toLowerCase() === searchQuery.toLowerCase() ? (
-              <mark key={i} className="dv-highlight">
+              <mark key={i} className={styles.dvHighlight}>
                 {part}
               </mark>
             ) : (
@@ -112,7 +113,7 @@ export default function DiffViewer({
       return (
         <>
           {line.wordDiffs.map((wordDiff, i) => (
-            <span key={i} className={`dv-word-diff dv-word-diff--${wordDiff.type}`}>
+            <span key={i} className={`${styles.dvWordDiff} ${styles[`dvWordDiff--${wordDiff.type}`]}`}>
               {wordDiff.content}
             </span>
           ))}
@@ -126,31 +127,31 @@ export default function DiffViewer({
   if (viewMode === "split") {
     return (
       <>
-        <div className="dv-split" ref={containerRef}>
-          <div className="dv-split-panel">
-            <div className="dv-split-header">
+        <div className={styles.dvSplit} ref={containerRef}>
+          <div className={styles.dvSplitPanel}>
+            <div className={styles.dvSplitHeader}>
               <i className="ti ti-file" />
               <span>Original</span>
-              <div className="dv-split-stats">
+              <div className={styles.dvSplitStats}>
                 {result.stats.removed > 0 && (
-                  <span className="dv-stat dv-stat--remove">-{result.stats.removed}</span>
+                  <span className={`${styles.dvStat} ${styles.dvStatRemove}`}>-{result.stats.removed}</span>
                 )}
               </div>
             </div>
-            <div className="dv-split-content">
+            <div className={styles.dvSplitContent}>
               {processedLines
                 .filter((line) => line.type === "remove" || line.type === "unchanged")
                 .map((line, idx) => (
                   <div
                     key={`orig-${idx}`}
-                    className={`dv-line dv-line--${line.type} ${selectedLines.has(line.index) ? "dv-line--selected" : ""
+                    className={`${styles.dvLine} ${styles[`dvLine--${line.type}`]} ${selectedLines.has(line.index) ? styles.dvLineSelected : ""
                       }`}
                     onClick={(e) => handleLineClick(line, line.index, e)}
                   >
-                    <span className="dv-line-num">{line.originalLineNum || ""}</span>
-                    <span className="dv-line-content">{renderLineContent(line)}</span>
+                    <span className={styles.dvLineNum}>{line.originalLineNum || ""}</span>
+                    <span className={styles.dvLineContent}>{renderLineContent(line)}</span>
                     <button
-                      className="dv-line-actions"
+                      className={styles.dvLineActions}
                       onClick={(e) => {
                         e.stopPropagation();
                         copyLine(line.content, line.index);
@@ -164,21 +165,21 @@ export default function DiffViewer({
             </div>
           </div>
 
-          <div className="dv-split-divider">
-            <div className="dv-split-divider-line" />
+          <div className={styles.dvSplitDivider}>
+            <div className={styles.dvSplitDividerLine} />
           </div>
 
-          <div className="dv-split-panel">
-            <div className="dv-split-header">
+          <div className={styles.dvSplitPanel}>
+            <div className={styles.dvSplitHeader}>
               <i className="ti ti-file-diff" />
               <span>Modified</span>
-              <div className="dv-split-stats">
+              <div className={styles.dvSplitStats}>
                 {result.stats.added > 0 && (
-                  <span className="dv-stat dv-stat--add">+{result.stats.added}</span>
+                  <span className={`${styles.dvStat} ${styles.dvStatAdd}`}>+{result.stats.added}</span>
                 )}
               </div>
             </div>
-            <div className="dv-split-content">
+            <div className={styles.dvSplitContent}>
               {processedLines
                 .filter(
                   (line) =>
@@ -187,14 +188,14 @@ export default function DiffViewer({
                 .map((line, idx) => (
                   <div
                     key={`mod-${idx}`}
-                    className={`dv-line dv-line--${line.type} ${selectedLines.has(line.index) ? "dv-line--selected" : ""
+                    className={`${styles.dvLine} ${styles[`dvLine--${line.type}`]} ${selectedLines.has(line.index) ? styles.dvLineSelected : ""
                       }`}
                     onClick={(e) => handleLineClick(line, line.index, e)}
                   >
-                    <span className="dv-line-num">{line.modifiedLineNum || ""}</span>
-                    <span className="dv-line-content">{renderLineContent(line)}</span>
+                    <span className={styles.dvLineNum}>{line.modifiedLineNum || ""}</span>
+                    <span className={styles.dvLineContent}>{renderLineContent(line)}</span>
                     <button
-                      className="dv-line-actions"
+                      className={styles.dvLineActions}
                       onClick={(e) => {
                         e.stopPropagation();
                         copyLine(line.content, line.index);
@@ -215,43 +216,43 @@ export default function DiffViewer({
   // Unified view (default for now, can extend for inline view)
   return (
     <>
-      <div className="dv-unified" ref={containerRef}>
-        <div className="dv-unified-header">
-          <div className="dv-unified-title">
+      <div className={styles.dvUnified} ref={containerRef}>
+        <div className={styles.dvUnifiedHeader}>
+          <div className={styles.dvUnifiedTitle}>
             <i className="ti ti-git-diff" />
             <span>Unified Diff</span>
           </div>
-          <div className="dv-unified-stats">
+          <div className={styles.dvUnifiedStats}>
             {result.stats.added > 0 && (
-              <span className="dv-stat dv-stat--add">+{result.stats.added}</span>
+              <span className={`${styles.dvStat} ${styles.dvStatAdd}`}>+{result.stats.added}</span>
             )}
             {result.stats.removed > 0 && (
-              <span className="dv-stat dv-stat--remove">-{result.stats.removed}</span>
+              <span className={`${styles.dvStat} ${styles.dvStatRemove}`}>-{result.stats.removed}</span>
             )}
           </div>
         </div>
 
-        <div className="dv-unified-content">
+        <div className={styles.dvUnifiedContent}>
           {processedLines.map((line, idx) => (
             <div
               key={idx}
-              className={`dv-line dv-line--${line.type} ${selectedLines.has(line.index) ? "dv-line--selected" : ""
+              className={`${styles.dvLine} ${styles[`dvLine--${line.type}`]} ${selectedLines.has(line.index) ? styles.dvLineSelected : ""
                 }`}
               onClick={(e) => handleLineClick(line, line.index, e)}
             >
-              <span className="dv-line-indicator">
+              <span className={styles.dvLineIndicator}>
                 {line.type === "add" && "+"}
                 {line.type === "remove" && "−"}
                 {line.type === "unchanged" && " "}
                 {line.type === "modified" && "~"}
               </span>
-              <span className="dv-line-nums">
-                <span className="dv-line-num">{line.originalLineNum || ""}</span>
-                <span className="dv-line-num">{line.modifiedLineNum || ""}</span>
+              <span className={styles.dvLineNums}>
+                <span className={styles.dvLineNum}>{line.originalLineNum || ""}</span>
+                <span className={styles.dvLineNum}>{line.modifiedLineNum || ""}</span>
               </span>
-              <span className="dv-line-content">{renderLineContent(line)}</span>
+              <span className={styles.dvLineContent}>{renderLineContent(line)}</span>
               <button
-                className="dv-line-actions"
+                className={styles.dvLineActions}
                 onClick={(e) => {
                   e.stopPropagation();
                   copyLine(line.content, line.index);

@@ -2,6 +2,7 @@
 "use client";
 
 import { useMemo } from "react";
+import styles from "./style/JsonDiff.module.css";
 
 type DiffProps = {
   leftText: string;
@@ -79,7 +80,7 @@ export default function JsonDiff({ leftText, rightText }: DiffProps) {
 
   if (!leftText.trim() && !rightText.trim()) {
     return (
-      <div className="jdiff-empty">
+      <div className={styles.jdiffEmpty}>
         <i className="ti ti-git-diff" aria-hidden="true" />
         <p>Paste JSON in both panels above to see a diff</p>
       </div>
@@ -88,30 +89,30 @@ export default function JsonDiff({ leftText, rightText }: DiffProps) {
 
   return (
     <>
-      <div className="jdiff-root" role="region" aria-label="JSON diff output">
+      <div className={styles.jdiffRoot} role="region" aria-label="JSON diff output">
         {/* Header bar */}
-        <div className="jdiff-header">
+        <div className={styles.jdiffHeader}>
           {parseError ? (
-            <span className="jdiff-error-msg">
+            <span className={styles.jdiffErrorMsg}>
               <i className="ti ti-alert-circle" aria-hidden="true" />
               {parseError}
             </span>
           ) : stats ? (
-            <div className="jdiff-stats">
+            <div className={styles.jdiffStats}>
               {stats.added > 0 && (
-                <span className="jdiff-stat added">
+                <span className={`${styles.jdiffStat} ${styles.added}`}>
                   <i className="ti ti-plus" aria-hidden="true" />
                   {stats.added} added
                 </span>
               )}
               {stats.removed > 0 && (
-                <span className="jdiff-stat removed">
+                <span className={`${styles.jdiffStat} ${styles.removed}`}>
                   <i className="ti ti-minus" aria-hidden="true" />
                   {stats.removed} removed
                 </span>
               )}
               {stats.added === 0 && stats.removed === 0 && (
-                <span className="jdiff-stat same">
+                <span className={`${styles.jdiffStat} ${styles.same}`}>
                   <i className="ti ti-check" aria-hidden="true" />
                   Identical
                 </span>
@@ -121,11 +122,11 @@ export default function JsonDiff({ leftText, rightText }: DiffProps) {
         </div>
 
         {/* Diff lines */}
-        <div className="jdiff-lines" role="list" aria-label="Diff lines">
+        <div className={styles.jdiffLines} role="list" aria-label="Diff lines">
           {diff.map((line, i) => {
             if (line.type === "separator") {
               return (
-                <div key={i} className="jdiff-sep" role="separator" aria-hidden="true">
+                <div key={i} className={styles.jdiffSep} role="separator" aria-hidden="true">
                   ···
                 </div>
               );
@@ -133,17 +134,17 @@ export default function JsonDiff({ leftText, rightText }: DiffProps) {
             return (
               <div
                 key={i}
-                className={`jdiff-line jdiff-${line.type}`}
+                className={`${styles.jdiffLine} ${styles[`jdiff${line.type.charAt(0).toUpperCase() + line.type.slice(1)}`]}`}
                 role="listitem"
                 aria-label={`${line.type === "added" ? "Added" : line.type === "removed" ? "Removed" : "Unchanged"} line ${line.lineNum}: ${line.text}`}
               >
-                <span className="jdiff-gutter" aria-hidden="true">
+                <span className={styles.jdiffGutter} aria-hidden="true">
                   {line.type === "added" ? "+" : line.type === "removed" ? "−" : " "}
                 </span>
-                <span className="jdiff-linenum" aria-hidden="true">
+                <span className={styles.jdiffLinenum} aria-hidden="true">
                   {line.lineNum}
                 </span>
-                <span className="jdiff-text">{line.text}</span>
+                <span className={styles.jdiffText}>{line.text}</span>
               </div>
             );
           })}

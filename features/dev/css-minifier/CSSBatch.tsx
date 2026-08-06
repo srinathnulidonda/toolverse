@@ -2,8 +2,9 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { processCSS } from "./utils";
+import { processCSS } from "./ts/utils";
 import { formatBytes } from "@/utils";
+import styles from "./style/CSSBatch.module.css";
 
 interface BatchItem {
   id: string;
@@ -135,18 +136,18 @@ export default function CSSBatch({ onComplete }: CSSBatchProps) {
 
   return (
     <>
-      <div className="cb-root">
+      <div className={styles.cbRoot}>
         {/*  Upload Section  */}
-        <div className="cb-section">
-          <div className="cb-section-header">
-            <div className="cb-section-label">
+        <div className={styles.cbSection}>
+          <div className={styles.cbSectionHeader}>
+            <div className={styles.cbSectionLabel}>
               <i className="ti ti-upload" />
               Upload CSS Files
             </div>
             {items.length > 0 && (
               <button
                 type="button"
-                className="cb-btn"
+                className={`${styles.cbBtn}`}
                 onClick={() => setItems([])}
                 disabled={processing}
               >
@@ -156,33 +157,33 @@ export default function CSSBatch({ onComplete }: CSSBatchProps) {
             )}
           </div>
 
-          <div className="cb-upload-area">
+          <div className={styles.cbUploadArea}>
             <input
               type="file"
               id="css-files"
-              className="cb-file-input"
+              className={styles.cbFileInput}
               multiple
               accept=".css"
               onChange={handleFilesChange}
               disabled={processing}
             />
-            <label htmlFor="css-files" className="cb-upload-label">
-              <div className="cb-upload-icon">
+            <label htmlFor="css-files" className={styles.cbUploadLabel}>
+              <div className={styles.cbUploadIcon}>
                 <i className="ti ti-file-upload" />
               </div>
-              <p className="cb-upload-title">Choose CSS files</p>
-              <p className="cb-upload-desc">Select multiple .css files to minify</p>
+              <p className={styles.cbUploadTitle}>Choose CSS files</p>
+              <p className={styles.cbUploadDesc}>Select multiple .css files to minify</p>
             </label>
           </div>
 
           {items.length > 0 && (
-            <div className="cb-upload-footer">
-              <span className="cb-upload-count">
+            <div className={styles.cbUploadFooter}>
+              <span className={styles.cbUploadCount}>
                 {items.length} {items.length === 1 ? "file" : "files"} selected
               </span>
               <button
                 type="button"
-                className="cb-btn cb-btn-primary"
+                className={`${styles.cbBtn} ${styles.cbBtnPrimary}`}
                 onClick={handleProcess}
                 disabled={processing}
               >
@@ -195,27 +196,27 @@ export default function CSSBatch({ onComplete }: CSSBatchProps) {
 
         {/*  Results Section  */}
         {items.length > 0 && (
-          <div className="cb-section">
-            <div className="cb-section-header">
-              <div className="cb-section-label">
+          <div className={styles.cbSection}>
+            <div className={styles.cbSectionHeader}>
+              <div className={styles.cbSectionLabel}>
                 <i className="ti ti-list-check" />
                 Results
                 {doneCount > 0 && (
-                  <span className="cb-count-badge">
+                  <span className={styles.cbCountBadge}>
                     {doneCount}/{items.length}
                   </span>
                 )}
               </div>
-              <div className="cb-section-actions">
+              <div className={styles.cbSectionActions}>
                 {totalSavings > 0 && (
-                  <span className="cb-savings-badge">
+                  <span className={styles.cbSavingsBadge}>
                     <i className="ti ti-discount-check" />
                     Saved {formatBytes(totalSavings)}
                   </span>
                 )}
                 <button
                   type="button"
-                  className="cb-btn"
+                  className={styles.cbBtn}
                   onClick={handleDownloadAll}
                   disabled={doneCount === 0}
                 >
@@ -225,41 +226,41 @@ export default function CSSBatch({ onComplete }: CSSBatchProps) {
               </div>
             </div>
 
-            <div className="cb-results">
+            <div className={styles.cbResults}>
               {items.map((item, idx) => (
-                <div key={item.id} className="cb-result-item">
-                  <div className="cb-result-header">
-                    <div className="cb-result-index">#{idx + 1}</div>
-                    <div className="cb-result-info">
-                      <span className="cb-result-name">{item.name}</span>
+                <div key={item.id} className={styles.cbResultItem}>
+                  <div className={styles.cbResultHeader}>
+                    <div className={styles.cbResultIndex}>#{idx + 1}</div>
+                    <div className={styles.cbResultInfo}>
+                      <span className={styles.cbResultName}>{item.name}</span>
                       {item.stats && (
-                        <span className="cb-result-stats">
+                        <span className={styles.cbResultStats}>
                           {formatBytes(item.stats.original)} → {formatBytes(item.stats.minified)} (
                           {item.stats.savingsPercent}% saved)
                         </span>
                       )}
                     </div>
-                    <div className="cb-result-status">
+                    <div className={styles.cbResultStatus}>
                       {item.status === "pending" && (
-                        <span className="cb-status-badge pending">
+                        <span className={`${styles.cbStatusBadge} ${styles.pending}`}>
                           <i className="ti ti-clock" />
                           Pending
                         </span>
                       )}
                       {item.status === "processing" && (
-                        <span className="cb-status-badge processing">
+                        <span className={`${styles.cbStatusBadge} ${styles.processing}`}>
                           <i className="ti ti-loader" />
                           Processing
                         </span>
                       )}
                       {item.status === "done" && (
-                        <span className="cb-status-badge done">
+                        <span className={`${styles.cbStatusBadge} ${styles.done}`}>
                           <i className="ti ti-check" />
                           Done
                         </span>
                       )}
                       {item.status === "error" && (
-                        <span className="cb-status-badge error">
+                        <span className={`${styles.cbStatusBadge} ${styles.error}`}>
                           <i className="ti ti-alert-circle" />
                           Error
                         </span>
@@ -268,7 +269,7 @@ export default function CSSBatch({ onComplete }: CSSBatchProps) {
                     {item.status === "done" && (
                       <button
                         type="button"
-                        className={`cb-copy-btn${copiedId === item.id ? " copied" : ""}`}
+                        className={`${styles.cbCopyBtn}${copiedId === item.id ? ` ${styles.copied}` : ""}`}
                         onClick={() => handleCopy(item.output, item.id)}
                       >
                         <i className={`ti ${copiedId === item.id ? "ti-check" : "ti-copy"}`} />
@@ -277,7 +278,7 @@ export default function CSSBatch({ onComplete }: CSSBatchProps) {
                   </div>
 
                   {item.status === "error" && item.error && (
-                    <div className="cb-result-error">
+                    <div className={styles.cbResultError}>
                       <i className="ti ti-alert-triangle" />
                       {item.error}
                     </div>
@@ -290,12 +291,12 @@ export default function CSSBatch({ onComplete }: CSSBatchProps) {
 
         {/*  Empty State  */}
         {items.length === 0 && (
-          <div className="cb-empty">
-            <div className="cb-empty-icon">
+          <div className={styles.cbEmpty}>
+            <div className={styles.cbEmptyIcon}>
               <i className="ti ti-files" />
             </div>
-            <p className="cb-empty-title">Batch CSS Minifier</p>
-            <p className="cb-empty-desc">
+            <p className={styles.cbEmptyTitle}>Batch CSS Minifier</p>
+            <p className={styles.cbEmptyDesc}>
               Upload multiple CSS files and minify them all at once. Results can be downloaded
               individually or as a batch.
             </p>

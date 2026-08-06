@@ -29,6 +29,7 @@ import GSTCalculatorWorkspace from "@/features/finance/gst-calculator/Workspace"
 import ITCCalculatorWorkspace from "@/features/finance/itc-calculator/Workspace";
 import InvoiceGeneratorWorkspace from "@/features/finance/invoice-generator/Workspace";
 import EMICalculatorWorkspace from "@/features/finance/emi-calculator/Workspace";
+import SIPCalculatorWorkspace from "@/features/finance/sip-calculator/Workspace";
 type ToolWorkspaceProps = {
   tool: Tool;
 };
@@ -67,6 +68,7 @@ const WORKSPACES: Record<string, ComponentType<{ tool: Tool }>> = {
   "itc-calculator": ITCCalculatorWorkspace,
   "invoice-generator": InvoiceGeneratorWorkspace,
   "emi-calculator": EMICalculatorWorkspace,
+  "sip-calculator": SIPCalculatorWorkspace,
 };
 
 export default function ToolWorkspace({ tool }: ToolWorkspaceProps) {

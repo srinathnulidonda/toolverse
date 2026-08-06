@@ -11,13 +11,11 @@ import {
   SAMPLE_TEMPLATES,
   formatBytes,
   estimateGzipSize,
-} from "./jsEngine";
+} from "./ts/jsEngine";
 import JSAnalysis from "./JSAnalysis";
 import JSBatch from "./JSBatch";
-import { useJSStore } from "./jsStore";
-import "./style/JSAnalysis.css";
-import "./style/JSBatch.css";
-import "./style/Workspace.css";
+import { useJSStore } from "./ts/jsStore";
+import styles from "./style/Workspace.module.css";
 
 type TabView = "minify" | "batch" | "analysis" | "history";
 
@@ -104,26 +102,26 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="jw-root" ref={rootRef}>
+      <div className={styles.jwRoot} ref={rootRef}>
         {/*  Chrome  */}
-        <div className="jw-chrome">
-          <div className="jw-chrome-left">
-            <div className="jw-title">
-              <div className="jw-title-icon">
+        <div className={styles.jwChrome}>
+          <div className={styles.jwChromeLeft}>
+            <div className={styles.jwTitle}>
+              <div className={styles.jwTitleIcon}>
                 <i className="ti ti-brand-javascript" />
               </div>
               JS Minifier
-              <span className="jw-title-badge">{options.mode}</span>
+              <span className={styles.jwTitleBadge}>{options.mode}</span>
             </div>
           </div>
-          <div className="jw-chrome-right">
+          <div className={styles.jwChromeRight}>
             {/* Mode quick-switcher */}
-            <div className="jw-mode-pills">
+            <div className={styles.jwModePills}>
               {(["minify", "compress", "mangle"] as MinifyMode[]).map((m) => (
                 <button
                   key={m}
                   type="button"
-                  className={`jw-mode-pill ${options.mode === m ? "active" : ""}`}
+                  className={`${styles.jwModePill} ${options.mode === m ? "active" : ""}`}
                   style={
                     options.mode === m
                       ? {
@@ -142,7 +140,7 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
 
             <button
               type="button"
-              className={`jw-settings-btn ${showSettings ? "active" : ""}`}
+              className={`${styles.jwSettingsBtn} ${showSettings ? "active" : ""}`}
               onClick={() => setShowSettings((s) => !s)}
             >
               <i className="ti ti-settings" />
@@ -153,45 +151,45 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Settings Panel  */}
         {showSettings && (
-          <div className="jw-settings">
-            <div className="jw-settings-grid">
-              <label className="jw-toggle">
+          <div className={styles.jwSettings}>
+            <div className={styles.jwSettingsGrid}>
+              <label className={styles.jwToggle}>
                 <input
                   type="checkbox"
                   checked={options.removeComments}
                   onChange={(e) => setOptions((p) => ({ ...p, removeComments: e.target.checked }))}
                 />
-                <div className="jw-toggle-track">
-                  <div className="jw-toggle-thumb" />
+                <div className={styles.jwToggleTrack}>
+                  <div className={styles.jwToggleThumb} />
                 </div>
                 <span>Remove Comments</span>
               </label>
 
-              <label className="jw-toggle">
+              <label className={styles.jwToggle}>
                 <input
                   type="checkbox"
                   checked={options.removeConsole}
                   onChange={(e) => setOptions((p) => ({ ...p, removeConsole: e.target.checked }))}
                 />
-                <div className="jw-toggle-track">
-                  <div className="jw-toggle-thumb" />
+                <div className={styles.jwToggleTrack}>
+                  <div className={styles.jwToggleThumb} />
                 </div>
                 <span>Remove console.*</span>
               </label>
 
-              <label className="jw-toggle">
+              <label className={styles.jwToggle}>
                 <input
                   type="checkbox"
                   checked={options.removeDebugger}
                   onChange={(e) => setOptions((p) => ({ ...p, removeDebugger: e.target.checked }))}
                 />
-                <div className="jw-toggle-track">
-                  <div className="jw-toggle-thumb" />
+                <div className={styles.jwToggleTrack}>
+                  <div className={styles.jwToggleThumb} />
                 </div>
                 <span>Remove debugger</span>
               </label>
 
-              <label className="jw-toggle">
+              <label className={styles.jwToggle}>
                 <input
                   type="checkbox"
                   checked={options.collapseWhitespace}
@@ -199,25 +197,25 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                     setOptions((p) => ({ ...p, collapseWhitespace: e.target.checked }))
                   }
                 />
-                <div className="jw-toggle-track">
-                  <div className="jw-toggle-thumb" />
+                <div className={styles.jwToggleTrack}>
+                  <div className={styles.jwToggleThumb} />
                 </div>
                 <span>Collapse Whitespace</span>
               </label>
 
-              <label className="jw-toggle">
+              <label className={styles.jwToggle}>
                 <input
                   type="checkbox"
                   checked={options.mangle}
                   onChange={(e) => setOptions((p) => ({ ...p, mangle: e.target.checked }))}
                 />
-                <div className="jw-toggle-track">
-                  <div className="jw-toggle-thumb" />
+                <div className={styles.jwToggleTrack}>
+                  <div className={styles.jwToggleThumb} />
                 </div>
                 <span>Mangle Variables</span>
               </label>
 
-              <label className="jw-toggle">
+              <label className={styles.jwToggle}>
                 <input
                   type="checkbox"
                   checked={options.deadCodeElimination}
@@ -225,8 +223,8 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                     setOptions((p) => ({ ...p, deadCodeElimination: e.target.checked }))
                   }
                 />
-                <div className="jw-toggle-track">
-                  <div className="jw-toggle-thumb" />
+                <div className={styles.jwToggleTrack}>
+                  <div className={styles.jwToggleThumb} />
                 </div>
                 <span>Dead Code Elimination</span>
               </label>
@@ -235,23 +233,23 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/*  Tabs  */}
-        <div className="jw-tabs-bar">
-          <nav className="jw-tabs">
+        <div className={styles.jwTabsBar}>
+          <nav className={styles.jwTabs}>
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
-                className={`jw-tab ${tabView === tab.id ? "active" : ""}`}
+                className={`${styles.jwTab} ${tabView === tab.id ? "active" : ""}`}
                 onClick={() => setTabView(tab.id)}
                 title={tab.desc}
               >
                 <i className={`ti ${tab.icon}`} />
                 <span>{tab.label}</span>
                 {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className="jw-tab-badge">{history.length}</span>
+                  <span className={styles.jwTabBadge}>{history.length}</span>
                 )}
                 {tab.id === "analysis" && result && result.issues.length > 0 && (
-                  <span className="jw-tab-dot" />
+                  <span className={styles.jwTabDot} />
                 )}
               </button>
             ))}
@@ -259,19 +257,19 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Tab Content  */}
-        <div className="jw-content">
+        <div className={styles.jwContent}>
           {/*  Minify Tab  */}
           {tabView === "minify" && (
-            <div className="jw-minify-view">
+            <div className={styles.jwMinifyView}>
               {/* Toolbar */}
-              <div className="jw-toolbar">
-                <div className="jw-toolbar-left">
-                  <span className="jw-toolbar-label">Samples:</span>
+              <div className={styles.jwToolbar}>
+                <div className={styles.jwToolbarLeft}>
+                  <span className={styles.jwToolbarLabel}>Samples:</span>
                   {Object.entries(SAMPLE_TEMPLATES).map(([key, s]) => (
                     <button
                       key={key}
                       type="button"
-                      className="jw-sample-btn"
+                      className={styles.jwSampleBtn}
                       onClick={() => loadSample(key as keyof typeof SAMPLE_TEMPLATES)}
                       title={s.description}
                     >
@@ -279,9 +277,9 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                     </button>
                   ))}
                 </div>
-                <div className="jw-toolbar-right">
+                <div className={styles.jwToolbarRight}>
                   {result && (
-                    <div className="jw-gzip-badge">
+                    <div className={styles.jwGzipBadge}>
                       <i className="ti ti-circle-filled" />~
                       {formatBytes(estimateGzipSize(result.output))} gzip
                     </div>
@@ -290,48 +288,48 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
               </div>
 
               {/* Mobile switcher */}
-              <div className="jw-mobile-switcher">
+              <div className={styles.jwMobileSwitcher}>
                 <button
                   type="button"
-                  className={`jw-sw-tab ${mobilePanel === "input" ? "active" : ""}`}
+                  className={`${styles.jwSwTab} ${mobilePanel === "input" ? "active" : ""}`}
                   onClick={goToInput}
                 >
                   <i className="ti ti-file-code" />
                   Original
                 </button>
-                <div className="jw-sw-divider" />
+                <div className={styles.jwSwDivider} />
                 <button
                   type="button"
-                  className={`jw-sw-tab ${mobilePanel === "output" ? "active" : ""}`}
+                  className={`${styles.jwSwTab} ${mobilePanel === "output" ? "active" : ""}`}
                   onClick={goToOutput}
                 >
                   <i className="ti ti-file-zip" />
                   Minified
-                  {result && mobilePanel !== "output" && <span className="jw-sw-dot" />}
+                  {result && mobilePanel !== "output" && <span className={styles.jwSwDot} />}
                 </button>
               </div>
 
               {/* Body */}
-              <div className="jw-body">
+              <div className={styles.jwBody}>
                 {/* Input */}
                 <div
-                  className={`jw-panel ${mobilePanel === "input" ? "mob-visible" : "mob-hidden"}`}
+                  className={`${styles.jwPanel} ${mobilePanel === "input" ? styles.mobVisible : styles.mobHidden}`}
                 >
-                  <div className="jw-panel-bar">
-                    <div className="jw-panel-label">
+                  <div className={styles.jwPanelBar}>
+                    <div className={styles.jwPanelLabel}>
                       <i className="ti ti-file-code" />
                       Original JavaScript
                     </div>
-                    <div className="jw-panel-actions">
+                    <div className={styles.jwPanelActions}>
                       {input && (
                         <>
-                          <span className="jw-char-count">{input.length.toLocaleString()} ch</span>
-                          <span className="jw-char-count">{input.split("\n").length} lines</span>
+                          <span className={styles.jwCharCount}>{input.length.toLocaleString()} ch</span>
+                          <span className={styles.jwCharCount}>{input.split("\n").length} lines</span>
                         </>
                       )}
                       <button
                         type="button"
-                        className="jw-icon-btn"
+                        className={styles.jwIconBtn}
                         onClick={() => setInput("")}
                         disabled={!input}
                         title="Clear"
@@ -341,15 +339,15 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                     </div>
                   </div>
                   <textarea
-                    className="jw-textarea"
+                    className={styles.jwTextarea}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Paste your JavaScript here…"
                     spellCheck={false}
                   />
                   {input && result && (
-                    <div className="jw-mob-cta">
-                      <button type="button" className="jw-cta-btn" onClick={goToOutput}>
+                    <div className={styles.jwMobCta}>
+                      <button type="button" className={styles.jwCtaBtn} onClick={goToOutput}>
                         <i className="ti ti-file-zip" />
                         View Minified Output
                         <i className="ti ti-chevron-right" />
@@ -359,20 +357,20 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                 </div>
 
                 {/* Gutter */}
-                <div className="jw-gutter">
-                  <div className="jw-gutter-line" />
-                  <div className="jw-gutter-node">
+                <div className={styles.jwGutter}>
+                  <div className={styles.jwGutterLine} />
+                  <div className={styles.jwGutterNode}>
                     <i className="ti ti-chevrons-right" />
                   </div>
-                  <div className="jw-gutter-line" />
+                  <div className={styles.jwGutterLine} />
                 </div>
 
                 {/* Output */}
                 <div
-                  className={`jw-panel ${mobilePanel === "output" ? "mob-visible" : "mob-hidden"}`}
+                  className={`${styles.jwPanel} ${mobilePanel === "output" ? styles.mobVisible : styles.mobHidden}`}
                 >
-                  <div className="jw-panel-bar">
-                    <div className="jw-panel-label">
+                  <div className={styles.jwPanelBar}>
+                    <div className={styles.jwPanelLabel}>
                       <i className="ti ti-file-zip" />
                       {options.mode === "minify"
                         ? "Minified"
@@ -381,11 +379,11 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                           : "Mangled"}{" "}
                       JavaScript
                     </div>
-                    <div className="jw-panel-actions">
+                    <div className={styles.jwPanelActions}>
                       {result && (
                         <button
                           type="button"
-                          className={`jw-copy-btn ${copiedKey === "out" ? "copied" : ""}`}
+                          className={`${styles.jwCopyBtn} ${copiedKey === "out" ? "copied" : ""}`}
                           onClick={() => handleCopy(result.output, "out")}
                         >
                           <i className={`ti ${copiedKey === "out" ? "ti-check" : "ti-copy"}`} />
@@ -396,22 +394,22 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                   </div>
 
                   {!result && (
-                    <div className="jw-empty">
-                      <div className="jw-empty-icon">
+                    <div className={styles.jwEmpty}>
+                      <div className={styles.jwEmptyIcon}>
                         <i className="ti ti-brand-javascript" />
                       </div>
-                      <h3 className="jw-empty-title">Minify JavaScript</h3>
-                      <p className="jw-empty-desc">
+                      <h3 className={styles.jwEmptyTitle}>Minify JavaScript</h3>
+                      <p className={styles.jwEmptyDesc}>
                         Paste code on the left, load a sample, or drop a file to reduce bundle size
                       </p>
-                      <div className="jw-empty-samples">
+                      <div className={styles.jwEmptySamples}>
                         {Object.entries(SAMPLE_TEMPLATES)
                           .slice(0, 2)
                           .map(([key, s]) => (
                             <button
                               key={key}
                               type="button"
-                              className="jw-empty-sample-btn"
+                              className={styles.jwEmptySampleBtn}
                               onClick={() => loadSample(key as keyof typeof SAMPLE_TEMPLATES)}
                             >
                               Try {s.name}
@@ -423,54 +421,54 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
 
                   {result && (
                     <>
-                      <pre className="jw-output">{result.output}</pre>
+                      <pre className={styles.jwOutput}>{result.output}</pre>
 
-                      <div className="jw-stats-bar">
-                        <div className="jw-stat">
+                      <div className={styles.jwStatsBar}>
+                        <div className={styles.jwStat}>
                           <i className="ti ti-file" />
-                          <span className="jw-stat-label">Original</span>
-                          <span className="jw-stat-value">
+                          <span className={styles.jwStatLabel}>Original</span>
+                          <span className={styles.jwStatValue}>
                             {formatBytes(result.stats.original)}
                           </span>
                         </div>
-                        <div className="jw-stat">
+                        <div className={styles.jwStat}>
                           <i className="ti ti-file-zip" />
-                          <span className="jw-stat-label">Minified</span>
-                          <span className="jw-stat-value">
+                          <span className={styles.jwStatLabel}>Minified</span>
+                          <span className={styles.jwStatValue}>
                             {formatBytes(result.stats.minified)}
                           </span>
                         </div>
-                        <div className="jw-stat jw-stat--highlight">
+                        <div className={`${styles.jwStat} ${styles.jwStatHighlight}`}>
                           <i className="ti ti-trending-down" />
-                          <span className="jw-stat-label">Saved</span>
-                          <span className="jw-stat-value jw-stat-value--good">
+                          <span className={styles.jwStatLabel}>Saved</span>
+                          <span className={`${styles.jwStatValue} ${styles.jwStatValueGood}`}>
                             {formatBytes(result.stats.savings)} ({result.stats.savingsPercent}%)
                           </span>
                         </div>
-                        <div className="jw-stat">
+                        <div className={styles.jwStat}>
                           <i className="ti ti-layers" />
-                          <span className="jw-stat-label">Lines</span>
-                          <span className="jw-stat-value">
+                          <span className={styles.jwStatLabel}>Lines</span>
+                          <span className={styles.jwStatValue}>
                             {result.stats.originalLines} → {result.stats.minifiedLines}
                           </span>
                         </div>
-                        <button type="button" className="jw-download-btn" onClick={handleDownload}>
+                        <button type="button" className={styles.jwDownloadBtn} onClick={handleDownload}>
                           <i className="ti ti-download" />
                           Download .js
                         </button>
                       </div>
 
                       {/* Mobile actions */}
-                      <div className="jw-mob-actions">
+                      <div className={styles.jwMobActions}>
                         <button
                           type="button"
-                          className={`jw-mob-btn ${copiedKey === "mob" ? "copied" : ""}`}
+                          className={`${styles.jwMobBtn} ${copiedKey === "mob" ? "copied" : ""}`}
                           onClick={() => handleCopy(result.output, "mob")}
                         >
                           <i className={`ti ${copiedKey === "mob" ? "ti-check" : "ti-copy"}`} />
                           {copiedKey === "mob" ? "Copied!" : "Copy"}
                         </button>
-                        <button type="button" className="jw-mob-btn" onClick={handleDownload}>
+                        <button type="button" className={styles.jwMobBtn} onClick={handleDownload}>
                           <i className="ti ti-download" />
                           Download
                         </button>
@@ -490,8 +488,8 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
             (result ? (
               <JSAnalysis analysis={result.analysis} issues={result.issues} stats={result.stats} />
             ) : (
-              <div className="jw-tab-empty">
-                <div className="jw-tab-empty-icon">
+              <div className={styles.jwTabEmpty}>
+                <div className={styles.jwTabEmptyIcon}>
                   <i className="ti ti-chart-bar" />
                 </div>
                 <h3>Code Analysis</h3>
@@ -501,7 +499,7 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                 </p>
                 <button
                   type="button"
-                  className="jw-tab-empty-btn"
+                  className={styles.jwTabEmptyBtn}
                   onClick={() => setTabView("minify")}
                 >
                   Go to Minifier
@@ -511,10 +509,10 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
 
           {/*  History Tab  */}
           {tabView === "history" && (
-            <div className="jw-history">
+            <div className={styles.jwHistory}>
               {history.length === 0 ? (
-                <div className="jw-tab-empty">
-                  <div className="jw-tab-empty-icon">
+                <div className={styles.jwTabEmpty}>
+                  <div className={styles.jwTabEmptyIcon}>
                     <i className="ti ti-history" />
                   </div>
                   <h3>No History Yet</h3>
@@ -522,41 +520,41 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
                 </div>
               ) : (
                 <>
-                  <div className="jw-history-header">
-                    <div className="jw-history-title">
+                  <div className={styles.jwHistoryHeader}>
+                    <div className={styles.jwHistoryTitle}>
                       <i className="ti ti-history" />
                       History
-                      <span className="jw-history-count">{history.length}</span>
+                      <span className={styles.jwHistoryCount}>{history.length}</span>
                     </div>
-                    <button type="button" className="jw-ghost-btn" onClick={clearHistory}>
+                    <button type="button" className={styles.jwGhostBtn} onClick={clearHistory}>
                       <i className="ti ti-trash" />
                       Clear
                     </button>
                   </div>
-                  <div className="jw-history-list">
+                  <div className={styles.jwHistoryList}>
                     {history.map((entry) => (
-                      <div key={entry.id} className="jw-history-item">
-                        <div className="jw-history-item-left">
-                          <div className="jw-history-item-icon">
+                      <div key={entry.id} className={styles.jwHistoryItem}>
+                        <div className={styles.jwHistoryItemLeft}>
+                          <div className={styles.jwHistoryItemIcon}>
                             <i className="ti ti-brand-javascript" />
                           </div>
                           <div>
-                            <div className="jw-history-item-title">{entry.title}</div>
-                            <div className="jw-history-item-meta">
+                            <div className={styles.jwHistoryItemTitle}>{entry.title}</div>
+                            <div className={styles.jwHistoryItemMeta}>
                               {new Date(entry.timestamp).toLocaleString()} ·{" "}
                               {formatBytes(entry.result.stats.original)} →{" "}
                               {formatBytes(entry.result.stats.minified)}
                             </div>
                           </div>
                         </div>
-                        <div className="jw-history-item-right">
-                          <span className="jw-history-mode">{entry.options.mode}</span>
-                          <span className="jw-history-savings">
+                        <div className={styles.jwHistoryItemRight}>
+                          <span className={styles.jwHistoryMode}>{entry.options.mode}</span>
+                          <span className={styles.jwHistorySavings}>
                             -{entry.result.stats.savingsPercent}%
                           </span>
                           <button
                             type="button"
-                            className="jw-icon-btn"
+                            className={styles.jwIconBtn}
                             onClick={() => {
                               setInput(entry.input);
                               setTabView("minify");
@@ -576,18 +574,18 @@ export default function JSMinifierWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Footer  */}
-        <div className="jw-footer">
-          <div className="jw-footer-left">
+        <div className={styles.jwFooter}>
+          <div className={styles.jwFooterLeft}>
             <i className="ti ti-shield-lock" />
             <span>Runs entirely in your browser — nothing is sent to any server.</span>
           </div>
           {result && (
-            <div className="jw-footer-right">
+            <div className={styles.jwFooterRight}>
               <span>{result.stats.functions} functions</span>
               <span>·</span>
               <span>{result.stats.variables} variables</span>
               <span>·</span>
-              <span className={result.analysis.syntaxValid ? "jw-valid" : "jw-invalid"}>
+              <span className={result.analysis.syntaxValid ? styles.jwValid : styles.jwInvalid}>
                 <i className={`ti ${result.analysis.syntaxValid ? "ti-check" : "ti-x"}`} />
                 {result.analysis.syntaxValid ? "Valid" : "Errors"}
               </span>

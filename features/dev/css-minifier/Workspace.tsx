@@ -8,9 +8,7 @@ import CSSBatch from "./CSSBatch";
 import HistoryList from "@/components/shared/HistoryList";
 import { useHistoryStore } from "@/lib/useHistoryStore";
 import { formatBytes } from "@/utils";
-import "./style/CSSBatch.css";
-import "./style/CSSPreview.css";
-import "./style/Workspace.css";
+import styles from "./style/Workspace.module.css";
 
 interface HistoryEntry {
   id: string;
@@ -85,104 +83,109 @@ export default function CSSMinifierWorkspace({ tool }: { tool: Tool }) {
   ];
 
   return (
-    <div className="cm-root">
-      {/*  Top Chrome  */}
-      <div className="cm-chrome">
-        <div className="cm-chrome-left">
-          <div className="cm-title">
-            <i className="ti ti-brand-css3" />
-            CSS Minifier
+    <>
+      <div className={styles.cmRoot}>
+        {/*  Top Chrome  */}
+        <div className={styles.cmChrome}>
+          <div className={styles.cmChromeLeft}>
+            <div className={styles.cmTitle}>
+              <i className="ti ti-brand-css3" />
+              CSS Minifier
+            </div>
+          </div>
+          <div className={styles.cmChromeRight}>
+            {/* No extra buttons in the chrome for now */}
           </div>
         </div>
-      </div>
 
-      {/*  View Tabs  */}
-      <div className="cm-tabs-bar">
-        <nav className="cm-tabs" role="tablist">
-          {VIEW_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              role="tab"
-              className={`cm-tab${viewTab === tab.id ? " active" : ""}`}
-              onClick={() => setViewTab(tab.id)}
-              aria-selected={viewTab === tab.id}
-            >
-              <i className={`ti ${tab.icon}`} />
-              {tab.label}
-              {typeof window !== 'undefined' && tab.id === "history" && history.length > 0 && (
-                <span className="cm-badge">{history.length}</span>
+        {/*  View Tabs  */}
+        <div className={styles.cmTabsBar}>
+          <nav className={styles.cmTabs} role="tablist">
+            {VIEW_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                className={`${styles.cmTab}${viewTab === tab.id ? ` ${styles.active}` : ""}`}
+                onClick={() => setViewTab(tab.id)}
+                aria-selected={viewTab === tab.id}
+              >
+                <i className={`ti ${tab.icon}`} />
+                {tab.label}
+                {typeof window !== 'undefined' && tab.id === "history" && history.length > 0 && (
+                  <span className={styles.cmBadge}>{history.length}</span>
+                )}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        {/*  Tab Content  */}
+        <div className={styles.cmTabContent}>
+          {viewTab === "single" && (
+            <CSSPreview onProcess={addToHistory} />
+          )}
+
+          {viewTab === "batch" && (
+            <CSSBatch onComplete={() => { }} />
+          )}
+
+          {viewTab === "history" && (
+            <HistoryList<HistoryEntry>
+              history={history}
+              onClear={clearHistory}
+              onDelete={removeFromHistory}
+              onUse={(entry) => {
+                setViewTab("single");
+              }}
+              renderItemContent={(entry) => (
+                <div className="ch-item">
+                  <div className="ch-item-header">
+                    <div className="ch-item-info">
+                      <span className="ch-item-time">{formatTimestamp(entry.timestamp)}</span>
+                      {entry.stats && (
+                        <span className="ch-item-savings">
+                          Saved {formatBytes(entry.stats.savings)} ({entry.stats.savingsPercent}%)
+                        </span>
+                      )}
+                    </div>
+                    <div className="ch-item-actions">
+                      <button
+                        type="button"
+                        className="ch-copy-btn"
+                        onClick={() => {
+                          navigator.clipboard.writeText(entry.output);
+                        }}
+                        title="Copy output"
+                      >
+                        <i className="ti ti-copy" />
+                        Copy
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="ch-item-content">
+                    <div className="ch-item-row">
+                      <span className="ch-item-label">Input:</span>
+                      <code className="ch-item-code">{entry.input}...</code>
+                    </div>
+                    <div className="ch-item-row">
+                      <span className="ch-item-label">Output:</span>
+                      <code className="ch-item-code">{entry.output}...</code>
+                    </div>
+                  </div>
+                </div>
               )}
-            </button>
-          ))}
-        </nav>
+            />
+          )}
+        </div>
+
+        {/*  Footer  */}
+        <div className={styles.cmFooter}>
+          <i className="ti ti-shield-lock" />
+          <span>Everything runs in your browser — no data ever leaves this page.</span>
+        </div>
       </div>
-
-      {/*  Tab Content  */}
-      <div className="cm-tab-content">
-        {viewTab === "single" && (
-          <CSSPreview onProcess={addToHistory} />
-        )}
-
-        {viewTab === "batch" && (
-          <CSSBatch onComplete={() => { }} />
-        )}
-
-        {viewTab === "history" && (
-          <HistoryList<HistoryEntry>
-            history={history}
-            onClear={clearHistory}
-            onDelete={removeFromHistory}
-            onUse={(entry) => {
-              setViewTab("single");
-            }}
-            renderItemContent={(entry) => (
-              <div className="ch-item">
-                <div className="ch-item-header">
-                  <div className="ch-item-info">
-                    <span className="ch-item-time">{formatTimestamp(entry.timestamp)}</span>
-                    {entry.stats && (
-                      <span className="ch-item-savings">
-                        Saved {formatBytes(entry.stats.savings)} ({entry.stats.savingsPercent}%)
-                      </span>
-                    )}
-                  </div>
-                  <div className="ch-item-actions">
-                    <button
-                      type="button"
-                      className="ch-copy-btn"
-                      onClick={() => {
-                        navigator.clipboard.writeText(entry.output);
-                      }}
-                      title="Copy output"
-                    >
-                      <i className="ti ti-copy" />
-                      Copy
-                    </button>
-                  </div>
-                </div>
-
-                <div className="ch-item-content">
-                  <div className="ch-item-row">
-                    <span className="ch-item-label">Input:</span>
-                    <code className="ch-item-code">{entry.input}...</code>
-                  </div>
-                  <div className="ch-item-row">
-                    <span className="ch-item-label">Output:</span>
-                    <code className="ch-item-code">{entry.output}...</code>
-                  </div>
-                </div>
-              </div>
-            )}
-          />
-        )}
-      </div>
-
-      {/*  Footer  */}
-      <div className="cm-footer">
-        <i className="ti ti-shield-lock" />
-        <span>Everything runs in your browser — no data ever leaves this page.</span>
-      </div>
-    </div>
+    </>
   );
 }

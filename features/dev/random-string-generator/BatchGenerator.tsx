@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import type { GeneratorOptions, GeneratedString } from "./utils";
+import type { GeneratorOptions, GeneratedString } from "./ts/utils";
 import {
   generateString,
   calculateEntropy,
@@ -10,7 +10,8 @@ import {
   exportToCSV,
   exportToJSON,
   exportToText,
-} from "./utils";
+} from "./ts/utils";
+import styles from "./style/BatchGenerator.module.css";
 
 interface BatchGeneratorProps {
   options: GeneratorOptions;
@@ -151,12 +152,12 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
 
   return (
     <>
-      <div className="bg-root">
+      <div className={styles.bgRoot}>
         {/*  Mobile Tab Switcher  */}
-        <div className="bg-mobile-tabs">
+        <div className={styles.bgMobileTabs}>
           <button
             type="button"
-            className={`bg-mobile-tab${mobileView === "config" ? " active" : ""}`}
+            className={`${styles.bgMobileTab}${mobileView === "config" ? ` ${styles.active}` : ""}`}
             onClick={() => setMobileView("config")}
           >
             <i className="ti ti-settings" />
@@ -164,24 +165,24 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
           </button>
           <button
             type="button"
-            className={`bg-mobile-tab${mobileView === "results" ? " active" : ""}`}
+            className={`${styles.bgMobileTab}${mobileView === "results" ? ` ${styles.active}` : ""}`}
             onClick={() => setMobileView("results")}
           >
             <i className="ti ti-list-check" />
             Results
-            {results.length > 0 && <span className="bg-mobile-badge">{results.length}</span>}
+            {results.length > 0 && <span className={styles.bgMobileBadge}>{results.length}</span>}
           </button>
         </div>
 
         <div
-          className={`bg-config${mobileView === "config" ? " mobile-visible" : " mobile-hidden"}`}
+          className={`${styles.bgConfig}${mobileView === "config" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
         >
-          <div className="bg-config-section">
-            <label className="bg-label">Quantity</label>
-            <div className="bg-quantity-control">
+          <div className={styles.bgConfigSection}>
+            <label className={styles.bgLabel}>Quantity</label>
+            <div className={styles.bgQuantityControl}>
               <button
                 type="button"
-                className="bg-quantity-btn"
+                className={styles.bgQuantityBtn}
                 onClick={() => setCount(Math.max(1, count - 10))}
                 disabled={generating}
               >
@@ -189,7 +190,7 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
               </button>
               <input
                 type="number"
-                className="bg-quantity-input"
+                className={styles.bgQuantityInput}
                 value={count}
                 onChange={(e) =>
                   setCount(Math.max(1, Math.min(10000, parseInt(e.target.value) || 1)))
@@ -200,19 +201,19 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
               />
               <button
                 type="button"
-                className="bg-quantity-btn"
+                className={styles.bgQuantityBtn}
                 onClick={() => setCount(Math.min(10000, count + 10))}
                 disabled={generating}
               >
                 <i className="ti ti-plus" />
               </button>
             </div>
-            <div className="bg-quick-amounts">
+            <div className={styles.bgQuickAmounts}>
               {[10, 50, 100, 500, 1000].map((n) => (
                 <button
                   key={n}
                   type="button"
-                  className={`bg-quick-btn${count === n ? " active" : ""}`}
+                  className={`${styles.bgQuickBtn}${count === n ? ` ${styles.active}` : ""}`}
                   onClick={() => setCount(n)}
                   disabled={generating}
                 >
@@ -222,31 +223,31 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
             </div>
           </div>
 
-          <div className="bg-config-section">
-            <label className="bg-label">Options</label>
-            <div className="bg-options">
-              <label className="bg-checkbox">
+          <div className={styles.bgConfigSection}>
+            <label className={styles.bgLabel}>Options</label>
+            <div className={styles.bgOptions}>
+              <label className={styles.bgCheckbox}>
                 <input
                   type="checkbox"
                   checked={uniqueOnly}
                   onChange={(e) => setUniqueOnly(e.target.checked)}
                   disabled={generating}
                 />
-                <span className="bg-checkbox-label">
+                <span className={styles.bgCheckboxLabel}>
                   Generate unique strings only
-                  <span className="bg-checkbox-hint">Skip duplicates</span>
+                  <span className={styles.bgCheckboxHint}>Skip duplicates</span>
                 </span>
               </label>
-              <label className="bg-checkbox">
+              <label className={styles.bgCheckbox}>
                 <input
                   type="checkbox"
                   checked={addIndex}
                   onChange={(e) => setAddIndex(e.target.checked)}
                   disabled={generating}
                 />
-                <span className="bg-checkbox-label">
+                <span className={styles.bgCheckboxLabel}>
                   Add numeric index prefix
-                  <span className="bg-checkbox-hint">e.g., 1_abc123</span>
+                  <span className={styles.bgCheckboxHint}>e.g., 1_abc123</span>
                 </span>
               </label>
             </div>
@@ -254,7 +255,7 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
 
           <button
             type="button"
-            className="bg-generate-btn"
+            className={styles.bgGenerateBtn}
             onClick={handleGenerate}
             disabled={generating}
           >
@@ -264,45 +265,45 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
         </div>
 
         {generating && (
-          <div className="bg-progress-bar">
-            <div className="bg-progress-fill" style={{ width: `${progress}%` }} />
+          <div className={styles.bgProgressBar}>
+            <div className={styles.bgProgressFill} style={{ width: `${progress}%` }} />
           </div>
         )}
 
         <div
-          className={`bg-results-container${mobileView === "results" ? " mobile-visible" : " mobile-hidden"}`}
+          className={`${styles.bgResultsContainer}${mobileView === "results" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
         >
           {results.length > 0 && (
-            <div className="bg-results-header">
-              <div className="bg-results-info">
+            <div className={styles.bgResultsHeader}>
+              <div className={styles.bgResultsInfo}>
                 <i className="ti ti-list-check" />
-                <span className="bg-results-count">{results.length} strings generated</span>
+                <span className={styles.bgResultsCount}>{results.length} strings generated</span>
                 {duplicateCount > 0 && (
-                  <span className="bg-duplicate-badge">
+                  <span className={styles.bgDuplicateBadge}>
                     <i className="ti ti-copy" />
                     {duplicateCount} duplicate{duplicateCount > 1 ? "s" : ""}
                   </span>
                 )}
               </div>
-              <div className="bg-results-actions">
+              <div className={styles.bgResultsActions}>
                 <button
                   type="button"
-                  className={`bg-action-btn${copiedId === "all" ? " copied" : ""}`}
+                  className={`${styles.bgActionBtn}${copiedId === "all" ? ` ${styles.copied}` : ""}`}
                   onClick={handleCopyAll}
                 >
                   <i className={`ti ${copiedId === "all" ? "ti-check" : "ti-copy"}`} />
                   {copiedId === "all" ? "Copied" : "Copy All"}
                 </button>
-                <div className="bg-export-dropdown">
-                  <button type="button" className="bg-action-btn">
+                <div className={styles.bgExportDropdown}>
+                  <button type="button" className={styles.bgActionBtn}>
                     <i className="ti ti-download" />
                     Export
                     <i className="ti ti-chevron-down" style={{ fontSize: "10px" }} />
                   </button>
-                  <div className="bg-export-menu">
+                  <div className={styles.bgExportMenu}>
                     <button
                       type="button"
-                      className="bg-export-item"
+                      className={styles.bgExportItem}
                       onClick={() => handleExport("txt")}
                     >
                       <i className="ti ti-file-text" />
@@ -310,7 +311,7 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
                     </button>
                     <button
                       type="button"
-                      className="bg-export-item"
+                      className={styles.bgExportItem}
                       onClick={() => handleExport("csv")}
                     >
                       <i className="ti ti-file-spreadsheet" />
@@ -318,7 +319,7 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
                     </button>
                     <button
                       type="button"
-                      className="bg-export-item"
+                      className={styles.bgExportItem}
                       onClick={() => handleExport("json")}
                     >
                       <i className="ti ti-file-code" />
@@ -326,7 +327,7 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
                     </button>
                   </div>
                 </div>
-                <button type="button" className="bg-action-btn bg-clear-btn" onClick={handleClear}>
+                <button type="button" className={`${styles.bgActionBtn} ${styles.bgClearBtn}`} onClick={handleClear}>
                   <i className="ti ti-trash" />
                   Clear
                 </button>
@@ -335,28 +336,28 @@ export default function BatchGenerator({ options, onGenerate }: BatchGeneratorPr
           )}
 
           {results.length === 0 ? (
-            <div className="bg-empty">
-              <div className="bg-empty-icon">
+            <div className={styles.bgEmpty}>
+              <div className={styles.bgEmptyIcon}>
                 <i className="ti ti-layers-linked" />
               </div>
-              <p className="bg-empty-title">Batch Generation</p>
-              <p className="bg-empty-desc">
+              <p className={styles.bgEmptyTitle}>Batch Generation</p>
+              <p className={styles.bgEmptyDesc}>
                 Generate hundreds or thousands of random strings at once. Perfect for testing, data
                 seeding, or bulk password generation.
               </p>
-              <button className="bg-empty-cta" onClick={() => setMobileView("config")}>
+              <button className={styles.bgEmptyCta} onClick={() => setMobileView("config")}>
                 <i className="ti ti-settings" />
                 Configure Batch
               </button>
             </div>
           ) : (
-            <div className="bg-results-grid">
+            <div className={styles.bgResultsGrid}>
               {results.map((result) => (
-                <div key={result.id} className="bg-result-item">
-                  <div className="bg-result-value">{result.value}</div>
+                <div key={result.id} className={styles.bgResultItem}>
+                  <div className={styles.bgResultValue}>{result.value}</div>
                   <button
                     type="button"
-                    className={`bg-copy-icon${copiedId === result.id ? " copied" : ""}`}
+                    className={`${styles.bgCopyIcon}${copiedId === result.id ? ` ${styles.copied}` : ""}`}
                     onClick={() => handleCopy(result.value, result.id)}
                     title="Copy to clipboard"
                   >

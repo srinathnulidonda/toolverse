@@ -1,0 +1,269 @@
+/* features/social/hashtag-generator/style/SavedSets.module.css */
+
+.ssEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.ssEmpty i {
+    font-size: 36px;
+    color: var(--text-disabled);
+}
+
+.ssEmpty p {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.ssEmpty span {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    max-width: 200px;
+    line-height: 1.5;
+}
+
+.ssRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ssHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.ssTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.ssTitle i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.ssCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.ssClearBtn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    background: transparent;
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-tertiary);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ssClearBtn i {
+    font-size: 13px;
+}
+
+.ssClearBtn:hover {
+    background: var(--error-bg);
+    border-color: #FECACA;
+    color: #B91C1C;
+}
+
+.ssList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ssCard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    transition: box-shadow 0.15s;
+}
+
+.ssCard:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ssCardHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ssCardTitleRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ssCardTitleRow i {
+    font-size: 15px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.ssCardName {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ssCardTime {
+    font-size: 10.5px;
+    color: var(--text-disabled);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ssCardMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-left: 23px;
+}
+
+.ssCardPlatform {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--brand-text);
+    padding: 2px 6px;
+    background: var(--brand-light);
+    border-radius: 4px;
+}
+
+.ssCardTagCount {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.ssCardPreview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.ssTagChip {
+    display: inline-flex;
+    padding: 3px 7px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+}
+
+.ssTagMore {
+    display: inline-flex;
+    padding: 3px 7px;
+    background: var(--bg-surface);
+    border: 0.5px dashed var(--border);
+    border-radius: 4px;
+    font-size: 10.5px;
+    color: var(--text-disabled);
+    font-style: italic;
+}
+
+.ssCardActions {
+    display: flex;
+    gap: 6px;
+}
+
+.ssBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ssBtn i {
+    font-size: 13px;
+}
+
+.ssBtn:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.ssRestoreBtn {
+    flex: 1;
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+.ssRestoreBtn:hover {
+    background: var(--brand);
+    color: white;
+}
+
+.ssCopyBtn {
+    flex: 1;
+}
+
+.ssDeleteBtn {
+    width: 34px;
+    padding: 7px;
+}
+
+.ssDeleteBtn:hover {
+    background: var(--error-bg);
+    border-color: #FECACA;
+    color: #B91C1C;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ssClearBtn:hover {
+        color: #F87171;
+    }
+
+    .ssDeleteBtn:hover {
+        color: #F87171;
+        border-color: #7F1D1D;
+    }
+}

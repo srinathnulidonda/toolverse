@@ -2,14 +2,15 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import type { GeneratorOptions, GeneratedString, StrengthLevel } from "./utils";
+import type { GeneratorOptions, GeneratedString, StrengthLevel } from "./ts/utils";
 import {
   generateString,
   calculateEntropy,
   getStrengthLevel,
   estimateCrackTime,
   analyzeString,
-} from "./utils";
+} from "./ts/utils";
+import styles from "./style/GeneratorPanel.module.css";
 
 interface GeneratorPanelProps {
   options: GeneratorOptions;
@@ -90,12 +91,12 @@ export default function GeneratorPanel({
 
   return (
     <>
-      <div className="gp-root">
+      <div className={styles.gpRoot}>
         {/*  Mobile Tab Switcher  */}
-        <div className="gp-mobile-tabs">
+        <div className={styles.gpMobileTabs}>
           <button
             type="button"
-            className={`gp-mobile-tab${mobileView === "options" ? " active" : ""}`}
+            className={`${styles.gpMobileTab}${mobileView === "options" ? ` ${styles.active}` : ""}`}
             onClick={() => setMobileView("options")}
           >
             <i className="ti ti-adjustments" />
@@ -103,28 +104,28 @@ export default function GeneratorPanel({
           </button>
           <button
             type="button"
-            className={`gp-mobile-tab${mobileView === "results" ? " active" : ""}`}
+            className={`${styles.gpMobileTab}${mobileView === "results" ? ` ${styles.active}` : ""}`}
             onClick={() => setMobileView("results")}
           >
             <i className="ti ti-list-check" />
             Results
-            {results.length > 0 && <span className="gp-mobile-badge">{results.length}</span>}
+            {results.length > 0 && <span className={styles.gpMobileBadge}>{results.length}</span>}
           </button>
         </div>
 
-        <div className="gp-panels">
+        <div className={styles.gpPanels}>
           {/*  Options Panel  */}
           <div
-            className={`gp-options${mobileView === "options" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.gpOptions}${mobileView === "options" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
             {/* Length Control */}
-            <div className="gp-section">
-              <div className="gp-section-header">
-                <label className="gp-label">Length</label>
-                <div className="gp-length-display">
+            <div className={styles.gpSection}>
+              <div className={styles.gpSectionHeader}>
+                <label className={styles.gpLabel}>Length</label>
+                <div className={styles.gpLengthDisplay}>
                   <input
                     type="number"
-                    className="gp-length-input"
+                    className={styles.gpLengthInput}
                     value={options.length}
                     onChange={(e) => {
                       const val = parseInt(e.target.value) || 1;
@@ -133,18 +134,18 @@ export default function GeneratorPanel({
                     min="1"
                     max="10000"
                   />
-                  <span className="gp-length-unit">chars</span>
+                  <span className={styles.gpLengthUnit}>chars</span>
                 </div>
               </div>
               <input
                 type="range"
-                className="gp-slider"
+                className={styles.gpSlider}
                 min="1"
                 max="128"
                 value={Math.min(options.length, 128)}
                 onChange={(e) => updateOptions({ length: parseInt(e.target.value) })}
               />
-              <div className="gp-slider-marks">
+              <div className={styles.gpSliderMarks}>
                 <span>1</span>
                 <span>32</span>
                 <span>64</span>
@@ -153,10 +154,10 @@ export default function GeneratorPanel({
             </div>
 
             {/* Character Sets */}
-            <div className="gp-section">
-              <label className="gp-label">Character Sets</label>
-              <div className="gp-checkboxes">
-                <label className="gp-checkbox">
+            <div className={styles.gpSection}>
+              <label className={styles.gpLabel}>Character Sets</label>
+              <div className={styles.gpCheckboxes}>
+                <label className={styles.gpCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.uppercase}
@@ -164,13 +165,13 @@ export default function GeneratorPanel({
                       updateOptions({ uppercase: e.target.checked, hex: false, binary: false })
                     }
                   />
-                  <div className="gp-checkbox-content">
-                    <span className="gp-checkbox-label">Uppercase</span>
-                    <span className="gp-checkbox-hint">A-Z (26)</span>
+                  <div className={styles.gpCheckboxContent}>
+                    <span className={styles.gpCheckboxLabel}>Uppercase</span>
+                    <span className={styles.gpCheckboxHint}>A-Z (26)</span>
                   </div>
                 </label>
 
-                <label className="gp-checkbox">
+                <label className={styles.gpCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.lowercase}
@@ -178,13 +179,13 @@ export default function GeneratorPanel({
                       updateOptions({ lowercase: e.target.checked, hex: false, binary: false })
                     }
                   />
-                  <div className="gp-checkbox-content">
-                    <span className="gp-checkbox-label">Lowercase</span>
-                    <span className="gp-checkbox-hint">a-z (26)</span>
+                  <div className={styles.gpCheckboxContent}>
+                    <span className={styles.gpCheckboxLabel}>Lowercase</span>
+                    <span className={styles.gpCheckboxHint}>a-z (26)</span>
                   </div>
                 </label>
 
-                <label className="gp-checkbox">
+                <label className={styles.gpCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.numbers}
@@ -192,13 +193,13 @@ export default function GeneratorPanel({
                       updateOptions({ numbers: e.target.checked, hex: false, binary: false })
                     }
                   />
-                  <div className="gp-checkbox-content">
-                    <span className="gp-checkbox-label">Numbers</span>
-                    <span className="gp-checkbox-hint">0-9 (10)</span>
+                  <div className={styles.gpCheckboxContent}>
+                    <span className={styles.gpCheckboxLabel}>Numbers</span>
+                    <span className={styles.gpCheckboxHint}>0-9 (10)</span>
                   </div>
                 </label>
 
-                <label className="gp-checkbox">
+                <label className={styles.gpCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.symbols}
@@ -206,13 +207,13 @@ export default function GeneratorPanel({
                       updateOptions({ symbols: e.target.checked, hex: false, binary: false })
                     }
                   />
-                  <div className="gp-checkbox-content">
-                    <span className="gp-checkbox-label">Symbols</span>
-                    <span className="gp-checkbox-hint">!@#$... (28)</span>
+                  <div className={styles.gpCheckboxContent}>
+                    <span className={styles.gpCheckboxLabel}>Symbols</span>
+                    <span className={styles.gpCheckboxHint}>!@#$... (28)</span>
                   </div>
                 </label>
 
-                <label className="gp-checkbox">
+                <label className={styles.gpCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.hex}
@@ -231,13 +232,13 @@ export default function GeneratorPanel({
                       }
                     }}
                   />
-                  <div className="gp-checkbox-content">
-                    <span className="gp-checkbox-label">Hexadecimal</span>
-                    <span className="gp-checkbox-hint">0-9, A-F (16)</span>
+                  <div className={styles.gpCheckboxContent}>
+                    <span className={styles.gpCheckboxLabel}>Hexadecimal</span>
+                    <span className={styles.gpCheckboxHint}>0-9, A-F (16)</span>
                   </div>
                 </label>
 
-                <label className="gp-checkbox">
+                <label className={styles.gpCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.binary}
@@ -256,51 +257,51 @@ export default function GeneratorPanel({
                       }
                     }}
                   />
-                  <div className="gp-checkbox-content">
-                    <span className="gp-checkbox-label">Binary</span>
-                    <span className="gp-checkbox-hint">0, 1 (2)</span>
+                  <div className={styles.gpCheckboxContent}>
+                    <span className={styles.gpCheckboxLabel}>Binary</span>
+                    <span className={styles.gpCheckboxHint}>0, 1 (2)</span>
                   </div>
                 </label>
               </div>
             </div>
 
             {/* Advanced Options */}
-            <div className="gp-section">
-              <label className="gp-label">Advanced</label>
-              <div className="gp-checkboxes">
-                <label className="gp-checkbox">
+            <div className={styles.gpSection}>
+              <label className={styles.gpLabel}>Advanced</label>
+              <div className={styles.gpCheckboxes}>
+                <label className={styles.gpCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.excludeSimilar}
                     onChange={(e) => updateOptions({ excludeSimilar: e.target.checked })}
                     disabled={options.hex || options.binary || !!options.customChars}
                   />
-                  <div className="gp-checkbox-content">
-                    <span className="gp-checkbox-label">Exclude similar</span>
-                    <span className="gp-checkbox-hint">i, l, 1, L, o, 0, O</span>
+                  <div className={styles.gpCheckboxContent}>
+                    <span className={styles.gpCheckboxLabel}>Exclude similar</span>
+                    <span className={styles.gpCheckboxHint}>i, l, 1, L, o, 0, O</span>
                   </div>
                 </label>
 
-                <label className="gp-checkbox">
+                <label className={styles.gpCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.excludeAmbiguous}
                     onChange={(e) => updateOptions({ excludeAmbiguous: e.target.checked })}
                     disabled={options.hex || options.binary || !!options.customChars}
                   />
-                  <div className="gp-checkbox-content">
-                    <span className="gp-checkbox-label">Exclude ambiguous</span>
-                    <span className="gp-checkbox-hint">{`{ } [ ] ( ) / \\ ' " \` ~ , ; : . < >`}</span>
+                  <div className={styles.gpCheckboxContent}>
+                    <span className={styles.gpCheckboxLabel}>Exclude ambiguous</span>
+                    <span className={styles.gpCheckboxHint}>{`{ } [ ] ( ) / \\ ' " \` ~ , ; : . < >`}</span>
                   </div>
                 </label>
               </div>
 
               {/* Custom Characters */}
-              <div className="gp-input-group">
-                <label className="gp-input-label">Custom character set</label>
+              <div className={styles.gpInputGroup}>
+                <label className={styles.gpInputLabel}>Custom character set</label>
                 <input
                   type="text"
-                  className="gp-input"
+                  className={styles.gpInput}
                   value={options.customChars}
                   onChange={(e) => updateOptions({ customChars: e.target.value })}
                   placeholder="e.g., abc123XYZ (overrides above)"
@@ -308,22 +309,22 @@ export default function GeneratorPanel({
               </div>
 
               {/* Prefix/Suffix */}
-              <div className="gp-input-row">
-                <div className="gp-input-group">
-                  <label className="gp-input-label">Prefix</label>
+              <div className={styles.gpInputRow}>
+                <div className={styles.gpInputGroup}>
+                  <label className={styles.gpInputLabel}>Prefix</label>
                   <input
                     type="text"
-                    className="gp-input"
+                    className={styles.gpInput}
                     value={options.prefix}
                     onChange={(e) => updateOptions({ prefix: e.target.value })}
                     placeholder="e.g., user_"
                   />
                 </div>
-                <div className="gp-input-group">
-                  <label className="gp-input-label">Suffix</label>
+                <div className={styles.gpInputGroup}>
+                  <label className={styles.gpInputLabel}>Suffix</label>
                   <input
                     type="text"
-                    className="gp-input"
+                    className={styles.gpInput}
                     value={options.suffix}
                     onChange={(e) => updateOptions({ suffix: e.target.value })}
                     placeholder="e.g., _2024"
@@ -332,23 +333,23 @@ export default function GeneratorPanel({
               </div>
 
               {/* Separator */}
-              <div className="gp-input-row">
-                <div className="gp-input-group">
-                  <label className="gp-input-label">Separator</label>
+              <div className={styles.gpInputRow}>
+                <div className={styles.gpInputGroup}>
+                  <label className={styles.gpInputLabel}>Separator</label>
                   <input
                     type="text"
-                    className="gp-input"
+                    className={styles.gpInput}
                     value={options.separator}
                     onChange={(e) => updateOptions({ separator: e.target.value.slice(0, 1) })}
                     placeholder="e.g., -"
                     maxLength={1}
                   />
                 </div>
-                <div className="gp-input-group">
-                  <label className="gp-input-label">Every N chars</label>
+                <div className={styles.gpInputGroup}>
+                  <label className={styles.gpInputLabel}>Every N chars</label>
                   <input
                     type="number"
-                    className="gp-input"
+                    className={styles.gpInput}
                     value={options.separatorInterval || ""}
                     onChange={(e) =>
                       updateOptions({ separatorInterval: parseInt(e.target.value) || 0 })
@@ -361,20 +362,20 @@ export default function GeneratorPanel({
             </div>
 
             {/* Strength Meter */}
-            <div className="gp-strength">
-              <div className="gp-strength-header">
-                <div className="gp-strength-label">
+            <div className={styles.gpStrength}>
+              <div className={styles.gpStrengthHeader}>
+                <div className={styles.gpStrengthLabel}>
                   <i className="ti ti-shield-check" />
                   Security Strength
                 </div>
-                <span className="gp-strength-badge" style={{ background: strengthColor }}>
+                <span className={styles.gpStrengthBadge} style={{ background: strengthColor }}>
                   {strength}
                 </span>
               </div>
 
-              <div className="gp-strength-bar">
+              <div className={styles.gpStrengthBar}>
                 <div
-                  className="gp-strength-fill"
+                  className={styles.gpStrengthFill}
                   style={{
                     width: `${Math.min((entropy / 150) * 100, 100)}%`,
                     background: strengthColor,
@@ -382,20 +383,20 @@ export default function GeneratorPanel({
                 />
               </div>
 
-              <div className="gp-strength-stats">
-                <div className="gp-stat">
-                  <span className="gp-stat-value">{entropy.toFixed(1)}</span>
-                  <span className="gp-stat-label">bits entropy</span>
+              <div className={styles.gpStrengthStats}>
+                <div className={styles.gpStat}>
+                  <span className={styles.gpStatValue}>{entropy.toFixed(1)}</span>
+                  <span className={styles.gpStatLabel}>bits entropy</span>
                 </div>
-                <div className="gp-stat">
-                  <span className="gp-stat-value">{crackTime}</span>
-                  <span className="gp-stat-label">to crack</span>
+                <div className={styles.gpStat}>
+                  <span className={styles.gpStatValue}>{crackTime}</span>
+                  <span className={styles.gpStatLabel}>to crack</span>
                 </div>
               </div>
             </div>
 
             {/* Mobile-only Generate Button */}
-            <button className="gp-generate-btn gp-generate-btn-mobile" onClick={handleGenerate}>
+            <button className={`${styles.gpGenerateBtn} ${styles.gpGenerateBtnMobile}`} onClick={handleGenerate}>
               <i className="ti ti-refresh" />
               Generate {count} String{count !== 1 ? "s" : ""}
             </button>
@@ -403,16 +404,16 @@ export default function GeneratorPanel({
 
           {/*  Results Panel  */}
           <div
-            className={`gp-results-panel${mobileView === "results" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.gpResultsPanel}${mobileView === "results" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
             {/* Controls */}
-            <div className="gp-controls">
-              <div className="gp-controls-left">
-                <label className="gp-count-label">
+            <div className={styles.gpControls}>
+              <div className={styles.gpControlsLeft}>
+                <label className={styles.gpCountLabel}>
                   Generate
                   <input
                     type="number"
-                    className="gp-count-input"
+                    className={styles.gpCountInput}
                     value={count}
                     onChange={(e) =>
                       setCount(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))
@@ -423,7 +424,7 @@ export default function GeneratorPanel({
                   strings
                 </label>
 
-                <label className="gp-auto-toggle">
+                <label className={styles.gpAutoToggle}>
                   <input
                     type="checkbox"
                     checked={autoGenerate}
@@ -433,7 +434,7 @@ export default function GeneratorPanel({
                 </label>
               </div>
 
-              <button className="gp-generate-btn" onClick={handleGenerate}>
+              <button className={styles.gpGenerateBtn} onClick={handleGenerate}>
                 <i className="ti ti-refresh" />
                 Generate
               </button>
@@ -441,40 +442,40 @@ export default function GeneratorPanel({
 
             {/* Results */}
             {results.length === 0 ? (
-              <div className="gp-empty">
-                <div className="gp-empty-icon">
+              <div className={styles.gpEmpty}>
+                <div className={styles.gpEmptyIcon}>
                   <i className="ti ti-click" />
                 </div>
-                <p className="gp-empty-title">Ready to generate</p>
-                <p className="gp-empty-desc">
+                <p className={styles.gpEmptyTitle}>Ready to generate</p>
+                <p className={styles.gpEmptyDesc}>
                   Configure your options and click "Generate" to create secure random strings
                 </p>
-                <button className="gp-empty-cta" onClick={() => setMobileView("options")}>
+                <button className={styles.gpEmptyCta} onClick={() => setMobileView("options")}>
                   <i className="ti ti-adjustments" />
                   Configure Options
                 </button>
               </div>
             ) : (
-              <div className="gp-results">
+              <div className={styles.gpResults}>
                 {results.map((result, idx) => {
                   const analysis = analyzeString(result);
                   return (
-                    <div key={idx} className="gp-result-card">
-                      <div className="gp-result-header">
-                        <span className="gp-result-index">#{idx + 1}</span>
-                        <div className="gp-result-meta">
-                          <span className="gp-result-length">{result.length} chars</span>
+                    <div key={idx} className={styles.gpResultCard}>
+                      <div className={styles.gpResultHeader}>
+                        <span className={styles.gpResultIndex}>#{idx + 1}</span>
+                        <div className={styles.gpResultMeta}>
+                          <span className={styles.gpResultLength}>{result.length} chars</span>
                           {analysis.hasRepeats && (
-                            <span className="gp-result-warn" title="Contains repeated characters">
+                            <span className={styles.gpResultWarn} title="Contains repeated characters">
                               <i className="ti ti-alert-triangle" />
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="gp-result-value">{result}</div>
-                      <div className="gp-result-actions">
+                      <div className={styles.gpResultValue}>{result}</div>
+                      <div className={styles.gpResultActions}>
                         <button
-                          className={`gp-result-btn${copiedIndex === idx ? " copied" : ""}`}
+                          className={`${styles.gpResultBtn}${copiedIndex === idx ? ` ${styles.copied}` : ""}`}
                           onClick={() => handleCopy(result, idx)}
                         >
                           <i className={`ti ${copiedIndex === idx ? "ti-check" : "ti-copy"}`} />

@@ -1,0 +1,236 @@
+/* features/dev/url-encoder/style/UrlDiff.module.css */
+.udRoot {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/*  Empty State  */
+.udEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.udEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.udEmptyTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.udEmptyDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
+/*  Stats  */
+.udStats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 16px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.udStatCard {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.udStatLabel {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+}
+
+.udStatValue {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.udStatValue.changed {
+    color: #f59e0b;
+}
+
+.udStatValue.unchanged {
+    color: var(--brand);
+}
+
+/*  Diff  */
+.udDiffInner {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.udDiffTrack {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.udDiffRail {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    font-family: var(--font-mono);
+    padding: 4px 7px;
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.udDiffRail.input {
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    border: 0.5px solid var(--border);
+}
+
+.udDiffRail.output {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.udDiffChars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.udChar {
+    color: var(--text-secondary);
+}
+
+.udChar.removed {
+    background: #fffbeb;
+    color: #92400e;
+    border-radius: 2px;
+    padding: 0 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .udChar.removed {
+        background: #1c1400;
+        color: #fcd34d;
+    }
+}
+
+.udChar.added {
+    background: #f0fdf4;
+    color: #166534;
+    border-radius: 2px;
+    padding: 0 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .udChar.added {
+        background: #052e16;
+        color: #4ade80;
+    }
+}
+
+/*  Legend  */
+.udDiffLegend {
+    display: flex;
+    gap: 16px;
+    padding-top: 8px;
+    border-top: 0.5px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.udLegendItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+}
+
+.udLegendSwatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.udLegendItem.removed .udLegendSwatch {
+    background: #fffbeb;
+    border: 0.5px solid #fde68a;
+}
+
+@media (prefers-color-scheme: dark) {
+    .udLegendItem.removed .udLegendSwatch {
+        background: #1c1400;
+        border-color: #78350f;
+    }
+}
+
+.udLegendItem.added .udLegendSwatch {
+    background: #f0fdf4;
+    border: 0.5px solid #bbf7d0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .udLegendItem.added .udLegendSwatch {
+        background: #052e16;
+        border-color: #166534;
+    }
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .udStats {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 12px;
+    }
+
+    .udDiffInner {
+        padding: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .udRoot,
+    .udRoot * {
+        transition: none;
+    }
+}

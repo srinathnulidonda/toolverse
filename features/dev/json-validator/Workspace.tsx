@@ -10,15 +10,15 @@ import {
   type ValidationMode,
   DEFAULT_OPTIONS,
   SAMPLE_TEMPLATES,
-} from "./validatorEngine";
+} from "./ts/validatorEngine";
 import ValidationPanel from "./ValidationPanel";
 import SchemaValidator from "./SchemaValidator";
 import CompareMode from "./CompareMode";
-import { useValidatorStore } from "./validatorStore";
-import "./style/CompareMode.css";
-import "./style/SchemaValidator.css";
-import "./style/ValidationPanel.css";
-import "./style/Workspace.css";
+import { useValidatorStore } from "./ts/validatorStore";
+import styles from "./style/CompareMode.module.css";
+import schemaStyles from "./style/SchemaValidator.module.css";
+import validationStyles from "./style/ValidationPanel.module.css";
+import workspaceStyles from "./style/Workspace.module.css";
 
 type TabView = "validate" | "schema" | "compare" | "history";
 
@@ -129,19 +129,19 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="jvw-root" ref={rootRef}>
+      <div className={workspaceStyles.jvwRoot} ref={rootRef}>
         {/* ── Top Chrome ── */}
-        <div className="jvw-chrome">
-          <div className="jvw-chrome-left">
-            <div className="jvw-title">
+        <div className={workspaceStyles.jvwChrome}>
+          <div className={workspaceStyles.jvwChromeLeft}>
+            <div className={workspaceStyles.jvwTitle}>
               <i className="ti ti-braces" />
               JSON Validator
             </div>
           </div>
-          <div className="jvw-chrome-right">
+          <div className={workspaceStyles.jvwChromeRight}>
             <button
               type="button"
-              className="jvw-chrome-btn"
+              className={workspaceStyles.jvwChromeBtn}
               onClick={() => setShowSettings((s) => !s)}
             >
               <i className="ti ti-settings" />
@@ -152,16 +152,16 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
 
         {/* ── Settings Panel ── */}
         {showSettings && (
-          <div className="jvw-settings">
-            <div className="jvw-settings-row">
-              <div className="jvw-setting-group">
-                <label className="jvw-setting-label">Validation Mode</label>
-                <div className="jvw-pill-group">
+          <div className={workspaceStyles.jvwSettings}>
+            <div className={workspaceStyles.jvwSettingsRow}>
+              <div className={workspaceStyles.jvwSettingGroup}>
+                <label className={workspaceStyles.jvwSettingLabel}>Validation Mode</label>
+                <div className={workspaceStyles.jvwPillGroup}>
                   {(["standard", "strict", "permissive"] as ValidationMode[]).map((m) => (
                     <button
                       key={m}
                       type="button"
-                      className={`jvw-pill${options.mode === m ? " active" : ""}`}
+                      className={`${workspaceStyles.jvwPill}${options.mode === m ? " active" : ""}`}
                       onClick={() => setOptions((prev) => ({ ...prev, mode: m }))}
                     >
                       {m.charAt(0).toUpperCase() + m.slice(1)}
@@ -172,8 +172,8 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
 
               {options.mode === "permissive" && (
                 <>
-                  <div className="jvw-setting-group">
-                    <label className="jvw-setting-checkbox">
+                  <div className={workspaceStyles.jvwSettingGroup}>
+                    <label className={workspaceStyles.jvwSettingCheckbox}>
                       <input
                         type="checkbox"
                         checked={options.allowComments}
@@ -188,8 +188,8 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
                     </label>
                   </div>
 
-                  <div className="jvw-setting-group">
-                    <label className="jvw-setting-checkbox">
+                  <div className={workspaceStyles.jvwSettingGroup}>
+                    <label className={workspaceStyles.jvwSettingCheckbox}>
                       <input
                         type="checkbox"
                         checked={options.allowTrailingCommas}
@@ -204,8 +204,8 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
                     </label>
                   </div>
 
-                  <div className="jvw-setting-group">
-                    <label className="jvw-setting-checkbox">
+                  <div className={workspaceStyles.jvwSettingGroup}>
+                    <label className={workspaceStyles.jvwSettingCheckbox}>
                       <input
                         type="checkbox"
                         checked={options.allowSingleQuotes}
@@ -222,8 +222,8 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
                 </>
               )}
 
-              <div className="jvw-setting-group">
-                <label className="jvw-setting-checkbox">
+              <div className={workspaceStyles.jvwSettingGroup}>
+                <label className={workspaceStyles.jvwSettingCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.checkDuplicateKeys}
@@ -242,23 +242,23 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/* ── Tab Navigation ── */}
-        <div className="jvw-tabs-bar">
-          <nav className="jvw-tabs">
+        <div className={workspaceStyles.jvwTabsBar}>
+          <nav className={workspaceStyles.jvwTabs}>
             {TAB_VIEWS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
-                className={`jvw-tab${tabView === tab.id ? " active" : ""}`}
+                className={`${workspaceStyles.jvwTab}${tabView === tab.id ? " active" : ""}`}
                 onClick={() => setTabView(tab.id)}
                 title={tab.description}
               >
                 <i className={`ti ${tab.icon}`} />
                 <span>{tab.label}</span>
                 {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className="jvw-tab-badge">{history.length}</span>
+                  <span className={workspaceStyles.jvwTabBadge}>{history.length}</span>
                 )}
                 {tab.id === "validate" && result && !result.valid && (
-                  <span className="jvw-tab-indicator" />
+                  <span className={workspaceStyles.jvwTabIndicator} />
                 )}
               </button>
             ))}
@@ -266,20 +266,20 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* ── Tab Content ── */}
-        <div className="jvw-tab-content">
+        <div className={workspaceStyles.jvwTabContent}>
           {/* Validate Tab */}
           {tabView === "validate" && (
-            <div className="jvw-validate-view">
+            <div className={workspaceStyles.jvwValidateView}>
               {/* Command Bar */}
-              <div className="jvw-command-bar">
-                <div className="jvw-command-left">
-                  <div className="jvw-samples">
-                    <span className="jvw-samples-label">Examples:</span>
+              <div className={workspaceStyles.jvwCommandBar}>
+                <div className={workspaceStyles.jvwCommandLeft}>
+                  <div className={workspaceStyles.jvwSamples}>
+                    <span className={workspaceStyles.jvwSamplesLabel}>Examples:</span>
                     {Object.entries(SAMPLE_TEMPLATES).map(([key, sample]) => (
                       <button
                         key={key}
                         type="button"
-                        className="jvw-sample-btn"
+                        className={workspaceStyles.jvwSampleBtn}
                         onClick={() => loadSample(key as keyof typeof SAMPLE_TEMPLATES)}
                         title={sample.description}
                       >
@@ -288,9 +288,9 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
                     ))}
                   </div>
                 </div>
-                <div className="jvw-command-right">
+                <div className={workspaceStyles.jvwCommandRight}>
                   {result?.valid && (
-                    <button type="button" className="jvw-action-btn" onClick={formatJSON}>
+                    <button type="button" className={workspaceStyles.jvwActionBtn} onClick={formatJSON}>
                       <i className="ti ti-text-wrap" />
                       Format
                     </button>
@@ -298,7 +298,7 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
                   {result?.repaired && (
                     <button
                       type="button"
-                      className="jvw-action-btn jvw-action-btn--brand"
+                      className={`${workspaceStyles.jvwActionBtn} ${workspaceStyles.jvwActionBtnBrand}`}
                       onClick={useRepaired}
                     >
                       <i className="ti ti-wand" />
@@ -310,77 +310,77 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
 
               {/* Status Bar */}
               {result && (
-                <div className={`jvw-status jvw-status--${result.valid ? "valid" : "invalid"}`}>
-                  <div className="jvw-status-left">
+                <div className={`${workspaceStyles.jvwStatus} ${workspaceStyles[`jvwStatus${result.valid ? "Valid" : "Invalid"}`]}`}>
+                  <div className={workspaceStyles.jvwStatusLeft}>
                     <i className={`ti ${result.valid ? "ti-circle-check" : "ti-alert-circle"}`} />
-                    <span className="jvw-status-label">
+                    <span className={workspaceStyles.jvwStatusLabel}>
                       {result.valid ? "Valid JSON" : "Invalid JSON"}
                     </span>
                     {result.errors.length > 0 && (
-                      <span className="jvw-status-count">
+                      <span className={workspaceStyles.jvwStatusCount}>
                         {result.errors.length} error{result.errors.length !== 1 ? "s" : ""}
                       </span>
                     )}
                   </div>
                   {result.valid && (
-                    <div className="jvw-status-right">
-                      <span className="jvw-status-stat">{formatBytes(result.stats.size)}</span>
-                      <span className="jvw-status-stat">{result.stats.lines} lines</span>
-                      <span className="jvw-status-stat">Depth: {result.stats.depth}</span>
+                    <div className={workspaceStyles.jvwStatusRight}>
+                      <span className={workspaceStyles.jvwStatusStat}>{formatBytes(result.stats.size)}</span>
+                      <span className={workspaceStyles.jvwStatusStat}>{result.stats.lines} lines</span>
+                      <span className={workspaceStyles.jvwStatusStat}>Depth: {result.stats.depth}</span>
                     </div>
                   )}
                 </div>
               )}
 
               {/* Mobile Panel Switcher */}
-              <div className="jvw-mobile-switcher">
+              <div className={workspaceStyles.jvwMobileSwitcher}>
                 <button
                   type="button"
-                  className={`jvw-switcher-tab${mobilePanel === "input" ? " active" : ""}`}
+                  className={`${workspaceStyles.jvwSwitcherTab}${mobilePanel === "input" ? " active" : ""}`}
                   onClick={goToInput}
                 >
                   <i className="ti ti-code" />
                   Input JSON
                 </button>
-                <div className="jvw-switcher-divider" />
+                <div className={workspaceStyles.jvwSwitcherDivider} />
                 <button
                   type="button"
-                  className={`jvw-switcher-tab${mobilePanel === "output" ? " active" : ""}`}
+                  className={`${workspaceStyles.jvwSwitcherTab}${mobilePanel === "output" ? " active" : ""}`}
                   onClick={goToOutput}
                 >
                   <i className="ti ti-list-details" />
                   Results
-                  {result && mobilePanel !== "output" && <span className="jvw-ready-indicator" />}
+                  {result && mobilePanel !== "output" && <span className={workspaceStyles.jvwReadyIndicator} />}
                 </button>
               </div>
 
               {/* Body */}
-              <div className="jvw-body">
+              <div className={workspaceStyles.jvwBody}>
                 {/* Input Panel */}
                 <div
-                  className={`jvw-panel${mobilePanel === "input" ? " mobile-visible" : " mobile-hidden"}`}
+                  className={`${workspaceStyles.jvwPanel}${mobilePanel === "input" ? ` ${workspaceStyles.mobileVisible}` : ` ${workspaceStyles.mobileHidden}`}`}
                 >
-                  <div className="jvw-panel-header">
-                    <div className="jvw-panel-title">
+                  <div className={workspaceStyles.jvwPanelHeader}>
+                    <div className={workspaceStyles.jvwPanelTitle}>
                       <i className="ti ti-braces" />
                       JSON Input
                     </div>
-                    <div className="jvw-panel-actions">
+                    <div className={workspaceStyles.jvwPanelActions}>
                       {input && (
                         <>
-                          <span className="jvw-char-count">
+                          <span className={workspaceStyles.jvwCharCount}>
                             {input.length.toLocaleString()} chars
                           </span>
                           <button
                             type="button"
-                            className={`jvw-copy-btn${copiedKey === "input" ? " copied" : ""}`}
+                            className={`${workspaceStyles.jvwCopyBtn}${copiedKey === "input" ? " copied" : ""}`}
                             onClick={() => handleCopy(input, "input")}
                           >
                             <i className={`ti ${copiedKey === "input" ? "ti-check" : "ti-copy"}`} />
                           </button>
                           <button
                             type="button"
-                            className="jvw-clear-btn"
+                            className={workspaceStyles.jvwClearBtn}
                             onClick={clearAll}
                             title="Clear input"
                           >
@@ -391,15 +391,15 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
                     </div>
                   </div>
                   <textarea
-                    className={`jvw-textarea${result && !result.valid ? " jvw-textarea--error" : ""}`}
+                    className={`${workspaceStyles.jvwTextarea}${result && !result.valid ? ` ${workspaceStyles.jvwTextareaError}` : ""}`}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Paste your JSON here..."
                     spellCheck={false}
                   />
                   {input && result && (
-                    <div className="jvw-mobile-cta">
-                      <button type="button" className="jvw-view-result-btn" onClick={goToOutput}>
+                    <div className={workspaceStyles.jvwMobileCta}>
+                      <button type="button" className={workspaceStyles.jvwViewResultBtn} onClick={goToOutput}>
                         <i className="ti ti-list-details" />
                         View Validation Results
                         <i className="ti ti-chevron-right" />
@@ -409,36 +409,36 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
                 </div>
 
                 {/* Gutter */}
-                <div className="jvw-gutter">
-                  <div className="jvw-gutter-line" />
-                  <div className="jvw-gutter-icon">
+                <div className={workspaceStyles.jvwGutter}>
+                  <div className={workspaceStyles.jvwGutterLine} />
+                  <div className={workspaceStyles.jvwGutterIcon}>
                     <i className="ti ti-arrow-right" />
                   </div>
-                  <div className="jvw-gutter-line" />
+                  <div className={workspaceStyles.jvwGutterLine} />
                 </div>
 
                 {/* Output Panel */}
                 <div
-                  className={`jvw-panel${mobilePanel === "output" ? " mobile-visible" : " mobile-hidden"}`}
+                  className={`${workspaceStyles.jvwPanel}${mobilePanel === "output" ? ` ${workspaceStyles.mobileVisible}` : ` ${workspaceStyles.mobileHidden}`}`}
                 >
                   {!result && !input && (
-                    <div className="jvw-empty">
-                      <div className="jvw-empty-icon">
+                    <div className={workspaceStyles.jvwEmpty}>
+                      <div className={workspaceStyles.jvwEmptyIcon}>
                         <i className="ti ti-braces" />
                       </div>
-                      <h3 className="jvw-empty-title">Validate JSON Syntax</h3>
-                      <p className="jvw-empty-description">
+                      <h3 className={workspaceStyles.jvwEmptyTitle}>Validate JSON Syntax</h3>
+                      <p className={workspaceStyles.jvwEmptyDescription}>
                         Paste JSON to check for syntax errors, structural issues, and security
                         concerns
                       </p>
-                      <div className="jvw-empty-samples">
+                      <div className={workspaceStyles.jvwEmptySamples}>
                         {Object.entries(SAMPLE_TEMPLATES)
                           .slice(0, 2)
                           .map(([key, sample]) => (
                             <button
                               key={key}
                               type="button"
-                              className="jvw-empty-sample-btn"
+                              className={workspaceStyles.jvwEmptySampleBtn}
                               onClick={() => loadSample(key as keyof typeof SAMPLE_TEMPLATES)}
                             >
                               Try {sample.name}
@@ -462,48 +462,48 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
 
           {/* History Tab */}
           {tabView === "history" && (
-            <div className="jvw-history-view">
+            <div className={workspaceStyles.jvwHistoryView}>
               {history.length === 0 ? (
-                <div className="jvw-tab-empty">
-                  <div className="jvw-tab-empty-icon">
+                <div className={workspaceStyles.jvwTabEmpty}>
+                  <div className={workspaceStyles.jvwTabEmptyIcon}>
                     <i className="ti ti-history" />
                   </div>
-                  <h3 className="jvw-tab-empty-title">No History Yet</h3>
-                  <p className="jvw-tab-empty-description">
+                  <h3 className={workspaceStyles.jvwTabEmptyTitle}>No History Yet</h3>
+                  <p className={workspaceStyles.jvwTabEmptyDescription}>
                     Your validation history will appear here when auto-save is enabled.
                   </p>
                 </div>
               ) : (
                 <>
-                  <div className="jvw-history-header">
-                    <div className="jvw-history-title">
+                  <div className={workspaceStyles.jvwHistoryHeader}>
+                    <div className={workspaceStyles.jvwHistoryTitle}>
                       <i className="ti ti-history" />
                       Validation History
-                      <span className="jvw-history-count">{history.length}</span>
+                      <span className={workspaceStyles.jvwHistoryCount}>{history.length}</span>
                     </div>
-                    <button type="button" className="jvw-action-btn" onClick={clearHistory}>
+                    <button type="button" className={workspaceStyles.jvwActionBtn} onClick={clearHistory}>
                       <i className="ti ti-trash" />
                       Clear History
                     </button>
                   </div>
-                  <div className="jvw-history-list">
+                  <div className={workspaceStyles.jvwHistoryList}>
                     {history.slice(0, 50).map((entry) => (
-                      <div key={entry.id} className="jvw-history-item">
-                        <div className="jvw-history-item-header">
-                          <div className="jvw-history-item-info">
-                            <span className="jvw-history-item-title">{entry.title}</span>
-                            <span className="jvw-history-item-time">
+                      <div key={entry.id} className={workspaceStyles.jvwHistoryItem}>
+                        <div className={workspaceStyles.jvwHistoryItemHeader}>
+                          <div className={workspaceStyles.jvwHistoryItemInfo}>
+                            <span className={workspaceStyles.jvwHistoryItemTitle}>{entry.title}</span>
+                            <span className={workspaceStyles.jvwHistoryItemTime}>
                               {new Date(entry.timestamp).toLocaleString()}
                             </span>
                           </div>
-                          <div className="jvw-history-item-meta">
+                          <div className={workspaceStyles.jvwHistoryItemMeta}>
                             <span
-                              className={`jvw-history-badge ${entry.result.valid ? "valid" : "invalid"}`}
+                              className={`${workspaceStyles.jvwHistoryBadge} ${entry.result.valid ? "valid" : "invalid"}`}
                             >
                               <i className={`ti ${entry.result.valid ? "ti-check" : "ti-x"}`} />
                               {entry.result.valid ? "Valid" : "Invalid"}
                             </span>
-                            <span className="jvw-history-stat">
+                            <span className={workspaceStyles.jvwHistoryStat}>
                               {formatBytes(entry.result.stats.size)}
                             </span>
                           </div>
@@ -518,13 +518,13 @@ export default function JSONValidatorWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Footer */}
-        <div className="jvw-footer">
-          <div className="jvw-footer-info">
+        <div className={workspaceStyles.jvwFooter}>
+          <div className={workspaceStyles.jvwFooterInfo}>
             <i className="ti ti-shield-lock" />
             <span>Everything runs in your browser — no data ever leaves this page.</span>
           </div>
           {result && (
-            <div className="jvw-footer-stats">
+            <div className={workspaceStyles.jvwFooterStats}>
               <span>{result.stats.keys} keys</span>
               <span>•</span>
               <span>{result.stats.objects} objects</span>

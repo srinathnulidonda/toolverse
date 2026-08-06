@@ -1,4 +1,4 @@
-// features/dev/uuid-generator/UuidBatch.tsx
+/* features/dev/uuid-generator/UuidBatch.tsx */
 "use client";
 import { logger } from "@/lib/logger";
 
@@ -13,7 +13,8 @@ import {
   type UuidVersion,
   type UuidFormat,
   type UuidCase,
-} from "./utils";
+} from "./ts/utils";
+import styles from "./style/UuidBatch.module.css";
 
 interface UuidBatchProps {
   version: UuidVersion;
@@ -143,16 +144,16 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
 
   return (
     <>
-      <div className="ub-root">
+      <div className={styles.ubRoot}>
         {/*  Controls  */}
-        <div className="ub-controls">
-          <div className="ub-controls-left">
-            <div className="ub-count-group">
-              <label className="ub-count-label">Quantity:</label>
-              <div className="ub-count-stepper">
+        <div className={styles.ubControls}>
+          <div className={styles.ubControlsLeft}>
+            <div className={styles.ubCountGroup}>
+              <label className={styles.ubCountLabel}>Quantity:</label>
+              <div className={styles.ubCountStepper}>
                 <button
                   type="button"
-                  className="ub-count-btn"
+                  className={styles.ubCountBtn}
                   onClick={() => setCount((c) => Math.max(1, c - 10))}
                   disabled={generating}
                 >
@@ -160,7 +161,7 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
                 </button>
                 <input
                   type="number"
-                  className="ub-count-input"
+                  className={styles.ubCountInput}
                   value={count}
                   onChange={(e) =>
                     setCount(Math.min(MAX_BULK, Math.max(1, Number(e.target.value))))
@@ -171,7 +172,7 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
                 />
                 <button
                   type="button"
-                  className="ub-count-btn"
+                  className={styles.ubCountBtn}
                   onClick={() => setCount((c) => Math.min(MAX_BULK, c + 10))}
                   disabled={generating}
                 >
@@ -180,12 +181,12 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
               </div>
             </div>
 
-            <div className="ub-quick-btns">
+            <div className={styles.ubQuickBtns}>
               {[10, 50, 100, 1000].map((n) => (
                 <button
                   key={n}
                   type="button"
-                  className={`ub-quick-btn${count === n ? " active" : ""}`}
+                  className={`${styles.ubQuickBtn}${count === n ? ` ${styles.active}` : ""}`}
                   onClick={() => setCount(n)}
                   disabled={generating}
                 >
@@ -195,14 +196,14 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
             </div>
           </div>
 
-          <div className="ub-controls-right">
+          <div className={styles.ubControlsRight}>
             <button
               type="button"
-              className="ub-generate-btn"
+              className={styles.ubGenerateBtn}
               onClick={handleGenerate}
               disabled={generating}
             >
-              <i className={`ti ${generating ? "ti-loader ub-spinning" : "ti-play"}`} />
+              <i className={`ti ${generating ? `ti-loader ${styles.ubSpinning}` : "ti-play"}`} />
               {generating ? `${progress}%` : "Generate"}
             </button>
           </div>
@@ -210,34 +211,34 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
 
         {/*  Stats Bar  */}
         {uuids.length > 0 && (
-          <div className="ub-stats">
-            <div className="ub-stat">
+          <div className={styles.ubStats}>
+            <div className={styles.ubStat}>
               <i className="ti ti-hash" />
-              <span className="ub-stat-value">{uuids.length.toLocaleString()}</span>
-              <span className="ub-stat-label">UUIDs</span>
+              <span className={styles.ubStatValue}>{uuids.length.toLocaleString()}</span>
+              <span className={styles.ubStatLabel}>UUIDs</span>
             </div>
-            <div className="ub-stat">
+            <div className={styles.ubStat}>
               <i className="ti ti-binary" />
-              <span className="ub-stat-value">{Math.round(uuids.join("").length / 1024)}KB</span>
-              <span className="ub-stat-label">Size</span>
+              <span className={styles.ubStatValue}>{Math.round(uuids.join("").length / 1024)}KB</span>
+              <span className={styles.ubStatLabel}>Size</span>
             </div>
-            <div className="ub-stat">
+            <div className={styles.ubStat}>
               <i className="ti ti-info-circle" />
-              <span className="ub-stat-value" title={collisionProb}>
+              <span className={styles.ubStatValue} title={collisionProb}>
                 {collisionProb}
               </span>
-              <span className="ub-stat-label">Collision Risk</span>
+              <span className={styles.ubStatLabel}>Collision Risk</span>
             </div>
           </div>
         )}
 
         {/*  Export Controls  */}
         {uuids.length > 0 && (
-          <div className="ub-export">
-            <div className="ub-export-left">
-              <span className="ub-export-label">Export as:</span>
+          <div className={styles.ubExport}>
+            <div className={styles.ubExportLeft}>
+              <span className={styles.ubExportLabel}>Export as:</span>
               <select
-                className="ub-export-select"
+                className={styles.ubExportSelect}
                 value={exportFormat}
                 onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
               >
@@ -252,20 +253,20 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
               </select>
             </div>
 
-            <div className="ub-export-actions">
+            <div className={styles.ubExportActions}>
               <button
                 type="button"
-                className={`ub-action-btn${copiedAll ? " success" : ""}`}
+                className={`${styles.ubActionBtn}${copiedAll ? ` ${styles.success}` : ""}`}
                 onClick={handleCopyAll}
               >
                 <i className={`ti ${copiedAll ? "ti-check" : "ti-copy"}`} />
                 {copiedAll ? "Copied" : "Copy All"}
               </button>
-              <button type="button" className="ub-action-btn" onClick={handleDownload}>
+              <button type="button" className={styles.ubActionBtn} onClick={handleDownload}>
                 <i className="ti ti-download" />
                 Download
               </button>
-              <button type="button" className="ub-action-btn ub-clear-btn" onClick={handleClear}>
+              <button type="button" className={`${styles.ubActionBtn} ${styles.ubClearBtn}`} onClick={handleClear}>
                 <i className="ti ti-trash" />
               </button>
             </div>
@@ -273,32 +274,32 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
         )}
 
         {/*  Results  */}
-        <div className="ub-results">
+        <div className={styles.ubResults}>
           {uuids.length === 0 ? (
-            <div className="ub-empty">
-              <div className="ub-empty-icon">
+            <div className={styles.ubEmpty}>
+              <div className={styles.ubEmptyIcon}>
                 <i className="ti ti-stack" />
               </div>
-              <p className="ub-empty-title">Bulk Generation</p>
-              <p className="ub-empty-desc">
+              <p className={styles.ubEmptyTitle}>Bulk Generation</p>
+              <p className={styles.ubEmptyDesc}>
                 Generate up to {MAX_BULK.toLocaleString()} UUIDs at once. Perfect for database
                 seeding, testing, or batch operations.
               </p>
             </div>
           ) : (
-            <div className="ub-list-wrap">
-              <div className="ub-list-header">
-                <span className="ub-list-header-label">Generated UUIDs</span>
+            <div className={styles.ubListWrap}>
+              <div className={styles.ubListHeader}>
+                <span className={styles.ubListHeaderLabel}>Generated UUIDs</span>
               </div>
-              <div className="ub-list">
+              <div className={styles.ubList}>
                 {uuids.slice(0, 1000).map((uuid, i) => (
-                  <div key={i} className="ub-list-item">
-                    <span className="ub-list-num">{i + 1}</span>
-                    <code className="ub-list-uuid">{uuid}</code>
+                  <div key={i} className={styles.ubListItem}>
+                    <span className={styles.ubListNum}>{i + 1}</span>
+                    <code className={styles.ubListUuid}>{uuid}</code>
                   </div>
                 ))}
                 {uuids.length > 1000 && (
-                  <div className="ub-list-more">
+                  <div className={styles.ubListMore}>
                     + {(uuids.length - 1000).toLocaleString()} more (download to see all)
                   </div>
                 )}
@@ -309,13 +310,13 @@ export default function UuidBatch({ version, format, uuidCase, onComplete }: Uui
 
         {/*  Progress Bar  */}
         {generating && (
-          <div className="ub-progress-overlay">
-            <div className="ub-progress-card">
-              <div className="ub-progress-label">Generating {count} UUIDs...</div>
-              <div className="ub-progress-bar">
-                <div className="ub-progress-fill" style={{ width: `${progress}%` }} />
+          <div className={styles.ubProgressOverlay}>
+            <div className={styles.ubProgressCard}>
+              <div className={styles.ubProgressLabel}>Generating {count} UUIDs...</div>
+              <div className={styles.ubProgressBar}>
+                <div className={styles.ubProgressFill} style={{ width: `${progress}%` }} />
               </div>
-              <div className="ub-progress-text">{progress}%</div>
+              <div className={styles.ubProgressText}>{progress}%</div>
             </div>
           </div>
         )}

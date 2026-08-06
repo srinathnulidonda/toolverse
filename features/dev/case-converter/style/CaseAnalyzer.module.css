@@ -1,0 +1,477 @@
+/* features\dev\case-converter\style\CaseAnalyzer.module.css */
+.caRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+}
+
+/*  Input Section  */
+.caInputSection {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--ccRadiusLg);
+    overflow: hidden;
+}
+
+.caInputHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+}
+
+.caInputLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.caInputLabel i {
+    font-size: 12px;
+}
+
+.caClearBtn {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    border: none;
+    background: transparent;
+    color: var(--text-disabled);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.caClearBtn:hover {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.caTextarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    resize: vertical;
+    min-height: 80px;
+}
+
+.caTextarea::placeholder {
+    color: var(--text-disabled);
+    font-family: var(--font-sans);
+}
+
+/*  Content  */
+.caContent {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.caCard {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--ccRadiusLg);
+    overflow: hidden;
+}
+
+.caCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.caCardHeader i {
+    font-size: 12px;
+}
+
+.caCardBody {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/*  Detection  */
+.caDetection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.caDetectionMain {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.caDetectionLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.caDetectionResult {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: var(--ccRadiusMd);
+}
+
+.caDetectionResult i {
+    font-size: 20px;
+    color: var(--brand);
+    flex-shrink: 0;
+}
+
+.caDetectionResult>span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.caDetectionName {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brand-text);
+    font-family: var(--font-mono);
+}
+
+.caDetectionDesc {
+    font-size: 11px;
+    color: var(--brand-text);
+    opacity: 0.8;
+}
+
+/*  Suggestions  */
+.caSuggestions {
+    padding: 12px;
+    background: #eff6ff;
+    border: 0.5px solid #bfdbfe;
+    border-radius: var(--ccRadiusMd);
+}
+
+@media (prefers-color-scheme: dark) {
+    .caSuggestions {
+        background: #0a1628;
+        border-color: #1e3a5f;
+    }
+}
+
+.caSuggestionsHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1d4ed8;
+    margin-bottom: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .caSuggestionsHeader {
+        color: #93c5fd;
+    }
+}
+
+.caSuggestionsHeader i {
+    font-size: 13px;
+}
+
+.caSuggestionsList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.caSuggestionItem {
+    font-size: 12px;
+    color: #1d4ed8;
+    line-height: 1.6;
+    padding-left: 14px;
+    position: relative;
+}
+
+@media (prefers-color-scheme: dark) {
+    .caSuggestionItem {
+        color: #93c5fd;
+    }
+}
+
+.caSuggestionItem::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+}
+
+/*  Statistics  */
+.caStatsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+}
+
+.caStat {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--ccRadiusMd);
+}
+
+.caStatIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--ccRadiusMd);
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.caStatIcon i {
+    font-size: 16px;
+    color: var(--brand);
+}
+
+.caStatContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.caStatValue {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+
+.caStatLabel {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/*  Words  */
+.caWords {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 6px;
+    border-top: 0.5px solid var(--border-faint);
+}
+
+.caWordsHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.caWordsHeader i {
+    font-size: 12px;
+}
+
+.caWordsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.caWordTag {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+}
+
+/*  Variables  */
+.caVariables {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.caVariable {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--ccRadiusMd);
+    transition: border-color 0.12s;
+}
+
+.caVariable:hover {
+    border-color: var(--brand-border);
+}
+
+.caVariableContext {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    min-width: 140px;
+}
+
+.caVariableValue {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg-card);
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 0.5px solid var(--border-faint);
+}
+
+.caVariableCopy {
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.caVariableCopy i {
+    font-size: 12px;
+}
+
+.caVariableCopy:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+/*  Empty State  */
+.caEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.caEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.caEmptyTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.caEmptyDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 380px;
+    line-height: 1.6;
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .caRoot {
+        padding: 12px;
+    }
+
+    .caStatsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .caVariable {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .caVariableContext {
+        min-width: unset;
+    }
+
+    .caVariableValue {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .caClearBtn,
+    .caVariable,
+    .caVariableCopy {
+        transition: none;
+    }
+}

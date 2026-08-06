@@ -2,8 +2,9 @@
 "use client";
 
 import { useMemo } from "react";
-import type { JSONAnalysis, JSONIssue, JSONStats } from "./jsonEngine";
-import { formatBytes } from "./jsonEngine";
+import type { JSONAnalysis, JSONIssue, JSONStats } from "./ts/jsonEngine";
+import { formatBytes } from "./ts/jsonEngine";
+import styles from "./style/JSONAnalysis.module.css";
 
 interface JSONAnalysisProps {
   analysis: JSONAnalysis;
@@ -65,37 +66,37 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
 
   const renderSchema = (node: any, depth = 0): React.ReactNode => {
     if (!node) return null;
-    if (depth > 3) return <span className="jva-schema-ellipsis">…</span>;
+    if (depth > 3) return <span className={styles.jvaSchemaEllipsis}>…</span>;
 
     if (node.type === "object" && node.children) {
       return (
-        <div className="jva-schema-object">
-          <span className="jva-schema-brace">{"{"}</span>
-          <div className="jva-schema-children">
+        <div className={styles.jvaSchemaObject}>
+          <span className={styles.jvaSchemaBrace}>{"{"}</span>
+          <div className={styles.jvaSchemaChildren}>
             {Object.entries(node.children)
               .slice(0, 8)
               .map(([k, v]: [string, any]) => (
-                <div key={k} className="jva-schema-row">
-                  <span className="jva-schema-key">"{k}"</span>
-                  <span className="jva-schema-colon">:</span>
+                <div key={k} className={styles.jvaSchemaRow}>
+                  <span className={styles.jvaSchemaKey}>"{k}"</span>
+                  <span className={styles.jvaSchemaColon}>:</span>
                   {renderSchema(v, depth + 1)}
                 </div>
               ))}
             {Object.keys(node.children).length > 8 && (
-              <div className="jva-schema-row jva-schema-more">
+              <div className={`${styles.jvaSchemaRow} ${styles.jvaSchemaMore}`}>
                 +{Object.keys(node.children).length - 8} more…
               </div>
             )}
           </div>
-          <span className="jva-schema-brace">{"}"}</span>
+          <span className={styles.jvaSchemaBrace}>{"}"}</span>
         </div>
       );
     }
 
     if (node.type === "array") {
       return (
-        <span className="jva-schema-array">
-          <span className="jva-schema-type jva-schema-type--array">array[{node.count}]</span>
+        <span className={styles.jvaSchemaArray}>
+          <span className={`${styles.jvaSchemaType} ${styles.jvaSchemaTypeArray}`}>array[{node.count}]</span>
           {node.items && node.items.type !== "unknown" && (
             <> of {renderSchema(node.items, depth + 1)}</>
           )}
@@ -104,25 +105,25 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
     }
 
     const typeColors: Record<string, string> = {
-      string: "jva-schema-type--string",
-      number: "jva-schema-type--number",
-      boolean: "jva-schema-type--boolean",
-      null: "jva-schema-type--null",
-      object: "jva-schema-type--object",
-      array: "jva-schema-type--array",
+      string: styles.jvaSchemaTypeString,
+      number: styles.jvaSchemaTypeNumber,
+      boolean: styles.jvaSchemaTypeBoolean,
+      null: styles.jvaSchemaTypeNull,
+      object: styles.jvaSchemaTypeObject,
+      array: styles.jvaSchemaTypeArray,
     };
 
-    return <span className={`jva-schema-type ${typeColors[node.type] || ""}`}>{node.type}</span>;
+    return <span className={`${styles.jvaSchemaType} ${typeColors[node.type] || ""}`}>{node.type}</span>;
   };
 
   return (
     <>
-      <div className="jva-root">
+      <div className={styles.jvaRoot}>
         {/* Summary Cards */}
-        <div className="jva-cards">
-          <div className="jva-card">
+        <div className={styles.jvaCards}>
+          <div className={styles.jvaCard}>
             <div
-              className="jva-card-icon"
+              className={styles.jvaCardIcon}
               style={{
                 background: analysis.isValid ? "#dcfce7" : "#fef2f2",
                 color: analysis.isValid ? "#16a34a" : "#dc2626",
@@ -130,137 +131,137 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
             >
               <i className={`ti ${analysis.isValid ? "ti-circle-check" : "ti-circle-x"}`} />
             </div>
-            <div className="jva-card-body">
-              <div className="jva-card-label">Status</div>
-              <div className="jva-card-value">{analysis.isValid ? "Valid" : "Invalid"}</div>
+            <div className={styles.jvaCardBody}>
+              <div className={styles.jvaCardLabel}>Status</div>
+              <div className={styles.jvaCardValue}>{analysis.isValid ? "Valid" : "Invalid"}</div>
             </div>
           </div>
 
-          <div className="jva-card">
-            <div className="jva-card-icon" style={{ background: "#eff6ff", color: "#2563eb" }}>
+          <div className={styles.jvaCard}>
+            <div className={styles.jvaCardIcon} style={{ background: "#eff6ff", color: "#2563eb" }}>
               <i className="ti ti-braces" />
             </div>
-            <div className="jva-card-body">
-              <div className="jva-card-label">Root Type</div>
-              <div className="jva-card-value" style={{ textTransform: "capitalize" }}>
+            <div className={styles.jvaCardBody}>
+              <div className={styles.jvaCardLabel}>Root Type</div>
+              <div className={styles.jvaCardValue} style={{ textTransform: "capitalize" }}>
                 {analysis.rootType}
               </div>
             </div>
           </div>
 
-          <div className="jva-card">
-            <div className="jva-card-icon" style={{ background: "#faf5ff", color: "#7c3aed" }}>
+          <div className={styles.jvaCard}>
+            <div className={styles.jvaCardIcon} style={{ background: "#faf5ff", color: "#7c3aed" }}>
               <i className="ti ti-key" />
             </div>
-            <div className="jva-card-body">
-              <div className="jva-card-label">Total Keys</div>
-              <div className="jva-card-value">{stats.keys.toLocaleString()}</div>
+            <div className={styles.jvaCardBody}>
+              <div className={styles.jvaCardLabel}>Total Keys</div>
+              <div className={styles.jvaCardValue}>{stats.keys.toLocaleString()}</div>
             </div>
           </div>
 
-          <div className="jva-card">
-            <div className="jva-card-icon" style={{ background: "#fff7ed", color: "#ea580c" }}>
+          <div className={styles.jvaCard}>
+            <div className={styles.jvaCardIcon} style={{ background: "#fff7ed", color: "#ea580c" }}>
               <i className="ti ti-layers" />
             </div>
-            <div className="jva-card-body">
-              <div className="jva-card-label">Max Depth</div>
-              <div className="jva-card-value">{stats.depth}</div>
+            <div className={styles.jvaCardBody}>
+              <div className={styles.jvaCardLabel}>Max Depth</div>
+              <div className={styles.jvaCardValue}>{stats.depth}</div>
             </div>
           </div>
         </div>
 
         {/* Size Analysis */}
-        <div className="jva-section">
-          <div className="jva-section-header">
+        <div className={styles.jvaSection}>
+          <div className={styles.jvaSectionHeader}>
             <i className="ti ti-chart-bar" />
             <span>Size Analysis</span>
           </div>
-          <div className="jva-size-rows">
-            <div className="jva-size-row">
-              <span className="jva-size-label">Original</span>
-              <div className="jva-size-track">
-                <div className="jva-size-fill jva-size-fill--orig" style={{ width: "100%" }} />
+          <div className={styles.jvaSizeRows}>
+            <div className={styles.jvaSizeRow}>
+              <span className={styles.jvaSizeLabel}>Original</span>
+              <div className={styles.jvaSizeTrack}>
+                <div className={`${styles.jvaSizeFill} ${styles.jvaSizeFillOrig}`} style={{ width: "100%" }} />
               </div>
-              <span className="jva-size-val">{formatBytes(stats.original)}</span>
+              <span className={styles.jvaSizeVal}>{formatBytes(stats.original)}</span>
             </div>
-            <div className="jva-size-row">
-              <span className="jva-size-label">Processed</span>
-              <div className="jva-size-track">
+            <div className={styles.jvaSizeRow}>
+              <span className={styles.jvaSizeLabel}>Processed</span>
+              <div className={styles.jvaSizeTrack}>
                 <div
-                  className="jva-size-fill jva-size-fill--proc"
+                  className={`${styles.jvaSizeFill} ${styles.jvaSizeFillProc}`}
                   style={{ width: `${Math.max(5, 100 - Math.abs(stats.savingsPercent))}%` }}
                 />
               </div>
-              <span className="jva-size-val">{formatBytes(stats.processed)}</span>
+              <span className={styles.jvaSizeVal}>{formatBytes(stats.processed)}</span>
             </div>
             {stats.savings !== 0 && (
-              <div className="jva-size-row">
-                <span className="jva-size-label">{stats.savings > 0 ? "Saved" : "Added"}</span>
-                <div className="jva-size-track">
+              <div className={styles.jvaSizeRow}>
+                <span className={styles.jvaSizeLabel}>{stats.savings > 0 ? "Saved" : "Added"}</span>
+                <div className={styles.jvaSizeTrack}>
                   <div
-                    className={`jva-size-fill ${stats.savings > 0 ? "jva-size-fill--save" : "jva-size-fill--add"}`}
+                    className={`${styles.jvaSizeFill} ${stats.savings > 0 ? styles.jvaSizeFillSave : styles.jvaSizeFillAdd}`}
                     style={{ width: `${Math.abs(stats.savingsPercent)}%` }}
                   />
                 </div>
-                <span className={`jva-size-val ${stats.savings > 0 ? "good" : "warn"}`}>
+                <span className={`${styles.jvaSizeVal} ${stats.savings > 0 ? "good" : "warn"}`}>
                   {formatBytes(Math.abs(stats.savings))} ({Math.abs(stats.savingsPercent)}%)
                 </span>
               </div>
             )}
           </div>
 
-          <div className="jva-meta-grid">
-            <div className="jva-meta-item">
-              <span className="jva-meta-label">Objects</span>
-              <span className="jva-meta-value">{stats.objects}</span>
+          <div className={styles.jvaMetaGrid}>
+            <div className={styles.jvaMetaItem}>
+              <span className={styles.jvaMetaLabel}>Objects</span>
+              <span className={styles.jvaMetaValue}>{stats.objects}</span>
             </div>
-            <div className="jva-meta-item">
-              <span className="jva-meta-label">Arrays</span>
-              <span className="jva-meta-value">{stats.arrays}</span>
+            <div className={styles.jvaMetaItem}>
+              <span className={styles.jvaMetaLabel}>Arrays</span>
+              <span className={styles.jvaMetaValue}>{stats.arrays}</span>
             </div>
-            <div className="jva-meta-item">
-              <span className="jva-meta-label">Strings</span>
-              <span className="jva-meta-value">{stats.strings}</span>
+            <div className={styles.jvaMetaItem}>
+              <span className={styles.jvaMetaLabel}>Strings</span>
+              <span className={styles.jvaMetaValue}>{stats.strings}</span>
             </div>
-            <div className="jva-meta-item">
-              <span className="jva-meta-label">Numbers</span>
-              <span className="jva-meta-value">{stats.numbers}</span>
+            <div className={styles.jvaMetaItem}>
+              <span className={styles.jvaMetaLabel}>Numbers</span>
+              <span className={styles.jvaMetaValue}>{stats.numbers}</span>
             </div>
-            <div className="jva-meta-item">
-              <span className="jva-meta-label">Booleans</span>
-              <span className="jva-meta-value">{stats.booleans}</span>
+            <div className={styles.jvaMetaItem}>
+              <span className={styles.jvaMetaLabel}>Booleans</span>
+              <span className={styles.jvaMetaValue}>{stats.booleans}</span>
             </div>
-            <div className="jva-meta-item">
-              <span className="jva-meta-label">Nulls</span>
-              <span className="jva-meta-value">{stats.nulls}</span>
+            <div className={styles.jvaMetaItem}>
+              <span className={styles.jvaMetaLabel}>Nulls</span>
+              <span className={styles.jvaMetaValue}>{stats.nulls}</span>
             </div>
           </div>
         </div>
 
         {/* Type Distribution */}
         {typeDistribution.length > 0 && (
-          <div className="jva-section">
-            <div className="jva-section-header">
+          <div className={styles.jvaSection}>
+            <div className={styles.jvaSectionHeader}>
               <i className="ti ti-chart-donut" />
               <span>Value Distribution</span>
             </div>
-            <div className="jva-dist">
-              <div className="jva-dist-bar">
+            <div className={styles.jvaDist}>
+              <div className={styles.jvaDistBar}>
                 {typeDistribution.map((t) => (
                   <div
                     key={t.label}
-                    className="jva-dist-segment"
+                    className={styles.jvaDistSegment}
                     style={{ width: `${t.pct}%`, background: t.color }}
                     title={`${t.label}: ${t.count} (${t.pct}%)`}
                   />
                 ))}
               </div>
-              <div className="jva-dist-legend">
+              <div className={styles.jvaDistLegend}>
                 {typeDistribution.map((t) => (
-                  <div key={t.label} className="jva-dist-item">
-                    <span className="jva-dist-dot" style={{ background: t.color }} />
-                    <span className="jva-dist-label">{t.label}</span>
-                    <span className="jva-dist-count">{t.count}</span>
+                  <div key={t.label} className={styles.jvaDistItem}>
+                    <span className={styles.jvaDistDot} style={{ background: t.color }} />
+                    <span className={styles.jvaDistLabel}>{t.label}</span>
+                    <span className={styles.jvaDistCount}>{t.count}</span>
                   </div>
                 ))}
               </div>
@@ -269,12 +270,12 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
         )}
 
         {/* Features */}
-        <div className="jva-section">
-          <div className="jva-section-header">
+        <div className={styles.jvaSection}>
+          <div className={styles.jvaSectionHeader}>
             <i className="ti ti-info-circle" />
             <span>Structure Info</span>
           </div>
-          <div className="jva-features">
+          <div className={styles.jvaFeatures}>
             {[
               { label: "Nested Objects", active: analysis.hasNestedObjects, icon: "ti-braces" },
               { label: "Arrays", active: analysis.hasArrays, icon: "ti-brackets" },
@@ -286,14 +287,14 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
                 icon: "ti-copy",
               },
             ].map((f) => (
-              <div key={f.label} className={`jva-feature ${f.active ? "on" : "off"}`}>
+              <div key={f.label} className={`${styles.jvaFeature} ${f.active ? "on" : "off"}`}>
                 <i className={`ti ${f.icon}`} />
                 <span>{f.label}</span>
-                <i className={`ti ${f.active ? "ti-check" : "ti-minus"} jva-feature-tick`} />
+                <i className={`ti ${f.active ? "ti-check" : "ti-minus"} ${styles.jvaFeatureTick}`} />
               </div>
             ))}
             {analysis.deepestPath && (
-              <div className="jva-feature on">
+              <div className={`${styles.jvaFeature} on`}>
                 <i className="ti ti-route" />
                 <span>
                   Deepest path: <code>{analysis.deepestPath}</code>
@@ -301,7 +302,7 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
               </div>
             )}
             {analysis.largestArray > 0 && (
-              <div className="jva-feature on">
+              <div className={`${styles.jvaFeature} on`}>
                 <i className="ti ti-list" />
                 <span>
                   Largest array: <strong>{analysis.largestArray} items</strong>
@@ -312,52 +313,52 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
         </div>
 
         {/* Schema */}
-        <div className="jva-section">
-          <div className="jva-section-header">
+        <div className={styles.jvaSection}>
+          <div className={styles.jvaSectionHeader}>
             <i className="ti ti-hierarchy" />
             <span>Inferred Schema</span>
           </div>
-          <div className="jva-schema-wrap">{renderSchema(analysis.schema)}</div>
+          <div className={styles.jvaSchemaWrap}>{renderSchema(analysis.schema)}</div>
         </div>
 
         {/* Issues */}
         {issues.length > 0 && (
-          <div className="jva-section">
-            <div className="jva-section-header">
+          <div className={styles.jvaSection}>
+            <div className={styles.jvaSectionHeader}>
               <i className="ti ti-alert-circle" />
               <span>Issues</span>
-              <div className="jva-issue-counts">
+              <div className={styles.jvaIssueCounts}>
                 {issueSummary.errors > 0 && (
-                  <span className="jva-badge jva-badge--error">
+                  <span className={`${styles.jvaBadge} ${styles.jvaBadgeError}`}>
                     {issueSummary.errors} error{issueSummary.errors !== 1 ? "s" : ""}
                   </span>
                 )}
                 {issueSummary.warnings > 0 && (
-                  <span className="jva-badge jva-badge--warning">
+                  <span className={`${styles.jvaBadge} ${styles.jvaBadgeWarning}`}>
                     {issueSummary.warnings} warning{issueSummary.warnings !== 1 ? "s" : ""}
                   </span>
                 )}
                 {issueSummary.infos > 0 && (
-                  <span className="jva-badge jva-badge--info">{issueSummary.infos} info</span>
+                  <span className={`${styles.jvaBadge} ${styles.jvaBadgeInfo}`}>{issueSummary.infos} info</span>
                 )}
               </div>
             </div>
-            <div className="jva-issues">
+            <div className={styles.jvaIssues}>
               {issues.slice(0, 20).map((issue, idx) => (
-                <div key={idx} className={`jva-issue jva-issue--${issue.type}`}>
-                  <div className="jva-issue-icon">
+                <div key={idx} className={`${styles.jvaIssue} ${styles[`jvaIssue${issue.type.charAt(0).toUpperCase()}${issue.type.slice(1)}`]}`}>
+                  <div className={styles.jvaIssueIcon}>
                     <i
                       className={`ti ${issue.type === "error"
-                          ? "ti-circle-x"
-                          : issue.type === "warning"
-                            ? "ti-alert-triangle"
-                            : "ti-info-circle"
+                        ? "ti-circle-x"
+                        : issue.type === "warning"
+                          ? "ti-alert-triangle"
+                          : "ti-info-circle"
                         }`}
                     />
                   </div>
-                  <div className="jva-issue-body">
-                    <div className="jva-issue-msg">{issue.message}</div>
-                    <div className="jva-issue-meta">
+                  <div className={styles.jvaIssueBody}>
+                    <div className={styles.jvaIssueMsg}>{issue.message}</div>
+                    <div className={styles.jvaIssueMeta}>
                       {issue.path && <span>{issue.path}</span>}
                       {issue.rule && <code>{issue.rule}</code>}
                     </div>
@@ -365,19 +366,19 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
                 </div>
               ))}
               {issues.length > 20 && (
-                <div className="jva-issues-more">+{issues.length - 20} more issues</div>
+                <div className={styles.jvaIssuesMore}>+{issues.length - 20} more issues</div>
               )}
             </div>
           </div>
         )}
 
         {issues.length === 0 && (
-          <div className="jva-clean">
-            <div className="jva-clean-icon">
+          <div className={styles.jvaClean}>
+            <div className={styles.jvaCleanIcon}>
               <i className="ti ti-circle-check" />
             </div>
-            <h3 className="jva-clean-title">Clean JSON</h3>
-            <p className="jva-clean-desc">No issues detected — your JSON is well-structured.</p>
+            <h3 className={styles.jvaCleanTitle}>Clean JSON</h3>
+            <p className={styles.jvaCleanDesc}>No issues detected — your JSON is well-structured.</p>
           </div>
         )}
       </div>

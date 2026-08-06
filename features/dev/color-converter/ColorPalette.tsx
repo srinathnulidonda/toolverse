@@ -8,7 +8,7 @@ import {
   generateTetradic,
   generateAnalogous,
   generateMonochromatic,
-} from "./utils";
+} from "./ts/utils";
 
 interface ColorPaletteProps {
   baseColor: string;
@@ -55,6 +55,8 @@ const PALETTE_TYPES: Array<{
     },
   ];
 
+import styles from "./style/ColorPalette.module.css";
+
 export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteProps) {
   const [selectedType, setSelectedType] = useState<PaletteType>("complementary");
   const [copiedColor, setCopiedColor] = useState("");
@@ -86,22 +88,22 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
 
   return (
     <>
-      <div className="cpal-root">
+      <div className={styles.cpalRoot}>
         {/*  Palette Type Selector  */}
-        <div className="cpal-selector">
-          <div className="cpal-selector-header">
-            <div className="cpal-selector-label">
+        <div className={styles.cpalSelector}>
+          <div className={styles.cpalSelectorHeader}>
+            <div className={styles.cpalSelectorLabel}>
               <i className="ti ti-color-swatch" />
               Color Scheme
             </div>
-            {selectedInfo && <span className="cpal-selector-desc">{selectedInfo.description}</span>}
+            {selectedInfo && <span className={styles.cpalSelectorDesc}>{selectedInfo.description}</span>}
           </div>
-          <div className="cpal-types">
+          <div className={styles.cpalTypes}>
             {PALETTE_TYPES.map((type) => (
               <button
                 key={type.id}
                 type="button"
-                className={`cpal-type-btn${selectedType === type.id ? " active" : ""}`}
+                className={`${styles.cpalTypeBtn}${selectedType === type.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setSelectedType(type.id)}
               >
                 <i className={`ti ${type.icon}`} />
@@ -112,12 +114,12 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
         </div>
 
         {/*  Palette Display  */}
-        <div className="cpal-display">
-          <div className="cpal-colors">
+        <div className={styles.cpalDisplay}>
+          <div className={styles.cpalColors}>
             {palette.map((color, idx) => (
-              <div key={idx} className="cpal-color-card">
+              <div key={idx} className={styles.cpalColorCard}>
                 <div
-                  className="cpal-color-swatch"
+                  className={styles.cpalColorSwatch}
                   style={{ background: color }}
                   onClick={() => onColorSelect(color)}
                   role="button"
@@ -125,18 +127,18 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
                   title="Click to select this color"
                 >
                   {idx === 0 && (
-                    <div className="cpal-base-badge">
+                    <div className={styles.cpalBaseBadge}>
                       <i className="ti ti-star-filled" />
                       Base
                     </div>
                   )}
                 </div>
-                <div className="cpal-color-info">
-                  <code className="cpal-color-hex">{color.toUpperCase()}</code>
-                  <div className="cpal-color-actions">
+                <div className={styles.cpalColorInfo}>
+                  <code className={styles.cpalColorHex}>{color.toUpperCase()}</code>
+                  <div className={styles.cpalColorActions}>
                     <button
                       type="button"
-                      className={`cpal-action-btn${copiedColor === color ? " copied" : ""}`}
+                      className={`${styles.cpalActionBtn}${copiedColor === color ? ` ${styles.copied}` : ""}`}
                       onClick={() => handleCopyColor(color)}
                       title="Copy HEX"
                     >
@@ -144,7 +146,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
                     </button>
                     <button
                       type="button"
-                      className="cpal-action-btn"
+                      className={styles.cpalActionBtn}
                       onClick={() => onColorSelect(color)}
                       title="Use this color"
                     >
@@ -158,15 +160,15 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
         </div>
 
         {/*  Export Options  */}
-        <div className="cpal-export">
-          <div className="cpal-export-header">
+        <div className={styles.cpalExport}>
+          <div className={styles.cpalExportHeader}>
             <i className="ti ti-download" />
             Export Palette
           </div>
-          <div className="cpal-export-actions">
+          <div className={styles.cpalExportActions}>
             <button
               type="button"
-              className="cpal-export-btn"
+              className={styles.cpalExportBtn}
               onClick={() => {
                 const css = palette.map((c, i) => `--color-${i + 1}: ${c};`).join("\n");
                 navigator.clipboard.writeText(`:root {\n  ${css}\n}`);
@@ -177,7 +179,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
             </button>
             <button
               type="button"
-              className="cpal-export-btn"
+              className={styles.cpalExportBtn}
               onClick={() => {
                 const json = JSON.stringify(
                   palette.reduce((acc, c, i) => ({ ...acc, [`color${i + 1}`]: c }), {}),
@@ -192,7 +194,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
             </button>
             <button
               type="button"
-              className="cpal-export-btn"
+              className={styles.cpalExportBtn}
               onClick={() => {
                 const scss = palette.map((c, i) => `$color-${i + 1}: ${c};`).join("\n");
                 navigator.clipboard.writeText(scss);

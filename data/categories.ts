@@ -14,7 +14,7 @@ export type Category = {
 export const CATEGORIES: Category[] = [
   {
     slug: "pdf",
-    label: "PDF Tools",
+    label: "PDF",
     icon: "ti-file-text",
     description:
       "Compress, merge, split, convert — everything PDF, processed entirely in your browser.",
@@ -25,7 +25,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: "image",
-    label: "Image Tools",
+    label: "Image",
     icon: "ti-photo",
     description: "Compress, resize, convert, and edit images without uploading to any server.",
     color: "#7C5CFC",
@@ -35,7 +35,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: "dev",
-    label: "Developer Tools",
+    label: "Developer",
     icon: "ti-code",
     description: "Format, validate, encode, and transform code and data structures instantly.",
     color: "#0EA5E9",
@@ -45,7 +45,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: "finance",
-    label: "Finance Tools",
+    label: "Finance",
     icon: "ti-calculator",
     description:
       "Calculate GST, EMI, SIP returns, and more — accurate financial tools for everyone.",
@@ -56,7 +56,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: "resume",
-    label: "Resume Tools",
+    label: "Resume",
     icon: "ti-file-cv",
     description:
       "Build, analyze, and optimize your resume with professional templates and AI hints.",
@@ -67,7 +67,7 @@ export const CATEGORIES: Category[] = [
   },
   {
     slug: "social",
-    label: "Social Tools",
+    label: "Social",
     icon: "ti-share",
     description: "Generate QR codes, Open Graph previews, meta tags, and social media assets.",
     color: "#EC4899",

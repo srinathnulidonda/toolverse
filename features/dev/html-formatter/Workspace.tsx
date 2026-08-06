@@ -14,15 +14,12 @@ import {
   convertToMarkdown,
   convertToPlainText,
   formatBytes,
-} from "./htmlEngine";
+} from "./ts/htmlEngine";
 import HTMLValidation from "./HTMLValidation";
 import HTMLPreview from "./HTMLPreview";
 import HTMLBatch from "./HTMLBatch";
-import { useHTMLStore } from "./htmlStore";
-import "./style/HTMLBatch.css";
-import "./style/HTMLPreview.css";
-import "./style/HTMLValidation.css";
-import "./style/Workspace.css";
+import { useHTMLStore } from "./ts/htmlStore";
+import styles from "./style/Workspace.module.css";
 
 type TabView = "single" | "batch" | "validation" | "preview" | "history";
 
@@ -138,19 +135,19 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="hf-root" ref={rootRef}>
+      <div className={styles.hfRoot} ref={rootRef}>
         {/* ── Top Chrome ── */}
-        <div className="hf-chrome">
-          <div className="hf-chrome-left">
-            <div className="hf-title">
+        <div className={styles.hfChrome}>
+          <div className={styles.hfChromeLeft}>
+            <div className={styles.hfTitle}>
               <i className="ti ti-brand-html5" />
               HTML Formatter
             </div>
           </div>
-          <div className="hf-chrome-right">
+          <div className={styles.hfChromeRight}>
             <button
               type="button"
-              className="hf-chrome-btn"
+              className={styles.hfChromeBtn}
               onClick={() => setShowSettings((s) => !s)}
             >
               <i className="ti ti-settings" />
@@ -161,16 +158,16 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
 
         {/* ── Settings Panel ── */}
         {showSettings && (
-          <div className="hf-settings">
-            <div className="hf-settings-row">
-              <div className="hf-setting-group">
-                <label className="hf-setting-label">Mode</label>
-                <div className="hf-pill-group">
+          <div className={styles.hfSettings}>
+            <div className={styles.hfSettingsRow}>
+              <div className={styles.hfSettingGroup}>
+                <label className={styles.hfSettingLabel}>Mode</label>
+                <div className={styles.hfPillGroup}>
                   {(["format", "minify", "compress"] as FormattingMode[]).map((m) => (
                     <button
                       key={m}
                       type="button"
-                      className={`hf-pill${options.mode === m ? " active" : ""}`}
+                      className={`${styles.hfPill}${options.mode === m ? ` ${styles.active}` : ""}`}
                       onClick={() => setOptions((prev) => ({ ...prev, mode: m }))}
                     >
                       {m === "format" && <i className="ti ti-text-wrap" />}
@@ -184,10 +181,10 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
 
               {options.mode === "format" && (
                 <>
-                  <div className="hf-setting-group">
-                    <label className="hf-setting-label">Indent Style</label>
+                  <div className={styles.hfSettingGroup}>
+                    <label className={styles.hfSettingLabel}>Indent Style</label>
                     <select
-                      className="hf-select"
+                      className={styles.hfSelect}
                       value={options.indentStyle}
                       onChange={(e) =>
                         setOptions((prev) => ({
@@ -202,8 +199,8 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                     </select>
                   </div>
 
-                  <div className="hf-setting-group">
-                    <label className="hf-setting-checkbox">
+                  <div className={styles.hfSettingGroup}>
+                    <label className={styles.hfSettingCheckbox}>
                       <input
                         type="checkbox"
                         checked={options.wrapAttributes}
@@ -218,8 +215,8 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                     </label>
                   </div>
 
-                  <div className="hf-setting-group">
-                    <label className="hf-setting-checkbox">
+                  <div className={styles.hfSettingGroup}>
+                    <label className={styles.hfSettingCheckbox}>
                       <input
                         type="checkbox"
                         checked={options.sortAttributes}
@@ -236,8 +233,8 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                 </>
               )}
 
-              <div className="hf-setting-group">
-                <label className="hf-setting-checkbox">
+              <div className={styles.hfSettingGroup}>
+                <label className={styles.hfSettingCheckbox}>
                   <input
                     type="checkbox"
                     checked={options.removeComments}
@@ -253,8 +250,8 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
               </div>
 
               {options.mode !== "format" && (
-                <div className="hf-setting-group">
-                  <label className="hf-setting-checkbox">
+                <div className={styles.hfSettingGroup}>
+                  <label className={styles.hfSettingCheckbox}>
                     <input
                       type="checkbox"
                       checked={options.removeOptionalTags}
@@ -274,23 +271,23 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/* ── Tab Navigation ── */}
-        <div className="hf-tabs-bar">
-          <nav className="hf-tabs">
+        <div className={styles.hfTabsBar}>
+          <nav className={styles.hfTabs}>
             {TAB_VIEWS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
-                className={`hf-tab${tabView === tab.id ? " active" : ""}`}
+                className={`${styles.hfTab}${tabView === tab.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setTabView(tab.id)}
                 title={tab.description}
               >
                 <i className={`ti ${tab.icon}`} />
                 <span>{tab.label}</span>
                 {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className="hf-tab-badge">{history.length}</span>
+                  <span className={styles.hfTabBadge}>{history.length}</span>
                 )}
                 {tab.id === "validation" && result && !result.validation.isValid && (
-                  <span className="hf-tab-indicator" />
+                  <span className={styles.hfTabIndicator} />
                 )}
               </button>
             ))}
@@ -298,20 +295,20 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* ── Tab Content ── */}
-        <div className="hf-tab-content">
+        <div className={styles.hfTabContent}>
           {/* Single Tab */}
           {tabView === "single" && (
-            <div className="hf-single-view">
+            <div className={styles.hfSingleView}>
               {/* Command Bar */}
-              <div className="hf-command-bar">
-                <div className="hf-command-left">
-                  <div className="hf-samples">
-                    <span className="hf-samples-label">Examples:</span>
+              <div className={styles.hfCommandBar}>
+                <div className={styles.hfCommandLeft}>
+                  <div className={styles.hfSamples}>
+                    <span className={styles.hfSamplesLabel}>Examples:</span>
                     {Object.entries(SAMPLE_TEMPLATES).map(([key, sample]) => (
                       <button
                         key={key}
                         type="button"
-                        className="hf-sample-btn"
+                        className={styles.hfSampleBtn}
                         onClick={() => loadSample(key as keyof typeof SAMPLE_TEMPLATES)}
                         title={sample.description}
                       >
@@ -320,27 +317,27 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                     ))}
                   </div>
                 </div>
-                <div className="hf-command-right">
+                <div className={styles.hfCommandRight}>
                   {result && (
-                    <div className="hf-export-chips">
-                      <span className="hf-export-label">Export:</span>
+                    <div className={styles.hfExportChips}>
+                      <span className={styles.hfExportLabel}>Export:</span>
                       <button
                         type="button"
-                        className="hf-export-chip"
+                        className={styles.hfExportChip}
                         onClick={() => handleDownload("html")}
                       >
                         HTML
                       </button>
                       <button
                         type="button"
-                        className="hf-export-chip"
+                        className={styles.hfExportChip}
                         onClick={() => handleDownload("markdown")}
                       >
                         MD
                       </button>
                       <button
                         type="button"
-                        className="hf-export-chip"
+                        className={styles.hfExportChip}
                         onClick={() => handleDownload("txt")}
                       >
                         TXT
@@ -351,45 +348,45 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
               </div>
 
               {/* Mobile Panel Switcher */}
-              <div className="hf-mobile-switcher">
+              <div className={styles.hfMobileSwitcher}>
                 <button
                   type="button"
-                  className={`hf-switcher-tab${mobilePanel === "input" ? " active" : ""}`}
+                  className={`${styles.hfSwitcherTab}${mobilePanel === "input" ? ` ${styles.active}` : ""}`}
                   onClick={goToInput}
                 >
                   <i className="ti ti-code" />
                   Input HTML
                 </button>
-                <div className="hf-switcher-divider" />
+                <div className={styles.hfSwitcherDivider} />
                 <button
                   type="button"
-                  className={`hf-switcher-tab${mobilePanel === "output" ? " active" : ""}`}
+                  className={`${styles.hfSwitcherTab}${mobilePanel === "output" ? ` ${styles.active}` : ""}`}
                   onClick={goToOutput}
                 >
                   <i className="ti ti-sparkles" />
                   Result
-                  {result && mobilePanel !== "output" && <span className="hf-ready-indicator" />}
+                  {result && mobilePanel !== "output" && <span className={styles.hfReadyIndicator} />}
                 </button>
               </div>
 
               {/* Body */}
-              <div className="hf-body">
+              <div className={styles.hfBody}>
                 {/* Input Panel */}
                 <div
-                  className={`hf-panel${mobilePanel === "input" ? " mobile-visible" : " mobile-hidden"}`}
+                  className={`${styles.hfPanel}${mobilePanel === "input" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
                 >
-                  <div className="hf-panel-header">
-                    <div className="hf-panel-title">
+                  <div className={styles.hfPanelHeader}>
+                    <div className={styles.hfPanelTitle}>
                       <i className="ti ti-code" />
                       Input HTML
                     </div>
-                    <div className="hf-panel-actions">
+                    <div className={styles.hfPanelActions}>
                       {input && (
-                        <span className="hf-char-count">{input.length.toLocaleString()} chars</span>
+                        <span className={styles.hfCharCount}>{input.length.toLocaleString()} chars</span>
                       )}
                       <button
                         type="button"
-                        className="hf-panel-btn"
+                        className={styles.hfPanelBtn}
                         onClick={clearAll}
                         disabled={!input}
                         title="Clear input"
@@ -399,15 +396,15 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                     </div>
                   </div>
                   <textarea
-                    className="hf-textarea"
+                    className={styles.hfTextarea}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Paste your HTML here..."
                     spellCheck={false}
                   />
                   {input && result && (
-                    <div className="hf-mobile-cta">
-                      <button type="button" className="hf-view-result-btn" onClick={goToOutput}>
+                    <div className={styles.hfMobileCta}>
+                      <button type="button" className={styles.hfViewResultBtn} onClick={goToOutput}>
                         <i className="ti ti-sparkles" />
                         View{" "}
                         {options.mode === "format"
@@ -423,20 +420,20 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                 </div>
 
                 {/* Gutter */}
-                <div className="hf-gutter">
-                  <div className="hf-gutter-line" />
-                  <div className="hf-gutter-icon">
+                <div className={styles.hfGutter}>
+                  <div className={styles.hfGutterLine} />
+                  <div className={styles.hfGutterIcon}>
                     <i className="ti ti-arrow-right" />
                   </div>
-                  <div className="hf-gutter-line" />
+                  <div className={styles.hfGutterLine} />
                 </div>
 
                 {/* Output Panel */}
                 <div
-                  className={`hf-panel${mobilePanel === "output" ? " mobile-visible" : " mobile-hidden"}`}
+                  className={`${styles.hfPanel}${mobilePanel === "output" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
                 >
-                  <div className="hf-panel-header">
-                    <div className="hf-panel-title">
+                  <div className={styles.hfPanelHeader}>
+                    <div className={styles.hfPanelTitle}>
                       <i className="ti ti-sparkles" />
                       {options.mode === "format"
                         ? "Formatted"
@@ -445,11 +442,11 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                           : "Compressed"}{" "}
                       HTML
                     </div>
-                    <div className="hf-panel-actions">
+                    <div className={styles.hfPanelActions}>
                       {result && (
                         <button
                           type="button"
-                          className={`hf-copy-btn${copiedKey === "output" ? " copied" : ""}`}
+                          className={`${styles.hfCopyBtn}${copiedKey === "output" ? ` ${styles.copied}` : ""}`}
                           onClick={() => handleCopy(result.output, "output")}
                         >
                           <i className={`ti ${copiedKey === "output" ? "ti-check" : "ti-copy"}`} />
@@ -460,29 +457,29 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                   </div>
 
                   {!result && !input && (
-                    <div className="hf-empty">
-                      <div className="hf-empty-icon">
+                    <div className={styles.hfEmpty}>
+                      <div className={styles.hfEmptyIcon}>
                         <i className="ti ti-brand-html5" />
                       </div>
-                      <h3 className="hf-empty-title">Format or Minify HTML</h3>
-                      <p className="hf-empty-description">
+                      <h3 className={styles.hfEmptyTitle}>Format or Minify HTML</h3>
+                      <p className={styles.hfEmptyDescription}>
                         Paste HTML code on the left or try a sample to get started
                       </p>
-                      <div className="hf-empty-samples">
+                      <div className={styles.hfEmptySamples}>
                         {Object.entries(SAMPLE_TEMPLATES)
                           .slice(0, 2)
                           .map(([key, sample]) => (
                             <button
                               key={key}
                               type="button"
-                              className="hf-empty-sample-btn"
+                              className={styles.hfEmptySampleBtn}
                               onClick={() => loadSample(key as keyof typeof SAMPLE_TEMPLATES)}
                             >
                               Try {sample.name}
                             </button>
                           ))}
                       </div>
-                      <button type="button" className="hf-go-input-btn" onClick={goToInput}>
+                      <button type="button" className={styles.hfGoInputBtn} onClick={goToInput}>
                         <i className="ti ti-code" />
                         Go to input
                       </button>
@@ -491,44 +488,44 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
 
                   {result && (
                     <>
-                      <pre className="hf-output">{result.output}</pre>
-                      <div className="hf-stats-bar">
-                        <div className="hf-stat">
-                          <span className="hf-stat-label">Original</span>
-                          <span className="hf-stat-value">
+                      <pre className={styles.hfOutput}>{result.output}</pre>
+                      <div className={styles.hfStatsBar}>
+                        <div className={styles.hfStat}>
+                          <span className={styles.hfStatLabel}>Original</span>
+                          <span className={styles.hfStatValue}>
                             {formatBytes(result.stats.original)}
                           </span>
                         </div>
-                        <div className="hf-stat">
-                          <span className="hf-stat-label">Processed</span>
-                          <span className="hf-stat-value">
+                        <div className={styles.hfStat}>
+                          <span className={styles.hfStatLabel}>Processed</span>
+                          <span className={styles.hfStatValue}>
                             {formatBytes(result.stats.processed)}
                           </span>
                         </div>
-                        <div className="hf-stat">
-                          <span className="hf-stat-label">
+                        <div className={styles.hfStat}>
+                          <span className={styles.hfStatLabel}>
                             {result.stats.savings > 0 ? "Saved" : "Added"}
                           </span>
                           <span
-                            className={`hf-stat-value ${result.stats.savings > 0 ? "success" : result.stats.savings < 0 ? "warning" : ""}`}
+                            className={`${styles.hfStatValue} ${result.stats.savings > 0 ? styles.success : result.stats.savings < 0 ? styles.warning : ""}`}
                           >
                             {formatBytes(Math.abs(result.stats.savings))}
                             {result.stats.savingsPercent !== 0 && (
-                              <span className="hf-stat-percent">
+                              <span className={styles.hfStatPercent}>
                                 ({Math.abs(result.stats.savingsPercent)}%)
                               </span>
                             )}
                           </span>
                         </div>
-                        <div className="hf-stat">
-                          <span className="hf-stat-label">Elements</span>
-                          <span className="hf-stat-value">
+                        <div className={styles.hfStat}>
+                          <span className={styles.hfStatLabel}>Elements</span>
+                          <span className={styles.hfStatValue}>
                             {result.stats.elements.toLocaleString()}
                           </span>
                         </div>
                         <button
                           type="button"
-                          className="hf-download-btn"
+                          className={styles.hfDownloadBtn}
                           onClick={() => handleDownload("html")}
                         >
                           <i className="ti ti-download" />
@@ -539,10 +536,10 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                   )}
 
                   {result && (
-                    <div className="hf-mobile-actions">
+                    <div className={styles.hfMobileActions}>
                       <button
                         type="button"
-                        className={`hf-mobile-action-btn${copiedKey === "mobile" ? " copied" : ""}`}
+                        className={`${styles.hfMobileActionBtn}${copiedKey === "mobile" ? ` ${styles.copied}` : ""}`}
                         onClick={() => handleCopy(result.output, "mobile")}
                       >
                         <i className={`ti ${copiedKey === "mobile" ? "ti-check" : "ti-copy"}`} />
@@ -550,7 +547,7 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
                       </button>
                       <button
                         type="button"
-                        className="hf-mobile-action-btn"
+                        className={styles.hfMobileActionBtn}
                         onClick={() => handleDownload("html")}
                       >
                         <i className="ti ti-download" />
@@ -571,18 +568,18 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
             (result ? (
               <HTMLValidation validation={result.validation} metadata={result.metadata} />
             ) : (
-              <div className="hf-tab-empty">
-                <div className="hf-tab-empty-icon">
+              <div className={styles.hfTabEmpty}>
+                <div className={styles.hfTabEmptyIcon}>
                   <i className="ti ti-shield-check" />
                 </div>
-                <h3 className="hf-tab-empty-title">HTML Validation</h3>
-                <p className="hf-tab-empty-description">
+                <h3 className={styles.hfTabEmptyTitle}>HTML Validation</h3>
+                <p className={styles.hfTabEmptyDescription}>
                   Add HTML code to see validation results, accessibility score, and best practice
                   recommendations.
                 </p>
                 <button
                   type="button"
-                  className="hf-tab-empty-btn"
+                  className={styles.hfTabEmptyBtn}
                   onClick={() => setTabView("single")}
                 >
                   Go to formatter
@@ -592,21 +589,21 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
 
           {/* ✅ Preview Tab — key change here */}
           {tabView === "preview" && (
-            <div className="hf-preview-host">
+            <div className={styles.hfPreviewHost}>
               {input.trim() ? (
                 <HTMLPreview html={input} />
               ) : (
-                <div className="hf-tab-empty">
-                  <div className="hf-tab-empty-icon">
+                <div className={styles.hfTabEmpty}>
+                  <div className={styles.hfTabEmptyIcon}>
                     <i className="ti ti-eye" />
                   </div>
-                  <h3 className="hf-tab-empty-title">Live Preview</h3>
-                  <p className="hf-tab-empty-description">
+                  <h3 className={styles.hfTabEmptyTitle}>Live Preview</h3>
+                  <p className={styles.hfTabEmptyDescription}>
                     Add HTML code to see a live rendered preview with responsive viewport controls.
                   </p>
                   <button
                     type="button"
-                    className="hf-tab-empty-btn"
+                    className={styles.hfTabEmptyBtn}
                     onClick={() => setTabView("single")}
                   >
                     Go to formatter
@@ -618,45 +615,45 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
 
           {/* History Tab */}
           {tabView === "history" && (
-            <div className="hf-history-view">
+            <div className={styles.hfHistoryView}>
               {history.length === 0 ? (
-                <div className="hf-tab-empty">
-                  <div className="hf-tab-empty-icon">
+                <div className={styles.hfTabEmpty}>
+                  <div className={styles.hfTabEmptyIcon}>
                     <i className="ti ti-history" />
                   </div>
-                  <h3 className="hf-tab-empty-title">No History Yet</h3>
-                  <p className="hf-tab-empty-description">
+                  <h3 className={styles.hfTabEmptyTitle}>No History Yet</h3>
+                  <p className={styles.hfTabEmptyDescription}>
                     Your formatting history will appear here when auto-save is enabled.
                   </p>
                 </div>
               ) : (
                 <>
-                  <div className="hf-history-header">
-                    <div className="hf-history-title">
+                  <div className={styles.hfHistoryHeader}>
+                    <div className={styles.hfHistoryTitle}>
                       <i className="ti ti-history" />
                       Formatting History
-                      <span className="hf-history-count">{history.length}</span>
+                      <span className={styles.hfHistoryCount}>{history.length}</span>
                     </div>
-                    <button type="button" className="hf-action-btn" onClick={clearHistory}>
+                    <button type="button" className={styles.hfActionBtn} onClick={clearHistory}>
                       <i className="ti ti-trash" />
                       Clear History
                     </button>
                   </div>
-                  <div className="hf-history-list">
+                  <div className={styles.hfHistoryList}>
                     {history.slice(0, 50).map((entry) => (
-                      <div key={entry.id} className="hf-history-item">
-                        <div className="hf-history-item-header">
-                          <div className="hf-history-item-info">
-                            <span className="hf-history-item-title">{entry.title}</span>
-                            <span className="hf-history-item-time">
+                      <div key={entry.id} className={styles.hfHistoryItem}>
+                        <div className={styles.hfHistoryItemHeader}>
+                          <div className={styles.hfHistoryItemInfo}>
+                            <span className={styles.hfHistoryItemTitle}>{entry.title}</span>
+                            <span className={styles.hfHistoryItemTime}>
                               {new Date(entry.timestamp).toLocaleString()}
                             </span>
                           </div>
-                          <div className="hf-history-item-meta">
-                            <span className="hf-history-mode-badge">{entry.options.mode}</span>
+                          <div className={styles.hfHistoryItemMeta}>
+                            <span className={styles.hfHistoryModeBadge}>{entry.options.mode}</span>
                             {entry.result.stats.savings !== 0 && (
                               <span
-                                className={`hf-history-savings ${entry.result.stats.savings > 0 ? "positive" : "negative"}`}
+                                className={`${styles.hfHistorySavings} ${styles[entry.result.stats.savings > 0 ? "positive" : "negative"]}`}
                               >
                                 {entry.result.stats.savings > 0 ? "↓" : "↑"}{" "}
                                 {formatBytes(Math.abs(entry.result.stats.savings))}
@@ -674,13 +671,13 @@ export default function HTMLFormatterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Footer */}
-        <div className="hf-footer">
-          <div className="hf-footer-info">
+        <div className={styles.hfFooter}>
+          <div className={styles.hfFooterInfo}>
             <i className="ti ti-shield-lock" />
             <span>Everything runs in your browser — no data ever leaves this page.</span>
           </div>
           {result && (
-            <div className="hf-footer-stats">
+            <div className={styles.hfFooterStats}>
               <span>{result.stats.elements} elements</span>
               <span>•</span>
               <span>{result.stats.lines} lines</span>

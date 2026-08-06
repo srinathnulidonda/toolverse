@@ -4,9 +4,7 @@ import { logger } from "@/lib/logger";
 
 import { useState, useCallback, useMemo, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
-import "./style/DiffStats.css";
-import "./style/DiffViewer.css";
-import "./style/Workspace.css";
+import styles from "./style/Workspace.module.css";
 
 import {
   computeDiff,
@@ -17,7 +15,7 @@ import {
   type DiffResult,
   SAMPLE_DIFFS,
   detectFileType,
-} from "./diffEngine";
+} from "./ts/diffEngine";
 import DiffViewer from "./DiffViewer";
 import DiffStats from "./DiffStats";
 import { useHistoryStore } from "@/lib/useHistoryStore";
@@ -230,65 +228,65 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="dc-root">
+      <div className={styles.dcRoot}>
         {/* Command Bar */}
-        <div className="dc-command-bar">
-          <div className="dc-command-left">
+        <div className={styles.dcCommandBar}>
+          <div className={styles.dcCommandLeft}>
             {/* Sample buttons */}
-            <div className="dc-samples">
+            <div className={styles.dcSamples}>
               {Object.keys(SAMPLE_DIFFS).map((type) => (
                 <button
                   key={type}
                   type="button"
-                  className="dc-sample-btn"
+                  className={styles.dcSampleBtn}
                   onClick={() => loadSample(type as keyof typeof SAMPLE_DIFFS)}
                 >
                   <i className="ti ti-file-code" />
-                  <span className="dc-sample-label">{type.toUpperCase()}</span>
+                  <span className={styles.dcSampleLabel}>{type.toUpperCase()}</span>
                 </button>
               ))}
             </div>
 
             {/* Actions */}
-            <div className="dc-actions">
+            <div className={styles.dcActions}>
               <button
                 type="button"
-                className="dc-action-btn"
+                className={styles.dcActionBtn}
                 onClick={swapTexts}
                 disabled={!originalText && !modifiedText}
                 title="Swap original and modified"
               >
                 <i className="ti ti-arrows-exchange" />
-                <span className="dc-action-label">Swap</span>
+                <span className={styles.dcActionLabel}>Swap</span>
               </button>
 
               <button
                 type="button"
-                className="dc-action-btn"
+                className={styles.dcActionBtn}
                 onClick={() => setShowSearch(!showSearch)}
                 title="Search in diff"
               >
                 <i className="ti ti-search" />
-                <span className="dc-action-label">Search</span>
+                <span className={styles.dcActionLabel}>Search</span>
               </button>
 
               <button
                 type="button"
-                className="dc-action-btn"
+                className={styles.dcActionBtn}
                 onClick={clearAll}
                 disabled={!originalText && !modifiedText}
                 title="Clear all content"
               >
                 <i className="ti ti-trash" />
-                <span className="dc-action-label">Clear</span>
+                <span className={styles.dcActionLabel}>Clear</span>
               </button>
             </div>
           </div>
 
-          <div className="dc-command-right">
+          <div className={styles.dcCommandRight}>
             {/* Options */}
-            <div className="dc-options">
-              <label className="dc-toggle">
+            <div className={styles.dcOptions}>
+              <label className={styles.dcToggle}>
                 <input
                   type="checkbox"
                   checked={options.ignoreWhitespace}
@@ -299,13 +297,13 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
                     }))
                   }
                 />
-                <span className="dc-toggle-track">
-                  <span className="dc-toggle-thumb" />
+                <span className={styles.dcToggleTrack}>
+                  <span className={styles.dcToggleThumb} />
                 </span>
-                <span className="dc-toggle-label">Ignore whitespace</span>
+                <span className={styles.dcToggleLabel}>Ignore whitespace</span>
               </label>
 
-              <label className="dc-toggle">
+              <label className={styles.dcToggle}>
                 <input
                   type="checkbox"
                   checked={options.ignoreCase}
@@ -316,16 +314,16 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
                     }))
                   }
                 />
-                <span className="dc-toggle-track">
-                  <span className="dc-toggle-thumb" />
+                <span className={styles.dcToggleTrack}>
+                  <span className={styles.dcToggleThumb} />
                 </span>
-                <span className="dc-toggle-label">Ignore case</span>
+                <span className={styles.dcToggleLabel}>Ignore case</span>
               </label>
             </div>
 
             {/* Algorithm selector */}
             <select
-              className="dc-select"
+              className={styles.dcSelect}
               value={options.algorithm}
               onChange={(e) =>
                 setOptions((prev) => ({
@@ -340,12 +338,12 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
             </select>
 
             {/* View mode toggle */}
-            <div className="dc-view-toggle">
+            <div className={styles.dcViewToggle}>
               {(["split", "unified"] as DiffViewMode[]).map((mode) => (
                 <button
                   key={mode}
                   type="button"
-                  className={`dc-view-btn${viewMode === mode ? " active" : ""}`}
+                  className={`${styles.dcViewBtn}${viewMode === mode ? ` ${styles.active}` : ""}`}
                   onClick={() => setViewMode(mode)}
                 >
                   <i
@@ -358,22 +356,22 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
 
             {/* Save/Export */}
             {diffResult && (
-              <div className="dc-export-group">
+              <div className={styles.dcExportGroup}>
                 <button
                   type="button"
-                  className="dc-action-btn dc-action-btn--primary"
+                  className={`${styles.dcActionBtn} ${styles.dcActionBtnPrimary}`}
                   onClick={saveDiff}
                 >
                   <i className="ti ti-device-floppy" />
-                  <span className="dc-action-label">Save</span>
+                  <span className={styles.dcActionLabel}>Save</span>
                 </button>
 
-                <div className="dc-export-menu">
-                  <button type="button" className="dc-action-btn" title="Export options">
+                <div className={styles.dcExportMenu}>
+                  <button type="button" className={styles.dcActionBtn} title="Export options">
                     <i className="ti ti-download" />
                     <i className="ti ti-chevron-down" />
                   </button>
-                  <div className="dc-export-dropdown">
+                  <div className={styles.dcExportDropdown}>
                     <button onClick={() => handleExport("patch")}>
                       <i className="ti ti-file-diff" />
                       Patch file
@@ -395,12 +393,12 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
 
         {/* Search Bar */}
         {showSearch && (
-          <div className="dc-search-bar">
-            <div className="dc-search-input-wrap">
+          <div className={styles.dcSearchBar}>
+            <div className={styles.dcSearchInputWrap}>
               <i className="ti ti-search" />
               <input
                 type="text"
-                className="dc-search-input"
+                className={styles.dcSearchInput}
                 placeholder="Search in diff..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -408,7 +406,7 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
               {searchQuery && (
                 <button
                   type="button"
-                  className="dc-search-clear"
+                  className={styles.dcSearchClear}
                   onClick={() => setSearchQuery("")}
                 >
                   <i className="ti ti-x" />
@@ -420,86 +418,86 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
 
         {/* Stats Summary */}
         {diffResult && (
-          <div className="dc-stats-summary">
-            <div className="dc-summary-stats">
+          <div className={styles.dcStatsSummary}>
+            <div className={styles.dcSummaryStats}>
               {diffResult.stats.added > 0 && (
-                <div className="dc-summary-stat dc-summary-stat--add">
+                <div className={`${styles.dcSummaryStat} ${styles.dcSummaryStatAdd}`}>
                   <i className="ti ti-plus" />
                   {diffResult.stats.added} added
                 </div>
               )}
               {diffResult.stats.removed > 0 && (
-                <div className="dc-summary-stat dc-summary-stat--remove">
+                <div className={`${styles.dcSummaryStat} ${styles.dcSummaryStatRemove}`}>
                   <i className="ti ti-minus" />
                   {diffResult.stats.removed} removed
                 </div>
               )}
-              <div className="dc-summary-stat">
+              <div className={styles.dcSummaryStat}>
                 <i className="ti ti-equal" />
                 {diffResult.stats.unchanged} unchanged
               </div>
-              <div className="dc-summary-stat">
+              <div className={styles.dcSummaryStat}>
                 <i className="ti ti-percentage" />
                 {diffResult.stats.similarity}% similar
               </div>
             </div>
-            <div className="dc-summary-text">{diffResult.summary}</div>
+            <div className={styles.dcSummaryText}>{diffResult.summary}</div>
           </div>
         )}
 
         {/* Mobile Panel Switcher */}
-        <div className="dc-mobile-tabs">
+        <div className={styles.dcMobileTabs}>
           <button
             type="button"
-            className={`dc-mobile-tab${mobilePanel === "original" ? " active" : ""}`}
+            className={`${styles.dcMobileTab}${mobilePanel === "original" ? ` ${styles.active}` : ""}`}
             onClick={() => setMobilePanel("original")}
           >
             <i className="ti ti-file" />
             Original
-            {originalText && <span className="dc-mobile-indicator" />}
+            {originalText && <span className={styles.dcMobileIndicator} />}
           </button>
           <button
             type="button"
-            className={`dc-mobile-tab${mobilePanel === "modified" ? " active" : ""}`}
+            className={`${styles.dcMobileTab}${mobilePanel === "modified" ? ` ${styles.active}` : ""}`}
             onClick={() => setMobilePanel("modified")}
           >
             <i className="ti ti-file-diff" />
             Modified
-            {modifiedText && <span className="dc-mobile-indicator" />}
+            {modifiedText && <span className={styles.dcMobileIndicator} />}
           </button>
         </div>
 
         {/* Main Content */}
-        <div className="dc-content">
+        <div className={styles.dcContent}>
           {/* Input Panels (Desktop) or Mobile Input */}
-          <div className="dc-input-section">
+          <div className={styles.dcInputSection}>
             <div
-              className={`dc-input-panel${mobilePanel === "original" ? " mobile-visible" : " mobile-hidden"}`}
+              className={`${styles.dcInputPanel}${mobilePanel === "original" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
             >
-              <div className="dc-panel-header">
-                <div className="dc-panel-title">
+              <div className={styles.dcPanelHeader}>
+                <div className={styles.dcPanelTitle}>
                   <i className="ti ti-file" />
                   <span>Original</span>
-                  {originalFilename && <span className="dc-filename">{originalFilename}</span>}
+                  {originalFilename && <span className={styles.dcFilename}>{originalFilename}</span>}
                 </div>
-                <div className="dc-panel-actions">
+                <div className={styles.dcPanelActions}>
                   <input
                     type="file"
                     id="original-file"
-                    className="dc-file-input"
+                    className={styles.dcFileInput}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) handleFileUpload(file, "original");
                     }}
                     accept=".txt,.js,.ts,.jsx,.tsx,.css,.scss,.html,.htm,.json,.md,.xml,.svg"
                   />
-                  <label htmlFor="original-file" className="dc-file-btn" title="Upload file">
+                  <label htmlFor="original-file" className={styles.dcFileBtn} title="Upload file">
                     <i className="ti ti-upload" />
                   </label>
                   {originalText && (
                     <button
                       type="button"
-                      className="dc-panel-btn"
+                      className={styles.dcPanelBtn}
                       onClick={() => handleCopy(originalText, "original")}
                       title="Copy content"
                     >
@@ -509,7 +507,7 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
                   {originalText && (
                     <button
                       type="button"
-                      className="dc-panel-btn"
+                      className={styles.dcPanelBtn}
                       onClick={() => {
                         setOriginalText("");
                         setOriginalFilename("");
@@ -522,7 +520,7 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
                 </div>
               </div>
               <textarea
-                className="dc-textarea"
+                className={styles.dcTextarea}
                 value={originalText}
                 onChange={(e) => setOriginalText(e.target.value)}
                 placeholder="Paste original text here or upload a file..."
@@ -531,32 +529,32 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
             </div>
 
             <div
-              className={`dc-input-panel${mobilePanel === "modified" ? " mobile-visible" : " mobile-hidden"}`}
+              className={`${styles.dcInputPanel}${mobilePanel === "modified" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
             >
-              <div className="dc-panel-header">
-                <div className="dc-panel-title">
+              <div className={styles.dcPanelHeader}>
+                <div className={styles.dcPanelTitle}>
                   <i className="ti ti-file-diff" />
                   <span>Modified</span>
-                  {modifiedFilename && <span className="dc-filename">{modifiedFilename}</span>}
+                  {modifiedFilename && <span className={styles.dcFilename}>{modifiedFilename}</span>}
                 </div>
-                <div className="dc-panel-actions">
+                <div className={styles.dcPanelActions}>
                   <input
                     type="file"
                     id="modified-file"
-                    className="dc-file-input"
+                    className={styles.dcFileInput}
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) handleFileUpload(file, "modified");
                     }}
                     accept=".txt,.js,.ts,.jsx,.tsx,.css,.scss,.html,.htm,.json,.md,.xml,.svg"
                   />
-                  <label htmlFor="modified-file" className="dc-file-btn" title="Upload file">
+                  <label htmlFor="modified-file" className={styles.dcFileBtn} title="Upload file">
                     <i className="ti ti-upload" />
                   </label>
                   {modifiedText && (
                     <button
                       type="button"
-                      className="dc-panel-btn"
+                      className={styles.dcPanelBtn}
                       onClick={() => handleCopy(modifiedText, "modified")}
                       title="Copy content"
                     >
@@ -566,7 +564,7 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
                   {modifiedText && (
                     <button
                       type="button"
-                      className="dc-panel-btn"
+                      className={styles.dcPanelBtn}
                       onClick={() => {
                         setModifiedText("");
                         setModifiedFilename("");
@@ -579,7 +577,7 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
                 </div>
               </div>
               <textarea
-                className="dc-textarea"
+                className={styles.dcTextarea}
                 value={modifiedText}
                 onChange={(e) => setModifiedText(e.target.value)}
                 placeholder="Paste modified text here or upload a file..."
@@ -589,22 +587,22 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
           </div>
 
           {/* Results Section */}
-          <div className="dc-results-section">
+          <div className={styles.dcResultsSection}>
             {/* Tab Navigation */}
-            <div className="dc-tabs-bar">
-              <nav className="dc-tabs">
+            <div className={styles.dcTabsBar}>
+              <nav className={styles.dcTabs}>
                 {TAB_VIEWS.map((tab) => (
                   <button
                     key={tab.id}
                     type="button"
-                    className={`dc-tab${tabView === tab.id ? " active" : ""}`}
+                    className={`${styles.dcTab}${tabView === tab.id ? ` ${styles.active}` : ""}`}
                     onClick={() => setTabView(tab.id)}
                     aria-selected={tabView === tab.id}
                   >
                     <i className={`ti ${tab.icon}`} />
                     <span>{tab.label}</span>
                     {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                      <span className="dc-tab-badge">{history.length}</span>
+                      <span className={styles.dcTabBadge}>{history.length}</span>
                     )}
                   </button>
                 ))}
@@ -612,7 +610,7 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
             </div>
 
             {/* Tab Content */}
-            <div className="dc-tab-content">
+            <div className={styles.dcTabContent}>
               {tabView === "diff" &&
                 (diffResult ? (
                   <DiffViewer
@@ -626,20 +624,20 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
                     wrapLines={options.wrapLines}
                   />
                 ) : (
-                  <div className="dc-empty-state">
-                    <div className="dc-empty-icon">
+                  <div className={styles.dcEmptyState}>
+                    <div className={styles.dcEmptyIcon}>
                       <i className="ti ti-git-compare" />
                     </div>
-                    <h3 className="dc-empty-title">Compare Text Differences</h3>
-                    <p className="dc-empty-desc">
+                    <h3 className={styles.dcEmptyTitle}>Compare Text Differences</h3>
+                    <p className={styles.dcEmptyDesc}>
                       Add content to both panels or load a sample to see the differences
                     </p>
-                    <div className="dc-empty-actions">
+                    <div className={styles.dcEmptyActions}>
                       {Object.keys(SAMPLE_DIFFS).map((type) => (
                         <button
                           key={type}
                           type="button"
-                          className="dc-empty-sample-btn"
+                          className={styles.dcEmptySampleBtn}
                           onClick={() => loadSample(type as keyof typeof SAMPLE_DIFFS)}
                         >
                           Load {type.toUpperCase()} sample
@@ -658,58 +656,58 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
               )}
 
               {tabView === "history" && (
-                <div className="dc-history">
+                <div className={styles.dcHistory}>
                   {history.length === 0 ? (
-                    <div className="dc-empty-state">
-                      <div className="dc-empty-icon">
+                    <div className={styles.dcEmptyState}>
+                      <div className={styles.dcEmptyIcon}>
                         <i className="ti ti-history" />
                       </div>
-                      <h3 className="dc-empty-title">No History Yet</h3>
-                      <p className="dc-empty-desc">
+                      <h3 className={styles.dcEmptyTitle}>No History Yet</h3>
+                      <p className={styles.dcEmptyDesc}>
                         Your comparison history will appear here after you save diffs
                       </p>
                     </div>
                   ) : (
                     <>
-                      <div className="dc-history-header">
-                        <div className="dc-history-title">
+                      <div className={styles.dcHistoryHeader}>
+                        <div className={styles.dcHistoryTitle}>
                           <i className="ti ti-history" />
                           Diff History
-                          <span className="dc-history-count">{history.length}</span>
+                          <span className={styles.dcHistoryCount}>{history.length}</span>
                         </div>
-                        <button type="button" className="dc-action-btn" onClick={clearHistory}>
+                        <button type="button" className={styles.dcActionBtn} onClick={clearHistory}>
                           <i className="ti ti-trash" />
                           Clear All
                         </button>
                       </div>
 
-                      <div className="dc-history-list">
+                      <div className={styles.dcHistoryList}>
                         {history.slice(0, 20).map((entry) => (
-                          <div key={entry.id} className="dc-history-item">
-                            <div className="dc-history-item-header">
-                              <span className="dc-history-item-title">{entry.title}</span>
-                              <span className="dc-history-item-time">
+                          <div key={entry.id} className={styles.dcHistoryItem}>
+                            <div className={styles.dcHistoryItemHeader}>
+                              <span className={styles.dcHistoryItemTitle}>{entry.title}</span>
+                              <span className={styles.dcHistoryItemTime}>
                                 {new Date(entry.timestamp).toLocaleDateString()}
                               </span>
                             </div>
-                            <div className="dc-history-item-stats">
+                            <div className={styles.dcHistoryItemStats}>
                               {entry.result.stats.added > 0 && (
-                                <span className="dc-history-stat dc-history-stat--add">
+                                <span className={`${styles.dcHistoryStat} ${styles.dcHistoryStatAdd}`}>
                                   +{entry.result.stats.added}
                                 </span>
                               )}
                               {entry.result.stats.removed > 0 && (
-                                <span className="dc-history-stat dc-history-stat--remove">
+                                <span className={`${styles.dcHistoryStat} ${styles.dcHistoryStatRemove}`}>
                                   -{entry.result.stats.removed}
                                 </span>
                               )}
-                              <span className="dc-history-stat">
+                              <span className={styles.dcHistoryStat}>
                                 {entry.result.stats.similarity}% similar
                               </span>
                             </div>
                             <button
                               type="button"
-                              className="dc-history-restore"
+                              className={styles.dcHistoryRestore}
                               onClick={() => {
                                 setOriginalText(entry.originalText);
                                 setModifiedText(entry.modifiedText);
@@ -734,13 +732,13 @@ export default function DiffCheckerWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Footer */}
-        <div className="dc-footer">
-          <div className="dc-footer-info">
+        <div className={styles.dcFooter}>
+          <div className={styles.dcFooterInfo}>
             <i className="ti ti-shield-lock" />
             <span>Everything runs in your browser — no data ever leaves this page.</span>
           </div>
           {diffResult && (
-            <div className="dc-footer-stats">
+            <div className={styles.dcFooterStats}>
               <span>{diffResult.stats.totalLines.toLocaleString()} total lines</span>
               <span>•</span>
               <span>{fileType} file</span>

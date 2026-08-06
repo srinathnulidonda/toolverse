@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { generateSlug, analyzeSlug, type SlugOptions } from "./utils";
+import { generateSlug, analyzeSlug, type SlugOptions } from "./ts/utils";
+import styles from "./style/SlugCompare.module.css";
 
 interface SlugCompareProps {
   options: SlugOptions;
@@ -67,13 +68,13 @@ export default function SlugCompare({ options }: SlugCompareProps) {
 
   return (
     <>
-      <div className="sc-root">
+      <div className={styles.scRoot}>
         {/*  Comparison Controls  */}
-        <div className="sc-controls">
-          <div className="sc-mode-group">
+        <div className={styles.scControls}>
+          <div className={styles.scModeGroup}>
             <button
               type="button"
-              className={`sc-mode-btn${compareMode === "side-by-side" ? " active" : ""}`}
+              className={`${styles.scModeBtn}${compareMode === "side-by-side" ? ` ${styles.active}` : ""}`}
               onClick={() => setCompareMode("side-by-side")}
             >
               <i className="ti ti-columns" />
@@ -81,7 +82,7 @@ export default function SlugCompare({ options }: SlugCompareProps) {
             </button>
             <button
               type="button"
-              className={`sc-mode-btn${compareMode === "detailed" ? " active" : ""}`}
+              className={`${styles.scModeBtn}${compareMode === "detailed" ? ` ${styles.active}` : ""}`}
               onClick={() => setCompareMode("detailed")}
             >
               <i className="ti ti-chart-bar" />
@@ -89,10 +90,10 @@ export default function SlugCompare({ options }: SlugCompareProps) {
             </button>
           </div>
 
-          <div className="sc-actions">
+          <div className={styles.scActions}>
             <button
               type="button"
-              className="sc-btn"
+              className={styles.scBtn}
               onClick={handleSwap}
               disabled={!leftInput || !rightInput}
             >
@@ -101,7 +102,7 @@ export default function SlugCompare({ options }: SlugCompareProps) {
             </button>
             <button
               type="button"
-              className="sc-btn"
+              className={styles.scBtn}
               onClick={handleClear}
               disabled={!leftInput && !rightInput}
             >
@@ -113,25 +114,25 @@ export default function SlugCompare({ options }: SlugCompareProps) {
 
         {/*  Comparison Result  */}
         {comparison && (
-          <div className="sc-result">
+          <div className={styles.scResult}>
             {comparison.identical ? (
-              <div className="sc-result-card identical">
-                <div className="sc-result-icon">
+              <div className={`${styles.scResultCard} ${styles.identical}`}>
+                <div className={styles.scResultIcon}>
                   <i className="ti ti-checks" />
                 </div>
-                <div className="sc-result-content">
-                  <h3 className="sc-result-title">Identical Slugs</h3>
-                  <p className="sc-result-desc">Both inputs generate the same slug</p>
+                <div className={styles.scResultContent}>
+                  <h3 className={styles.scResultTitle}>Identical Slugs</h3>
+                  <p className={styles.scResultDesc}>Both inputs generate the same slug</p>
                 </div>
               </div>
             ) : (
-              <div className="sc-result-card different">
-                <div className="sc-result-icon">
+              <div className={`${styles.scResultCard} ${styles.different}`}>
+                <div className={styles.scResultIcon}>
                   <i className="ti ti-git-compare" />
                 </div>
-                <div className="sc-result-content">
-                  <h3 className="sc-result-title">Different Slugs</h3>
-                  <p className="sc-result-desc">
+                <div className={styles.scResultContent}>
+                  <h3 className={styles.scResultTitle}>Different Slugs</h3>
+                  <p className={styles.scResultDesc}>
                     {comparison.winner === "tie"
                       ? "Both slugs have equal SEO scores"
                       : comparison.winner === "left"
@@ -143,35 +144,35 @@ export default function SlugCompare({ options }: SlugCompareProps) {
             )}
 
             {compareMode === "detailed" && !comparison.identical && (
-              <div className="sc-details">
-                <div className="sc-detail-grid">
-                  <div className="sc-detail-card">
-                    <div className="sc-detail-header">
+              <div className={styles.scDetails}>
+                <div className={styles.scDetailGrid}>
+                  <div className={styles.scDetailCard}>
+                    <div className={styles.scDetailHeader}>
                       <i className="ti ti-trophy" />
                       <span>Winner</span>
                     </div>
-                    <div className="sc-detail-value">
+                    <div className={styles.scDetailValue}>
                       {comparison.winner === "tie" ? (
-                        <span className="sc-tie">Tie</span>
+                        <span className={styles.scTie}>Tie</span>
                       ) : (
-                        <span className={`sc-winner ${comparison.winner}`}>
+                        <span className={`${styles.scWinner} ${styles[comparison.winner]}`}>
                           {comparison.winner === "left" ? "Left" : "Right"}
                         </span>
                       )}
                     </div>
-                    <div className="sc-detail-label">Based on SEO score</div>
+                    <div className={styles.scDetailLabel}>Based on SEO score</div>
                   </div>
 
-                  <div className="sc-detail-card">
-                    <div className="sc-detail-header">
+                  <div className={styles.scDetailCard}>
+                    <div className={styles.scDetailHeader}>
                       <i className="ti ti-ruler-2" />
                       <span>Length Difference</span>
                     </div>
-                    <div className="sc-detail-value">
+                    <div className={styles.scDetailValue}>
                       {comparison.lengthDiff > 0 ? "+" : ""}
                       {comparison.lengthDiff}
                     </div>
-                    <div className="sc-detail-label">
+                    <div className={styles.scDetailLabel}>
                       {comparison.lengthDiff > 0
                         ? "Right is longer"
                         : comparison.lengthDiff < 0
@@ -180,16 +181,16 @@ export default function SlugCompare({ options }: SlugCompareProps) {
                     </div>
                   </div>
 
-                  <div className="sc-detail-card">
-                    <div className="sc-detail-header">
+                  <div className={styles.scDetailCard}>
+                    <div className={styles.scDetailHeader}>
                       <i className="ti ti-chart-line" />
                       <span>Score Difference</span>
                     </div>
-                    <div className="sc-detail-value">
+                    <div className={styles.scDetailValue}>
                       {comparison.scoreDiff > 0 ? "+" : ""}
                       {comparison.scoreDiff}
                     </div>
-                    <div className="sc-detail-label">
+                    <div className={styles.scDetailLabel}>
                       {leftAnalysis?.score || 0} vs {rightAnalysis?.score || 0}
                     </div>
                   </div>
@@ -200,63 +201,63 @@ export default function SlugCompare({ options }: SlugCompareProps) {
         )}
 
         {/*  Side-by-Side Inputs  */}
-        <div className="sc-inputs">
-          <div className="sc-input-panel">
-            <div className="sc-input-header">
-              <div className="sc-input-label">
+        <div className={styles.scInputs}>
+          <div className={styles.scInputPanel}>
+            <div className={styles.scInputHeader}>
+              <div className={styles.scInputLabel}>
                 <i className="ti ti-arrow-left" />
                 Left Side
               </div>
               {leftAnalysis && (
-                <div className={`sc-score-badge ${leftAnalysis.readability}`}>
+                <div className={`${styles.scScoreBadge} ${styles[leftAnalysis.readability]}`}>
                   {leftAnalysis.score}
                 </div>
               )}
             </div>
             <textarea
-              className="sc-textarea"
+              className={styles.scTextarea}
               value={leftInput}
               onChange={(e) => setLeftInput(e.target.value)}
               placeholder="Enter first text..."
               spellCheck={false}
             />
             {leftSlug && (
-              <div className="sc-slug-preview">
-                <span className="sc-slug-label">Slug:</span>
-                <code className="sc-slug-value">{leftSlug}</code>
+              <div className={styles.scSlugPreview}>
+                <span className={styles.scSlugLabel}>Slug:</span>
+                <code className={styles.scSlugValue}>{leftSlug}</code>
               </div>
             )}
           </div>
 
-          <div className="sc-vs">
-            <div className="sc-vs-icon">
+          <div className={styles.scVs}>
+            <div className={styles.scVsIcon}>
               <span>VS</span>
             </div>
           </div>
 
-          <div className="sc-input-panel">
-            <div className="sc-input-header">
-              <div className="sc-input-label">
+          <div className={styles.scInputPanel}>
+            <div className={styles.scInputHeader}>
+              <div className={styles.scInputLabel}>
                 <i className="ti ti-arrow-right" />
                 Right Side
               </div>
               {rightAnalysis && (
-                <div className={`sc-score-badge ${rightAnalysis.readability}`}>
+                <div className={`${styles.scScoreBadge} ${styles[rightAnalysis.readability]}`}>
                   {rightAnalysis.score}
                 </div>
               )}
             </div>
             <textarea
-              className="sc-textarea"
+              className={styles.scTextarea}
               value={rightInput}
               onChange={(e) => setRightInput(e.target.value)}
               placeholder="Enter second text..."
               spellCheck={false}
             />
             {rightSlug && (
-              <div className="sc-slug-preview">
-                <span className="sc-slug-label">Slug:</span>
-                <code className="sc-slug-value">{rightSlug}</code>
+              <div className={styles.scSlugPreview}>
+                <span className={styles.scSlugLabel}>Slug:</span>
+                <code className={styles.scSlugValue}>{rightSlug}</code>
               </div>
             )}
           </div>
@@ -264,12 +265,12 @@ export default function SlugCompare({ options }: SlugCompareProps) {
 
         {/*  Empty State  */}
         {!leftInput && !rightInput && (
-          <div className="sc-empty">
-            <div className="sc-empty-icon">
+          <div className={styles.scEmpty}>
+            <div className={styles.scEmptyIcon}>
               <i className="ti ti-git-compare" />
             </div>
-            <p className="sc-empty-title">Compare Two Slugs</p>
-            <p className="sc-empty-desc">
+            <p className={styles.scEmptyTitle}>Compare Two Slugs</p>
+            <p className={styles.scEmptyDesc}>
               Enter two different texts above to compare their generated slugs and SEO quality
             </p>
           </div>

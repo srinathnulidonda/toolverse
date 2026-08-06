@@ -1,0 +1,249 @@
+/* features/social/hashtag-generator/style/HashtagCategories.module.css */
+
+.hcRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.hcHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.hcHeader i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.hcSearch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.15s;
+}
+
+.hcSearch:focus-within {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.hcSearch>i {
+    font-size: 15px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.hcSearchInput {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 13px;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.hcSearchInput::placeholder {
+    color: var(--text-disabled);
+}
+
+.hcSearchClear {
+    background: none;
+    border: none;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.hcSearchClear:hover {
+    color: var(--text);
+}
+
+.hcCategories {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hcCategory {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.hcCategoryHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    background: var(--bg-surface);
+    border: none;
+    cursor: pointer;
+    transition: background 0.12s;
+    width: 100%;
+}
+
+.hcCategoryHeader:hover {
+    background: var(--border-faint);
+}
+
+.hcCategoryLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hcCategoryLeft>i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.hcCategoryName {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.hcSelectedBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    background: var(--brand);
+    color: white;
+    border-radius: 999px;
+    font-size: 9.5px;
+    font-weight: 700;
+}
+
+.hcCategoryRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hcCategoryCount {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.hcChevron {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    transition: transform 0.2s;
+}
+
+.hcChevron.expanded {
+    transform: rotate(180deg);
+}
+
+.hcCategoryTags {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 6px;
+    padding: 12px;
+    border-top: 0.5px solid var(--border);
+}
+
+.hcTag {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px 10px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.12s;
+    position: relative;
+}
+
+.hcTag:hover {
+    background: var(--border-faint);
+    border-color: var(--size-color, var(--border));
+}
+
+.hcTag.selected {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.hcTagText {
+    font-size: 11.5px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 18px;
+}
+
+.hcTag.selected .hcTagText {
+    color: var(--brand-text);
+}
+
+.hcTagInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.hcTagSize {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hcTagReach {
+    font-size: 9.5px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.hcCheck {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 11px;
+    color: var(--brand);
+}
+
+.hcNoResults {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 32px 20px;
+    text-align: center;
+}
+
+.hcNoResults i {
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.hcNoResults p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+}

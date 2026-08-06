@@ -1,0 +1,100 @@
+/* features/dev/json-formatter/style/JsonStats.module.css */
+.jstRoot {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.jstSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.jstSectionLabel {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-family: var(--font-sans);
+    margin: 0;
+}
+
+.jstGrid {
+    display: grid;
+    gap: 8px;
+}
+
+.jstGrid4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.jstGrid6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.jstCard {
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 12px 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color 0.12s, background 0.12s;
+}
+
+.jstCard:hover {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.jstCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.jstCardHeader i {
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+.jstCardLabel {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.jstCardVal {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-sans);
+    letter-spacing: -0.8px;
+    line-height: 1;
+}
+
+@media (max-width: 520px) {
+    .jstGrid4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jstGrid6 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .jstCard {
+        transition: none;
+    }
+}

@@ -1,0 +1,379 @@
+/* features/dev/uuid-generator/style/UuidGenerator.module.css */
+.ugGenRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+}
+
+/*  Display  */
+.ugGenDisplay {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.ugGenDisplayHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+}
+
+.ugGenDisplayLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ugGenDisplayLabel i {
+    font-size: 13px;
+}
+
+.ugGenDisplayActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ugGenIconBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ugGenIconBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ugGenIconBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ugGenIconBtn i {
+    font-size: 14px;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.ugSpinning {
+    animation: spin 1s linear infinite;
+}
+
+.ugGenCopyBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ugGenCopyBtn i {
+    font-size: 12px;
+}
+
+.ugGenCopyBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ugGenCopyBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ugGenCopyBtn.success {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.ugGenUuidBox {
+    padding: 20px 18px;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ugGenUuid {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--brand);
+    letter-spacing: 0.02em;
+    word-break: break-all;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.ugGenPlaceholder {
+    font-size: 13px;
+    color: var(--text-disabled);
+    font-style: italic;
+}
+
+.ugGenAnalysis {
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border-faint);
+}
+
+.ugGenAnalysisGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+}
+
+.ugGenAnalysisItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ugGenAnalysisWide {
+    grid-column: 1 / -1;
+}
+
+.ugGenAnalysisLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ugGenAnalysisValue {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.ugGenTimestamp {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+}
+
+/*  Namespace  */
+.ugGenNamespace {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ugGenSectionLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ugGenSectionLabel i {
+    font-size: 13px;
+}
+
+.ugGenNamespaceToggle {
+    display: flex;
+    gap: 16px;
+    padding: 10px 0;
+}
+
+.ugGenRadio {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ugGenRadio input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--brand);
+}
+
+.ugGenRadioLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.ugGenInputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ugGenInputLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.ugGenInput,
+.ugGenSelect {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text);
+    font-size: 12.5px;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: border-color 0.12s;
+}
+
+.ugGenInput:focus,
+.ugGenSelect:focus {
+    border-color: var(--brand-border);
+}
+
+.ugGenInput::placeholder {
+    color: var(--text-disabled);
+}
+
+.ugGenSelect {
+    cursor: pointer;
+    font-size: 11.5px;
+}
+
+.ugGenInputHint {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    font-style: italic;
+    line-height: 1.4;
+}
+
+/*  Info  */
+.ugGenInfo {
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: var(--radius-lg);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ugGenInfoHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand-text);
+}
+
+.ugGenInfoHeader i {
+    font-size: 14px;
+}
+
+.ugGenInfoDesc {
+    font-size: 12px;
+    color: var(--brand-text);
+    margin: 0;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+.ugGenInfoMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ugGenInfoTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: var(--bg-card);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.ugGenInfoTag i {
+    font-size: 11px;
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .ugGenRoot {
+        padding: 12px;
+    }
+
+    .ugGenUuid {
+        font-size: 14px;
+    }
+
+    .ugGenNamespaceToggle {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ugGenIconBtn,
+    .ugGenCopyBtn,
+    .ugGenInput,
+    .ugGenSelect {
+        transition: none;
+    }
+
+    .ugSpinning {
+        animation: none;
+    }
+}

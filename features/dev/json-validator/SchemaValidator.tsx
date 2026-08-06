@@ -7,7 +7,8 @@ import {
   validateJSON,
   type JSONSchema,
   type ValidationOptions,
-} from "./validatorEngine";
+} from "./ts/validatorEngine";
+import styles from "./style/SchemaValidator.module.css";
 
 interface SchemaValidatorProps {
   jsonInput: string;
@@ -116,19 +117,19 @@ export default function SchemaValidator({ jsonInput, options }: SchemaValidatorP
 
   return (
     <>
-      <div className="sv-root">
+      <div className={styles.svRoot}>
         {/* Header */}
-        <div className="sv-header">
-          <div className="sv-header-left">
+        <div className={styles.svHeader}>
+          <div className={styles.svHeaderLeft}>
             <i className="ti ti-shield-check" />
             <span>JSON Schema Validation</span>
           </div>
-          <div className="sv-header-right">
+          <div className={styles.svHeaderRight}>
             {Object.entries(SAMPLE_SCHEMAS).map(([key, sample]) => (
               <button
                 key={key}
                 type="button"
-                className="sv-sample-btn"
+                className={styles.svSampleBtn}
                 onClick={() => loadSampleSchema(key as keyof typeof SAMPLE_SCHEMAS)}
                 title={sample.name}
               >
@@ -138,27 +139,27 @@ export default function SchemaValidator({ jsonInput, options }: SchemaValidatorP
           </div>
         </div>
 
-        <div className="sv-body">
+        <div className={styles.svBody}>
           {/* Schema Input */}
-          <div className="sv-panel">
-            <div className="sv-panel-header">
-              <div className="sv-panel-title">
+          <div className={styles.svPanel}>
+            <div className={styles.svPanelHeader}>
+              <div className={styles.svPanelTitle}>
                 <i className="ti ti-file-code" />
                 JSON Schema
               </div>
-              <div className="sv-panel-actions">
+              <div className={styles.svPanelActions}>
                 {schemaInput && (
                   <>
                     <button
                       type="button"
-                      className={`sv-copy-btn${copiedKey === "schema" ? " copied" : ""}`}
+                      className={`${styles.svCopyBtn}${copiedKey === "schema" ? " copied" : ""}`}
                       onClick={() => handleCopy(schemaInput, "schema")}
                     >
                       <i className={`ti ${copiedKey === "schema" ? "ti-check" : "ti-copy"}`} />
                     </button>
                     <button
                       type="button"
-                      className="sv-clear-btn"
+                      className={styles.svClearBtn}
                       onClick={() => setSchemaInput("")}
                     >
                       <i className="ti ti-x" />
@@ -168,7 +169,7 @@ export default function SchemaValidator({ jsonInput, options }: SchemaValidatorP
               </div>
             </div>
             <textarea
-              className="sv-textarea"
+              className={styles.svTextarea}
               value={schemaInput}
               onChange={(e) => setSchemaInput(e.target.value)}
               placeholder="Paste JSON Schema here or generate from your JSON..."
@@ -178,26 +179,26 @@ export default function SchemaValidator({ jsonInput, options }: SchemaValidatorP
 
           {/* Generated Schema */}
           {generatedSchema && (
-            <div className="sv-generated">
-              <div className="sv-generated-header">
-                <div className="sv-generated-title">
+            <div className={styles.svGenerated}>
+              <div className={styles.svGeneratedHeader}>
+                <div className={styles.svGeneratedTitle}>
                   <i className="ti ti-sparkles" />
                   Auto-Generated Schema
                 </div>
-                <button type="button" className="sv-use-btn" onClick={useGeneratedSchema}>
+                <button type="button" className={styles.svUseBtn} onClick={useGeneratedSchema}>
                   <i className="ti ti-arrow-up" />
                   Use This Schema
                 </button>
               </div>
-              <pre className="sv-schema-preview">{JSON.stringify(generatedSchema, null, 2)}</pre>
+              <pre className={styles.svSchemaPreview}>{JSON.stringify(generatedSchema, null, 2)}</pre>
             </div>
           )}
 
           {/* Validation Results */}
           {schemaValidationResult && (
-            <div className="sv-results">
+            <div className={styles.svResults}>
               {"error" in schemaValidationResult ? (
-                <div className="sv-result-error">
+                <div className={styles.svResultError}>
                   <i className="ti ti-alert-circle" />
                   <div>
                     <strong>Invalid Schema</strong>
@@ -206,28 +207,28 @@ export default function SchemaValidator({ jsonInput, options }: SchemaValidatorP
                 </div>
               ) : (
                 <div
-                  className={`sv-result sv-result--${schemaValidationResult.valid ? "valid" : "invalid"}`}
+                  className={`${styles.svResult} ${styles[`svResult${schemaValidationResult.valid ? "Valid" : "Invalid"}`]}`}
                 >
-                  <div className="sv-result-icon">
+                  <div className={styles.svResultIcon}>
                     <i
                       className={`ti ${schemaValidationResult.valid ? "ti-circle-check" : "ti-alert-circle"}`}
                     />
                   </div>
-                  <div className="sv-result-content">
-                    <h3 className="sv-result-title">
+                  <div className={styles.svResultContent}>
+                    <h3 className={styles.svResultTitle}>
                       {schemaValidationResult.valid ? "Schema Valid" : "Schema Validation Failed"}
                     </h3>
-                    <p className="sv-result-desc">
+                    <p className={styles.svResultDesc}>
                       {schemaValidationResult.valid
                         ? "Your JSON conforms to the provided schema."
                         : `Found ${schemaValidationResult.errors.length} schema violation(s).`}
                     </p>
                     {!schemaValidationResult.valid && schemaValidationResult.errors.length > 0 && (
-                      <div className="sv-schema-errors">
+                      <div className={styles.svSchemaErrors}>
                         {schemaValidationResult.errors
                           .filter((e) => e.type === "schema")
                           .map((error, idx) => (
-                            <div key={idx} className="sv-schema-error">
+                            <div key={idx} className={styles.svSchemaError}>
                               <i className="ti ti-point-filled" />
                               <span>{error.message}</span>
                               {error.path && <code>{error.path}</code>}
@@ -243,12 +244,12 @@ export default function SchemaValidator({ jsonInput, options }: SchemaValidatorP
 
           {/* Empty State */}
           {!generatedSchema && !schemaInput && (
-            <div className="sv-empty">
-              <div className="sv-empty-icon">
+            <div className={styles.svEmpty}>
+              <div className={styles.svEmptyIcon}>
                 <i className="ti ti-shield-check" />
               </div>
-              <h3 className="sv-empty-title">JSON Schema Validation</h3>
-              <p className="sv-empty-desc">
+              <h3 className={styles.svEmptyTitle}>JSON Schema Validation</h3>
+              <p className={styles.svEmptyDesc}>
                 Validate your JSON data against a JSON Schema. Load a sample schema or generate one
                 from your JSON.
               </p>

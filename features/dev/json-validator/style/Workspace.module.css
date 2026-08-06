@@ -1,0 +1,1036 @@
+/* features/dev/json-validator/style/Workspace.module.css */
+.jvwRoot {
+    --jvw-radius-sm: 6px;
+    --jvw-radius-md: 8px;
+    --jvw-radius-lg: 12px;
+    --jvw-radius-xl: 16px;
+
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--jvw-radius-xl);
+    display: flex;
+    flex-direction: column;
+    min-height: 700px;
+    overflow: hidden;
+}
+
+/* Chrome */
+.jvwChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jvwChromeLeft,
+.jvwChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.jvwTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.jvwTitle i {
+    font-size: 16px;
+    color: var(--brand);
+}
+
+.jvwChromeBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: var(--jvw-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jvwChromeBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jvwChromeBtn i {
+    font-size: 13px;
+}
+
+/* Settings */
+.jvwSettings {
+    padding: 14px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jvwSettingsRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.jvwSettingGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.jvwSettingLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jvwPillGroup {
+    display: inline-flex;
+    gap: 2px;
+    padding: 2px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--jvw-radius-md);
+}
+
+.jvwPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.jvwPill:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jvwPill.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.jvwSettingCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.jvwSettingCheckbox input {
+    cursor: pointer;
+}
+
+.jvwSettingCheckbox span {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Tabs */
+.jvwTabsBar {
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jvwTabs {
+    display: flex;
+    padding: 0 16px;
+    overflow-x: auto;
+}
+
+.jvwTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.jvwTab:hover {
+    color: var(--text);
+}
+
+.jvwTab.active {
+    color: var(--text);
+}
+
+.jvwTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.jvwTab i {
+    font-size: 14px;
+}
+
+.jvwTabBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.jvwTabIndicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ef4444;
+}
+
+/* Tab Content */
+.jvwTabContent {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Validate View */
+.jvwValidateView {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Command Bar */
+.jvwCommandBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.jvwCommandLeft,
+.jvwCommandRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.jvwSamples {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.jvwSamplesLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-disabled);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jvwSampleBtn {
+    height: 26px;
+    padding: 0 8px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--jvw-radius-md);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.jvwSampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jvwActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: var(--jvw-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jvwActionBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jvwActionBtn i {
+    font-size: 13px;
+}
+
+.jvwActionBtnBrand {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+}
+
+.jvwActionBtnBrand:hover {
+    background: var(--brand-hover);
+    border-color: var(--brand-hover);
+}
+
+/* Status Bar */
+.jvwStatus {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.jvwStatusValid {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.jvwStatusInvalid {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jvwStatusValid {
+        background: #052e16;
+        color: #4ade80;
+    }
+
+    .jvwStatusInvalid {
+        background: #1c0a0a;
+        color: #f87171;
+    }
+}
+
+.jvwStatusLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jvwStatusLeft i {
+    font-size: 16px;
+}
+
+.jvwStatusLabel {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.jvwStatusCount {
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.jvwStatusRight {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.jvwStatusStat {
+    font-size: 11px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+}
+
+/* Mobile Switcher */
+.jvwMobileSwitcher {
+    display: none;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jvwSwitcherTab {
+    flex: 1;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.jvwSwitcherTab.active {
+    color: var(--text);
+}
+
+.jvwSwitcherTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--brand);
+}
+
+.jvwSwitcherDivider {
+    width: 0.5px;
+    background: var(--border);
+    align-self: stretch;
+    margin: 10px 0;
+}
+
+.jvwReadyIndicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+}
+
+/* Body */
+.jvwBody {
+    display: grid;
+    grid-template-columns: 1fr 44px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.jvwPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.jvwPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    height: 40px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.jvwPanelTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jvwPanelTitle i {
+    font-size: 13px;
+}
+
+.jvwPanelActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.jvwCharCount {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-disabled);
+}
+
+.jvwCopyBtn,
+.jvwClearBtn {
+    width: 28px;
+    height: 28px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--jvw-radius-md);
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jvwCopyBtn:hover:not(:disabled),
+.jvwClearBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jvwCopyBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jvwTextarea {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    min-height: 0;
+}
+
+.jvwTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.jvwTextareaError {
+    border-left: 3px solid #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jvwTextareaError {
+        border-color: #f87171;
+    }
+}
+
+.jvwMobileCta {
+    display: none;
+    padding: 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jvwViewResultBtn {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: var(--jvw-radius-lg);
+    background: var(--brand);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jvwViewResultBtn:hover {
+    background: var(--brand-hover);
+}
+
+.jvwViewResultBtn i {
+    font-size: 16px;
+}
+
+/* Gutter */
+.jvwGutter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface);
+    border-left: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+}
+
+.jvwGutterLine {
+    flex: 1;
+    width: 0.5px;
+    background: var(--border);
+}
+
+.jvwGutterIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-disabled);
+    font-size: 14px;
+}
+
+/* Empty State */
+.jvwEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--bg-card);
+}
+
+.jvwEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.jvwEmptyTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.jvwEmptyDescription {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.jvwEmptySamples {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.jvwEmptySampleBtn {
+    height: 32px;
+    padding: 0 14px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--jvw-radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jvwEmptySampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+/* Tab Empty */
+.jvwTabEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px 24px;
+    text-align: center;
+    background: var(--bg-surface);
+}
+
+.jvwTabEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.jvwTabEmptyTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.jvwTabEmptyDescription {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+/* History */
+.jvwHistoryView {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-surface);
+    overflow: hidden;
+    min-height: 0;
+}
+
+.jvwHistoryHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jvwHistoryTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.jvwHistoryTitle i {
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+.jvwHistoryCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.jvwHistoryList {
+    flex: 1;
+    overflow: auto;
+    padding: 8px;
+    min-height: 0;
+}
+
+.jvwHistoryItem {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--jvw-radius-lg);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    transition: all 0.12s;
+}
+
+.jvwHistoryItem:hover {
+    border-color: var(--brand-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.jvwHistoryItemHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.jvwHistoryItemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.jvwHistoryItemTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jvwHistoryItemTime {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.jvwHistoryItemMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.jvwHistoryBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.jvwHistoryBadge.valid {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.jvwHistoryBadge.invalid {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jvwHistoryBadge.invalid {
+        background: #1f1517;
+        color: #f87171;
+    }
+}
+
+.jvwHistoryBadge i {
+    font-size: 9px;
+}
+
+.jvwHistoryStat {
+    font-size: 11px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+}
+
+/* Footer */
+.jvwFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.jvwFooterInfo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-tertiary);
+}
+
+.jvwFooterInfo i {
+    font-size: 13px;
+    color: var(--brand);
+}
+
+.jvwFooterStats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+}
+
+.mobileVisible {
+    z-index: 1;
+    visibility: visible;
+}
+
+.mobileHidden {
+    z-index: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .jvwRoot {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100dvh;
+    }
+
+    .jvwChromeBtn span,
+    .jvwSamplesLabel {
+        display: none;
+    }
+
+    .jvwSettingsRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .jvwSettingGroup {
+        width: 100%;
+    }
+
+    .jvwTab span {
+        display: none;
+    }
+
+    .jvwTab {
+        padding: 0 12px;
+    }
+
+    .jvwCommandBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .jvwCommandLeft,
+    .jvwCommandRight {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .jvwMobileSwitcher {
+        display: flex;
+    }
+
+    .jvwBody {
+        grid-template-columns: 1fr;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .jvwGutter {
+        display: none;
+    }
+
+    .jvwPanel {
+        grid-column: 1;
+        grid-row: 1;
+        position: absolute;
+        inset: 0;
+    }
+
+    .jvwPanel.mobileVisible {
+        z-index: 1;
+        visibility: visible;
+    }
+
+    .jvwPanel.mobileHidden {
+        z-index: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .jvwMobileCta {
+        display: block;
+    }
+
+    .jvwFooter {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .jvwChromeBtn,
+    .jvwPill,
+    .jvwTab,
+    .jvwSampleBtn,
+    .jvwActionBtn,
+    .jvwCopyBtn,
+    .jvwClearBtn,
+    .jvwViewResultBtn,
+    .jvwEmptySampleBtn,
+    .jvwHistoryItem {
+        transition: none;
+    }
+}

@@ -4,15 +4,12 @@ import { logger } from "@/lib/logger";
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
-import { parseJWT, formatDuration, formatTimestamp } from "./jwtParser";
-import type { DecodedToken, ParseError } from "./jwtParser";
+import { parseJWT, formatDuration, formatTimestamp } from "./ts/jwtParser";
+import type { DecodedToken, ParseError } from "./ts/jwtParser";
 import TokenVisualizer from "./TokenVisualizer";
 import SecurityAnalyzer from "./SecurityAnalyzer";
 import ClaimsExplorer from "./ClaimsExplorer";
-import "./style/ClaimsExplorer.css";
-import "./style/SecurityAnalyzer.css";
-import "./style/TokenVisualizer.css";
-import "./style/Workspace.css";
+import styles from "./style/Workspace.module.css";
 
 type ViewTab = "decoded" | "visualizer" | "security" | "raw";
 
@@ -93,27 +90,27 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="jwtw-root" role="main" aria-label="JWT Decoder">
+      <div className={styles.jwtwRoot} role="main" aria-label="JWT Decoder">
         {/* Top Bar */}
-        <div className="jwtw-chrome">
-          <div className="jwtw-chrome-left">
-            <div className="jwtw-presets" ref={presetsRef}>
+        <div className={styles.jwtwChrome}>
+          <div className={styles.jwtwChromeLeft}>
+            <div className={styles.jwtwPresets} ref={presetsRef}>
               <button
-                className="jwtw-presets-trigger"
+                className={styles.jwtwPresetsTrigger}
                 onClick={() => setShowPresets(!showPresets)}
                 aria-haspopup="menu"
                 aria-expanded={showPresets}
               >
                 <i className="ti ti-wand" />
                 <span>Examples</span>
-                <i className={`ti ti-chevron-down jwtw-chevron${showPresets ? " open" : ""}`} />
+                <i className={`ti ti-chevron-down ${styles.jwtwChevron}${showPresets ? ` ${styles.open}` : ""}`} />
               </button>
               {showPresets && (
-                <div className="jwtw-presets-menu" role="menu">
+                <div className={styles.jwtwPresetsMenu} role="menu">
                   {SAMPLE_TOKENS.map((preset) => (
                     <button
                       key={preset.id}
-                      className="jwtw-preset-item"
+                      className={styles.jwtwPresetItem}
                       onClick={() => loadPreset(preset.token)}
                       role="menuitem"
                     >
@@ -126,25 +123,25 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
             </div>
 
             {input && (
-              <button className="jwtw-icon-btn" onClick={handleClear} title="Clear all">
+              <button className={styles.jwtwIconBtn} onClick={handleClear} title="Clear all">
                 <i className="ti ti-trash" />
-                <span className="jwtw-btn-label">Clear</span>
+                <span className={styles.jwtwBtnLabel}>Clear</span>
               </button>
             )}
           </div>
 
-          <div className="jwtw-chrome-right">
+          <div className={styles.jwtwChromeRight}>
             {decodedToken && (
               <>
                 {/* Status Badge */}
                 {decodedToken.metadata.isExpired && (
-                  <div className="jwtw-badge jwtw-badge--error">
+                  <div className={`${styles.jwtwBadge} ${styles.jwtwBadgeError}`}>
                     <i className="ti ti-alert-circle" />
                     Expired
                   </div>
                 )}
                 {!decodedToken.metadata.isExpired && decodedToken.metadata.isNotYetValid && (
-                  <div className="jwtw-badge jwtw-badge--warning">
+                  <div className={`${styles.jwtwBadge} ${styles.jwtwBadgeWarning}`}>
                     <i className="ti ti-clock" />
                     Not Yet Valid
                   </div>
@@ -152,7 +149,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
                 {!decodedToken.metadata.isExpired &&
                   !decodedToken.metadata.isNotYetValid &&
                   decodedToken.decoded.payload.exp && (
-                    <div className="jwtw-badge jwtw-badge--success">
+                    <div className={`${styles.jwtwBadge} ${styles.jwtwBadgeSuccess}`}>
                       <i className="ti ti-circle-check" />
                       Valid
                     </div>
@@ -160,7 +157,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
 
                 {/* Copy & Download */}
                 <button
-                  className={`jwtw-action-btn${copiedKey === "full-token" ? " copied" : ""}`}
+                  className={`${styles.jwtwActionBtn}${copiedKey === "full-token" ? ` ${styles.copied}` : ""}`}
                   onClick={() => handleCopy(decodedToken.raw, "full-token")}
                 >
                   <i className={`ti ${copiedKey === "full-token" ? "ti-check" : "ti-copy"}`} />
@@ -172,21 +169,21 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Input Section */}
-        <div className="jwtw-input-section">
-          <div className="jwtw-input-header">
-            <div className="jwtw-input-label">
+        <div className={styles.jwtwInputSection}>
+          <div className={styles.jwtwInputHeader}>
+            <div className={styles.jwtwInputLabel}>
               <i className="ti ti-lock" />
               JWT Token
             </div>
             {input && (
-              <div className="jwtw-input-meta">
-                <span className="jwtw-input-length">{input.length} characters</span>
+              <div className={styles.jwtwInputMeta}>
+                <span className={styles.jwtwInputLength}>{input.length} characters</span>
               </div>
             )}
           </div>
           <textarea
             ref={textareaRef}
-            className="jwtw-input"
+            className={styles.jwtwInput}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Paste your JWT token here... (with or without Bearer prefix)"
@@ -198,7 +195,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
             aria-invalid={!!parseError}
           />
           {parseError && (
-            <div className="jwtw-error" role="alert">
+            <div className={styles.jwtwError} role="alert">
               <i className="ti ti-alert-triangle" />
               <div>
                 <strong>{parseError.message}</strong>
@@ -210,16 +207,16 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
 
         {/* Empty State */}
         {!input && (
-          <div className="jwtw-empty">
-            <div className="jwtw-empty-icon">
+          <div className={styles.jwtwEmpty}>
+            <div className={styles.jwtwEmptyIcon}>
               <i className="ti ti-key" />
             </div>
-            <h3 className="jwtw-empty-title">Decode & Analyze JWT Tokens</h3>
-            <p className="jwtw-empty-desc">
+            <h3 className={styles.jwtwEmptyTitle}>Decode & Analyze JWT Tokens</h3>
+            <p className={styles.jwtwEmptyDesc}>
               Paste a JWT token above to decode its header, payload, and signature. View security
               analysis, visualizations, and detailed claim information.
             </p>
-            <button className="jwtw-empty-btn" onClick={() => loadPreset(SAMPLE_TOKENS[0].token)}>
+            <button className={styles.jwtwEmptyBtn} onClick={() => loadPreset(SAMPLE_TOKENS[0].token)}>
               <i className="ti ti-wand" />
               Try an example
             </button>
@@ -229,7 +226,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
         {/* Content Tabs */}
         {decodedToken && (
           <>
-            <nav className="jwtw-tabs" role="tablist" aria-label="Token views">
+            <nav className={styles.jwtwTabs} role="tablist" aria-label="Token views">
               {[
                 { id: "decoded" as const, label: "Claims", icon: "ti-list-details" },
                 { id: "visualizer" as const, label: "Visualizer", icon: "ti-chart-pie" },
@@ -242,7 +239,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
                   role="tab"
                   aria-selected={viewTab === tab.id}
                   aria-controls={`jwtw-panel-${tab.id}`}
-                  className={`jwtw-tab${viewTab === tab.id ? " active" : ""}`}
+                  className={`${styles.jwtwTab}${viewTab === tab.id ? ` ${styles.active}` : ""}`}
                   onClick={() => setViewTab(tab.id)}
                 >
                   <i className={`ti ${tab.icon}`} />
@@ -251,7 +248,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
               ))}
             </nav>
 
-            <div className="jwtw-content">
+            <div className={styles.jwtwContent}>
               {/* Claims Explorer */}
               {viewTab === "decoded" && (
                 <div role="tabpanel" id="jwtw-panel-decoded">
@@ -266,26 +263,26 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
 
               {/* Visualizer */}
               {viewTab === "visualizer" && (
-                <div role="tabpanel" id="jwtw-panel-visualizer" className="jwtw-panel">
+                <div role="tabpanel" id="jwtw-panel-visualizer" className={styles.jwtwPanel}>
                   <TokenVisualizer token={decodedToken} />
                 </div>
               )}
 
               {/* Security Analyzer */}
               {viewTab === "security" && (
-                <div role="tabpanel" id="jwtw-panel-security" className="jwtw-panel">
+                <div role="tabpanel" id="jwtw-panel-security" className={styles.jwtwPanel}>
                   <SecurityAnalyzer token={decodedToken} />
                 </div>
               )}
 
               {/* Raw JSON */}
               {viewTab === "raw" && (
-                <div role="tabpanel" id="jwtw-panel-raw" className="jwtw-panel jwtw-raw">
-                  <div className="jwtw-raw-section">
-                    <div className="jwtw-raw-header">
+                <div role="tabpanel" id="jwtw-panel-raw" className={`${styles.jwtwPanel} ${styles.jwtwRaw}`}>
+                  <div className={styles.jwtwRawSection}>
+                    <div className={styles.jwtwRawHeader}>
                       <span>Header</span>
                       <button
-                        className={`jwtw-copy-btn-sm${copiedKey === "raw-header" ? " copied" : ""}`}
+                        className={`${styles.jwtwCopyBtnSm}${copiedKey === "raw-header" ? ` ${styles.copied}` : ""}`}
                         onClick={() =>
                           handleCopy(
                             JSON.stringify(decodedToken.decoded.header, null, 2),
@@ -298,15 +295,15 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
                         />
                       </button>
                     </div>
-                    <pre className="jwtw-raw-code">
+                    <pre className={styles.jwtwRawCode}>
                       {JSON.stringify(decodedToken.decoded.header, null, 2)}
                     </pre>
                   </div>
-                  <div className="jwtw-raw-section">
-                    <div className="jwtw-raw-header">
+                  <div className={styles.jwtwRawSection}>
+                    <div className={styles.jwtwRawHeader}>
                       <span>Payload</span>
                       <button
-                        className={`jwtw-copy-btn-sm${copiedKey === "raw-payload" ? " copied" : ""}`}
+                        className={`${styles.jwtwCopyBtnSm}${copiedKey === "raw-payload" ? ` ${styles.copied}` : ""}`}
                         onClick={() =>
                           handleCopy(
                             JSON.stringify(decodedToken.decoded.payload, null, 2),
@@ -319,21 +316,21 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
                         />
                       </button>
                     </div>
-                    <pre className="jwtw-raw-code">
+                    <pre className={styles.jwtwRawCode}>
                       {JSON.stringify(decodedToken.decoded.payload, null, 2)}
                     </pre>
                   </div>
-                  <div className="jwtw-raw-section">
-                    <div className="jwtw-raw-header">
+                  <div className={styles.jwtwRawSection}>
+                    <div className={styles.jwtwRawHeader}>
                       <span>Signature</span>
                       <button
-                        className={`jwtw-copy-btn-sm${copiedKey === "raw-sig" ? " copied" : ""}`}
+                        className={`${styles.jwtwCopyBtnSm}${copiedKey === "raw-sig" ? ` ${styles.copied}` : ""}`}
                         onClick={() => handleCopy(decodedToken.parts.signature, "raw-sig")}
                       >
                         <i className={`ti ${copiedKey === "raw-sig" ? "ti-check" : "ti-copy"}`} />
                       </button>
                     </div>
-                    <pre className="jwtw-raw-code jwtw-raw-sig">{decodedToken.parts.signature}</pre>
+                    <pre className={`${styles.jwtwRawCode} ${styles.jwtwRawSig}`}>{decodedToken.parts.signature}</pre>
                   </div>
                 </div>
               )}
@@ -342,7 +339,7 @@ export default function JWTDecoderWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/* Footer */}
-        <div className="jwtw-footer">
+        <div className={styles.jwtwFooter}>
           <i className="ti ti-shield-lock" />
           <span>All processing happens in your browser — tokens are never sent to any server</span>
         </div>

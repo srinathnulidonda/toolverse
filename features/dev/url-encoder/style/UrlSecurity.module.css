@@ -1,0 +1,411 @@
+/* features/dev/url-encoder/style/UrlSecurity.module.css */
+.usRoot {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/*  Empty State  */
+.usEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.usEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.usEmptyTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.usEmptyDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
+/*  Score Card  */
+.usScoreCard {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: var(--radius-lg);
+    border: 0.5px solid;
+}
+
+.usScoreCard.levelSafe {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.usScoreCard.levelCaution {
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+
+@media (prefers-color-scheme: dark) {
+    .usScoreCard.levelCaution {
+        background: #1c1400;
+        border-color: #78350f;
+    }
+}
+
+.usScoreCard.levelWarning {
+    background: #fff7ed;
+    border-color: #fed7aa;
+}
+
+@media (prefers-color-scheme: dark) {
+    .usScoreCard.levelWarning {
+        background: #1f1005;
+        border-color: #9a3412;
+    }
+}
+
+.usScoreCard.levelDanger {
+    background: var(--error-bg);
+    border-color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .usScoreCard.levelDanger {
+        border-color: #7f1d1d;
+    }
+}
+
+.usScoreIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.levelSafe .usScoreIcon {
+    background: var(--brand);
+    color: white;
+}
+
+.levelCaution .usScoreIcon {
+    background: #f59e0b;
+    color: white;
+}
+
+.levelWarning .usScoreIcon {
+    background: #f97316;
+    color: white;
+}
+
+.levelDanger .usScoreIcon {
+    background: #ef4444;
+    color: white;
+}
+
+.usScoreContent {
+    flex: 1;
+}
+
+.usScoreHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.usScoreTitle {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.levelSafe .usScoreTitle {
+    color: var(--brand-text);
+}
+
+.levelCaution .usScoreTitle {
+    color: #92400e;
+}
+
+@media (prefers-color-scheme: dark) {
+    .levelCaution .usScoreTitle {
+        color: #fcd34d;
+    }
+}
+
+.levelWarning .usScoreTitle {
+    color: #9a3412;
+}
+
+@media (prefers-color-scheme: dark) {
+    .levelWarning .usScoreTitle {
+        color: #fdba74;
+    }
+}
+
+.levelDanger .usScoreTitle {
+    color: #991b1b;
+}
+
+@media (prefers-color-scheme: dark) {
+    .levelDanger .usScoreTitle {
+        color: #f87171;
+    }
+}
+
+.usScoreValue {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.levelSafe .usScoreValue {
+    color: var(--brand-text);
+}
+
+.levelCaution .usScoreValue {
+    color: #92400e;
+}
+
+@media (prefers-color-scheme: dark) {
+    .levelCaution .usScoreValue {
+        color: #fcd34d;
+    }
+}
+
+.levelWarning .usScoreValue {
+    color: #9a3412;
+}
+
+@media (prefers-color-scheme: dark) {
+    .levelWarning .usScoreValue {
+        color: #fdba74;
+    }
+}
+
+.levelDanger .usScoreValue {
+    color: #991b1b;
+}
+
+@media (prefers-color-scheme: dark) {
+    .levelDanger .usScoreValue {
+        color: #f87171;
+    }
+}
+
+.usScoreBar {
+    height: 6px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.usScoreBarFill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+}
+
+.levelSafe .usScoreBarFill {
+    background: var(--brand);
+}
+
+.levelCaution .usScoreBarFill {
+    background: #f59e0b;
+}
+
+.levelWarning .usScoreBarFill {
+    background: #f97316;
+}
+
+.levelDanger .usScoreBarFill {
+    background: #ef4444;
+}
+
+/*  Section  */
+.usSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.usSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+}
+
+.usSectionHeader i {
+    font-size: 12px;
+}
+
+/*  Risks  */
+.usRisksList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.usRiskItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--error-bg);
+    border: 0.5px solid #fecaca;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    color: #991b1b;
+    line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .usRiskItem {
+        border-color: #7f1d1d;
+        color: #f87171;
+    }
+}
+
+.usRiskItem i {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/*  Issues  */
+.usIssuesList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.usIssueItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    line-height: 1.5;
+    border: 0.5px solid;
+}
+
+.usIssueItem.typeError {
+    background: var(--error-bg);
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+@media (prefers-color-scheme: dark) {
+    .usIssueItem.typeError {
+        border-color: #7f1d1d;
+        color: #f87171;
+    }
+}
+
+.usIssueItem.typeWarning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+@media (prefers-color-scheme: dark) {
+    .usIssueItem.typeWarning {
+        background: #1c1400;
+        border-color: #78350f;
+        color: #fcd34d;
+    }
+}
+
+.usIssueItem.typeInfo {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+@media (prefers-color-scheme: dark) {
+    .usIssueItem.typeInfo {
+        background: #0a1628;
+        border-color: #1e3a5f;
+        color: #93c5fd;
+    }
+}
+
+.usIssueItem i {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/*  Tips  */
+.usTipsList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.usTipItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.usTipItem i {
+    font-size: 14px;
+    color: var(--brand);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .usRoot {
+        padding: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .usScoreBarFill {
+        transition: none;
+    }
+}

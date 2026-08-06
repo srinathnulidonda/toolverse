@@ -2,8 +2,9 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import type { JwtHeader, JwtPayload } from "./jwtParser";
-import { getClaimMetadata, formatTimestamp, getRelativeTime } from "./jwtParser";
+import type { JwtHeader, JwtPayload } from "./ts/jwtParser";
+import { getClaimMetadata, formatTimestamp, getRelativeTime } from "./ts/jwtParser";
+import styles from "./style/ClaimsExplorer.module.css";
 
 interface ClaimsExplorerProps {
   header: JwtHeader;
@@ -90,54 +91,54 @@ export default function ClaimsExplorer({
   }, [payload, filterMode, searchQuery]);
 
   const renderValue = (value: unknown, isExpanded: boolean = false): React.ReactNode => {
-    if (value === null) return <span className="ce-value-null">null</span>;
-    if (value === undefined) return <span className="ce-value-undefined">undefined</span>;
+    if (value === null) return <span className={styles.ceValueNull}>null</span>;
+    if (value === undefined) return <span className={styles.ceValueUndefined}>undefined</span>;
     if (typeof value === "boolean")
-      return <span className="ce-value-bool">{value.toString()}</span>;
-    if (typeof value === "number") return <span className="ce-value-num">{value}</span>;
+      return <span className={styles.ceValueBool}>{value.toString()}</span>;
+    if (typeof value === "number") return <span className={styles.ceValueNum}>{value}</span>;
     if (typeof value === "string") {
       if (value.length > 100 && !isExpanded) {
-        return <span className="ce-value-str">"{value.slice(0, 100)}…"</span>;
+        return <span className={styles.ceValueStr}>"{value.slice(0, 100)}…"</span>;
       }
-      return <span className="ce-value-str">"{value}"</span>;
+      return <span className={styles.ceValueStr}>"{value}"</span>;
     }
     if (Array.isArray(value)) {
       if (isExpanded) {
         return (
-          <div className="ce-value-array">
-            <span className="ce-bracket">[</span>
-            <div className="ce-array-items">
+          <div className={styles.ceValueArray}>
+            <span className={styles.ceBracket}>[</span>
+            <div className={styles.ceArrayItems}>
               {value.map((item, idx) => (
-                <div key={idx} className="ce-array-item">
-                  <span className="ce-array-index">{idx}:</span>
+                <div key={idx} className={styles.ceArrayItem}>
+                  <span className={styles.ceArrayIndex}>{idx}:</span>
                   {renderValue(item, true)}
                 </div>
               ))}
             </div>
-            <span className="ce-bracket">]</span>
+            <span className={styles.ceBracket}>]</span>
           </div>
         );
       }
-      return <span className="ce-value-arr">[{value.length} items]</span>;
+      return <span className={styles.ceValueArr}>[{value.length} items]</span>;
     }
     if (typeof value === "object") {
       if (isExpanded) {
         return (
-          <div className="ce-value-object">
-            <span className="ce-bracket">{"{"}</span>
-            <div className="ce-object-props">
+          <div className={styles.ceValueObject}>
+            <span className={styles.ceBracket}>{"{"}</span>
+            <div className={styles.ceObjectProps}>
               {Object.entries(value as Record<string, unknown>).map(([k, v]) => (
-                <div key={k} className="ce-object-prop">
-                  <span className="ce-object-key">"{k}":</span>
+                <div key={k} className={styles.ceObjectProp}>
+                  <span className={styles.ceObjectKey}>"{k}":</span>
                   {renderValue(v, true)}
                 </div>
               ))}
             </div>
-            <span className="ce-bracket">{"}"}</span>
+            <span className={styles.ceBracket}>{"}"}</span>
           </div>
         );
       }
-      return <span className="ce-value-obj">{"{…}"}</span>;
+      return <span className={styles.ceValueObj}>{"{…}"}</span>;
     }
     return <span>{String(value)}</span>;
   };
@@ -149,32 +150,32 @@ export default function ClaimsExplorer({
     const isTimestamp = meta.valueType === "timestamp" && typeof value === "number";
 
     return (
-      <div key={key} className="ce-claim">
-        <div className="ce-claim-header">
-          <div className="ce-claim-main">
+      <div key={key} className={styles.ceClaim}>
+        <div className={styles.ceClaimHeader}>
+          <div className={styles.ceClaimMain}>
             {isComplex && (
               <button
-                className="ce-expand-btn"
+                className={styles.ceExpandBtn}
                 onClick={() => toggleClaim(key)}
                 aria-label={isExpanded ? "Collapse" : "Expand"}
               >
                 <i className={`ti ti-chevron-${isExpanded ? "down" : "right"}`} />
               </button>
             )}
-            <div className="ce-claim-info">
-              <div className="ce-claim-key-row">
-                <code className="ce-claim-key">{key}</code>
-                <span className={`ce-claim-type ce-claim-type--${meta.type}`}>{meta.type}</span>
+            <div className={styles.ceClaimInfo}>
+              <div className={styles.ceClaimKeyRow}>
+                <code className={styles.ceClaimKey}>{key}</code>
+                <span className={`${styles.ceClaimType} ${styles[`ceClaimType--${meta.type}`]}`}>{meta.type}</span>
               </div>
-              <div className="ce-claim-meta-row">
-                <span className="ce-claim-name">{meta.name}</span>
-                <span className="ce-claim-separator">·</span>
-                <span className="ce-claim-desc">{meta.description}</span>
+              <div className={styles.ceClaimMetaRow}>
+                <span className={styles.ceClaimName}>{meta.name}</span>
+                <span className={styles.ceClaimSeparator}>·</span>
+                <span className={styles.ceClaimDesc}>{meta.description}</span>
               </div>
             </div>
           </div>
           <button
-            className={`ce-copy-btn${copiedKey === `claim-${key}` ? " copied" : ""}`}
+            className={`${styles.ceCopyBtn}${copiedKey === `claim-${key}` ? ` ${styles.copied}` : ""}`}
             onClick={() => onCopy?.(JSON.stringify({ [key]: value }, null, 2), `claim-${key}`)}
             title="Copy claim"
           >
@@ -182,15 +183,15 @@ export default function ClaimsExplorer({
           </button>
         </div>
 
-        <div className="ce-claim-value">
+        <div className={styles.ceClaimValue}>
           {renderValue(value, isExpanded)}
           {isTimestamp && (
-            <div className="ce-timestamp-info">
-              <div className="ce-timestamp-row">
+            <div className={styles.ceTimestampInfo}>
+              <div className={styles.ceTimestampRow}>
                 <i className="ti ti-calendar" />
                 <span>{formatTimestamp(value)}</span>
               </div>
-              <div className="ce-timestamp-row ce-timestamp-relative">
+              <div className={`${styles.ceTimestampRow} ${styles.ceTimestampRelative}`}>
                 <i className="ti ti-clock" />
                 <span>{getRelativeTime(value)}</span>
               </div>
@@ -203,21 +204,21 @@ export default function ClaimsExplorer({
 
   return (
     <>
-      <div className="ce-root">
+      <div className={styles.ceRoot}>
         {/* Controls */}
-        <div className="ce-controls">
-          <div className="ce-search">
+        <div className={styles.ceControls}>
+          <div className={styles.ceSearch}>
             <i className="ti ti-search" />
             <input
               type="text"
-              className="ce-search-input"
+              className={styles.ceSearchInput}
               placeholder="Search claims..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
               <button
-                className="ce-search-clear"
+                className={styles.ceSearchClear}
                 onClick={() => setSearchQuery("")}
                 aria-label="Clear search"
               >
@@ -226,24 +227,24 @@ export default function ClaimsExplorer({
             )}
           </div>
 
-          <div className="ce-filters">
-            <div className="ce-filter-group">
+          <div className={styles.ceFilters}>
+            <div className={styles.ceFilterGroup}>
               <button
-                className={`ce-filter-btn${viewMode === "categorized" ? " active" : ""}`}
+                className={`${styles.ceFilterBtn}${viewMode === "categorized" ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewMode("categorized")}
                 title="Group by category"
               >
                 <i className="ti ti-category" />
               </button>
               <button
-                className={`ce-filter-btn${viewMode === "alphabetical" ? " active" : ""}`}
+                className={`${styles.ceFilterBtn}${viewMode === "alphabetical" ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewMode("alphabetical")}
                 title="Sort alphabetically"
               >
                 <i className="ti ti-sort-ascending-letters" />
               </button>
               <button
-                className={`ce-filter-btn${viewMode === "tree" ? " active" : ""}`}
+                className={`${styles.ceFilterBtn}${viewMode === "tree" ? ` ${styles.active}` : ""}`}
                 onClick={() => setViewMode("tree")}
                 title="Tree view"
               >
@@ -251,23 +252,23 @@ export default function ClaimsExplorer({
               </button>
             </div>
 
-            <div className="ce-divider" />
+            <div className={styles.ceDivider} />
 
-            <div className="ce-filter-group">
+            <div className={styles.ceFilterGroup}>
               <button
-                className={`ce-filter-btn${filterMode === "all" ? " active" : ""}`}
+                className={`${styles.ceFilterBtn}${filterMode === "all" ? ` ${styles.active}` : ""}`}
                 onClick={() => setFilterMode("all")}
               >
                 All
               </button>
               <button
-                className={`ce-filter-btn${filterMode === "registered" ? " active" : ""}`}
+                className={`${styles.ceFilterBtn}${filterMode === "registered" ? ` ${styles.active}` : ""}`}
                 onClick={() => setFilterMode("registered")}
               >
                 Standard
               </button>
               <button
-                className={`ce-filter-btn${filterMode === "custom" ? " active" : ""}`}
+                className={`${styles.ceFilterBtn}${filterMode === "custom" ? ` ${styles.active}` : ""}`}
                 onClick={() => setFilterMode("custom")}
               >
                 Custom
@@ -277,34 +278,34 @@ export default function ClaimsExplorer({
         </div>
 
         {/* Header Section */}
-        <div className="ce-section">
-          <div className="ce-section-header">
-            <div className="ce-section-title">
+        <div className={styles.ceSection}>
+          <div className={styles.ceSectionHeader}>
+            <div className={styles.ceSectionTitle}>
               <i className="ti ti-file-description" />
               <span>Header ({Object.keys(header).length} claims)</span>
             </div>
             <button
-              className={`ce-copy-btn${copiedKey === "header-all" ? " copied" : ""}`}
+              className={`${styles.ceCopyBtn}${copiedKey === "header-all" ? ` ${styles.copied}` : ""}`}
               onClick={() => onCopy?.(JSON.stringify(header, null, 2), "header-all")}
             >
               <i className={`ti ${copiedKey === "header-all" ? "ti-check" : "ti-copy"}`} />
               Copy all
             </button>
           </div>
-          <div className="ce-claims-list">
+          <div className={styles.ceClaimsList}>
             {Object.entries(header).map(([key, value]) => renderClaim(key, value))}
           </div>
         </div>
 
         {/* Payload Section */}
-        <div className="ce-section">
-          <div className="ce-section-header">
-            <div className="ce-section-title">
+        <div className={styles.ceSection}>
+          <div className={styles.ceSectionHeader}>
+            <div className={styles.ceSectionTitle}>
               <i className="ti ti-package" />
               <span>Payload ({filteredClaims.length} claims)</span>
             </div>
             <button
-              className={`ce-copy-btn${copiedKey === "payload-all" ? " copied" : ""}`}
+              className={`${styles.ceCopyBtn}${copiedKey === "payload-all" ? ` ${styles.copied}` : ""}`}
               onClick={() => onCopy?.(JSON.stringify(payload, null, 2), "payload-all")}
             >
               <i className={`ti ${copiedKey === "payload-all" ? "ti-check" : "ti-copy"}`} />
@@ -313,28 +314,28 @@ export default function ClaimsExplorer({
           </div>
 
           {viewMode === "categorized" && (
-            <div className="ce-categorized">
+            <div className={styles.ceCategorized}>
               {Object.entries(categorizedClaims)
                 .filter(([_, claims]) => claims.length > 0)
                 .map(([category, claims]) => (
-                  <div key={category} className="ce-category">
-                    <div className="ce-category-header">
+                  <div key={category} className={styles.ceCategory}>
+                    <div className={styles.ceCategoryHeader}>
                       <i
                         className={`ti ti-${category === "temporal"
-                            ? "clock"
-                            : category === "identity"
-                              ? "user"
-                              : category === "authorization"
-                                ? "shield"
-                                : category === "metadata"
-                                  ? "info-circle"
-                                  : "puzzle"
+                          ? "clock"
+                          : category === "identity"
+                            ? "user"
+                            : category === "authorization"
+                              ? "shield"
+                              : category === "metadata"
+                                ? "info-circle"
+                                : "puzzle"
                           }`}
                       />
                       <span>{category.charAt(0).toUpperCase() + category.slice(1)}</span>
-                      <span className="ce-category-count">{claims.length}</span>
+                      <span className={styles.ceCategoryCount}>{claims.length}</span>
                     </div>
-                    <div className="ce-claims-list">
+                    <div className={styles.ceClaimsList}>
                       {claims.map(([key, value]) => renderClaim(key, value))}
                     </div>
                   </div>
@@ -343,7 +344,7 @@ export default function ClaimsExplorer({
           )}
 
           {viewMode === "alphabetical" && (
-            <div className="ce-claims-list">
+            <div className={styles.ceClaimsList}>
               {filteredClaims
                 .sort(([a], [b]) => a.localeCompare(b))
                 .map(([key, value]) => renderClaim(key, value))}
@@ -351,13 +352,13 @@ export default function ClaimsExplorer({
           )}
 
           {viewMode === "tree" && (
-            <div className="ce-claims-list">
+            <div className={styles.ceClaimsList}>
               {filteredClaims.map(([key, value]) => renderClaim(key, value))}
             </div>
           )}
 
           {filteredClaims.length === 0 && (
-            <div className="ce-empty">
+            <div className={styles.ceEmpty}>
               <i className="ti ti-search-off" />
               <p>No claims match your filter</p>
             </div>

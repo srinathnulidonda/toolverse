@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import styles from "./style/CompareMode.module.css";
 
 interface CompareModeProps {
   leftDefault?: string;
@@ -142,18 +143,18 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
 
   return (
     <>
-      <div className="cm-root">
+      <div className={styles.cmRoot}>
         {/* Header */}
-        <div className="cm-header">
-          <div className="cm-header-left">
+        <div className={styles.cmHeader}>
+          <div className={styles.cmHeaderLeft}>
             <i className="ti ti-git-compare" />
             <span>Compare JSON Documents</span>
           </div>
-          <div className="cm-header-right">
-            <div className="cm-view-toggle">
+          <div className={styles.cmHeaderRight}>
+            <div className={styles.cmViewToggle}>
               <button
                 type="button"
-                className={`cm-view-btn${viewMode === "split" ? " active" : ""}`}
+                className={`${styles.cmViewBtn}${viewMode === "split" ? " active" : ""}`}
                 onClick={() => setViewMode("split")}
               >
                 <i className="ti ti-layout-columns" />
@@ -161,7 +162,7 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
               </button>
               <button
                 type="button"
-                className={`cm-view-btn${viewMode === "unified" ? " active" : ""}`}
+                className={`${styles.cmViewBtn}${viewMode === "unified" ? " active" : ""}`}
                 onClick={() => setViewMode("unified")}
               >
                 <i className="ti ti-list" />
@@ -173,28 +174,28 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
 
         {/* Stats */}
         {comparison.valid && comparison.stats && (
-          <div className="cm-stats">
+          <div className={styles.cmStats}>
             {areSame ? (
-              <div className="cm-stat cm-stat--same">
+              <div className={`${styles.cmStat} ${styles.cmStatSame}`}>
                 <i className="ti ti-checks" />
                 <span>Documents are identical</span>
               </div>
             ) : (
               <>
                 {comparison.stats.added > 0 && (
-                  <div className="cm-stat cm-stat--added">
+                  <div className={`${styles.cmStat} ${styles.cmStatAdded}`}>
                     <i className="ti ti-plus" />
                     <span>{comparison.stats.added} added</span>
                   </div>
                 )}
                 {comparison.stats.removed > 0 && (
-                  <div className="cm-stat cm-stat--removed">
+                  <div className={`${styles.cmStat} ${styles.cmStatRemoved}`}>
                     <i className="ti ti-minus" />
                     <span>{comparison.stats.removed} removed</span>
                   </div>
                 )}
                 {comparison.stats.modified > 0 && (
-                  <div className="cm-stat cm-stat--modified">
+                  <div className={`${styles.cmStat} ${styles.cmStatModified}`}>
                     <i className="ti ti-pencil" />
                     <span>{comparison.stats.modified} modified</span>
                   </div>
@@ -205,20 +206,20 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
         )}
 
         {/* Body */}
-        <div className={`cm-body cm-body--${viewMode}`}>
+        <div className={`${styles.cmBody} ${styles[`cmBody${viewMode.charAt(0).toUpperCase()}${viewMode.slice(1)}`]}`}>
           {viewMode === "split" ? (
             <>
               {/* Left Panel */}
-              <div className="cm-panel">
-                <div className="cm-panel-header">
-                  <div className="cm-panel-title">
+              <div className={styles.cmPanel}>
+                <div className={styles.cmPanelHeader}>
+                  <div className={styles.cmPanelTitle}>
                     <i className="ti ti-file" />
                     Original
                   </div>
-                  <div className="cm-panel-actions">
+                  <div className={styles.cmPanelActions}>
                     <button
                       type="button"
-                      className={`cm-copy-btn${copiedKey === "left" ? " copied" : ""}`}
+                      className={`${styles.cmCopyBtn}${copiedKey === "left" ? " copied" : ""}`}
                       onClick={() => handleCopy(leftInput, "left")}
                       disabled={!leftInput}
                     >
@@ -226,7 +227,7 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
                     </button>
                     <button
                       type="button"
-                      className="cm-clear-btn"
+                      className={styles.cmClearBtn}
                       onClick={() => setLeftInput("")}
                       disabled={!leftInput}
                     >
@@ -235,7 +236,7 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
                   </div>
                 </div>
                 <textarea
-                  className="cm-textarea"
+                  className={styles.cmTextarea}
                   value={leftInput}
                   onChange={(e) => setLeftInput(e.target.value)}
                   placeholder="Paste first JSON..."
@@ -244,23 +245,23 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
               </div>
 
               {/* Divider */}
-              <div className="cm-divider">
-                <div className="cm-divider-icon">
+              <div className={styles.cmDivider}>
+                <div className={styles.cmDividerIcon}>
                   <i className="ti ti-arrows-left-right" />
                 </div>
               </div>
 
               {/* Right Panel */}
-              <div className="cm-panel">
-                <div className="cm-panel-header">
-                  <div className="cm-panel-title">
+              <div className={styles.cmPanel}>
+                <div className={styles.cmPanelHeader}>
+                  <div className={styles.cmPanelTitle}>
                     <i className="ti ti-file" />
                     Modified
                   </div>
-                  <div className="cm-panel-actions">
+                  <div className={styles.cmPanelActions}>
                     <button
                       type="button"
-                      className={`cm-copy-btn${copiedKey === "right" ? " copied" : ""}`}
+                      className={`${styles.cmCopyBtn}${copiedKey === "right" ? " copied" : ""}`}
                       onClick={() => handleCopy(rightInput, "right")}
                       disabled={!rightInput}
                     >
@@ -268,7 +269,7 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
                     </button>
                     <button
                       type="button"
-                      className="cm-clear-btn"
+                      className={styles.cmClearBtn}
                       onClick={() => setRightInput("")}
                       disabled={!rightInput}
                     >
@@ -277,7 +278,7 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
                   </div>
                 </div>
                 <textarea
-                  className="cm-textarea"
+                  className={styles.cmTextarea}
                   value={rightInput}
                   onChange={(e) => setRightInput(e.target.value)}
                   placeholder="Paste second JSON to compare..."
@@ -287,53 +288,53 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
             </>
           ) : (
             /* Unified View */
-            <div className="cm-unified">
+            <div className={styles.cmUnified}>
               {!comparison.valid && comparison.error && (
-                <div className="cm-error">
+                <div className={styles.cmError}>
                   <i className="ti ti-alert-circle" />
                   <span>{comparison.error}</span>
                 </div>
               )}
 
               {comparison.valid && comparison.diffs.length === 0 && (
-                <div className="cm-same">
+                <div className={styles.cmSame}>
                   <i className="ti ti-checks" />
                   <span>Documents are identical</span>
                 </div>
               )}
 
               {comparison.valid && comparison.diffs.length > 0 && (
-                <div className="cm-diff-list">
+                <div className={styles.cmDiffList}>
                   {comparison.diffs.map((diff, idx) => (
-                    <div key={idx} className={`cm-diff-item cm-diff-item--${diff.type}`}>
-                      <div className="cm-diff-icon">
+                    <div key={idx} className={`${styles.cmDiffItem} ${styles[`cmDiffItem${diff.type.charAt(0).toUpperCase()}${diff.type.slice(1)}`]}`}>
+                      <div className={styles.cmDiffIcon}>
                         {diff.type === "added" && <i className="ti ti-plus" />}
                         {diff.type === "removed" && <i className="ti ti-minus" />}
                         {diff.type === "modified" && <i className="ti ti-pencil" />}
                       </div>
-                      <div className="cm-diff-content">
-                        <div className="cm-diff-path">{diff.path}</div>
+                      <div className={styles.cmDiffContent}>
+                        <div className={styles.cmDiffPath}>{diff.path}</div>
                         {diff.type === "modified" && (
-                          <div className="cm-diff-values">
-                            <div className="cm-diff-value cm-diff-value--old">
-                              <span className="cm-diff-label">−</span>
+                          <div className={styles.cmDiffValues}>
+                            <div className={`${styles.cmDiffValue} ${styles.cmDiffValueOld}`}>
+                              <span className={styles.cmDiffLabel}>−</span>
                               <code>{JSON.stringify(diff.leftValue)}</code>
                             </div>
-                            <div className="cm-diff-value cm-diff-value--new">
-                              <span className="cm-diff-label">+</span>
+                            <div className={`${styles.cmDiffValue} ${styles.cmDiffValueNew}`}>
+                              <span className={styles.cmDiffLabel}>+</span>
                               <code>{JSON.stringify(diff.rightValue)}</code>
                             </div>
                           </div>
                         )}
                         {diff.type === "removed" && (
-                          <div className="cm-diff-value cm-diff-value--old">
-                            <span className="cm-diff-label">−</span>
+                          <div className={`${styles.cmDiffValue} ${styles.cmDiffValueOld}`}>
+                            <span className={styles.cmDiffLabel}>−</span>
                             <code>{JSON.stringify(diff.leftValue)}</code>
                           </div>
                         )}
                         {diff.type === "added" && (
-                          <div className="cm-diff-value cm-diff-value--new">
-                            <span className="cm-diff-label">+</span>
+                          <div className={`${styles.cmDiffValue} ${styles.cmDiffValueNew}`}>
+                            <span className={styles.cmDiffLabel}>+</span>
                             <code>{JSON.stringify(diff.rightValue)}</code>
                           </div>
                         )}
@@ -348,12 +349,12 @@ export default function CompareMode({ leftDefault = "" }: CompareModeProps) {
 
         {/* Empty State */}
         {!leftInput && !rightInput && (
-          <div className="cm-empty">
-            <div className="cm-empty-icon">
+          <div className={styles.cmEmpty}>
+            <div className={styles.cmEmptyIcon}>
               <i className="ti ti-git-compare" />
             </div>
-            <h3 className="cm-empty-title">Compare JSON Documents</h3>
-            <p className="cm-empty-desc">
+            <h3 className={styles.cmEmptyTitle}>Compare JSON Documents</h3>
+            <p className={styles.cmEmptyDesc}>
               Paste two JSON documents to see structural differences, additions, and modifications.
             </p>
           </div>

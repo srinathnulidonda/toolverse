@@ -2,8 +2,9 @@
 "use client";
 
 import { useMemo } from "react";
-import type { DiffResult } from "./diffEngine";
-import { formatBytes } from "./diffEngine";
+import type { DiffResult } from "./ts/diffEngine";
+import { formatBytes } from "./ts/diffEngine";
+import styles from "./style/DiffStats.module.css";
 
 interface DiffStatsProps {
   originalText: string;
@@ -50,11 +51,11 @@ export default function DiffStats({ originalText, modifiedText, result }: DiffSt
 
   if (!detailedStats) {
     return (
-      <div className="ds-empty">
-        <div className="ds-empty-icon">
+      <div className={styles.dsEmpty}>
+        <div className={styles.dsEmptyIcon}>
           <i className="ti ti-chart-bar" />
         </div>
-        <p className="ds-empty-text">Compare files to see detailed statistics</p>
+        <p className={styles.dsEmptyText}>Compare files to see detailed statistics</p>
       </div>
     );
   }
@@ -151,19 +152,19 @@ export default function DiffStats({ originalText, modifiedText, result }: DiffSt
 
   return (
     <>
-      <div className="ds-root">
+      <div className={styles.dsRoot}>
         {statGroups.map((group, groupIdx) => (
-          <div key={groupIdx} className="ds-group">
-            <div className="ds-group-header">
+          <div key={groupIdx} className={styles.dsGroup}>
+            <div className={styles.dsGroupHeader}>
               <i className={`ti ${group.icon}`} />
-              <span className="ds-group-title">{group.title}</span>
+              <span className={styles.dsGroupTitle}>{group.title}</span>
             </div>
-            <div className="ds-group-grid">
+            <div className={styles.dsGroupGrid}>
               {group.stats.map((stat, statIdx) => (
-                <div key={statIdx} className={`ds-stat ds-stat--${stat.type}`}>
-                  <div className="ds-stat-value">{stat.value}</div>
-                  <div className="ds-stat-label">{stat.label}</div>
-                  {stat.subtitle && <div className="ds-stat-subtitle">{stat.subtitle}</div>}
+                <div key={statIdx} className={`${styles.dsStat} ${styles[`dsStat--${stat.type}`]}`}>
+                  <div className={styles.dsStatValue}>{stat.value}</div>
+                  <div className={styles.dsStatLabel}>{stat.label}</div>
+                  {stat.subtitle && <div className={styles.dsStatSubtitle}>{stat.subtitle}</div>}
                 </div>
               ))}
             </div>
@@ -171,11 +172,11 @@ export default function DiffStats({ originalText, modifiedText, result }: DiffSt
         ))}
 
         {/* Quick Summary */}
-        <div className="ds-summary">
-          <div className="ds-summary-icon">
+        <div className={styles.dsSummary}>
+          <div className={styles.dsSummaryIcon}>
             <i className="ti ti-info-circle" />
           </div>
-          <div className="ds-summary-text">{result?.summary || "No changes detected"}</div>
+          <div className={styles.dsSummaryText}>{result?.summary || "No changes detected"}</div>
         </div>
       </div>
     </>

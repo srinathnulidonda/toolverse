@@ -2,8 +2,9 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { decodeUrl, normalizeUrl, parseUrl, type EncodingOptions } from "./utils";
+import { decodeUrl, normalizeUrl, parseUrl, type EncodingOptions } from "./ts/utils";
 import { formatBytes } from "@/utils";
+import styles from "./style/UrlCompare.module.css";
 
 interface UrlCompareProps {
   options: EncodingOptions;
@@ -80,17 +81,17 @@ export default function UrlCompare({ options }: UrlCompareProps) {
 
   return (
     <>
-      <div className="uc-root">
+      <div className={styles.ucRoot}>
         {/*  Controls  */}
-        <div className="uc-controls">
-          <div className="uc-controls-label">
+        <div className={styles.ucControls}>
+          <div className={styles.ucControlsLabel}>
             <i className="ti ti-git-compare" />
             Compare URLs
           </div>
-          <div className="uc-actions">
+          <div className={styles.ucActions}>
             <button
               type="button"
-              className="uc-btn"
+              className={styles.ucBtn}
               onClick={handleSwap}
               disabled={!leftInput || !rightInput}
             >
@@ -99,7 +100,7 @@ export default function UrlCompare({ options }: UrlCompareProps) {
             </button>
             <button
               type="button"
-              className="uc-btn"
+              className={styles.ucBtn}
               onClick={handleClear}
               disabled={!leftInput && !rightInput}
             >
@@ -111,16 +112,16 @@ export default function UrlCompare({ options }: UrlCompareProps) {
 
         {/*  Comparison Result  */}
         {comparison && (
-          <div className="uc-result">
-            <div className={`uc-result-card ${comparison.identical ? "identical" : "different"}`}>
-              <div className="uc-result-icon">
+          <div className={styles.ucResult}>
+            <div className={`${styles.ucResultCard} ${comparison.identical ? styles.identical : styles.different}`}>
+              <div className={styles.ucResultIcon}>
                 <i className={`ti ${comparison.identical ? "ti-checks" : "ti-git-compare"}`} />
               </div>
-              <div className="uc-result-content">
-                <h3 className="uc-result-title">
+              <div className={styles.ucResultContent}>
+                <h3 className={styles.ucResultTitle}>
                   {comparison.identical ? "Identical Match" : "Different URLs"}
                 </h3>
-                <p className="uc-result-desc">
+                <p className={styles.ucResultDesc}>
                   {comparison.identical
                     ? "Both URLs are exactly the same"
                     : `${comparison.similarity}% similar`}
@@ -129,32 +130,32 @@ export default function UrlCompare({ options }: UrlCompareProps) {
             </div>
 
             {/* Detailed comparison */}
-            <div className="uc-details">
-              <div className="uc-detail-grid">
-                <div className="uc-detail-card">
-                  <div className="uc-detail-header">
+            <div className={styles.ucDetails}>
+              <div className={styles.ucDetailGrid}>
+                <div className={styles.ucDetailCard}>
+                  <div className={styles.ucDetailHeader}>
                     <i className="ti ti-chart-bar" />
                     <span>Similarity</span>
                   </div>
-                  <div className="uc-detail-value">{comparison.similarity}%</div>
-                  <div className="uc-detail-bar">
+                  <div className={styles.ucDetailValue}>{comparison.similarity}%</div>
+                  <div className={styles.ucDetailBar}>
                     <div
-                      className="uc-detail-bar-fill"
+                      className={styles.ucDetailBarFill}
                       style={{ width: `${comparison.similarity}%` }}
                     />
                   </div>
                 </div>
 
-                <div className="uc-detail-card">
-                  <div className="uc-detail-header">
+                <div className={styles.ucDetailCard}>
+                  <div className={styles.ucDetailHeader}>
                     <i className="ti ti-file-diff" />
                     <span>Size Difference</span>
                   </div>
-                  <div className="uc-detail-value">
+                  <div className={styles.ucDetailValue}>
                     {comparison.sizeDiff > 0 ? "+" : ""}
                     {formatBytes(Math.abs(comparison.sizeDiff))}
                   </div>
-                  <div className="uc-detail-label">
+                  <div className={styles.ucDetailLabel}>
                     {comparison.sizeDiff > 0
                       ? "Right is larger"
                       : comparison.sizeDiff < 0
@@ -163,34 +164,34 @@ export default function UrlCompare({ options }: UrlCompareProps) {
                   </div>
                 </div>
 
-                <div className="uc-detail-card">
-                  <div className="uc-detail-header">
+                <div className={styles.ucDetailCard}>
+                  <div className={styles.ucDetailHeader}>
                     <i className="ti ti-world" />
                     <span>Host</span>
                   </div>
-                  <div className="uc-detail-value">
+                  <div className={styles.ucDetailValue}>
                     {comparison.sameHost ? (
-                      <span className="uc-match">✓ Same</span>
+                      <span className={styles.ucMatch}>✓ Same</span>
                     ) : (
-                      <span className="uc-diff">✗ Different</span>
+                      <span className={styles.ucDiff}>✗ Different</span>
                     )}
                   </div>
-                  <div className="uc-detail-label">{comparison.leftParsed?.hostname || "N/A"}</div>
+                  <div className={styles.ucDetailLabel}>{comparison.leftParsed?.hostname || "N/A"}</div>
                 </div>
 
-                <div className="uc-detail-card">
-                  <div className="uc-detail-header">
+                <div className={styles.ucDetailCard}>
+                  <div className={styles.ucDetailHeader}>
                     <i className="ti ti-route" />
                     <span>Path</span>
                   </div>
-                  <div className="uc-detail-value">
+                  <div className={styles.ucDetailValue}>
                     {comparison.samePath ? (
-                      <span className="uc-match">✓ Same</span>
+                      <span className={styles.ucMatch}>✓ Same</span>
                     ) : (
-                      <span className="uc-diff">✗ Different</span>
+                      <span className={styles.ucDiff}>✗ Different</span>
                     )}
                   </div>
-                  <div className="uc-detail-label">{comparison.leftParsed?.pathname || "/"}</div>
+                  <div className={styles.ucDetailLabel}>{comparison.leftParsed?.pathname || "/"}</div>
                 </div>
               </div>
             </div>
@@ -198,24 +199,24 @@ export default function UrlCompare({ options }: UrlCompareProps) {
         )}
 
         {/*  Side-by-Side Inputs  */}
-        <div className="uc-inputs">
-          <div className="uc-input-panel">
-            <div className="uc-input-header">
-              <div className="uc-input-label">
+        <div className={styles.ucInputs}>
+          <div className={styles.ucInputPanel}>
+            <div className={styles.ucInputHeader}>
+              <div className={styles.ucInputLabel}>
                 <i className="ti ti-arrow-left" />
                 Left Side
               </div>
               {leftInput && (
-                <div className="uc-input-meta">
-                  <span className="uc-meta-size">{formatBytes(new Blob([leftInput]).size)}</span>
+                <div className={styles.ucInputMeta}>
+                  <span className={styles.ucMetaSize}>{formatBytes(new Blob([leftInput]).size)}</span>
                   {leftDecoded?.error && (
-                    <span className="uc-meta-error">
+                    <span className={styles.ucMetaError}>
                       <i className="ti ti-alert-circle" />
                       Invalid
                     </span>
                   )}
                   {!leftDecoded?.error && leftDecoded && (
-                    <span className="uc-meta-valid">
+                    <span className={styles.ucMetaValid}>
                       <i className="ti ti-check" />
                       Valid
                     </span>
@@ -224,43 +225,43 @@ export default function UrlCompare({ options }: UrlCompareProps) {
               )}
             </div>
             <textarea
-              className="uc-textarea"
+              className={styles.ucTextarea}
               value={leftInput}
               onChange={(e) => setLeftInput(e.target.value)}
               placeholder="Paste first URL..."
               spellCheck={false}
             />
             {leftDecoded?.error && (
-              <div className="uc-input-error">
+              <div className={styles.ucInputError}>
                 <i className="ti ti-alert-triangle" />
                 {leftDecoded.error}
               </div>
             )}
           </div>
 
-          <div className="uc-vs">
-            <div className="uc-vs-icon">
+          <div className={styles.ucVs}>
+            <div className={styles.ucVsIcon}>
               <span>VS</span>
             </div>
           </div>
 
-          <div className="uc-input-panel">
-            <div className="uc-input-header">
-              <div className="uc-input-label">
+          <div className={styles.ucInputPanel}>
+            <div className={styles.ucInputHeader}>
+              <div className={styles.ucInputLabel}>
                 <i className="ti ti-arrow-right" />
                 Right Side
               </div>
               {rightInput && (
-                <div className="uc-input-meta">
-                  <span className="uc-meta-size">{formatBytes(new Blob([rightInput]).size)}</span>
+                <div className={styles.ucInputMeta}>
+                  <span className={styles.ucMetaSize}>{formatBytes(new Blob([rightInput]).size)}</span>
                   {rightDecoded?.error && (
-                    <span className="uc-meta-error">
+                    <span className={styles.ucMetaError}>
                       <i className="ti ti-alert-circle" />
                       Invalid
                     </span>
                   )}
                   {!rightDecoded?.error && rightDecoded && (
-                    <span className="uc-meta-valid">
+                    <span className={styles.ucMetaValid}>
                       <i className="ti ti-check" />
                       Valid
                     </span>
@@ -269,14 +270,14 @@ export default function UrlCompare({ options }: UrlCompareProps) {
               )}
             </div>
             <textarea
-              className="uc-textarea"
+              className={styles.ucTextarea}
               value={rightInput}
               onChange={(e) => setRightInput(e.target.value)}
               placeholder="Paste second URL..."
               spellCheck={false}
             />
             {rightDecoded?.error && (
-              <div className="uc-input-error">
+              <div className={styles.ucInputError}>
                 <i className="ti ti-alert-triangle" />
                 {rightDecoded.error}
               </div>
@@ -286,12 +287,12 @@ export default function UrlCompare({ options }: UrlCompareProps) {
 
         {/*  Empty State  */}
         {!leftInput && !rightInput && (
-          <div className="uc-empty">
-            <div className="uc-empty-icon">
+          <div className={styles.ucEmpty}>
+            <div className={styles.ucEmptyIcon}>
               <i className="ti ti-git-compare" />
             </div>
-            <p className="uc-empty-title">Compare URLs</p>
-            <p className="uc-empty-desc">
+            <p className={styles.ucEmptyTitle}>Compare URLs</p>
+            <p className={styles.ucEmptyDesc}>
               Paste two URLs above to compare their content, structure, and encoding
             </p>
           </div>

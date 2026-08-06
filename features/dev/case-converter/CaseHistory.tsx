@@ -1,7 +1,8 @@
 // features/dev/case-converter/CaseHistory.tsx
 "use client";
 
-import type { HistoryEntry, CaseType } from "./utils";
+import type { HistoryEntry, CaseType } from "./ts/utils";
+import styles from "./style/CaseHistory.module.css";
 
 interface CaseHistoryProps {
   history: HistoryEntry[];
@@ -26,44 +27,44 @@ export default function CaseHistory({ history, onClear, onRestore }: CaseHistory
 
   return (
     <>
-      <div className="ch-root">
+      <div className={styles.chRoot}>
         {history.length === 0 ? (
-          <div className="ch-empty">
-            <div className="ch-empty-icon">
+          <div className={styles.chEmpty}>
+            <div className={styles.chEmptyIcon}>
               <i className="ti ti-history" />
             </div>
-            <p className="ch-empty-title">No History Yet</p>
-            <p className="ch-empty-desc">
+            <p className={styles.chEmptyTitle}>No History Yet</p>
+            <p className={styles.chEmptyDesc}>
               Your conversion history will appear here. History is stored locally in your browser.
             </p>
           </div>
         ) : (
           <>
-            <div className="ch-header">
-              <div className="ch-header-label">
+            <div className={styles.chHeader}>
+              <div className={styles.chHeaderLabel}>
                 <i className="ti ti-history" />
                 Conversion History
-                <span className="ch-count-badge">{history.length}</span>
+                <span className={styles.chCountBadge}>{history.length}</span>
               </div>
-              <button type="button" className="ch-clear-btn" onClick={onClear}>
+              <button type="button" className={styles.chClearBtn} onClick={onClear}>
                 <i className="ti ti-trash" />
                 Clear All
               </button>
             </div>
 
-            <div className="ch-list">
+            <div className={styles.chList}>
               {history.map((entry) => (
-                <div key={entry.id} className="ch-item">
-                  <div className="ch-item-header">
-                    <div className="ch-item-conversion">
-                      <span className="ch-item-case">{entry.toCase}</span>
+                <div key={entry.id} className={styles.chItem}>
+                  <div className={styles.chItemHeader}>
+                    <div className={styles.chItemConversion}>
+                      <span className={styles.chItemCase}>{entry.toCase}</span>
                       <i className="ti ti-arrow-right" />
                     </div>
-                    <div className="ch-item-meta">
-                      <span className="ch-item-time">{formatTimestamp(entry.timestamp)}</span>
+                    <div className={styles.chItemMeta}>
+                      <span className={styles.chItemTime}>{formatTimestamp(entry.timestamp)}</span>
                       <button
                         type="button"
-                        className="ch-restore-btn"
+                        className={styles.chRestoreBtn}
                         onClick={() => onRestore(entry)}
                         title="Restore this conversion"
                       >
@@ -73,14 +74,14 @@ export default function CaseHistory({ history, onClear, onRestore }: CaseHistory
                     </div>
                   </div>
 
-                  <div className="ch-item-content">
-                    <div className="ch-item-row">
-                      <span className="ch-item-label">Input:</span>
-                      <code className="ch-item-code">{entry.input}</code>
+                  <div className={styles.chItemContent}>
+                    <div className={styles.chItemRow}>
+                      <span className={styles.chItemLabel}>Input:</span>
+                      <code className={styles.chItemCode}>{entry.input}</code>
                     </div>
-                    <div className="ch-item-row">
-                      <span className="ch-item-label">Output:</span>
-                      <code className="ch-item-code">{entry.output}</code>
+                    <div className={styles.chItemRow}>
+                      <span className={styles.chItemLabel}>Output:</span>
+                      <code className={styles.chItemCode}>{entry.output}</code>
                     </div>
                   </div>
                 </div>

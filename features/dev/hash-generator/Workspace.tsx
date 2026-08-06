@@ -14,13 +14,11 @@ import {
   SAMPLE_DATA,
   detectInputType,
   formatBytes,
-} from "./hashEngine";
+} from "./ts/hashEngine";
 import HashAnalysis from "./HashAnalysis";
 import HashBatch from "./HashBatch";
-import { useHashStore } from "./hashStore";
-import "./style/HashAnalysis.css";
-import "./style/Workspace.css";
-import "./style/HashBatch.css";
+import { useHashStore } from "./ts/hashStore";
+import styles from "./style/Workspace.module.css";
 
 type TabView = "single" | "batch" | "verify" | "history";
 
@@ -310,19 +308,19 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="hg-root">
+      <div className={styles.hgRoot}>
         {/* Top Chrome */}
-        <div className="hg-chrome">
-          <div className="hg-chrome-left">
-            <div className="hg-title">
+        <div className={styles.hgChrome}>
+          <div className={styles.hgChromeLeft}>
+            <div className={styles.hgTitle}>
               <i className="ti ti-hash" />
               Hash Generator
             </div>
           </div>
-          <div className="hg-chrome-right">
+          <div className={styles.hgChromeRight}>
             <button
               type="button"
-              className="hg-chrome-btn"
+              className={styles.hgChromeBtn}
               onClick={() => setShowAdvanced(!showAdvanced)}
             >
               <i className="ti ti-settings" />
@@ -333,12 +331,12 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
 
         {/* Settings Panel */}
         {showAdvanced && (
-          <div className="hg-settings">
-            <div className="hg-settings-row">
-              <div className="hg-setting-group">
-                <label className="hg-setting-label">Output Format</label>
+          <div className={styles.hgSettings}>
+            <div className={styles.hgSettingsRow}>
+              <div className={styles.hgSettingGroup}>
+                <label className={styles.hgSettingLabel}>Output Format</label>
                 <select
-                  className="hg-select"
+                  className={styles.hgSelect}
                   value={format}
                   onChange={(e) => setFormat(e.target.value as HashFormat)}
                 >
@@ -348,22 +346,22 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                 </select>
               </div>
 
-              <div className="hg-setting-group">
-                <label className="hg-setting-label">Salt (optional)</label>
+              <div className={styles.hgSettingGroup}>
+                <label className={styles.hgSettingLabel}>Salt (optional)</label>
                 <input
                   type="text"
-                  className="hg-input"
+                  className={styles.hgInput}
                   value={salt}
                   onChange={(e) => setSalt(e.target.value)}
                   placeholder="Enter salt for additional security"
                 />
               </div>
 
-              <div className="hg-setting-group">
-                <label className="hg-setting-label">HMAC Key (optional)</label>
+              <div className={styles.hgSettingGroup}>
+                <label className={styles.hgSettingLabel}>HMAC Key (optional)</label>
                 <input
                   type="text"
-                  className="hg-input"
+                  className={styles.hgInput}
                   value={hmacKey}
                   onChange={(e) => setHmacKey(e.target.value)}
                   placeholder="Enter key for HMAC"
@@ -374,20 +372,20 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
         )}
 
         {/* Tab Navigation */}
-        <div className="hg-tabs-bar">
-          <nav className="hg-tabs">
+        <div className={styles.hgTabsBar}>
+          <nav className={styles.hgTabs}>
             {TAB_VIEWS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
-                className={`hg-tab${tabView === tab.id ? " active" : ""}`}
+                className={`${styles.hgTab}${tabView === tab.id ? ` ${styles.active}` : ""}`}
                 onClick={() => setTabView(tab.id)}
                 title={tab.description}
               >
                 <i className={`ti ${tab.icon}`} />
                 <span>{tab.label}</span>
                 {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className="hg-tab-badge">{history.length}</span>
+                  <span className={styles.hgTabBadge}>{history.length}</span>
                 )}
               </button>
             ))}
@@ -395,28 +393,28 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Tab Content */}
-        <div className="hg-tab-content">
+        <div className={styles.hgTabContent}>
           {/* Single Hash Tab */}
           {tabView === "single" && (
-            <div className="hg-single-view">
+            <div className={styles.hgSingleView}>
               {/* Algorithm Selection */}
-              <div className="hg-algorithms-section">
-                <div className="hg-algorithms-header">
-                  <div className="hg-algorithms-title">
+              <div className={styles.hgAlgorithmsSection}>
+                <div className={styles.hgAlgorithmsHeader}>
+                  <div className={styles.hgAlgorithmsTitle}>
                     <i className="ti ti-shield-check" />
                     Select Hash Algorithms
                   </div>
-                  <div className="hg-algorithms-actions">
+                  <div className={styles.hgAlgorithmsActions}>
                     <button
                       type="button"
-                      className="hg-algo-preset-btn"
+                      className={styles.hgAlgoPresetBtn}
                       onClick={selectRecommendedAlgorithms}
                     >
                       Recommended
                     </button>
                     <button
                       type="button"
-                      className="hg-algo-preset-btn"
+                      className={styles.hgAlgoPresetBtn}
                       onClick={selectAllAlgorithms}
                     >
                       Select All
@@ -424,20 +422,20 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                   </div>
                 </div>
 
-                <div className="hg-algorithms-grid">
+                <div className={styles.hgAlgorithmsGrid}>
                   {filteredAlgorithms.map(([algorithm, info]) => (
                     <button
                       key={algorithm}
                       type="button"
-                      className={`hg-algorithm${selectedAlgorithms.has(algorithm as HashAlgorithm) ? " active" : ""}${info.isDeprecated ? " deprecated" : ""}`}
+                      className={`${styles.hgAlgorithm}${selectedAlgorithms.has(algorithm as HashAlgorithm) ? ` ${styles.active}` : ""}${info.isDeprecated ? ` ${styles.deprecated}` : ""}`}
                       onClick={() => toggleAlgorithm(algorithm as HashAlgorithm)}
                       title={info.description}
                     >
                       <i className={`ti ${info.icon}`} style={{ color: info.color }} />
-                      <div className="hg-algorithm-info">
-                        <span className="hg-algorithm-name">{info.label}</span>
-                        <span className="hg-algorithm-bits">{info.bitLength} bits</span>
-                        {info.isDeprecated && <span className="hg-deprecated-tag">Deprecated</span>}
+                      <div className={styles.hgAlgorithmInfo}>
+                        <span className={styles.hgAlgorithmName}>{info.label}</span>
+                        <span className={styles.hgAlgorithmBits}>{info.bitLength} bits</span>
+                        {info.isDeprecated && <span className={styles.hgDeprecatedTag}>Deprecated</span>}
                       </div>
                     </button>
                   ))}
@@ -445,21 +443,21 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
               </div>
 
               {/* Input Section */}
-              <div className="hg-input-section">
-                <div className="hg-input-header">
-                  <div className="hg-input-title">
+              <div className={styles.hgInputSection}>
+                <div className={styles.hgInputHeader}>
+                  <div className={styles.hgInputTitle}>
                     <i className="ti ti-file-text" />
                     Input Data
                   </div>
-                  <div className="hg-input-actions">
-                    <div className="hg-samples">
+                  <div className={styles.hgInputActions}>
+                    <div className={styles.hgSamples}>
                       {Object.entries(SAMPLE_DATA)
                         .slice(0, 3)
                         .map(([key, sample]) => (
                           <button
                             key={key}
                             type="button"
-                            className="hg-sample-btn"
+                            className={styles.hgSampleBtn}
                             onClick={() => loadSample(key as keyof typeof SAMPLE_DATA)}
                             title={sample.description}
                           >
@@ -471,20 +469,20 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                       ref={fileInputRef}
                       type="file"
                       id="file-input"
-                      className="hg-file-input"
+                      className={styles.hgFileInput}
                       onChange={handleFileUpload}
                       disabled={isProcessing}
                     />
-                    <label htmlFor="file-input" className="hg-file-btn">
+                    <label htmlFor="file-input" className={styles.hgFileBtn}>
                       <i className="ti ti-upload" />
                       Upload File
                     </label>
                   </div>
                 </div>
 
-                <div className="hg-input-area">
+                <div className={styles.hgInputArea}>
                   <textarea
-                    className="hg-textarea"
+                    className={styles.hgTextarea}
                     value={input}
                     onChange={(e) => {
                       setInput(e.target.value);
@@ -497,36 +495,36 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                   />
 
                   {inputType === "file" && fileName && (
-                    <div className="hg-file-info">
+                    <div className={styles.hgFileInfo}>
                       <i className="ti ti-file-check" />
-                      <span className="hg-file-name">{fileName}</span>
-                      <span className="hg-file-size">({formatBytes(fileSize)})</span>
+                      <span className={styles.hgFileName}>{fileName}</span>
+                      <span className={styles.hgFileSize}>({formatBytes(fileSize)})</span>
                     </div>
                   )}
 
                   {input.trim() && inputType === "text" && (
-                    <div className="hg-input-meta">
-                      <span className="hg-input-size">
+                    <div className={styles.hgInputMeta}>
+                      <span className={styles.hgInputSize}>
                         {input.length} characters, {formatBytes(new Blob([input]).size)}
                       </span>
-                      <span className="hg-input-type">Type: {detectInputType(input)}</span>
+                      <span className={styles.hgInputType}>Type: {detectInputType(input)}</span>
                     </div>
                   )}
                 </div>
 
-                <div className="hg-input-footer">
-                  <div className="hg-input-stats">
+                <div className={styles.hgInputFooter}>
+                  <div className={styles.hgInputStats}>
                     {selectedAlgorithms.size > 0 && (
-                      <span className="hg-selected-count">
+                      <span className={styles.hgSelectedCount}>
                         {selectedAlgorithms.size} algorithm
                         {selectedAlgorithms.size !== 1 ? "s" : ""} selected
                       </span>
                     )}
                   </div>
-                  <div className="hg-input-actions-footer">
+                  <div className={styles.hgInputActionsFooter}>
                     <button
                       type="button"
-                      className="hg-action-btn hg-action-btn--secondary"
+                      className={`${styles.hgActionBtn} ${styles.hgActionBtnSecondary}`}
                       onClick={clearAll}
                       disabled={!input && !fileName}
                     >
@@ -535,7 +533,7 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                     </button>
                     <button
                       type="button"
-                      className="hg-action-btn hg-action-btn--primary"
+                      className={`${styles.hgActionBtn} ${styles.hgActionBtnPrimary}`}
                       onClick={handleTextHash}
                       disabled={
                         isProcessing ||
@@ -543,7 +541,7 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                         selectedAlgorithms.size === 0
                       }
                     >
-                      <i className={`ti ${isProcessing ? "ti-loader hg-spin" : "ti-hash"}`} />
+                      <i className={`ti ${isProcessing ? `ti-loader ${styles.hgSpin}` : "ti-hash"}`} />
                       {isProcessing ? "Processing..." : "Generate Hashes"}
                     </button>
                   </div>
@@ -552,17 +550,17 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
 
               {/* Results Section */}
               {results.length > 0 && (
-                <div className="hg-results-section">
-                  <div className="hg-results-header">
-                    <div className="hg-results-title">
+                <div className={styles.hgResultsSection}>
+                  <div className={styles.hgResultsHeader}>
+                    <div className={styles.hgResultsTitle}>
                       <i className="ti ti-sparkles" />
                       Generated Hashes
-                      <span className="hg-results-count">{results.length}</span>
+                      <span className={styles.hgResultsCount}>{results.length}</span>
                     </div>
-                    <div className="hg-results-actions">
+                    <div className={styles.hgResultsActions}>
                       <button
                         type="button"
-                        className="hg-export-btn"
+                        className={styles.hgExportBtn}
                         onClick={() => handleExport("txt")}
                         title="Export as text"
                       >
@@ -571,7 +569,7 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                       </button>
                       <button
                         type="button"
-                        className="hg-export-btn"
+                        className={styles.hgExportBtn}
                         onClick={() => handleExport("csv")}
                         title="Export as CSV"
                       >
@@ -580,7 +578,7 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                       </button>
                       <button
                         type="button"
-                        className="hg-export-btn"
+                        className={styles.hgExportBtn}
                         onClick={() => handleExport("json")}
                         title="Export as JSON"
                       >
@@ -590,37 +588,37 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                     </div>
                   </div>
 
-                  <div className="hg-results-grid">
+                  <div className={styles.hgResultsGrid}>
                     {results.map((result) => {
                       const algorithmInfo = HASH_ALGORITHMS[result.algorithm];
                       return (
-                        <div key={result.algorithm} className="hg-result-card">
-                          <div className="hg-result-header">
-                            <div className="hg-result-info">
+                        <div key={result.algorithm} className={styles.hgResultCard}>
+                          <div className={styles.hgResultHeader}>
+                            <div className={styles.hgResultInfo}>
                               <i
                                 className={`ti ${algorithmInfo.icon}`}
                                 style={{ color: algorithmInfo.color }}
                               />
-                              <span className="hg-result-algorithm">{result.algorithm}</span>
-                              <span className="hg-result-format">{result.format}</span>
+                              <span className={styles.hgResultAlgorithm}>{result.algorithm}</span>
+                              <span className={styles.hgResultFormat}>{result.format}</span>
                             </div>
-                            <div className="hg-result-meta">
-                              <span className="hg-result-time">
+                            <div className={styles.hgResultMeta}>
+                              <span className={styles.hgResultTime}>
                                 {result.executionTime.toFixed(2)}ms
                               </span>
-                              <div className={`hg-strength-badge hg-strength-${result.strength}`}>
+                              <div className={`${styles.hgStrengthBadge} ${styles[`hgStrength${result.strength.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')}`]}`}>
                                 {result.strength.replace("-", " ")}
                               </div>
                             </div>
                           </div>
-                          <div className="hg-result-hash">{result.hash}</div>
-                          <div className="hg-result-footer">
-                            <span className="hg-result-length">
+                          <div className={styles.hgResultHash}>{result.hash}</div>
+                          <div className={styles.hgResultFooter}>
+                            <span className={styles.hgResultLength}>
                               {result.hash.length} characters
                             </span>
                             <button
                               type="button"
-                              className={`hg-copy-btn${copiedKey === result.algorithm ? " copied" : ""}`}
+                              className={`${styles.hgCopyBtn}${copiedKey === result.algorithm ? ` ${styles.copied}` : ""}`}
                               onClick={() => handleCopy(result.hash, result.algorithm)}
                             >
                               <i
@@ -635,7 +633,7 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                   </div>
 
                   {/* Analysis */}
-                  <div className="hg-analysis-section">
+                  <div className={styles.hgAnalysisSection}>
                     <HashAnalysis
                       results={results}
                       inputSize={inputType === "file" ? fileSize : new Blob([input]).size}
@@ -646,23 +644,23 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
 
               {/* Empty State */}
               {results.length === 0 && !isProcessing && (
-                <div className="hg-empty-state">
-                  <div className="hg-empty-icon">
+                <div className={styles.hgEmptyState}>
+                  <div className={styles.hgEmptyIcon}>
                     <i className="ti ti-hash" />
                   </div>
-                  <h3 className="hg-empty-title">Generate Cryptographic Hashes</h3>
-                  <p className="hg-empty-description">
+                  <h3 className={styles.hgEmptyTitle}>Generate Cryptographic Hashes</h3>
+                  <p className={styles.hgEmptyDescription}>
                     Enter text, upload a file, or try a sample to generate secure hash values using
                     industry-standard algorithms.
                   </p>
-                  <div className="hg-empty-samples">
+                  <div className={styles.hgEmptySamples}>
                     {Object.entries(SAMPLE_DATA)
                       .slice(0, 3)
                       .map(([key, sample]) => (
                         <button
                           key={key}
                           type="button"
-                          className="hg-empty-sample-btn"
+                          className={styles.hgEmptySampleBtn}
                           onClick={() => loadSample(key as keyof typeof SAMPLE_DATA)}
                         >
                           Try {sample.label}
@@ -681,20 +679,20 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
 
           {/* Verification Tab */}
           {tabView === "verify" && (
-            <div className="hg-verify-view">
-              <div className="hg-verify-section">
-                <div className="hg-verify-header">
-                  <div className="hg-verify-title">
+            <div className={styles.hgVerifyView}>
+              <div className={styles.hgVerifySection}>
+                <div className={styles.hgVerifyHeader}>
+                  <div className={styles.hgVerifyTitle}>
                     <i className="ti ti-shield-check" />
                     Hash Verification
                   </div>
                 </div>
 
-                <div className="hg-verify-form">
-                  <div className="hg-verify-group">
-                    <label className="hg-verify-label">Original Text/Data</label>
+                <div className={styles.hgVerifyForm}>
+                  <div className={styles.hgVerifyGroup}>
+                    <label className={styles.hgVerifyLabel}>Original Text/Data</label>
                     <textarea
-                      className="hg-textarea"
+                      className={styles.hgTextarea}
                       value={verifyInput}
                       onChange={(e) => setVerifyInput(e.target.value)}
                       placeholder="Enter the original text or data..."
@@ -702,22 +700,22 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                     />
                   </div>
 
-                  <div className="hg-verify-group">
-                    <label className="hg-verify-label">Expected Hash</label>
+                  <div className={styles.hgVerifyGroup}>
+                    <label className={styles.hgVerifyLabel}>Expected Hash</label>
                     <input
                       type="text"
-                      className="hg-input"
+                      className={styles.hgInput}
                       value={verifyHash}
                       onChange={(e) => setVerifyHash(e.target.value)}
                       placeholder="Enter the hash to verify against..."
                     />
                   </div>
 
-                  <div className="hg-verify-options">
-                    <div className="hg-verify-group">
-                      <label className="hg-verify-label">Algorithm</label>
+                  <div className={styles.hgVerifyOptions}>
+                    <div className={styles.hgVerifyGroup}>
+                      <label className={styles.hgVerifyLabel}>Algorithm</label>
                       <select
-                        className="hg-select"
+                        className={styles.hgSelect}
                         value={verifyAlgorithm}
                         onChange={(e) => setVerifyAlgorithm(e.target.value as HashAlgorithm)}
                       >
@@ -731,12 +729,12 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
 
                     <button
                       type="button"
-                      className="hg-action-btn hg-action-btn--primary"
+                      className={`${styles.hgActionBtn} ${styles.hgActionBtnPrimary}`}
                       onClick={handleVerify}
                       disabled={!verifyInput.trim() || !verifyHash.trim() || isProcessing}
                     >
                       <i
-                        className={`ti ${isProcessing ? "ti-loader hg-spin" : "ti-shield-check"}`}
+                        className={`ti ${isProcessing ? `ti-loader ${styles.hgSpin}` : "ti-shield-check"}`}
                       />
                       Verify Hash
                     </button>
@@ -744,12 +742,12 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
 
                   {verifyResult !== null && (
                     <div
-                      className={`hg-verify-result hg-verify-result--${verifyResult ? "success" : "failure"}`}
+                      className={`${styles.hgVerifyResult} ${styles[`hgVerifyResult${verifyResult ? "Success" : "Failure"}`]}`}
                     >
                       <i
                         className={`ti ${verifyResult ? "ti-shield-check-filled" : "ti-shield-x-filled"}`}
                       />
-                      <div className="hg-verify-result-content">
+                      <div className={styles.hgVerifyResultContent}>
                         <strong>{verifyResult ? "Hash Verified ✓" : "Hash Mismatch ✗"}</strong>
                         <p>
                           {verifyResult
@@ -766,30 +764,30 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
 
           {/* History Tab */}
           {tabView === "history" && (
-            <div className="hg-history-view">
+            <div className={styles.hgHistoryView}>
               {history.length === 0 ? (
-                <div className="hg-empty-state">
-                  <div className="hg-empty-icon">
+                <div className={styles.hgEmptyState}>
+                  <div className={styles.hgEmptyIcon}>
                     <i className="ti ti-history" />
                   </div>
-                  <h3 className="hg-empty-title">No History Yet</h3>
-                  <p className="hg-empty-description">
+                  <h3 className={styles.hgEmptyTitle}>No History Yet</h3>
+                  <p className={styles.hgEmptyDescription}>
                     Your hash generation history will appear here. History is automatically saved
                     when auto-save is enabled in settings.
                   </p>
                 </div>
               ) : (
                 <>
-                  <div className="hg-history-header">
-                    <div className="hg-history-title">
+                  <div className={styles.hgHistoryHeader}>
+                    <div className={styles.hgHistoryTitle}>
                       <i className="ti ti-history" />
                       Hash Generation History
-                      <span className="hg-history-count">{history.length}</span>
+                      <span className={styles.hgHistoryCount}>{history.length}</span>
                     </div>
-                    <div className="hg-history-actions">
+                    <div className={styles.hgHistoryActions}>
                       <button
                         type="button"
-                        className="hg-action-btn hg-action-btn--secondary"
+                        className={`${styles.hgActionBtn} ${styles.hgActionBtnSecondary}`}
                         onClick={clearHistory}
                       >
                         <i className="ti ti-trash" />
@@ -799,46 +797,46 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
                   </div>
 
                   {statistics.totalEntries > 0 && (
-                    <div className="hg-statistics">
-                      <div className="hg-stat">
-                        <span className="hg-stat-value">{statistics.totalEntries}</span>
-                        <span className="hg-stat-label">Total Hashes</span>
+                    <div className={styles.hgStatistics}>
+                      <div className={styles.hgStat}>
+                        <span className={styles.hgStatValue}>{statistics.totalEntries}</span>
+                        <span className={styles.hgStatLabel}>Total Hashes</span>
                       </div>
-                      <div className="hg-stat">
-                        <span className="hg-stat-value">
+                      <div className={styles.hgStat}>
+                        <span className={styles.hgStatValue}>
                           {statistics.mostUsedAlgorithm || "N/A"}
                         </span>
-                        <span className="hg-stat-label">Most Used</span>
+                        <span className={styles.hgStatLabel}>Most Used</span>
                       </div>
-                      <div className="hg-stat">
-                        <span className="hg-stat-value">
+                      <div className={styles.hgStat}>
+                        <span className={styles.hgStatValue}>
                           {statistics.averageProcessingTime.toFixed(1)}ms
                         </span>
-                        <span className="hg-stat-label">Avg. Time</span>
+                        <span className={styles.hgStatLabel}>Avg. Time</span>
                       </div>
                     </div>
                   )}
 
-                  <div className="hg-history-list">
+                  <div className={styles.hgHistoryList}>
                     {history.slice(0, 50).map((entry) => (
-                      <div key={entry.id} className="hg-history-item">
-                        <div className="hg-history-item-header">
-                          <div className="hg-history-item-info">
-                            <span className="hg-history-item-input">
+                      <div key={entry.id} className={styles.hgHistoryItem}>
+                        <div className={styles.hgHistoryItemHeader}>
+                          <div className={styles.hgHistoryItemInfo}>
+                            <span className={styles.hgHistoryItemInput}>
                               {entry.inputType === "file" ? `📁 ${entry.fileName}` : entry.input}
                             </span>
-                            <span className="hg-history-item-time">
+                            <span className={styles.hgHistoryItemTime}>
                               {new Date(entry.timestamp).toLocaleString()}
                             </span>
                           </div>
-                          <div className="hg-history-item-algorithms">
+                          <div className={styles.hgHistoryItemAlgorithms}>
                             {entry.results.slice(0, 3).map((result) => (
-                              <span key={result.algorithm} className="hg-algorithm-tag">
+                              <span key={result.algorithm} className={styles.hgAlgorithmTag}>
                                 {result.algorithm}
                               </span>
                             ))}
                             {entry.results.length > 3 && (
-                              <span className="hg-algorithm-tag hg-algorithm-tag--more">
+                              <span className={`${styles.hgAlgorithmTag} ${styles.hgAlgorithmTagMore}`}>
                                 +{entry.results.length - 3}
                               </span>
                             )}
@@ -854,13 +852,13 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/* Footer */}
-        <div className="hg-footer">
-          <div className="hg-footer-info">
+        <div className={styles.hgFooter}>
+          <div className={styles.hgFooterInfo}>
             <i className="ti ti-shield-lock" />
             <span>Everything runs in your browser — no data ever leaves this page.</span>
           </div>
           {results.length > 0 && (
-            <div className="hg-footer-stats">
+            <div className={styles.hgFooterStats}>
               <span>
                 {results.length} hash{results.length !== 1 ? "es" : ""} generated
               </span>

@@ -26,9 +26,3 @@ export const contactMethods = [
     availability: "Daily activity",
   },
 ];
-
-export const quickLinks = [
-  { label: "Feature Requests", href: "/feedback", icon: "ti-bulb" },
-  { label: "Status Page", href: "/status", icon: "ti-activity" },
-  { label: "Community", href: "/community", icon: "ti-users" },
-];

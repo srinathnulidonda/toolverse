@@ -1,0 +1,363 @@
+/* features/social/tweet-generator/style/TweetPreview.module.css */
+
+.tpRoot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    flex: 1;
+}
+
+.tpCanvasRegion {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.tpCanvasWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 400px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    padding: 20px;
+}
+
+.tpCanvasWrap.tpEmptyState {
+    background: var(--bg-surface) !important;
+}
+
+.tpPlaceholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.tpPlaceholderIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+}
+
+.tpPlaceholderText {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 200px;
+    font-family: var(--font-sans);
+}
+
+.tpTweetCard {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+}
+
+.tpTweetHeader {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.tpAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.tpProfileInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.tpNameRow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tpDisplayName {
+    font-size: 15px;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    line-height: 1.2;
+}
+
+.tpVerified {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.tpHandle {
+    font-size: 15px;
+    font-family: var(--font-sans);
+    line-height: 1.2;
+}
+
+.tpTweetBody {
+    padding-left: 0;
+}
+
+.tpTweetText {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.tpTweetMeta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    font-family: var(--font-sans);
+}
+
+.tpTimestamp,
+.tpSource {
+    font-size: 15px;
+}
+
+.tpMetaDot {
+    font-size: 15px;
+}
+
+.tpEngagement {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 0.5px solid;
+}
+
+.tpMetrics {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.tpMetric {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-family: var(--font-sans);
+}
+
+.tpMetric i {
+    font-size: 18px;
+}
+
+.tpMetric span {
+    font-weight: 500;
+}
+
+.tpWatermark {
+    position: absolute;
+    font-size: 10px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    pointer-events: none;
+}
+
+.tpWatermarkTopLeft {
+    top: 12px;
+    left: 12px;
+}
+
+.tpWatermarkTopRight {
+    top: 12px;
+    right: 12px;
+}
+
+.tpWatermarkBottomLeft {
+    bottom: 12px;
+    left: 12px;
+}
+
+.tpWatermarkBottomRight {
+    bottom: 12px;
+    right: 12px;
+}
+
+.tpActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.tpActionBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 42px;
+    border-radius: 9px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tpActionBtn i {
+    font-size: 16px;
+}
+
+.tpActionBtn:hover:not(:disabled) {
+    background: var(--border);
+    color: var(--text);
+}
+
+.tpActionBtn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.tpActionBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.tpSaveBtn.tpSaved {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+.tpExportSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.tpExportLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--font-sans);
+}
+
+.tpExportLabel i {
+    font-size: 13px;
+}
+
+.tpExportBtns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.tpExportBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 40px;
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tpExportBtn i {
+    font-size: 14px;
+}
+
+.tpExportBtn:hover:not(:disabled) {
+    background: var(--border);
+    color: var(--text);
+}
+
+.tpExportBtn:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.tpExportBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.tpExportPrimary {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+.tpExportPrimary:hover:not(:disabled) {
+    background: var(--brand-border);
+}
+
+@keyframes tpSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tpSpin {
+    animation: tpSpin 0.75s linear infinite;
+}
+
+@media (max-width: 768px) {
+    .tpRoot {
+        padding: 16px 20px 32px;
+    }
+
+    .tpCanvasWrap {
+        min-height: 300px;
+    }
+
+    .tpActions,
+    .tpExportSection {
+        max-width: 100%;
+    }
+
+    .tpActionBtn {
+        height: 46px;
+        font-size: 14px;
+    }
+
+    .tpExportBtn {
+        height: 44px;
+        font-size: 13.5px;
+    }
+}

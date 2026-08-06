@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { convertTimestamp, calculateDuration, type TimestampOptions } from "./utils";
+import { convertTimestamp, calculateDuration, type TimestampOptions } from "./ts/utils";
+import styles from "./style/TimestampCompare.module.css";
 
 interface TimestampCompareProps {
   options: TimestampOptions;
@@ -51,138 +52,138 @@ export default function TimestampCompare({ options }: TimestampCompareProps) {
 
   return (
     <>
-      <div className="tcp-root">
+      <div className={styles.tcpRoot}>
         {/*  Controls  */}
-        <div className="tcp-controls">
-          <div className="tcp-controls-title">
+        <div className={styles.tcpControls}>
+          <div className={styles.tcpControlsTitle}>
             <i className="ti ti-calculator" />
             Duration Calculator
           </div>
-          <div className="tcp-actions">
+          <div className={styles.tcpActions}>
             <button
               type="button"
-              className="tcp-btn"
+              className={styles.tcpBtn}
               onClick={handleSwap}
               disabled={!startInput || !endInput}
             >
               <i className="ti ti-arrows-left-right" />
-              <span className="tcp-btn-text">Swap</span>
+              <span className={styles.tcpBtnText}>Swap</span>
             </button>
             <button
               type="button"
-              className="tcp-btn"
+              className={styles.tcpBtn}
               onClick={handleClear}
               disabled={!startInput && !endInput}
             >
               <i className="ti ti-trash" />
-              <span className="tcp-btn-text">Clear</span>
+              <span className={styles.tcpBtnText}>Clear</span>
             </button>
           </div>
         </div>
 
         {/*  Duration Result  */}
         {duration && (
-          <div className={`tcp-result${!isEndAfterStart ? " reversed" : ""}`}>
-            <div className="tcp-result-icon">
+          <div className={`${styles.tcpResult}${!isEndAfterStart ? ` ${styles.reversed}` : ""}`}>
+            <div className={styles.tcpResultIcon}>
               <i className={`ti ${isEndAfterStart ? "ti-clock-forward" : "ti-clock-back"}`} />
             </div>
-            <div className="tcp-result-content">
-              <div className="tcp-result-label">
+            <div className={styles.tcpResultContent}>
+              <div className={styles.tcpResultLabel}>
                 {isEndAfterStart ? "Duration" : "Duration (End is before Start)"}
               </div>
-              <div className="tcp-result-value">{duration.formatted}</div>
+              <div className={styles.tcpResultValue}>{duration.formatted}</div>
             </div>
-            <div className="tcp-result-breakdown">
+            <div className={styles.tcpResultBreakdown}>
               {duration.days > 0 && (
-                <div className="tcp-breakdown-item">
-                  <span className="tcp-breakdown-value">{duration.days}</span>
-                  <span className="tcp-breakdown-label">days</span>
+                <div className={styles.tcpBreakdownItem}>
+                  <span className={styles.tcpBreakdownValue}>{duration.days}</span>
+                  <span className={styles.tcpBreakdownLabel}>days</span>
                 </div>
               )}
-              <div className="tcp-breakdown-item">
-                <span className="tcp-breakdown-value">{duration.hours}</span>
-                <span className="tcp-breakdown-label">hrs</span>
+              <div className={styles.tcpBreakdownItem}>
+                <span className={styles.tcpBreakdownValue}>{duration.hours}</span>
+                <span className={styles.tcpBreakdownLabel}>hrs</span>
               </div>
-              <div className="tcp-breakdown-item">
-                <span className="tcp-breakdown-value">{duration.minutes}</span>
-                <span className="tcp-breakdown-label">min</span>
+              <div className={styles.tcpBreakdownItem}>
+                <span className={styles.tcpBreakdownValue}>{duration.minutes}</span>
+                <span className={styles.tcpBreakdownLabel}>min</span>
               </div>
-              <div className="tcp-breakdown-item">
-                <span className="tcp-breakdown-value">{duration.seconds}</span>
-                <span className="tcp-breakdown-label">sec</span>
+              <div className={styles.tcpBreakdownItem}>
+                <span className={styles.tcpBreakdownValue}>{duration.seconds}</span>
+                <span className={styles.tcpBreakdownLabel}>sec</span>
               </div>
             </div>
-            <div className="tcp-total-seconds">
-              <span className="tcp-total-label">Total seconds:</span>
+            <div className={styles.tcpTotalSeconds}>
+              <span className={styles.tcpTotalLabel}>Total seconds:</span>
               <code>{duration.total.toLocaleString()}</code>
             </div>
           </div>
         )}
 
         {/*  Side-by-Side Inputs  */}
-        <div className="tcp-inputs">
-          <div className="tcp-input-panel">
-            <div className="tcp-input-header">
-              <div className="tcp-input-label">
+        <div className={styles.tcpInputs}>
+          <div className={styles.tcpInputPanel}>
+            <div className={styles.tcpInputHeader}>
+              <div className={styles.tcpInputLabel}>
                 <i className="ti ti-player-play" />
                 Start Time
               </div>
-              <button type="button" className="tcp-now-btn" onClick={() => handleNow("start")}>
+              <button type="button" className={styles.tcpNowBtn} onClick={() => handleNow("start")}>
                 Now
               </button>
             </div>
             <input
               type="text"
-              className="tcp-input"
+              className={styles.tcpInput}
               value={startInput}
               onChange={(e) => setStartInput(e.target.value)}
               placeholder="Enter timestamp or date..."
               spellCheck={false}
             />
             {startResult && (
-              <div className="tcp-input-preview">
+              <div className={styles.tcpInputPreview}>
                 <i className="ti ti-check" />
                 <span>{startResult.local}</span>
               </div>
             )}
             {startInput && !startResult && (
-              <div className="tcp-input-error">
+              <div className={styles.tcpInputError}>
                 <i className="ti ti-alert-circle" />
                 Invalid format
               </div>
             )}
           </div>
 
-          <div className="tcp-arrow">
+          <div className={styles.tcpArrow}>
             <i className="ti ti-arrow-right" />
           </div>
 
-          <div className="tcp-input-panel">
-            <div className="tcp-input-header">
-              <div className="tcp-input-label">
+          <div className={styles.tcpInputPanel}>
+            <div className={styles.tcpInputHeader}>
+              <div className={styles.tcpInputLabel}>
                 <i className="ti ti-player-stop" />
                 End Time
               </div>
-              <button type="button" className="tcp-now-btn" onClick={() => handleNow("end")}>
+              <button type="button" className={styles.tcpNowBtn} onClick={() => handleNow("end")}>
                 Now
               </button>
             </div>
             <input
               type="text"
-              className="tcp-input"
+              className={styles.tcpInput}
               value={endInput}
               onChange={(e) => setEndInput(e.target.value)}
               placeholder="Enter timestamp or date..."
               spellCheck={false}
             />
             {endResult && (
-              <div className="tcp-input-preview">
+              <div className={styles.tcpInputPreview}>
                 <i className="ti ti-check" />
                 <span>{endResult.local}</span>
               </div>
             )}
             {endInput && !endResult && (
-              <div className="tcp-input-error">
+              <div className={styles.tcpInputError}>
                 <i className="ti ti-alert-circle" />
                 Invalid format
               </div>
@@ -192,12 +193,12 @@ export default function TimestampCompare({ options }: TimestampCompareProps) {
 
         {/*  Empty State  */}
         {!startInput && !endInput && (
-          <div className="tcp-empty">
-            <div className="tcp-empty-icon">
+          <div className={styles.tcpEmpty}>
+            <div className={styles.tcpEmptyIcon}>
               <i className="ti ti-calculator" />
             </div>
-            <p className="tcp-empty-title">Calculate Duration Between Dates</p>
-            <p className="tcp-empty-desc">
+            <p className={styles.tcpEmptyTitle}>Calculate Duration Between Dates</p>
+            <p className={styles.tcpEmptyDesc}>
               Enter start and end timestamps to calculate the duration between them
             </p>
           </div>

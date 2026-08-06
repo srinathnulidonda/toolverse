@@ -2,9 +2,10 @@
 "use client";
 
 import { useMemo, type ReactNode } from "react";
-import type { Mode, EncodingOptions, UrlParts } from "./utils";
-import { parseUrl } from "./utils";
+import type { Mode, EncodingOptions, UrlParts } from "./ts/utils";
+import { parseUrl } from "./ts/utils";
 import { formatBytes } from "@/utils";
+import styles from "./style/UrlPreview.module.css";
 
 interface UrlPreviewProps {
   mode: Mode;
@@ -30,7 +31,7 @@ function highlightEncoded(str: string): ReactNode[] {
       parts.push(str.substring(lastIndex, match.index));
     }
     parts.push(
-      <span key={match.index} className="url-encoded-char">
+      <span key={match.index} className={styles.urlEncodedChar}>
         {match[0]}
       </span>
     );
@@ -70,12 +71,12 @@ export default function UrlPreview({
 
   return (
     <>
-      <div className="up-root">
+      <div className={styles.upRoot}>
         {/*  Mobile Switcher  */}
-        <div className="up-mobile-tabs">
+        <div className={styles.upMobileTabs}>
           <button
             type="button"
-            className={`up-mobile-tab${mobileView === "input" ? " active" : ""}`}
+            className={`${styles.upMobileTab}${mobileView === "input" ? ` ${styles.active}` : ""}`}
             onClick={() => onMobileViewChange("input")}
             aria-selected={mobileView === "input"}
           >
@@ -84,36 +85,36 @@ export default function UrlPreview({
           </button>
           <button
             type="button"
-            className={`up-mobile-tab${mobileView === "output" ? " active" : ""}`}
+            className={`${styles.upMobileTab}${mobileView === "output" ? ` ${styles.active}` : ""}`}
             onClick={() => onMobileViewChange("output")}
             aria-selected={mobileView === "output"}
           >
             <i className="ti ti-sparkles" />
             Result
             {output && mobileView === "input" && (
-              <span className="up-ready-dot" aria-label="Ready" />
+              <span className={styles.upReadyDot} aria-label="Ready" />
             )}
           </button>
         </div>
 
         {/*  Panels  */}
-        <div className="up-panels">
+        <div className={styles.upPanels}>
           {/* Input Panel */}
           <div
-            className={`up-panel${mobileView === "input" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.upPanel}${mobileView === "input" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
-            <div className="up-panel-header">
-              <div className="up-panel-label">
+            <div className={styles.upPanelHeader}>
+              <div className={styles.upPanelLabel}>
                 <i className={`ti ${mode === "encode" ? "ti-pencil" : "ti-code-dots"}`} />
                 {mode === "encode" ? "Plain URL" : "Encoded string"}
               </div>
-              <div className="up-panel-meta">
-                {input && <span className="up-meta-size">{formatBytes(inputBytes)}</span>}
+              <div className={styles.upPanelMeta}>
+                {input && <span className={styles.upMetaSize}>{formatBytes(inputBytes)}</span>}
               </div>
             </div>
 
             <textarea
-              className="up-textarea"
+              className={styles.upTextarea}
               value={input}
               onChange={(e) => onInputChange(e.target.value)}
               placeholder={
@@ -130,33 +131,33 @@ export default function UrlPreview({
 
             {/* URL anatomy chips */}
             {input && !error && parsedUrl && (
-              <div className="up-anatomy">
-                <span className="up-anatomy-chip proto" title="Protocol">
+              <div className={styles.upAnatomy}>
+                <span className={`${styles.upAnatomyChip} ${styles.proto}`} title="Protocol">
                   {parsedUrl.protocol}://
                 </span>
-                <span className="up-anatomy-chip host" title="Hostname">
+                <span className={`${styles.upAnatomyChip} ${styles.host}`} title="Hostname">
                   {parsedUrl.hostname}
                 </span>
                 {parsedUrl.port && (
-                  <span className="up-anatomy-chip port" title="Port">
+                  <span className={`${styles.upAnatomyChip} ${styles.port}`} title="Port">
                     :{parsedUrl.port}
                   </span>
                 )}
                 {parsedUrl.pathname !== "/" && (
-                  <span className="up-anatomy-chip path" title={parsedUrl.pathname}>
+                  <span className={`${styles.upAnatomyChip} ${styles.path}`} title={parsedUrl.pathname}>
                     {parsedUrl.pathname.length > 22
                       ? parsedUrl.pathname.slice(0, 22) + "…"
                       : parsedUrl.pathname}
                   </span>
                 )}
                 {parsedUrl.searchParams.length > 0 && (
-                  <span className="up-anatomy-chip params">
+                  <span className={`${styles.upAnatomyChip} ${styles.params}`}>
                     ?{parsedUrl.searchParams.length} param
                     {parsedUrl.searchParams.length !== 1 ? "s" : ""}
                   </span>
                 )}
                 {parsedUrl.hash && (
-                  <span className="up-anatomy-chip hash" title={parsedUrl.hash}>
+                  <span className={`${styles.upAnatomyChip} ${styles.hash}`} title={parsedUrl.hash}>
                     #{parsedUrl.hash.slice(0, 8)}
                     {parsedUrl.hash.length > 8 ? "…" : ""}
                   </span>
@@ -166,7 +167,7 @@ export default function UrlPreview({
 
             {/* Error */}
             {error && (
-              <div className="up-error" role="alert">
+              <div className={styles.upError} role="alert">
                 <i className="ti ti-alert-triangle" />
                 <div>
                   <strong>Decode error</strong>
@@ -177,8 +178,8 @@ export default function UrlPreview({
 
             {/* Mobile CTA */}
             {output && !error && (
-              <div className="up-mobile-cta">
-                <button type="button" className="up-view-result-btn" onClick={onViewOutput}>
+              <div className={styles.upMobileCta}>
+                <button type="button" className={styles.upViewResultBtn} onClick={onViewOutput}>
                   <i className="ti ti-sparkles" />
                   View result
                   <i className="ti ti-chevron-right" />
@@ -188,27 +189,27 @@ export default function UrlPreview({
           </div>
 
           {/* Divider */}
-          <div className="up-divider">
-            <div className="up-divider-icon">
+          <div className={styles.upDivider}>
+            <div className={styles.upDividerIcon}>
               <i className="ti ti-arrow-right" />
             </div>
           </div>
 
           {/* Output Panel */}
           <div
-            className={`up-panel${mobileView === "output" ? " mobile-visible" : " mobile-hidden"}`}
+            className={`${styles.upPanel}${mobileView === "output" ? ` ${styles.mobileVisible}` : ` ${styles.mobileHidden}`}`}
           >
-            <div className="up-panel-header">
-              <div className="up-panel-label">
+            <div className={styles.upPanelHeader}>
+              <div className={styles.upPanelLabel}>
                 <i className="ti ti-eye" />
                 Result
               </div>
-              <div className="up-panel-meta">
+              <div className={styles.upPanelMeta}>
                 {output && (
                   <>
-                    <span className="up-meta-size">{formatBytes(outputBytes)}</span>
+                    <span className={styles.upMetaSize}>{formatBytes(outputBytes)}</span>
                     {inputBytes > 0 && (
-                      <span className="up-ratio-pill">
+                      <span className={styles.upRatioPill}>
                         {Math.round((outputBytes / inputBytes) * 100)}%
                       </span>
                     )}
@@ -217,21 +218,21 @@ export default function UrlPreview({
               </div>
             </div>
 
-            <div className="up-panel-body">
+            <div className={styles.upPanelBody}>
               {!output ? (
-                <div className="up-empty">
-                  <div className="up-empty-icon">
+                <div className={styles.upEmpty}>
+                  <div className={styles.upEmptyIcon}>
                     <i className="ti ti-arrow-big-right-lines" />
                   </div>
-                  <p className="up-empty-title">Output appears here</p>
-                  <p className="up-empty-desc">
+                  <p className={styles.upEmptyTitle}>Output appears here</p>
+                  <p className={styles.upEmptyDesc}>
                     {mode === "encode"
                       ? "Start typing on the left or pick an example"
                       : "Paste a URL-encoded string on the left"}
                   </p>
                 </div>
               ) : (
-                <pre className="up-output">{highlightedOutput}</pre>
+                <pre className={styles.upOutput}>{highlightedOutput}</pre>
               )}
             </div>
           </div>

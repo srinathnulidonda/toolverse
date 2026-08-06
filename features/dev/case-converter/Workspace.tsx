@@ -3,17 +3,13 @@
 
 import { useState, useCallback } from "react";
 import type { Tool } from "@/lib/tools";
-import { type CaseType, CASE_FORMATS, type HistoryEntry } from "./utils";
+import { type CaseType, CASE_FORMATS, type HistoryEntry } from "./ts/utils";
 import CasePreview from "./CasePreview";
 import CaseBatch from "./CaseBatch";
 import CaseHistory from "./CaseHistory";
 import CaseAnalyzer from "./CaseAnalyzer";
 import { useHistoryStore } from "@/lib/useHistoryStore";
-import "./style/CaseAnalyzer.css";
-import "./style/CaseBatch.css";
-import "./style/CaseHistory.css";
-import "./style/CasePreview.css";
-import "./style/Workspace.css";
+import styles from "./style/Workspace.module.css";
 
 type ViewTab = "single" | "batch" | "analyze" | "history";
 
@@ -84,43 +80,42 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
 
   return (
     <>
-      <div className="cc-root">
-        {/*  Top Chrome  */}
-        <div className="cc-chrome">
-          <div className="cc-chrome-left">
-            <div className="cc-title">
+      <div className={styles.ccRoot}>
+        {/* Top Chrome */}
+        <div className={styles.ccChrome}>
+          <div className={styles.ccChromeLeft}>
+            <div className={styles.ccTitle}>
               <i className="ti ti-letter-case" />
               Case Converter
             </div>
             {input && viewTab === "single" && (
-              <span className="cc-input-badge">{input.length} chars</span>
+              <span className={styles.ccInputBadge}>{input.length} chars</span>
             )}
           </div>
-
-          <div className="cc-chrome-right">
-            <button type="button" className="cc-btn" onClick={handleClear} disabled={!input}>
+          <div className={styles.ccChromeRight}>
+            <button type="button" className={styles.ccBtn} onClick={handleClear} disabled={!input}>
               <i className="ti ti-trash" />
-              <span className="cc-label">Clear</span>
+              <span className={styles.ccLabel}>Clear</span>
             </button>
           </div>
         </div>
 
         {/*  View Tabs  */}
-        <div className="cc-tabs-bar">
-          <nav className="cc-tabs" role="tablist">
+        <div className={styles.ccTabsBar}>
+          <nav className={styles.ccTabs} role="tablist">
             {VIEW_TABS.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 role="tab"
-                className={`cc-tab${viewTab === tab.id ? " active" : ""}`}
+                className={`${styles.ccTab}${viewTab === tab.id ? ` ${styles.active}` : ``}`}
                 onClick={() => setViewTab(tab.id)}
                 aria-selected={viewTab === tab.id}
               >
                 <i className={`ti ${tab.icon}`} />
                 {tab.label}
                 {typeof window !== 'undefined' && tab.id === "history" && history.length > 0 && (
-                  <span className="cc-badge">{history.length}</span>
+                  <span className={styles.ccBadge}>{history.length}</span>
                 )}
               </button>
             ))}
@@ -129,11 +124,11 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
 
         {/*  Options Bar (Single view only)  */}
         {viewTab === "single" && (
-          <div className="cc-options-bar">
-            <div className="cc-options-group">
-              <span className="cc-options-label">Quick Formats:</span>
+          <div className={styles.ccOptionsBar}>
+            <div className={styles.ccOptionsGroup}>
+              <span className={styles.ccOptionsLabel}>Quick Formats:</span>
               {CASE_FORMATS.slice(0, 6).map((format) => (
-                <label key={format.id} className="cc-checkbox">
+                <label key={format.id} className={styles.ccCheckbox}>
                   <input
                     type="checkbox"
                     checked={selectedCases.includes(format.id)}
@@ -145,41 +140,41 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
                       }
                     }}
                   />
-                  <span className="cc-checkbox-label">{format.label}</span>
+                  <span className={styles.ccCheckboxLabel}>{format.label}</span>
                 </label>
               ))}
             </div>
 
-            <div className="cc-options-divider" />
+            <div className={styles.ccOptionsDivider} />
 
-            <label className="cc-toggle">
+            <label className={styles.ccToggle}>
               <input
                 type="checkbox"
                 checked={preserveNumbers}
                 onChange={(e) => setPreserveNumbers(e.target.checked)}
               />
-              <span className="cc-toggle-track">
-                <span className="cc-toggle-thumb" />
+              <span className={styles.ccToggleTrack}>
+                <span className={styles.ccToggleThumb} />
               </span>
-              <span className="cc-toggle-label">Preserve numbers</span>
+              <span className={styles.ccToggleLabel}>Preserve numbers</span>
             </label>
 
-            <label className="cc-toggle">
+            <label className={styles.ccToggle}>
               <input
                 type="checkbox"
                 checked={preserveAcronyms}
                 onChange={(e) => setPreserveAcronyms(e.target.checked)}
               />
-              <span className="cc-toggle-track">
-                <span className="cc-toggle-thumb" />
+              <span className={styles.ccToggleTrack}>
+                <span className={styles.ccToggleThumb} />
               </span>
-              <span className="cc-toggle-label">Preserve acronyms</span>
+              <span className={styles.ccToggleLabel}>Preserve acronyms</span>
             </label>
           </div>
         )}
 
         {/*  Tab Content  */}
-        <div className="cc-tab-content">
+        <div className={styles.ccTabContent}>
           {viewTab === "single" && (
             <CasePreview
               input={input}
@@ -216,7 +211,7 @@ export default function CaseConverterWorkspace({ tool }: { tool: Tool }) {
         </div>
 
         {/*  Footer  */}
-        <div className="cc-footer">
+        <div className={styles.ccFooter}>
           <i className="ti ti-shield-lock" />
           <span>Everything runs in your browser — no data ever leaves this page.</span>
         </div>

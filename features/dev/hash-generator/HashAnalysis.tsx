@@ -2,8 +2,9 @@
 "use client";
 
 import { useMemo } from "react";
-import type { HashResult } from "./hashEngine";
-import { HASH_ALGORITHMS, calculateHashRate } from "./hashEngine";
+import type { HashResult } from "./ts/hashEngine";
+import { HASH_ALGORITHMS, calculateHashRate } from "./ts/hashEngine";
+import styles from "./style/HashAnalysis.module.css";
 
 interface HashAnalysisProps {
   results: HashResult[];
@@ -68,68 +69,68 @@ export default function HashAnalysis({ results, inputSize }: HashAnalysisProps) 
 
   if (!analysis) {
     return (
-      <div className="ha-empty">
-        <div className="ha-empty-icon">
+      <div className={styles.haEmpty}>
+        <div className={styles.haEmptyIcon}>
           <i className="ti ti-chart-pie" />
         </div>
-        <p className="ha-empty-text">Generate hashes to see detailed analysis</p>
+        <p className={styles.haEmptyText}>Generate hashes to see detailed analysis</p>
       </div>
     );
   }
 
   return (
     <>
-      <div className="ha-root">
+      <div className={styles.haRoot}>
         {/* Performance Metrics */}
-        <div className="ha-section">
-          <div className="ha-section-header">
+        <div className={styles.haSection}>
+          <div className={styles.haSectionHeader}>
             <i className="ti ti-gauge" />
             <span>Performance Metrics</span>
           </div>
-          <div className="ha-metrics-grid">
-            <div className="ha-metric">
-              <div className="ha-metric-value">{analysis.performanceMetrics.formattedRate}</div>
-              <div className="ha-metric-label">Hash Rate</div>
+          <div className={styles.haMetricsGrid}>
+            <div className={styles.haMetric}>
+              <div className={styles.haMetricValue}>{analysis.performanceMetrics.formattedRate}</div>
+              <div className={styles.haMetricLabel}>Hash Rate</div>
             </div>
-            <div className="ha-metric">
-              <div className="ha-metric-value">{analysis.averageExecutionTime.toFixed(2)}ms</div>
-              <div className="ha-metric-label">Avg. Time</div>
+            <div className={styles.haMetric}>
+              <div className={styles.haMetricValue}>{analysis.averageExecutionTime.toFixed(2)}ms</div>
+              <div className={styles.haMetricLabel}>Avg. Time</div>
             </div>
-            <div className="ha-metric">
-              <div className="ha-metric-value">{(inputSize / 1024).toFixed(1)}KB</div>
-              <div className="ha-metric-label">Input Size</div>
+            <div className={styles.haMetric}>
+              <div className={styles.haMetricValue}>{(inputSize / 1024).toFixed(1)}KB</div>
+              <div className={styles.haMetricLabel}>Input Size</div>
             </div>
-            <div className="ha-metric">
-              <div className="ha-metric-value">{results.length}</div>
-              <div className="ha-metric-label">Algorithms</div>
+            <div className={styles.haMetric}>
+              <div className={styles.haMetricValue}>{results.length}</div>
+              <div className={styles.haMetricLabel}>Algorithms</div>
             </div>
           </div>
         </div>
 
         {/* Security Analysis */}
-        <div className="ha-section">
-          <div className="ha-section-header">
+        <div className={styles.haSection}>
+          <div className={styles.haSectionHeader}>
             <i className="ti ti-shield-check" />
             <span>Security Analysis</span>
           </div>
-          <div className="ha-security-grid">
-            <div className="ha-security-item ha-security-item--secure">
-              <div className="ha-security-count">{analysis.securityAnalysis.secure}</div>
-              <div className="ha-security-label">
+          <div className={styles.haSecurityGrid}>
+            <div className={`${styles.haSecurityItem} ${styles.haSecurityItemSecure}`}>
+              <div className={styles.haSecurityCount}>{analysis.securityAnalysis.secure}</div>
+              <div className={styles.haSecurityLabel}>
                 <i className="ti ti-shield-check" />
                 Secure
               </div>
             </div>
-            <div className="ha-security-item ha-security-item--deprecated">
-              <div className="ha-security-count">{analysis.securityAnalysis.deprecated}</div>
-              <div className="ha-security-label">
+            <div className={`${styles.haSecurityItem} ${styles.haSecurityItemDeprecated}`}>
+              <div className={styles.haSecurityCount}>{analysis.securityAnalysis.deprecated}</div>
+              <div className={styles.haSecurityLabel}>
                 <i className="ti ti-shield-x" />
                 Deprecated
               </div>
             </div>
-            <div className="ha-security-item ha-security-item--recommended">
-              <div className="ha-security-count">{analysis.securityAnalysis.recommended}</div>
-              <div className="ha-security-label">
+            <div className={`${styles.haSecurityItem} ${styles.haSecurityItemRecommended}`}>
+              <div className={styles.haSecurityCount}>{analysis.securityAnalysis.recommended}</div>
+              <div className={styles.haSecurityLabel}>
                 <i className="ti ti-shield-star" />
                 Recommended
               </div>
@@ -138,47 +139,47 @@ export default function HashAnalysis({ results, inputSize }: HashAnalysisProps) 
         </div>
 
         {/* Algorithm Comparison */}
-        <div className="ha-section">
-          <div className="ha-section-header">
+        <div className={styles.haSection}>
+          <div className={styles.haSectionHeader}>
             <i className="ti ti-timeline" />
             <span>Algorithm Comparison</span>
           </div>
-          <div className="ha-comparison">
+          <div className={styles.haComparison}>
             {results.map((result) => {
               const algorithmInfo = HASH_ALGORITHMS[result.algorithm];
               const relativeSpeed =
                 (analysis.fastestHash.executionTime / result.executionTime) * 100;
 
               return (
-                <div key={result.algorithm} className="ha-comparison-item">
-                  <div className="ha-comparison-header">
-                    <div className="ha-comparison-name">
+                <div key={result.algorithm} className={styles.haComparisonItem}>
+                  <div className={styles.haComparisonHeader}>
+                    <div className={styles.haComparisonName}>
                       <i
                         className={`ti ${algorithmInfo.icon}`}
                         style={{ color: algorithmInfo.color }}
                       />
                       <span>{result.algorithm}</span>
                       {algorithmInfo.isDeprecated && (
-                        <span className="ha-deprecated-badge">Deprecated</span>
+                        <span className={styles.haDeprecatedBadge}>Deprecated</span>
                       )}
                     </div>
-                    <div className="ha-comparison-time">{result.executionTime.toFixed(2)}ms</div>
+                    <div className={styles.haComparisonTime}>{result.executionTime.toFixed(2)}ms</div>
                   </div>
-                  <div className="ha-comparison-bar">
+                  <div className={styles.haComparisonBar}>
                     <div
-                      className="ha-comparison-fill"
+                      className={styles.haComparisonFill}
                       style={{
                         width: `${relativeSpeed}%`,
                         backgroundColor: algorithmInfo.color,
                       }}
                     />
                   </div>
-                  <div className="ha-comparison-details">
-                    <span className="ha-comparison-bits">{algorithmInfo.bitLength} bits</span>
-                    <span className="ha-comparison-strength">
+                  <div className={styles.haComparisonDetails}>
+                    <span className={styles.haComparisonBits}>{algorithmInfo.bitLength} bits</span>
+                    <span className={styles.haComparisonStrength}>
                       {result.strength.replace("-", " ")}
                     </span>
-                    <span className="ha-comparison-entropy">
+                    <span className={styles.haComparisonEntropy}>
                       {result.metadata.entropy}% entropy
                     </span>
                   </div>
@@ -189,23 +190,23 @@ export default function HashAnalysis({ results, inputSize }: HashAnalysisProps) 
         </div>
 
         {/* Bit Length Distribution */}
-        <div className="ha-section">
-          <div className="ha-section-header">
+        <div className={styles.haSection}>
+          <div className={styles.haSectionHeader}>
             <i className="ti ti-chart-bar" />
             <span>Hash Length Distribution</span>
           </div>
-          <div className="ha-distribution">
+          <div className={styles.haDistribution}>
             {Object.entries(analysis.bitLengthDistribution)
               .sort(([a], [b]) => parseInt(a) - parseInt(b))
               .map(([bitLength, count]) => {
                 const percentage = (count / results.length) * 100;
                 return (
-                  <div key={bitLength} className="ha-distribution-item">
-                    <div className="ha-distribution-label">{bitLength} bits</div>
-                    <div className="ha-distribution-bar">
-                      <div className="ha-distribution-fill" style={{ width: `${percentage}%` }} />
+                  <div key={bitLength} className={styles.haDistributionItem}>
+                    <div className={styles.haDistributionLabel}>{bitLength} bits</div>
+                    <div className={styles.haDistributionBar}>
+                      <div className={styles.haDistributionFill} style={{ width: `${percentage}%` }} />
                     </div>
-                    <div className="ha-distribution-count">
+                    <div className={styles.haDistributionCount}>
                       {count} hash{count !== 1 ? "es" : ""}
                     </div>
                   </div>
@@ -215,14 +216,14 @@ export default function HashAnalysis({ results, inputSize }: HashAnalysisProps) 
         </div>
 
         {/* Recommendations */}
-        <div className="ha-section">
-          <div className="ha-section-header">
+        <div className={styles.haSection}>
+          <div className={styles.haSectionHeader}>
             <i className="ti ti-bulb" />
             <span>Recommendations</span>
           </div>
-          <div className="ha-recommendations">
+          <div className={styles.haRecommendations}>
             {analysis.securityAnalysis.deprecated > 0 && (
-              <div className="ha-recommendation ha-recommendation--warning">
+              <div className={`${styles.haRecommendation} ${styles.haRecommendationWarning}`}>
                 <i className="ti ti-alert-triangle" />
                 <div>
                   <strong>Security Warning:</strong> You're using{" "}
@@ -234,7 +235,7 @@ export default function HashAnalysis({ results, inputSize }: HashAnalysisProps) 
             )}
 
             {analysis.securityAnalysis.recommended === 0 && (
-              <div className="ha-recommendation ha-recommendation--info">
+              <div className={`${styles.haRecommendation} ${styles.haRecommendationInfo}`}>
                 <i className="ti ti-info-circle" />
                 <div>
                   <strong>Recommendation:</strong> For maximum security, consider using SHA-256,
@@ -244,7 +245,7 @@ export default function HashAnalysis({ results, inputSize }: HashAnalysisProps) 
             )}
 
             {analysis.fastestHash.executionTime > 100 && (
-              <div className="ha-recommendation ha-recommendation--performance">
+              <div className={`${styles.haRecommendation} ${styles.haRecommendationPerformance}`}>
                 <i className="ti ti-rocket" />
                 <div>
                   <strong>Performance:</strong> For better performance with large inputs, consider
@@ -254,7 +255,7 @@ export default function HashAnalysis({ results, inputSize }: HashAnalysisProps) 
             )}
 
             {inputSize > 1024 * 1024 && (
-              <div className="ha-recommendation ha-recommendation--info">
+              <div className={`${styles.haRecommendation} ${styles.haRecommendationInfo}`}>
                 <i className="ti ti-database" />
                 <div>
                   <strong>Large File:</strong> For files over 1MB, consider streaming hash

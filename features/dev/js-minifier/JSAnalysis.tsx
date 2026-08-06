@@ -2,8 +2,9 @@
 "use client";
 
 import { useMemo } from "react";
-import type { CodeAnalysis, CodeIssue, JSStats } from "./jsEngine";
-import { formatBytes } from "./jsEngine";
+import type { CodeAnalysis, CodeIssue, JSStats } from "./ts/jsEngine";
+import { formatBytes } from "./ts/jsEngine";
+import styles from "./style/JSAnalysis.module.css";
 
 interface JSAnalysisProps {
   analysis: CodeAnalysis;
@@ -45,12 +46,12 @@ export default function JSAnalysis({ analysis, issues, stats }: JSAnalysisProps)
 
   return (
     <>
-      <div className="ja-root">
+      <div className={styles.jaRoot}>
         {/* Summary Cards */}
-        <div className="ja-cards">
-          <div className="ja-card">
+        <div className={styles.jaCards}>
+          <div className={styles.jaCard}>
             <div
-              className="ja-card-icon"
+              className={styles.jaCardIcon}
               style={{
                 background: analysis.syntaxValid ? "#dcfce7" : "#fef2f2",
                 color: analysis.syntaxValid ? "#16a34a" : "#dc2626",
@@ -58,119 +59,119 @@ export default function JSAnalysis({ analysis, issues, stats }: JSAnalysisProps)
             >
               <i className={`ti ${analysis.syntaxValid ? "ti-circle-check" : "ti-circle-x"}`} />
             </div>
-            <div className="ja-card-body">
-              <div className="ja-card-label">Syntax</div>
-              <div className="ja-card-value">{analysis.syntaxValid ? "Valid" : "Errors"}</div>
+            <div className={styles.jaCardBody}>
+              <div className={styles.jaCardLabel}>Syntax</div>
+              <div className={styles.jaCardValue}>{analysis.syntaxValid ? "Valid" : "Errors"}</div>
             </div>
           </div>
 
-          <div className="ja-card">
-            <div className="ja-card-icon" style={{ background: cx.bg, color: cx.color }}>
+          <div className={styles.jaCard}>
+            <div className={styles.jaCardIcon} style={{ background: cx.bg, color: cx.color }}>
               <i className={`ti ${cx.icon}`} />
             </div>
-            <div className="ja-card-body">
-              <div className="ja-card-label">Complexity</div>
-              <div className="ja-card-value">{cx.label}</div>
+            <div className={styles.jaCardBody}>
+              <div className={styles.jaCardLabel}>Complexity</div>
+              <div className={styles.jaCardValue}>{cx.label}</div>
             </div>
           </div>
 
-          <div className="ja-card">
-            <div className="ja-card-icon" style={{ background: "#eff6ff", color: "#2563eb" }}>
+          <div className={styles.jaCard}>
+            <div className={styles.jaCardIcon} style={{ background: "#eff6ff", color: "#2563eb" }}>
               <i className="ti ti-function" />
             </div>
-            <div className="ja-card-body">
-              <div className="ja-card-label">Functions</div>
-              <div className="ja-card-value">{stats.functions}</div>
+            <div className={styles.jaCardBody}>
+              <div className={styles.jaCardLabel}>Functions</div>
+              <div className={styles.jaCardValue}>{stats.functions}</div>
             </div>
           </div>
 
-          <div className="ja-card">
-            <div className="ja-card-icon" style={{ background: "#faf5ff", color: "#7c3aed" }}>
+          <div className={styles.jaCard}>
+            <div className={styles.jaCardIcon} style={{ background: "#faf5ff", color: "#7c3aed" }}>
               <i className="ti ti-variable" />
             </div>
-            <div className="ja-card-body">
-              <div className="ja-card-label">Variables</div>
-              <div className="ja-card-value">{stats.variables}</div>
+            <div className={styles.jaCardBody}>
+              <div className={styles.jaCardLabel}>Variables</div>
+              <div className={styles.jaCardValue}>{stats.variables}</div>
             </div>
           </div>
         </div>
 
         {/* Stats Section */}
-        <div className="ja-section">
-          <div className="ja-section-header">
+        <div className={styles.jaSection}>
+          <div className={styles.jaSectionHeader}>
             <i className="ti ti-chart-bar" />
             <span>Size Analysis</span>
           </div>
-          <div className="ja-size-chart">
-            <div className="ja-size-row">
-              <span className="ja-size-label">Original</span>
-              <div className="ja-size-bar-wrap">
-                <div className="ja-size-bar ja-size-bar--original" style={{ width: "100%" }} />
+          <div className={styles.jaSizeChart}>
+            <div className={styles.jaSizeRow}>
+              <span className={styles.jaSizeLabel}>Original</span>
+              <div className={styles.jaSizeBarWrap}>
+                <div className={`${styles.jaSizeBar} ${styles.jaSizeBarOriginal}`} style={{ width: "100%" }} />
               </div>
-              <span className="ja-size-value">{formatBytes(stats.original)}</span>
+              <span className={styles.jaSizeValue}>{formatBytes(stats.original)}</span>
             </div>
-            <div className="ja-size-row">
-              <span className="ja-size-label">Minified</span>
-              <div className="ja-size-bar-wrap">
+            <div className={styles.jaSizeRow}>
+              <span className={styles.jaSizeLabel}>Minified</span>
+              <div className={styles.jaSizeBarWrap}>
                 <div
-                  className="ja-size-bar ja-size-bar--minified"
+                  className={`${styles.jaSizeBar} ${styles.jaSizeBarMinified}`}
                   style={{ width: `${100 - stats.savingsPercent}%` }}
                 />
               </div>
-              <span className="ja-size-value">{formatBytes(stats.minified)}</span>
+              <span className={styles.jaSizeValue}>{formatBytes(stats.minified)}</span>
             </div>
-            <div className="ja-size-row">
-              <span className="ja-size-label">Saved</span>
-              <div className="ja-size-bar-wrap">
+            <div className={styles.jaSizeRow}>
+              <span className={styles.jaSizeLabel}>Saved</span>
+              <div className={styles.jaSizeBarWrap}>
                 <div
-                  className="ja-size-bar ja-size-bar--saved"
+                  className={`${styles.jaSizeBar} ${styles.jaSizeBarSaved}`}
                   style={{ width: `${stats.savingsPercent}%` }}
                 />
               </div>
-              <span className="ja-size-value ja-size-value--good">
+              <span className={`${styles.jaSizeValue} ${styles.jaSizeValueGood}`}>
                 {formatBytes(stats.savings)} ({stats.savingsPercent}%)
               </span>
             </div>
           </div>
 
-          <div className="ja-meta-grid">
-            <div className="ja-meta-item">
-              <span className="ja-meta-label">Lines (before)</span>
-              <span className="ja-meta-value">{stats.originalLines.toLocaleString()}</span>
+          <div className={styles.jaMetaGrid}>
+            <div className={styles.jaMetaItem}>
+              <span className={styles.jaMetaLabel}>Lines (before)</span>
+              <span className={styles.jaMetaValue}>{stats.originalLines.toLocaleString()}</span>
             </div>
-            <div className="ja-meta-item">
-              <span className="ja-meta-label">Lines (after)</span>
-              <span className="ja-meta-value">{stats.minifiedLines.toLocaleString()}</span>
+            <div className={styles.jaMetaItem}>
+              <span className={styles.jaMetaLabel}>Lines (after)</span>
+              <span className={styles.jaMetaValue}>{stats.minifiedLines.toLocaleString()}</span>
             </div>
-            <div className="ja-meta-item">
-              <span className="ja-meta-label">Comments</span>
-              <span className="ja-meta-value">{stats.comments}</span>
+            <div className={styles.jaMetaItem}>
+              <span className={styles.jaMetaLabel}>Comments</span>
+              <span className={styles.jaMetaValue}>{stats.comments}</span>
             </div>
-            <div className="ja-meta-item">
-              <span className="ja-meta-label">Strings</span>
-              <span className="ja-meta-value">{stats.strings}</span>
+            <div className={styles.jaMetaItem}>
+              <span className={styles.jaMetaLabel}>Strings</span>
+              <span className={styles.jaMetaValue}>{stats.strings}</span>
             </div>
           </div>
         </div>
 
         {/* Features */}
-        <div className="ja-section">
-          <div className="ja-section-header">
+        <div className={styles.jaSection}>
+          <div className={styles.jaSectionHeader}>
             <i className="ti ti-sparkles" />
             <span>Detected Features</span>
           </div>
-          <div className="ja-features">
+          <div className={styles.jaFeatures}>
             {features.map((f) => (
               <div
                 key={f.label}
-                className={`ja-feature ${f.active ? "ja-feature--on" : "ja-feature--off"}`}
+                className={`${styles.jaFeature} ${f.active ? styles.jaFeatureOn : styles.jaFeatureOff}`}
               >
                 <i className={`ti ${f.icon}`} />
                 <span>{f.label}</span>
                 {f.active ? (
-                  <i className="ti ti-check ja-feature-check" />
+                  <i className={`ti ti-check ${styles.jaFeatureCheck}`} />
                 ) : (
-                  <i className="ti ti-minus ja-feature-off-icon" />
+                  <i className={`ti ti-minus ${styles.jaFeatureOffIcon}`} />
                 )}
               </div>
             ))}
@@ -179,44 +180,44 @@ export default function JSAnalysis({ analysis, issues, stats }: JSAnalysisProps)
 
         {/* Issues */}
         {issues.length > 0 && (
-          <div className="ja-section">
-            <div className="ja-section-header">
+          <div className={styles.jaSection}>
+            <div className={styles.jaSectionHeader}>
               <i className="ti ti-bug" />
               <span>Code Issues</span>
-              <div className="ja-issue-counts">
+              <div className={styles.jaIssueCounts}>
                 {issueSummary.errors > 0 && (
-                  <span className="ja-issue-badge ja-issue-badge--error">
+                  <span className={`${styles.jaIssueBadge} ${styles.jaIssueBadgeError}`}>
                     {issueSummary.errors} error{issueSummary.errors !== 1 ? "s" : ""}
                   </span>
                 )}
                 {issueSummary.warnings > 0 && (
-                  <span className="ja-issue-badge ja-issue-badge--warning">
+                  <span className={`${styles.jaIssueBadge} ${styles.jaIssueBadgeWarning}`}>
                     {issueSummary.warnings} warning{issueSummary.warnings !== 1 ? "s" : ""}
                   </span>
                 )}
                 {issueSummary.infos > 0 && (
-                  <span className="ja-issue-badge ja-issue-badge--info">
+                  <span className={`${styles.jaIssueBadge} ${styles.jaIssueBadgeInfo}`}>
                     {issueSummary.infos} info
                   </span>
                 )}
               </div>
             </div>
-            <div className="ja-issues">
+            <div className={styles.jaIssues}>
               {issues.map((issue, idx) => (
-                <div key={idx} className={`ja-issue ja-issue--${issue.type}`}>
-                  <div className="ja-issue-icon">
+                <div key={idx} className={`${styles.jaIssue} ${styles[`jaIssue${issue.type.charAt(0).toUpperCase() + issue.type.slice(1)}`]}`}>
+                  <div className={styles.jaIssueIcon}>
                     <i
                       className={`ti ${issue.type === "error"
-                          ? "ti-circle-x"
-                          : issue.type === "warning"
-                            ? "ti-alert-triangle"
-                            : "ti-info-circle"
+                        ? "ti-circle-x"
+                        : issue.type === "warning"
+                          ? "ti-alert-triangle"
+                          : "ti-info-circle"
                         }`}
                     />
                   </div>
-                  <div className="ja-issue-body">
-                    <div className="ja-issue-msg">{issue.message}</div>
-                    <div className="ja-issue-meta">
+                  <div className={styles.jaIssueBody}>
+                    <div className={styles.jaIssueMsg}>{issue.message}</div>
+                    <div className={styles.jaIssueMeta}>
                       {issue.line && <span>Line {issue.line}</span>}
                       {issue.rule && <code>{issue.rule}</code>}
                     </div>
@@ -228,12 +229,12 @@ export default function JSAnalysis({ analysis, issues, stats }: JSAnalysisProps)
         )}
 
         {issues.length === 0 && (
-          <div className="ja-clean">
-            <div className="ja-clean-icon">
+          <div className={styles.jaClean}>
+            <div className={styles.jaCleanIcon}>
               <i className="ti ti-circle-check" />
             </div>
-            <h3 className="ja-clean-title">No Issues Found</h3>
-            <p className="ja-clean-desc">Your code looks clean and production-ready.</p>
+            <h3 className={styles.jaCleanTitle}>No Issues Found</h3>
+            <p className={styles.jaCleanDesc}>Your code looks clean and production-ready.</p>
           </div>
         )}
       </div>

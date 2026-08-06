@@ -1,10 +1,11 @@
-// features/dev/base64-encoder/Base64Preview.tsx
+// features\dev\base64-encoder\Base64Preview.tsx
 "use client";
 
 import React, { useMemo, useEffect, useState } from "react";
-import { detectMime, extensionForMime, looksBinary, readFileAsBase64 } from "./utils";
+import { detectMime, extensionForMime, looksBinary, readFileAsBase64 } from "./ts/utils";
 import { formatBytes } from "@/utils";
-import type { Mode, InputSource } from "./utils";
+import type { Mode, InputSource } from "./ts/utils";
+import styles from "./style/Base64Preview.module.css";
 
 interface Base64PreviewProps {
   mode: Mode;
@@ -70,266 +71,264 @@ export default function Base64Preview({
   const hasContent = mode === "encode" ? (source === "file" ? !!file : !!input) : !!input;
 
   return (
-    <>
-      <div className="bp-root">
-        {/*  Mobile Switcher  */}
-        <div className="bp-mobile-tabs">
-          <button
-            type="button"
-            className={`bp-mobile-tab${mobileView === "input" ? " active" : ""}`}
-            onClick={() => onMobileViewChange("input")}
-          >
-            <i className="ti ti-pencil" />
-            Input
-          </button>
-          <button
-            type="button"
-            className={`bp-mobile-tab${mobileView === "output" ? " active" : ""}`}
-            onClick={() => onMobileViewChange("output")}
-          >
-            <i className="ti ti-eye" />
-            Output
-            {output && <span className="bp-mobile-dot" />}
-          </button>
-        </div>
+    <div className={styles.root}>
+      {/*  Mobile Switcher  */}
+      <div className={styles.mobileTabs}>
+        <button
+          type="button"
+          className={`${styles.mobileTab} ${mobileView === "input" ? styles.active : ""}`}
+          onClick={() => onMobileViewChange("input")}
+        >
+          <i className="ti ti-pencil" />
+          Input
+        </button>
+        <button
+          type="button"
+          className={`${styles.mobileTab} ${mobileView === "output" ? styles.active : ""}`}
+          onClick={() => onMobileViewChange("output")}
+        >
+          <i className="ti ti-eye" />
+          Output
+          {output && <span className={styles.mobileDot} />}
+        </button>
+      </div>
 
-        {/*  Panels  */}
-        <div className="bp-panels">
-          {/* Input Panel */}
-          <div
-            className={`bp-panel${mobileView === "input" ? " mobile-visible" : " mobile-hidden"}`}
-          >
-            <div className="bp-panel-header">
-              <div className="bp-panel-label">
-                <i className="ti ti-pencil" />
-                Input
-              </div>
-              <div className="bp-panel-meta">
-                {inputBytes > 0 && <span className="bp-meta-text">{formatBytes(inputBytes)}</span>}
-              </div>
+      {/*  Panels  */}
+      <div className={styles.panels}>
+        {/* Input Panel */}
+        <div
+          className={`${styles.panel} ${mobileView === "input" ? styles.mobileVisible : styles.mobileHidden}`}
+        >
+          <div className={styles.panelHeader}>
+            <div className={styles.panelLabel}>
+              <i className="ti ti-pencil" />
+              Input
             </div>
+            <div className={styles.panelMeta}>
+              {inputBytes > 0 && <span className={styles.metaText}>{formatBytes(inputBytes)}</span>}
+            </div>
+          </div>
 
-            <div className="bp-panel-body">
-              {mode === "encode" && source === "file" ? (
-                <div
-                  className={`bp-dropzone${dragOver ? " drag-over" : ""}${file ? " has-file" : ""}`}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    onDragOver(true);
+          <div className={styles.panelBody}>
+            {mode === "encode" && source === "file" ? (
+              <div
+                className={`${styles.dropzone} ${dragOver ? styles.dragOver : ""} ${file ? styles.hasFile : ""}`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  onDragOver(true);
+                }}
+                onDragLeave={() => onDragOver(false)}
+                onDrop={onDrop}
+                onClick={() => fileRef.current?.click()}
+                role="button"
+                tabIndex={0}
+              >
+                <input
+                  ref={fileRef}
+                  type="file"
+                  className={styles.fileInput}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    onFileChange(f || null);
                   }}
-                  onDragLeave={() => onDragOver(false)}
-                  onDrop={onDrop}
-                  onClick={() => fileRef.current?.click()}
-                  role="button"
-                  tabIndex={0}
-                >
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    className="bp-file-input"
-                    onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      onFileChange(f || null);
-                    }}
-                  />
-                  {file ? (
-                    <div className="bp-file-card">
-                      {file.type.startsWith("image/") && fileBase64 ? (
-                        <img
-                          src={`data:${file.type};base64,${fileBase64}`}
-                          alt=""
-                          className="bp-file-thumb"
-                        />
-                      ) : (
-                        <div className="bp-file-icon">
-                          <i className="ti ti-file-check" />
-                        </div>
-                      )}
-                      <div className="bp-file-meta">
-                        <span className="bp-file-name">{file.name}</span>
-                        <span className="bp-file-sub">
-                          {formatBytes(file.size)} · {file.type || "unknown"}
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        className="bp-icon-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onFileChange(null);
-                        }}
-                      >
-                        <i className="ti ti-x" />
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="bp-drop-empty">
-                      <div className="bp-drop-icon">
-                        <i className="ti ti-cloud-upload" />
-                      </div>
-                      <p className="bp-drop-title">Drop a file here</p>
-                      <p className="bp-drop-sub">or click to browse — any file type, any size</p>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <textarea
-                  className="bp-textarea"
-                  value={input}
-                  onChange={(e) => onInputChange(e.target.value)}
-                  placeholder={
-                    mode === "encode"
-                      ? "Type or paste text to encode..."
-                      : "Paste a Base64 string to decode..."
-                  }
-                  spellCheck={false}
                 />
-              )}
-            </div>
-
-            {decodeResult.error && (
-              <div className="bp-error-bar">
-                <i className="ti ti-alert-circle" />
-                <div>
-                  <strong>Decode error</strong>
-                  <span>{decodeResult.error}</span>
-                </div>
+                {file ? (
+                  <div className={styles.fileCard}>
+                    {file.type.startsWith("image/") && fileBase64 ? (
+                      <img
+                        src={`data:${file.type};base64,${fileBase64}`}
+                        alt=""
+                        className={styles.fileThumb}
+                      />
+                    ) : (
+                      <div className={styles.fileIcon}>
+                        <i className="ti ti-file-check" />
+                      </div>
+                    )}
+                    <div className={styles.fileMeta}>
+                      <span className={styles.fileName}>{file.name}</span>
+                      <span className={styles.fileSub}>
+                        {formatBytes(file.size)} · {file.type || "unknown"}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className={styles.iconBtn}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onFileChange(null);
+                      }}
+                    >
+                      <i className="ti ti-x" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.dropEmpty}>
+                    <div className={styles.dropIcon}>
+                      <i className="ti ti-cloud-upload" />
+                    </div>
+                    <p className={styles.dropTitle}>Drop a file here</p>
+                    <p className={styles.dropSub}>or click to browse — any file type, any size</p>
+                  </div>
+                )}
               </div>
+            ) : (
+              <textarea
+                className={styles.textarea}
+                value={input}
+                onChange={(e) => onInputChange(e.target.value)}
+                placeholder={
+                  mode === "encode"
+                    ? "Type or paste text to encode..."
+                    : "Paste a Base64 string to decode..."
+                }
+                spellCheck={false}
+              />
             )}
           </div>
 
-          {/* Divider */}
-          <div className="bp-divider">
-            <div className="bp-divider-icon">
-              <i className="ti ti-arrow-right" />
-            </div>
-          </div>
-
-          {/* Output Panel */}
-          <div
-            className={`bp-panel${mobileView === "output" ? " mobile-visible" : " mobile-hidden"}`}
-          >
-            <div className="bp-panel-header">
-              <div className="bp-panel-label">
-                <i className="ti ti-eye" />
-                Output
-              </div>
-              <div className="bp-panel-meta">
-                {outputBytes > 0 && (
-                  <span className="bp-meta-text">{formatBytes(outputBytes)}</span>
-                )}
-                {ratio !== null && <span className="bp-ratio-pill">{ratio}%</span>}
+          {decodeResult.error && (
+            <div className={styles.errorBar}>
+              <i className="ti ti-alert-circle" />
+              <div>
+                <strong>Decode error</strong>
+                <span>{decodeResult.error}</span>
               </div>
             </div>
+          )}
+        </div>
 
-            <div className="bp-panel-body">
-              {!output ? (
-                <div className="bp-empty">
-                  <div className="bp-empty-icon">
-                    <i className="ti ti-arrow-big-right-lines" />
-                  </div>
-                  <p className="bp-empty-title">Output appears here</p>
-                  <p className="bp-empty-desc">
-                    {mode === "encode"
-                      ? source === "file"
-                        ? "Drop a file on the left to encode"
-                        : "Start typing on the left"
-                      : "Paste a Base64 string on the left"}
-                  </p>
-                </div>
-              ) : (
-                <>
-                  {/* Image Preview for Decode */}
-                  {mode === "decode" && decodeImageInfo && (
-                    <div className="bp-preview">
-                      <img
-                        src={`data:${decodeImageInfo.mime};base64,${input.replace(/\s/g, "")}`}
-                        alt="Decoded preview"
-                        className="bp-preview-img"
-                      />
-                      <span className="bp-preview-label">
-                        Image preview · {decodeImageInfo.mime} · .
-                        {extensionForMime(decodeImageInfo.mime)}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Image Preview for Encode */}
-                  {mode === "encode" &&
-                    source === "file" &&
-                    file?.type.startsWith("image/") &&
-                    fileBase64 && (
-                      <div className="bp-preview">
-                        <img
-                          src={`data:${file.type};base64,${fileBase64}`}
-                          alt="Source preview"
-                          className="bp-preview-img"
-                        />
-                        <span className="bp-preview-label">Source preview · {file.type}</span>
-                      </div>
-                    )}
-
-                  {/* Binary Data Message */}
-                  {mode === "decode" && isBinaryOutput && !decodeImageInfo ? (
-                    <div className="bp-binary-msg">
-                      <div className="bp-binary-icon">
-                        <i className="ti ti-binary" />
-                      </div>
-                      <p className="bp-binary-title">Binary data decoded</p>
-                      <p className="bp-binary-desc">
-                        This doesn't look like readable text — download it as a raw file.
-                      </p>
-                    </div>
-                  ) : (
-                    !decodeImageInfo && <pre className="bp-output">{output}</pre>
-                  )}
-                </>
-              )}
-            </div>
+        {/* Divider */}
+        <div className={styles.divider}>
+          <div className={styles.dividerIcon}>
+            <i className="ti ti-arrow-right" />
           </div>
         </div>
 
-        {/*  Status Bar  */}
-        {hasContent && (
-          <div className="bp-status">
-            <div className="bp-status-badges">
-              {decodeResult.error ? (
-                <span className="bp-badge error">
-                  <i className="ti ti-alert-triangle" />
-                  {decodeResult.error}
-                </span>
-              ) : decodeImageInfo ? (
-                <span className="bp-badge brand">
-                  <i className="ti ti-photo" />
-                  {decodeImageInfo.mime}
-                </span>
-              ) : isBinaryOutput ? (
-                <span className="bp-badge neutral">
-                  <i className="ti ti-binary" />
-                  Binary data
-                </span>
-              ) : hasContent ? (
-                <span className="bp-badge valid">
-                  <i className="ti ti-check" />
-                  Ready
-                </span>
-              ) : null}
+        {/* Output Panel */}
+        <div
+          className={`${styles.panel} ${mobileView === "output" ? styles.mobileVisible : styles.mobileHidden}`}
+        >
+          <div className={styles.panelHeader}>
+            <div className={styles.panelLabel}>
+              <i className="ti ti-eye" />
+              Output
             </div>
-
-            <div className="bp-stats">
-              <span className="bp-stat">
-                <span className="bp-stat-value">{formatBytes(inputBytes)}</span>
-                <span className="bp-stat-label">in</span>
-              </span>
-              <i className="ti ti-arrow-right bp-stat-arrow" />
-              <span className="bp-stat">
-                <span className="bp-stat-value">{formatBytes(outputBytes)}</span>
-                <span className="bp-stat-label">out</span>
-              </span>
+            <div className={styles.panelMeta}>
+              {outputBytes > 0 && (
+                <span className={styles.metaText}>{formatBytes(outputBytes)}</span>
+              )}
+              {ratio !== null && <span className={styles.ratioPill}>{ratio}%</span>}
             </div>
           </div>
-        )}
+
+          <div className={styles.panelBody}>
+            {!output ? (
+              <div className={styles.empty}>
+                <div className={styles.emptyIcon}>
+                  <i className="ti ti-arrow-big-right-lines" />
+                </div>
+                <p className={styles.emptyTitle}>Output appears here</p>
+                <p className={styles.emptyDesc}>
+                  {mode === "encode"
+                    ? source === "file"
+                      ? "Drop a file on the left to encode"
+                      : "Start typing on the left"
+                    : "Paste a Base64 string on the left"}
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* Image Preview for Decode */}
+                {mode === "decode" && decodeImageInfo && (
+                  <div className={styles.preview}>
+                    <img
+                      src={`data:${decodeImageInfo.mime};base64,${input.replace(/\s/g, "")}`}
+                      alt="Decoded preview"
+                      className={styles.previewImg}
+                    />
+                    <span className={styles.previewLabel}>
+                      Image preview · {decodeImageInfo.mime} · .
+                      {extensionForMime(decodeImageInfo.mime)}
+                    </span>
+                  </div>
+                )}
+
+                {/* Image Preview for Encode */}
+                {mode === "encode" &&
+                  source === "file" &&
+                  file?.type.startsWith("image/") &&
+                  fileBase64 && (
+                    <div className={styles.preview}>
+                      <img
+                        src={`data:${file.type};base64,${fileBase64}`}
+                        alt="Source preview"
+                        className={styles.previewImg}
+                      />
+                      <span className={styles.previewLabel}>Source preview · {file.type}</span>
+                    </div>
+                  )}
+
+                {/* Binary Data Message */}
+                {mode === "decode" && isBinaryOutput && !decodeImageInfo ? (
+                  <div className={styles.binaryMsg}>
+                    <div className={styles.binaryIcon}>
+                      <i className="ti ti-binary" />
+                    </div>
+                    <p className={styles.binaryTitle}>Binary data decoded</p>
+                    <p className={styles.binaryDesc}>
+                      This doesn't look like readable text — download it as a raw file.
+                    </p>
+                  </div>
+                ) : (
+                  !decodeImageInfo && <pre className={styles.output}>{output}</pre>
+                )}
+              </>
+            )}
+          </div>
+        </div>
       </div>
-    </>
+
+      {/*  Status Bar  */}
+      {hasContent && (
+        <div className={styles.status}>
+          <div className={styles.statusBadges}>
+            {decodeResult.error ? (
+              <span className={`${styles.badge} ${styles.error}`}>
+                <i className="ti ti-alert-triangle" />
+                {decodeResult.error}
+              </span>
+            ) : decodeImageInfo ? (
+              <span className={`${styles.badge} ${styles.brand}`}>
+                <i className="ti ti-photo" />
+                {decodeImageInfo.mime}
+              </span>
+            ) : isBinaryOutput ? (
+              <span className={`${styles.badge} ${styles.neutral}`}>
+                <i className="ti ti-binary" />
+                Binary data
+              </span>
+            ) : hasContent ? (
+              <span className={`${styles.badge} ${styles.valid}`}>
+                <i className="ti ti-check" />
+                Ready
+              </span>
+            ) : null}
+          </div>
+
+          <div className={styles.stats}>
+            <span className={styles.stat}>
+              <span className={styles.statValue}>{formatBytes(inputBytes)}</span>
+              <span className={styles.statLabel}>in</span>
+            </span>
+            <i className={`ti ti-arrow-right ${styles.statArrow}`} />
+            <span className={styles.stat}>
+              <span className={styles.statValue}>{formatBytes(outputBytes)}</span>
+              <span className={styles.statLabel}>out</span>
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

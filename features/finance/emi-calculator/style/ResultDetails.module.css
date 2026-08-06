@@ -1,0 +1,358 @@
+/* features/finance/emi-calculator/style/ResultDetails.module.css */
+.emiResultDetails {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    font-family: var(--font-sans);
+}
+
+.emiDetailSection {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.emiDetailHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.emiDetailHeading i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.emiDetailGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.emiDetailItem {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.emiDetailLabel {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+}
+
+.emiDetailValue {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.emiMono {
+    font-family: var(--font-mono);
+}
+
+.emiDetailSection:nth-child(2) {
+    background: var(--bg-surface);
+}
+
+.emiRatioChart {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.emiRatioItem {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.emiRatioLabel {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.emiRatioBar {
+    height: 8px;
+    background: var(--border-faint);
+    border-radius: 99px;
+    overflow: hidden;
+    display: flex;
+}
+
+.emiRatioFill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.emiBarPrincipal {
+    background: linear-gradient(90deg, var(--brand), var(--brand-hover));
+}
+
+.emiBarInterest {
+    background: linear-gradient(90deg, #dc2626, #ef4444);
+}
+
+.emiRatioValue {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.emiCalcSteps {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.emiCalcStep {
+    display: flex;
+    gap: 12px;
+}
+
+.emiStepNum {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.emiStepFinal .emiStepNum {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: white;
+}
+
+.emiStepContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.emiStepTitle {
+    font-size: 12px;
+    color: var(--text);
+}
+
+.emiStepDesc {
+    margin: 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.emiStepFormula {
+    margin-top: 6px;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border);
+}
+
+.emiStepFormula code {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text);
+}
+
+.emiStepFormula strong {
+    color: var(--brand);
+}
+
+.emiStepResult {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brand-text);
+    font-family: var(--font-mono);
+}
+
+.emiFinal {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.emiFinal code strong {
+    font-size: 16px;
+}
+
+.emiPrepaymentDetail {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-lg);
+}
+
+.emiPrepaymentItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.emiPrepaymentItem:last-child {
+    border-bottom: none;
+}
+
+.emiPrepaymentLabel {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.emiPrepaymentValue {
+    font-size: 12.5px;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-weight: 500;
+}
+
+.emiPrepaymentValue.emiSaving {
+    color: var(--brand-text);
+    font-weight: 600;
+}
+
+.emiScheduleTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.emiScheduleTable th,
+.emiScheduleTable td {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 12px;
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.emiScheduleTable th {
+    background: var(--bg-surface);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+}
+
+.emiScheduleTable td {
+    color: var(--text);
+}
+
+.emiScheduleTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.emiScheduleTable tbody tr:hover {
+    background: var(--border-faint);
+}
+
+.emiBalance {
+    font-weight: 600;
+}
+
+.emiRowAlt {
+    background: var(--bg-card);
+}
+
+.emiScheduleNote {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin: 8px 0 0 0;
+}
+
+@media (max-width: 768px) {
+    .emiResultDetails {
+        padding: 16px;
+        gap: 20px;
+    }
+
+    .emiDetailGrid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .emiRatioChart {
+        gap: 8px;
+    }
+
+    .emiRatioItem {
+        font-size: 11px;
+    }
+
+    .emiCalcSteps {
+        gap: 8px;
+    }
+
+    .emiStepTitle {
+        font-size: 10px;
+    }
+
+    .emiStepDesc {
+        font-size: 9px;
+    }
+
+    .emiPrepaymentDetail {
+        grid-template-columns: 1fr;
+    }
+
+    .emiPrepaymentLabel,
+    .emiPrepaymentValue {
+        font-size: 11px;
+    }
+
+    .emiScheduleTable {
+        overflow-x: auto;
+        width: 100%;
+    }
+
+    .emiScheduleTable th,
+    .emiScheduleTable td {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    .emiScheduleNote {
+        font-size: 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .emiRatioFill {
+        transition: none;
+    }
+}

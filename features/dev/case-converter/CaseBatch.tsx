@@ -2,7 +2,8 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { convertCase, CASE_FORMATS, type CaseType, type ConversionOptions } from "./utils";
+import { convertCase, CASE_FORMATS, type CaseType, type ConversionOptions } from "./ts/utils";
+import styles from "./style/CaseBatch.module.css";
 
 interface BatchItem {
   id: string;
@@ -23,269 +24,216 @@ export default function CaseBatch({
   onComplete,
 }: CaseBatchProps) {
   const [batchInput, setBatchInput] = useState("");
-  const [separator, setSeparator] = useState<"newline" | "comma" | "semicolon">("newline");
-  const [selectedFormats, setSelectedFormats] = useState<CaseType[]>([
-    "camel",
-    "pascal",
-    "snake",
-    "kebab",
-  ]);
   const [items, setItems] = useState<BatchItem[]>([]);
-  const [copiedCell, setCopiedCell] = useState("");
+  const [copiedCell, setCopiedCell] = useState<string | null>(null);
 
-  const options: ConversionOptions = {
-    preserveNumbers,
-    preserveAcronyms,
-  };
+  const selectedFormats = useMemo(() => {
+    return ["camel", "pascal", "snake", "kebab", "upper", "lower"];
+  }, []);
 
-  const handleProcess = useCallback(() => {
+  const handleCopy = useCallback((text: string, cellId: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedCell(cellId);
+      setTimeout(() => setCopiedCell(null), 1500);
+    });
+  }, []);
+
+  const processBatch = useCallback(() => {
     if (!batchInput.trim()) return;
 
-    const separatorMap = {
-      newline: "\n",
-      comma: ",",
-      semicolon: ";",
-    };
+    const lines = batchInput
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
 
-    const inputs = batchInput
-      .split(separatorMap[separator])
-      .map((s) => s.trim())
-      .filter(Boolean);
+    const newItems: BatchItem[] = lines.map((input) => {
+      const options: ConversionOptions = {
+        preserveNumbers,
+        preserveAcronyms,
+      };
 
-    const newItems: BatchItem[] = inputs.map((input, i) => {
-      const outputs: Record<string, string> = {};
-
+      const outputs: Record<CaseType, string> = {} as Record<CaseType, string>;
       selectedFormats.forEach((format) => {
-        outputs[format] = convertCase(input, format, options);
+        outputs[format as CaseType] = convertCase(input, format as CaseType, options);
       });
 
       return {
-        id: `${Date.now()}-${i}`,
+        id: Math.random().toString(36).substr(2, 9),
         input,
-        outputs: outputs as Record<CaseType, string>,
-        status: "done" as const,
+        outputs,
+        status: "done",
       };
     });
 
     setItems(newItems);
     if (onComplete) onComplete(newItems.length);
-  }, [batchInput, separator, selectedFormats, options, onComplete]);
-
-  const handleCopy = useCallback(async (text: string, cellId: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopiedCell(cellId);
-    setTimeout(() => setCopiedCell(""), 1500);
-  }, []);
-
-  const handleCopyAll = useCallback(async () => {
-    const csv = [
-      ["Input", ...selectedFormats].join(","),
-      ...items.map((item) =>
-        [item.input, ...selectedFormats.map((f) => item.outputs[f])].join(",")
-      ),
-    ].join("\n");
-
-    await navigator.clipboard.writeText(csv);
-  }, [items, selectedFormats]);
-
-  const handleDownload = useCallback(() => {
-    const csv = [
-      ["Input", ...selectedFormats].join(","),
-      ...items.map((item) =>
-        [item.input, ...selectedFormats.map((f) => item.outputs[f])].join(",")
-      ),
-    ].join("\n");
-
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "case-conversions.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [items, selectedFormats]);
+  }, [batchInput, preserveNumbers, preserveAcronyms, selectedFormats, convertCase, onComplete]);
 
   const handleClear = useCallback(() => {
     setBatchInput("");
     setItems([]);
   }, []);
 
-  const inputCount = useMemo(() => {
-    const separatorMap = {
-      newline: "\n",
-      comma: ",",
-      semicolon: ";",
-    };
-    return batchInput.split(separatorMap[separator]).filter((s) => s.trim()).length;
-  }, [batchInput, separator]);
+  const handleAddLine = useCallback((text: string) => {
+    setBatchInput((prev) => (prev ? `${prev}\n${text}` : text));
+    processBatch();
+  }, [processBatch]);
 
   return (
-    <>
-      <div className="cb-root">
-        {/*  Input Section  */}
-        <div className="cb-section">
-          <div className="cb-section-header">
-            <div className="cb-section-label">
-              <i className="ti ti-files" />
-              Batch Input
-            </div>
-            <div className="cb-section-actions">
-              <div className="cb-separator-group">
-                <span className="cb-separator-label">Split by:</span>
-                <select
-                  className="cb-select"
-                  value={separator}
-                  onChange={(e) => setSeparator(e.target.value as any)}
-                >
-                  <option value="newline">New line</option>
-                  <option value="comma">Comma (,)</option>
-                  <option value="semicolon">Semicolon (;)</option>
-                </select>
-              </div>
-              <button
-                type="button"
-                className="cb-btn"
-                onClick={handleClear}
-                disabled={!batchInput && items.length === 0}
-              >
-                <i className="ti ti-trash" />
-                Clear
-              </button>
-            </div>
+    <div className={styles.cbRoot}>
+      {/*  Input Section  */}
+      <div className={styles.cbSection}>
+        <div className={styles.cbSectionHeader}>
+          <div className={styles.cbSectionLabel}>
+            <i className="ti ti-menu-2" />
+            Batch Input
           </div>
-          <textarea
-            className="cb-textarea"
-            value={batchInput}
-            onChange={(e) => setBatchInput(e.target.value)}
-            placeholder="Enter multiple texts (one per line)..."
-            rows={6}
-            spellCheck={false}
-          />
-          <div className="cb-input-footer">
-            <span className="cb-input-count">{inputCount} items</span>
+          <div className={styles.cbSectionActions}>
             <button
-              type="button"
-              className="cb-btn cb-btn-primary"
-              onClick={handleProcess}
+              className={`${styles.cbBtn} ${styles.cbBtnPrimary}`}
+              onClick={processBatch}
               disabled={!batchInput.trim()}
             >
-              <i className="ti ti-wand" />
-              Convert All
+              <i className="ti ti-shuffle" />
+              Convert
+            </button>
+            <button className={styles.cbBtn} onClick={handleClear}>
+              <i className="ti ti-trash" />
+              Clear
             </button>
           </div>
         </div>
 
-        {/*  Format Selection  */}
-        <div className="cb-format-section">
-          <div className="cb-format-header">
-            <span className="cb-format-label">Output Formats:</span>
-          </div>
-          <div className="cb-format-grid">
-            {CASE_FORMATS.map((format) => (
-              <label key={format.id} className="cb-format-chip">
-                <input
-                  type="checkbox"
-                  checked={selectedFormats.includes(format.id)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedFormats([...selectedFormats, format.id]);
-                    } else {
-                      setSelectedFormats(selectedFormats.filter((f) => f !== format.id));
-                    }
-                  }}
-                />
-                <span className="cb-format-chip-label">{format.label}</span>
-              </label>
-            ))}
+        <textarea
+          className={styles.cbTextarea}
+          value={batchInput}
+          onChange={(e) => setBatchInput(e.target.value)}
+          placeholder="Enter one text per line..."
+          spellCheck={false}
+        />
+
+        <div className={styles.cbInputFooter}>
+          <span className={styles.cbInputCount}>
+            {batchInput.split("\n").filter((line) => line.trim().length > 0).length > 0}</span>
+          <div className={styles.cbSeparatorGroup}>
+            <span className={styles.cbSeparatorLabel}>Separator:</span>
+            <select className={styles.cbSelect} onChange={(e) => setBatchInput(batchInput.split("\n").join(e.target.value))}>
+              <option value="\n">New Line (\\n)</option>
+              <option value=",">Comma (,)</option>
+              <option value=";">Semicolon (;)</option>
+              <option value="|">Pipe (|)</option>
+              <option value="tab">Tab</option>
+            </select>
           </div>
         </div>
+      </div>
 
-        {/*  Results Table  */}
-        {items.length > 0 && (
-          <div className="cb-results-section">
-            <div className="cb-results-header">
-              <div className="cb-results-label">
-                <i className="ti ti-table" />
-                Results
-                <span className="cb-results-count">{items.length}</span>
-              </div>
-              <div className="cb-results-actions">
-                <button type="button" className="cb-btn" onClick={handleCopyAll}>
-                  <i className="ti ti-copy" />
-                  Copy All (CSV)
-                </button>
-                <button type="button" className="cb-btn" onClick={handleDownload}>
-                  <i className="ti ti-download" />
-                  Download CSV
-                </button>
-              </div>
+      {/*  Format Selection  */}
+      <div className={styles.cbFormatSection}>
+        <div className={styles.cbFormatHeader}>
+          <span className={styles.cbFormatLabel}>Output Formats</span>
+        </div>
+        <div className={styles.cbFormatGrid}>
+          {selectedFormats.map((format) => {
+            const formatInfo = CASE_FORMATS.find((f: any) => f.id === format);
+            return (
+              <label key={format} className={styles.cbFormatChip}>
+                <input
+                  type="checkbox"
+                  checked={selectedFormats.includes(format as CaseType)}
+                  readOnly
+                />
+                <span className={styles.cbFormatChipLabel}>
+                  {formatInfo?.label}
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+
+      {/*  Results Section  */}
+      {items.length > 0 && (
+        <div className={styles.cbResultsSection}>
+          <div className={styles.cbResultsHeader}>
+            <div className={styles.cbResultsLabel}>
+              <i className="ti ti-layout-template-3" />
+              Results
             </div>
-
-            <div className="cb-table-wrapper">
-              <table className="cb-table">
-                <thead>
-                  <tr>
-                    <th className="cb-th cb-th-index">#</th>
-                    <th className="cb-th cb-th-input">Input</th>
+            <span className={styles.cbResultsCount}>{items.length}</span>
+            <div className={styles.cbResultsActions}>
+              <button className={styles.cbBtn} onClick={handleClear}>
+                <i className="ti ti-trash" />
+                Clear All
+              </button>
+            </div>
+          </div>
+          <div className={styles.cbTableWrapper}>
+            <table className={styles.cbTable}>
+              <thead>
+                <tr>
+                  <th className={`${styles.cbTh} ${styles.cbThIndex}`}>#</th>
+                  <th className={`${styles.cbTh} ${styles.cbThInput}`}>Input</th>
+                  {selectedFormats.map((format) => {
+                    const formatInfo = CASE_FORMATS.find((f: any) => f.id === format);
+                    return (
+                      <th key={format} className={styles.cbTh}>
+                        {formatInfo?.label}
+                      </th>
+                    );
+                  })}
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item, idx) => (
+                  <tr key={item.id} className={styles.cbTr}>
+                    <td className={`${styles.cbTd} ${styles.cbTdIndex}`}>{idx + 1}</td>
+                    <td className={`${styles.cbTd} ${styles.cbTdInput}`}>
+                      <code className={styles.cbCode}>{item.input}</code>
+                    </td>
                     {selectedFormats.map((format) => {
-                      const formatInfo = CASE_FORMATS.find((f) => f.id === format);
+                      const cellId = `${item.id}-${format}`;
                       return (
-                        <th key={format} className="cb-th">
-                          {formatInfo?.label}
-                        </th>
+                        <td key={format} className={styles.cbTd}>
+                          <div className={styles.cbCell}>
+                            <code className={styles.cbCode}>{item.outputs[format as CaseType]}</code>
+                            <button
+                              type="button"
+                              className={`${styles.cbCellBtn}${copiedCell === cellId ? " copied" : ""
+                                }`}
+                              onClick={() => handleCopy(item.outputs[format as CaseType], cellId)}
+                              title="Copy"
+                            >
+                              <i
+                                className={`ti ${copiedCell === cellId ? "ti-check" : "ti-copy"
+                                  }`}
+                              />
+                            </button>
+                          </div>
+                        </td>
                       );
                     })}
                   </tr>
-                </thead>
-                <tbody>
-                  {items.map((item, idx) => (
-                    <tr key={item.id} className="cb-tr">
-                      <td className="cb-td cb-td-index">{idx + 1}</td>
-                      <td className="cb-td cb-td-input">
-                        <code className="cb-code">{item.input}</code>
-                      </td>
-                      {selectedFormats.map((format) => {
-                        const cellId = `${item.id}-${format}`;
-                        return (
-                          <td key={format} className="cb-td">
-                            <div className="cb-cell">
-                              <code className="cb-code">{item.outputs[format]}</code>
-                              <button
-                                type="button"
-                                className={`cb-cell-btn${copiedCell === cellId ? " copied" : ""}`}
-                                onClick={() => handleCopy(item.outputs[format], cellId)}
-                                title="Copy"
-                              >
-                                <i
-                                  className={`ti ${copiedCell === cellId ? "ti-check" : "ti-copy"}`}
-                                />
-                              </button>
-                            </div>
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
+        </div>
+      )}
 
-        {/*  Empty State  */}
-        {items.length === 0 && !batchInput && (
-          <div className="cb-empty">
-            <div className="cb-empty-icon">
-              <i className="ti ti-table" />
-            </div>
-            <p className="cb-empty-title">Batch Case Conversion</p>
-            <p className="cb-empty-desc">
-              Convert multiple texts at once. Enter one text per line above and select your desired
-              output formats.
-            </p>
+      {/*  Empty State  */}
+      {items.length === 0 && !batchInput && (
+        <div className={styles.cbEmpty}>
+          <div className={styles.cbEmptyIcon}>
+            <i className="ti ti-table" />
           </div>
-        )}
-      </div>
-    </>
+          <p className={styles.cbEmptyTitle}>Batch Case Conversion</p>
+          <p className={styles.cbEmptyDesc}>
+            Convert multiple texts at once. Enter one text per line above and select your desired
+            output formats.
+          </p>
+        </div>
+      )}
+    </div>
   );
 }

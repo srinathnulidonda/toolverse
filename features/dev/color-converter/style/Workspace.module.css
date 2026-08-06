@@ -1,0 +1,200 @@
+/* features/dev/color-converter/style/Workspace.module.css */
+
+.ccRoot {
+    --cc-radius-sm: 6px;
+    --cc-radius-md: 8px;
+    --cc-radius-lg: 12px;
+    --cc-radius-xl: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--cc-radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+/*  Chrome  */
+.ccChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.ccChromeLeft,
+.ccChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ccTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.ccTitle i {
+    font-size: 16px;
+    color: var(--brand);
+}
+
+.ccCurrentColor {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--cc-radius-md);
+    border: 0.5px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.12s;
+}
+
+.ccCurrentColor:hover {
+    transform: scale(1.08);
+}
+
+.ccPresetGroup {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ccPresetLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ccPresetBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 0.5px solid var(--border);
+    cursor: pointer;
+    transition: all 0.12s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ccPresetBtn:hover {
+    transform: scale(1.12);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/*  Tabs  */
+.ccTabsBar {
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.ccTabs {
+    display: flex;
+    padding: 0 16px;
+}
+
+.ccTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.ccTab i {
+    font-size: 14px;
+}
+
+.ccTab:hover {
+    color: var(--text);
+}
+
+.ccTab.active {
+    color: var(--text);
+}
+
+.ccTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.ccBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/*  Tab Content  */
+.ccTabContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*  Footer  */
+.ccFooter {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 16px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    font-size: 11px;
+    color: var(--text-disabled);
+}
+
+.ccFooter i {
+    font-size: 13px;
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .ccChrome {
+        padding: 10px 12px;
+    }
+
+    .ccPresetLabel {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ccTab,
+    .ccCurrentColor,
+    .ccPresetBtn {
+        transition: none;
+    }
+}

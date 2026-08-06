@@ -9,7 +9,8 @@ import {
   type HashOptions,
   type HashResult,
   formatBytes,
-} from "./hashEngine";
+} from "./ts/hashEngine";
+import styles from "./style/HashBatch.module.css";
 
 interface BatchItem {
   id: string;
@@ -202,19 +203,19 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
 
   return (
     <>
-      <div className="hb-root">
+      <div className={styles.hbRoot}>
         {/* Upload Section */}
-        <div className="hb-section">
-          <div className="hb-section-header">
-            <div className="hb-section-title">
+        <div className={styles.hbSection}>
+          <div className={styles.hbSectionHeader}>
+            <div className={styles.hbSectionTitle}>
               <i className="ti ti-upload" />
               Add Files or Text
             </div>
-            <div className="hb-section-actions">
+            <div className={styles.hbSectionActions}>
               {items.length > 0 && (
                 <button
                   type="button"
-                  className="hb-action-btn hb-action-btn--secondary"
+                  className={`${styles.hbActionBtn} ${styles.hbActionBtnSecondary}`}
                   onClick={clearAll}
                   disabled={isProcessing}
                 >
@@ -225,31 +226,31 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
             </div>
           </div>
 
-          <div className="hb-upload-area">
+          <div className={styles.hbUploadArea}>
             <input
               ref={fileInputRef}
               type="file"
               id="batch-files"
-              className="hb-file-input"
+              className={styles.hbFileInput}
               multiple
               onChange={handleFilesChange}
               disabled={isProcessing}
             />
-            <label htmlFor="batch-files" className="hb-upload-zone">
-              <div className="hb-upload-icon">
+            <label htmlFor="batch-files" className={styles.hbUploadZone}>
+              <div className={styles.hbUploadIcon}>
                 <i className="ti ti-cloud-upload" />
               </div>
-              <div className="hb-upload-content">
-                <p className="hb-upload-title">Drop files here or click to browse</p>
-                <p className="hb-upload-subtitle">
+              <div className={styles.hbUploadContent}>
+                <p className={styles.hbUploadTitle}>Drop files here or click to browse</p>
+                <p className={styles.hbUploadSubtitle}>
                   Support for any file type • Multiple files allowed
                 </p>
               </div>
             </label>
 
-            <div className="hb-text-input">
+            <div className={styles.hbTextInput}>
               <textarea
-                className="hb-textarea"
+                className={styles.hbTextarea}
                 placeholder="Or paste text content here..."
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && e.ctrlKey) {
@@ -262,7 +263,7 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
                 }}
                 disabled={isProcessing}
               />
-              <div className="hb-textarea-hint">
+              <div className={styles.hbTextareaHint}>
                 <i className="ti ti-info-circle" />
                 Press Ctrl+Enter to add text as batch item
               </div>
@@ -270,24 +271,24 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
           </div>
 
           {items.length > 0 && (
-            <div className="hb-batch-summary">
-              <div className="hb-summary-stats">
-                <span className="hb-summary-stat">
+            <div className={styles.hbBatchSummary}>
+              <div className={styles.hbSummaryStats}>
+                <span className={styles.hbSummaryStat}>
                   <i className="ti ti-files" />
                   {items.length} item{items.length !== 1 ? "s" : ""}
                 </span>
-                <span className="hb-summary-stat">
+                <span className={styles.hbSummaryStat}>
                   <i className="ti ti-database" />
                   {formatBytes(items.reduce((sum, item) => sum + item.size, 0))}
                 </span>
-                <span className="hb-summary-stat">
+                <span className={styles.hbSummaryStat}>
                   <i className="ti ti-shield-check" />
                   {algorithms.length} algorithm{algorithms.length !== 1 ? "s" : ""}
                 </span>
               </div>
               <button
                 type="button"
-                className="hb-action-btn hb-action-btn--primary"
+                className={`${styles.hbActionBtn} ${styles.hbActionBtnPrimary}`}
                 onClick={processAll}
                 disabled={isProcessing || items.length === 0}
               >
@@ -300,48 +301,48 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
 
         {/* Progress */}
         {isProcessing && (
-          <div className="hb-progress-section">
-            <div className="hb-progress-header">
-              <span className="hb-progress-label">Processing {progress}%</span>
-              <span className="hb-progress-detail">
+          <div className={styles.hbProgressSection}>
+            <div className={styles.hbProgressHeader}>
+              <span className={styles.hbProgressLabel}>Processing {progress}%</span>
+              <span className={styles.hbProgressDetail}>
                 {completedCount} of {items.length} completed
               </span>
             </div>
-            <div className="hb-progress-bar">
-              <div className="hb-progress-fill" style={{ width: `${progress}%` }} />
+            <div className={styles.hbProgressBar}>
+              <div className={styles.hbProgressFill} style={{ width: `${progress}%` }} />
             </div>
           </div>
         )}
 
         {/* Results */}
         {items.length > 0 && (
-          <div className="hb-section">
-            <div className="hb-section-header">
-              <div className="hb-section-title">
+          <div className={styles.hbSection}>
+            <div className={styles.hbSectionHeader}>
+              <div className={styles.hbSectionTitle}>
                 <i className="ti ti-list-check" />
                 Results
                 {completedCount > 0 && (
-                  <span className="hb-result-badge hb-result-badge--success">
+                  <span className={`${styles.hbResultBadge} ${styles.hbResultBadgeSuccess}`}>
                     {completedCount} completed
                   </span>
                 )}
                 {errorCount > 0 && (
-                  <span className="hb-result-badge hb-result-badge--error">
+                  <span className={`${styles.hbResultBadge} ${styles.hbResultBadgeError}`}>
                     {errorCount} error{errorCount !== 1 ? "s" : ""}
                   </span>
                 )}
               </div>
-              <div className="hb-section-actions">
+              <div className={styles.hbSectionActions}>
                 {completedCount > 0 && (
                   <>
                     {totalProcessingTime > 0 && (
-                      <span className="hb-processing-time">
+                      <span className={styles.hbProcessingTime}>
                         Total: {totalProcessingTime.toFixed(2)}ms
                       </span>
                     )}
                     <button
                       type="button"
-                      className="hb-action-btn hb-action-btn--secondary"
+                      className={`${styles.hbActionBtn} ${styles.hbActionBtnSecondary}`}
                       onClick={downloadResults}
                     >
                       <i className="ti ti-download" />
@@ -352,27 +353,27 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
               </div>
             </div>
 
-            <div className="hb-results">
+            <div className={styles.hbResults}>
               {items.map((item) => (
-                <div key={item.id} className="hb-result-item">
-                  <div className="hb-result-header">
-                    <div className="hb-result-info">
-                      <div className="hb-result-name">
+                <div key={item.id} className={styles.hbResultItem}>
+                  <div className={styles.hbResultHeader}>
+                    <div className={styles.hbResultInfo}>
+                      <div className={styles.hbResultName}>
                         <i className={`ti ${item.type === "file" ? "ti-file" : "ti-file-text"}`} />
-                        <span className="hb-result-title">{item.name}</span>
-                        <span className="hb-result-size">{formatBytes(item.size)}</span>
+                        <span className={styles.hbResultTitle}>{item.name}</span>
+                        <span className={styles.hbResultSize}>{formatBytes(item.size)}</span>
                       </div>
-                      <div className="hb-result-meta">
+                      <div className={styles.hbResultMeta}>
                         {item.status === "completed" && item.processingTime > 0 && (
-                          <span className="hb-result-time">{item.processingTime.toFixed(2)}ms</span>
+                          <span className={styles.hbResultTime}>{item.processingTime.toFixed(2)}ms</span>
                         )}
                       </div>
                     </div>
 
-                    <div className="hb-result-actions">
-                      <div className={`hb-result-status hb-result-status--${item.status}`}>
+                    <div className={styles.hbResultActions}>
+                      <div className={`${styles.hbResultStatus} ${styles[`hbResultStatus${item.status.charAt(0).toUpperCase() + item.status.slice(1)}`]}`}>
                         {item.status === "pending" && <i className="ti ti-clock" />}
-                        {item.status === "processing" && <i className="ti ti-loader hb-spin" />}
+                        {item.status === "processing" && <i className={`ti ti-loader ${styles.hbSpin}`} />}
                         {item.status === "completed" && <i className="ti ti-check" />}
                         {item.status === "error" && <i className="ti ti-alert-circle" />}
                         <span>{item.status}</span>
@@ -381,7 +382,7 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
                       {item.status === "completed" && (
                         <button
                           type="button"
-                          className={`hb-copy-btn ${copiedId === item.id ? "copied" : ""}`}
+                          className={`${styles.hbCopyBtn}${copiedId === item.id ? ` ${styles.copied}` : ""}`}
                           onClick={() => copyResults(item, "single")}
                           title="Copy all hashes"
                         >
@@ -391,7 +392,7 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
 
                       <button
                         type="button"
-                        className="hb-remove-btn"
+                        className={styles.hbRemoveBtn}
                         onClick={() => removeItem(item.id)}
                         disabled={isProcessing}
                         title="Remove item"
@@ -402,23 +403,23 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
                   </div>
 
                   {item.status === "error" && item.error && (
-                    <div className="hb-result-error">
+                    <div className={styles.hbResultError}>
                       <i className="ti ti-alert-triangle" />
                       {item.error}
                     </div>
                   )}
 
                   {item.status === "completed" && item.results.length > 0 && (
-                    <div className="hb-result-hashes">
+                    <div className={styles.hbResultHashes}>
                       {item.results.map((result) => (
-                        <div key={result.algorithm} className="hb-hash-item">
-                          <div className="hb-hash-header">
-                            <span className="hb-hash-algorithm">{result.algorithm}</span>
-                            <span className="hb-hash-time">
+                        <div key={result.algorithm} className={styles.hbHashItem}>
+                          <div className={styles.hbHashHeader}>
+                            <span className={styles.hbHashAlgorithm}>{result.algorithm}</span>
+                            <span className={styles.hbHashTime}>
                               {result.executionTime.toFixed(2)}ms
                             </span>
                           </div>
-                          <div className="hb-hash-value">{result.hash}</div>
+                          <div className={styles.hbHashValue}>{result.hash}</div>
                         </div>
                       ))}
                     </div>
@@ -431,12 +432,12 @@ export default function HashBatch({ algorithms, options, onComplete }: HashBatch
 
         {/* Empty State */}
         {items.length === 0 && (
-          <div className="hb-empty">
-            <div className="hb-empty-icon">
+          <div className={styles.hbEmpty}>
+            <div className={styles.hbEmptyIcon}>
               <i className="ti ti-files" />
             </div>
-            <h3 className="hb-empty-title">Batch Hash Processing</h3>
-            <p className="hb-empty-description">
+            <h3 className={styles.hbEmptyTitle}>Batch Hash Processing</h3>
+            <p className={styles.hbEmptyDescription}>
               Upload multiple files or add text items to generate hashes in bulk. All selected
               algorithms will be applied to each item.
             </p>
