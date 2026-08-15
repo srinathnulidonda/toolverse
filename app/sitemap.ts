@@ -1,14 +1,20 @@
 // app/sitemap.ts
 import type { MetadataRoute } from "next";
 import { TOOLS, CATEGORIES } from "@/lib/tools";
+import { logger } from "@/lib/logger";
 
 // Safely import COLLECTIONS
 let COLLECTIONS: any[] = [];
 try {
   const collections = require("@/data/collections");
   COLLECTIONS = collections.COLLECTIONS || [];
-} catch {
-  // Collections file doesn't exist, that's fine
+} catch (error) {
+  // Log the error for debugging purposes but continue with empty collections
+  // This prevents sitemap generation from failing if collections data is unavailable
+  if (process.env.NODE_ENV !== "production") {
+    logger.warn("Failed to load collections data for sitemap:", error);
+  }
+  COLLECTIONS = [];
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
