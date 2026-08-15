@@ -1,4 +1,4 @@
-/* features\dev\case-converter\style\CaseAnalyzer.module.css */
+/* features/dev/case-converter/style/CaseAnalyzer.module.css */
 .caRoot {
     flex: 1;
     display: flex;
@@ -8,7 +8,6 @@
     overflow: auto;
 }
 
-/*  Input Section  */
 .caInputSection {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
@@ -78,7 +77,6 @@
     font-family: var(--font-sans);
 }
 
-/*  Content  */
 .caContent {
     display: flex;
     flex-direction: column;
@@ -104,10 +102,43 @@
     color: var(--text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    flex-wrap: wrap;
 }
 
 .caCardHeader i {
     font-size: 12px;
+}
+
+.caCardHeader span {
+    flex: 1;
+}
+
+.caCopyAllBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 24px;
+    padding: 0 9px;
+    border-radius: var(--ccRadiusMd);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: normal;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.caCopyAllBtn i {
+    font-size: 11px;
+}
+
+.caCopyAllBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
 }
 
 .caCardBody {
@@ -117,7 +148,6 @@
     gap: 14px;
 }
 
-/*  Detection  */
 .caDetection {
     display: flex;
     flex-direction: column;
@@ -158,6 +188,7 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-width: 0;
 }
 
 .caDetectionName {
@@ -173,7 +204,6 @@
     opacity: 0.8;
 }
 
-/*  Suggestions  */
 .caSuggestions {
     padding: 12px;
     background: #eff6ff;
@@ -237,7 +267,6 @@
     left: 0;
 }
 
-/*  Statistics  */
 .caStatsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -285,6 +314,20 @@
     line-height: 1;
 }
 
+.caStatYes {
+    color: #16a34a;
+}
+
+.caStatNo {
+    color: var(--text-disabled);
+}
+
+@media (prefers-color-scheme: dark) {
+    .caStatYes {
+        color: #4ade80;
+    }
+}
+
 .caStatLabel {
     font-size: 10px;
     color: var(--text-tertiary);
@@ -292,7 +335,6 @@
     letter-spacing: 0.06em;
 }
 
-/*  Words  */
 .caWords {
     display: flex;
     flex-direction: column;
@@ -336,7 +378,6 @@
     font-family: var(--font-mono);
 }
 
-/*  Variables  */
 .caVariables {
     display: flex;
     flex-direction: column;
@@ -375,6 +416,7 @@
     padding: 6px 10px;
     border-radius: 5px;
     border: 0.5px solid var(--border-faint);
+    word-break: break-all;
 }
 
 .caVariableCopy {
@@ -402,7 +444,12 @@
     border-color: var(--brand-border);
 }
 
-/*  Empty State  */
+.caVariableCopy.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
 .caEmpty {
     flex: 1;
     display: flex;
@@ -443,14 +490,19 @@
     line-height: 1.6;
 }
 
-/*  Responsive  */
 @media (max-width: 768px) {
     .caRoot {
         padding: 12px;
+        gap: 12px;
     }
 
     .caStatsGrid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .caStat {
+        padding: 10px;
     }
 
     .caVariable {
@@ -465,13 +517,26 @@
     .caVariableValue {
         width: 100%;
     }
+
+    .caVariableCopy {
+        align-self: flex-end;
+    }
+
+    .caCardHeader {
+        gap: 6px;
+    }
+
+    .caCopyAllBtn {
+        margin-left: auto;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
     .caClearBtn,
     .caVariable,
-    .caVariableCopy {
+    .caVariableCopy,
+    .caCopyAllBtn {
         transition: none;
     }
 }

@@ -5,7 +5,7 @@
     overflow: auto;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     background: var(--bg-surface);
 }
 
@@ -17,6 +17,7 @@
     justify-content: center;
     gap: 12px;
     padding: 60px 24px;
+    text-align: center;
 }
 
 .haEmptyIcon {
@@ -33,16 +34,15 @@
 }
 
 .haEmptyText {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-tertiary);
     margin: 0;
-    text-align: center;
 }
 
 .haSection {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: 12px;
     overflow: hidden;
 }
 
@@ -50,40 +50,39 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 16px;
+    padding: 10px 14px;
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-tertiary);
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
 
 .haSectionHeader i {
-    font-size: 14px;
-    color: var(--text-secondary);
+    font-size: 13px;
 }
 
 .haMetricsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--border);
 }
 
 .haMetric {
     background: var(--bg-card);
-    padding: 16px 12px;
+    padding: 14px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 4px;
+    gap: 3px;
 }
 
 .haMetricValue {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     font-family: var(--font-mono);
     color: var(--text);
@@ -93,9 +92,9 @@
 .haMetricLabel {
     font-size: 10px;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--text-tertiary);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
 }
 
 .haSecurityGrid {
@@ -107,16 +106,16 @@
 
 .haSecurityItem {
     background: var(--bg-card);
-    padding: 16px 12px;
+    padding: 14px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .haSecurityCount {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     font-family: var(--font-mono);
     line-height: 1;
@@ -126,10 +125,14 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
+}
+
+.haSecurityLabel i {
+    font-size: 12px;
 }
 
 .haSecurityItemSecure .haSecurityCount,
@@ -148,7 +151,7 @@
 }
 
 .haComparison {
-    padding: 16px;
+    padding: 14px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -157,7 +160,7 @@
 .haComparisonItem {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
 }
 
 .haComparisonHeader {
@@ -170,20 +173,21 @@
 .haComparisonName {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 6px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--text);
 }
 
 .haComparisonName i {
-    font-size: 14px;
+    font-size: 13px;
+    flex-shrink: 0;
 }
 
 .haDeprecatedBadge {
     font-size: 9px;
-    font-weight: 600;
-    padding: 1px 4px;
+    font-weight: 700;
+    padding: 1px 5px;
     border-radius: 3px;
     background: #fef2f2;
     color: #dc2626;
@@ -204,28 +208,30 @@
     font-size: 11px;
     color: var(--text-tertiary);
     font-family: var(--font-mono);
+    flex-shrink: 0;
 }
 
 .haComparisonBar {
     width: 100%;
     height: 6px;
     background: var(--bg-surface);
-    border-radius: 3px;
+    border-radius: 99px;
     overflow: hidden;
 }
 
 .haComparisonFill {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 99px;
     transition: width 0.3s ease;
 }
 
 .haComparisonDetails {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     font-size: 10px;
     color: var(--text-tertiary);
+    flex-wrap: wrap;
 }
 
 .haComparisonBits,
@@ -235,7 +241,7 @@
 }
 
 .haDistribution {
-    padding: 16px;
+    padding: 14px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -243,9 +249,9 @@
 
 .haDistributionItem {
     display: grid;
-    grid-template-columns: 80px 1fr 80px;
+    grid-template-columns: 72px 1fr 72px;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .haDistributionLabel {
@@ -257,16 +263,16 @@
 
 .haDistributionBar {
     width: 100%;
-    height: 8px;
+    height: 7px;
     background: var(--bg-surface);
-    border-radius: 4px;
+    border-radius: 99px;
     overflow: hidden;
 }
 
 .haDistributionFill {
     height: 100%;
     background: var(--brand);
-    border-radius: 4px;
+    border-radius: 99px;
     transition: width 0.3s ease;
 }
 
@@ -278,24 +284,24 @@
 }
 
 .haRecommendations {
-    padding: 16px;
+    padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .haRecommendation {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 12px;
-    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    border-radius: 8px;
     font-size: 12px;
     line-height: 1.5;
 }
 
 .haRecommendation i {
-    font-size: 16px;
+    font-size: 14px;
     flex-shrink: 0;
     margin-top: 1px;
 }
@@ -355,7 +361,7 @@
 @media (max-width: 768px) {
     .haRoot {
         padding: 12px;
-        gap: 16px;
+        gap: 12px;
     }
 
     .haMetricsGrid {
@@ -363,17 +369,15 @@
     }
 
     .haSecurityGrid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .haDistributionItem {
-        grid-template-columns: 60px 1fr 60px;
+        grid-template-columns: 58px 1fr 58px;
         gap: 8px;
     }
 
     .haComparisonDetails {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
+        gap: 6px;
     }
 }

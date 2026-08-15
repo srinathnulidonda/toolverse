@@ -2,28 +2,37 @@
 "use client";
 
 import { useEffect, useRef, useMemo } from "react";
-import { Task, Priority, PRIORITY_ORDER, PRIORITY_META, getPriority, uid } from "./widgetTypes";
-
-type Filter = "all" | "active" | "completed";
-
-interface TasksDraft {
-  input: string;
-  priority: Priority;
-  showPicker: boolean;
-  search: string;
-  filter: Filter;
-  showCompleted: boolean;
-}
+import {
+  Task,
+  Priority,
+  TasksDraft,
+  PRIORITY_ORDER,
+  PRIORITY_META,
+  getPriority,
+  formatContext,
+  MAX_TASK_LENGTH,
+} from "./widgetTypes";
 
 interface WidgetTasksProps {
   tasks: Task[];
-  setTasks: (tasks: Task[] | ((prev: Task[]) => Task[])) => void;
+  addTask: (text: string, priority?: Priority, context?: string) => void;
+  toggleTask: (id: string) => void;
+  removeTask: (id: string) => void;
+  clearCompleted: (ids?: string[]) => void;
   draft: TasksDraft;
   setDraft: (draft: TasksDraft | ((prev: TasksDraft) => TasksDraft)) => void;
 }
 
-export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: WidgetTasksProps) {
-  const { input, priority, showPicker, filter } = draft;
+export default function WidgetTasks({
+  tasks,
+  addTask,
+  toggleTask,
+  removeTask,
+  clearCompleted,
+  draft,
+  setDraft,
+}: WidgetTasksProps) {
+  const { input, priority, showPicker, filter, showCompleted } = draft;
 
   const inputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -32,7 +41,6 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
     inputRef.current?.focus();
   }, []);
 
-  // Simplified outside click handler
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
@@ -43,7 +51,6 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
     return () => document.removeEventListener("mousedown", handler);
   }, [setDraft]);
 
-  // Improved / shortcut check
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
@@ -52,12 +59,17 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
 
       if (e.key === "/" && !isTyping) {
         e.preventDefault();
-        inputRef.current?.focus();
+        if (filter === "completed") {
+          setDraft((d) => ({ ...d, filter: "all" }));
+          requestAnimationFrame(() => inputRef.current?.focus());
+        } else {
+          inputRef.current?.focus();
+        }
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, []);
+  }, [filter, setDraft]);
 
   function add(e: React.FormEvent) {
     e.preventDefault();
@@ -67,41 +79,16 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
       return;
     }
 
-    const currentPage = typeof window !== "undefined" ? window.location.pathname : "";
-    let context = "";
-    if (currentPage.includes("/tools/")) {
-      const cleanPath = currentPage.replace(/\/$/, "");
-      context = cleanPath.split("/").pop() || "";
-    }
-
-    setTasks((prevTasks) => [
-      { id: uid(), text, completed: false, priority, createdAt: Date.now(), context },
-      ...prevTasks,
-    ]);
-
+    addTask(text, priority);
     setDraft((d) => ({ ...d, input: "" }));
     inputRef.current?.focus();
   }
 
-  const toggle = (id: string) =>
-    setTasks((prevTasks) =>
-      prevTasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-
-  const remove = (id: string) => setTasks((prevTasks) => prevTasks.filter((t) => t.id !== id));
-
-  const clearCompleted = () => {
-    const filteredIds = new Set(filtered.filter((t) => t.completed).map((t) => t.id));
-    setTasks((prevTasks) => prevTasks.filter((t) => !filteredIds.has(t.id)));
-  };
-
   const total = tasks.length;
   const done = tasks.filter((t) => t.completed).length;
-  const activeCount = total - done;
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
   const allDone = total > 0 && done === total;
 
-  // No search functionality in compact view
   const filtered = useMemo(
     () =>
       filter === "active"
@@ -120,7 +107,10 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
 
   const completedSorted = useMemo(() => filtered.filter((t) => t.completed), [filtered]);
 
-  // Always use compact sizing
+  const handleClearCompleted = () => {
+    clearCompleted(completedSorted.map((t) => t.id));
+  };
+
   const ringRadius = 11;
   const circumference = 2 * Math.PI * ringRadius;
   const ringSize = 30;
@@ -136,55 +126,73 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
 
   return (
     <>
-      <div className="wt-root wt-compact">
+      <div className="wt-root">
         <div className="wt-header">
-          <div className="wt-header-left">
-            <span className="wt-eyebrow">Tasks</span>
-          </div>
+          <span className="wt-eyebrow">Tasks</span>
 
-          <div className="wt-header-right">
-            {total > 0 && (
-              <div className="wt-ring-wrap">
-                <svg width={ringSize} height={ringSize} viewBox="0 0 30 30" aria-hidden="true">
-                  <circle
-                    cx="15"
-                    cy="15"
-                    r={ringRadius}
-                    fill="none"
-                    stroke="var(--border)"
-                    strokeWidth="2.5"
-                  />
-                  <circle
-                    cx="15"
-                    cy="15"
-                    r={ringRadius}
-                    fill="none"
-                    stroke={allDone ? "#4CAF82" : "#145C3C"}
-                    strokeWidth="2.5"
+          {total > 0 && (
+            <div className="wt-ring-wrap">
+              <svg width={ringSize} height={ringSize} viewBox="0 0 30 30" aria-hidden="true">
+                <circle cx="15" cy="15" r={ringRadius} fill="none" stroke="var(--border)" strokeWidth="2.5" />
+                <circle
+                  cx="15"
+                  cy="15"
+                  r={ringRadius}
+                  fill="none"
+                  stroke={allDone ? "#4CAF82" : "var(--brand)"}
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={circumference * (1 - pct / 100)}
+                  transform="rotate(-90 15 15)"
+                  style={{ transition: "stroke-dashoffset 0.5s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s" }}
+                />
+                {allDone && (
+                  <path
+                    d="M10.5 15l2.5 2.5L19.5 11"
+                    stroke="#4CAF82"
+                    strokeWidth="1.5"
                     strokeLinecap="round"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={circumference * (1 - pct / 100)}
-                    transform="rotate(-90 15 15)"
-                    style={{ transition: "stroke-dashoffset 0.4s ease, stroke 0.3s" }}
+                    strokeLinejoin="round"
+                    fill="none"
                   />
-                  {allDone && (
-                    <path
-                      d="M10.5 15l2.5 2.5L19.5 11"
-                      stroke="#4CAF82"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                    />
-                  )}
-                </svg>
-                <span className="wt-ring-label">
-                  <strong>{done}</strong>/{total}
-                </span>
-              </div>
-            )}
-          </div>
+                )}
+              </svg>
+              <span className="wt-ring-label">
+                <strong>{done}</strong>/{total}
+              </span>
+            </div>
+          )}
         </div>
+
+        {total > 0 && (
+          <div className="wt-filter-tabs" role="tablist" aria-label="Filter tasks">
+            <button
+              role="tab"
+              aria-selected={filter === "all"}
+              className={`wt-filter-tab${filter === "all" ? " active" : ""}`}
+              onClick={() => setDraft((d) => ({ ...d, filter: "all" }))}
+            >
+              All
+            </button>
+            <button
+              role="tab"
+              aria-selected={filter === "active"}
+              className={`wt-filter-tab${filter === "active" ? " active" : ""}`}
+              onClick={() => setDraft((d) => ({ ...d, filter: "active" }))}
+            >
+              Active
+            </button>
+            <button
+              role="tab"
+              aria-selected={filter === "completed"}
+              className={`wt-filter-tab${filter === "completed" ? " active" : ""}`}
+              onClick={() => setDraft((d) => ({ ...d, filter: "completed" }))}
+            >
+              Done
+            </button>
+          </div>
+        )}
 
         <div className="wt-divider" />
 
@@ -196,6 +204,8 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
                 className="wt-priority-btn"
                 onClick={() => setDraft((d) => ({ ...d, showPicker: !d.showPicker }))}
                 aria-label={`Priority: ${priority}`}
+                aria-haspopup="listbox"
+                aria-expanded={showPicker}
               >
                 <span className="wt-dot" style={{ background: PRIORITY_META[priority].color }} />
               </button>
@@ -209,9 +219,7 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
                       role="option"
                       aria-selected={priority === p}
                       className={`wt-picker-opt${priority === p ? " sel" : ""}`}
-                      onClick={() => {
-                        setDraft((d) => ({ ...d, priority: p, showPicker: false }));
-                      }}
+                      onClick={() => setDraft((d) => ({ ...d, priority: p, showPicker: false }))}
                     >
                       <span
                         style={{
@@ -236,15 +244,12 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
               value={input}
               onChange={(e) => setDraft((d) => ({ ...d, input: e.target.value }))}
               placeholder="Add a task…"
-              maxLength={120}
+              maxLength={MAX_TASK_LENGTH}
               className="wt-input"
+              aria-label="New task"
             />
 
-            <button
-              type="submit"
-              className={`wt-submit${input.trim() ? " active" : ""}`}
-              aria-label="Add task"
-            >
+            <button type="submit" className={`wt-submit${input.trim() ? " active" : ""}`} aria-label="Add task">
               <PlusIcon />
             </button>
           </form>
@@ -255,20 +260,7 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
         <div className="wt-scroll">
           {filtered.length === 0 && (
             <div className="wt-empty">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--border)"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="3" />
-                <path d="M9 12l2 2 4-4" />
-              </svg>
+              <ChecklistEmptyIcon />
               <span>{emptyMessage}</span>
               {total === 0 && (
                 <span className="wt-empty-hint">
@@ -281,39 +273,38 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
           {allDone && filter !== "completed" && filtered.length > 0 && (
             <div className="wt-all-done">
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <circle
-                  cx="7"
-                  cy="7"
-                  r="6.5"
-                  fill="var(--brand-light)"
-                  stroke="var(--brand)"
-                  strokeWidth="0.8"
-                />
-                <path
-                  d="M4.5 7l1.8 1.8L9.5 5"
-                  stroke="var(--brand)"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                <circle cx="7" cy="7" r="6.5" fill="var(--brand-light)" stroke="var(--brand)" strokeWidth="0.8" />
+                <path d="M4.5 7l1.8 1.8L9.5 5" stroke="var(--brand)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               All done — great work today
             </div>
           )}
 
-          {/* Compact view: flat list with priority dots, no grouping */}
           {filter !== "completed" &&
             activeSorted.map((task) => (
-              <TaskRow key={task.id} task={task} onToggle={toggle} onRemove={remove} />
+              <TaskRow key={task.id} task={task} onToggle={toggleTask} onRemove={removeTask} />
             ))}
 
-          {/* Completed: simple flat list */}
-          {completedSorted.length > 0 && filter !== "active" && (
+          {filter === "completed" &&
+            completedSorted.map((task) => (
+              <TaskRow key={task.id} task={task} onToggle={toggleTask} onRemove={removeTask} />
+            ))}
+
+          {filter === "all" && completedSorted.length > 0 && (
             <>
               <div className="wt-sep" />
-              {completedSorted.map((task) => (
-                <TaskRow key={task.id} task={task} onToggle={toggle} onRemove={remove} />
-              ))}
+              <button
+                className="wt-completed-toggle"
+                onClick={() => setDraft((d) => ({ ...d, showCompleted: !d.showCompleted }))}
+                aria-expanded={showCompleted}
+              >
+                <ChevronIcon open={showCompleted} />
+                {completedSorted.length} completed
+              </button>
+              {showCompleted &&
+                completedSorted.map((task) => (
+                  <TaskRow key={task.id} task={task} onToggle={toggleTask} onRemove={removeTask} />
+                ))}
             </>
           )}
         </div>
@@ -323,12 +314,10 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
             <div className="wt-divider" />
             <div className="wt-footer">
               <span className="wt-footer-label">{done} completed</span>
-              <div className="wt-footer-actions">
-                <button onClick={clearCompleted} className="wt-footer-btn wt-clear-btn">
-                  <TrashIcon />
-                  Clear done
-                </button>
-              </div>
+              <button onClick={handleClearCompleted} className="wt-footer-btn">
+                <TrashIcon />
+                Clear done
+              </button>
             </div>
           </>
         )}
@@ -336,81 +325,77 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
 
       <style>{`
         .wt-root {
-          background: var(--bg-card);
+          background: transparent;
           display: flex;
           flex-direction: column;
           width: 100%;
           height: 100%;
           font-family: var(--font-sans);
         }
-        .wt-compact {
-          border: 0.5px solid var(--border);
-          border-radius: var(--radius-lg);
-          overflow: hidden;
-        }
 
         .wt-header {
           display: flex;
-          align-items: flex-start;
+          align-items: center;
           justify-content: space-between;
           gap: 8px;
-          padding: 12px 14px 8px;
-        }
-        .wt-header-left { 
-          display: flex; 
-          flex-direction: column; 
-          gap: 2px; 
-          min-width: 0; 
+          padding: 13px 15px 8px;
         }
         .wt-eyebrow {
-          font-size: 11px; 
-          font-weight: 500; 
+          font-size: 10.5px;
+          font-weight: 600;
           color: var(--text-tertiary);
-          text-transform: uppercase; 
+          text-transform: uppercase;
           letter-spacing: 0.08em;
         }
+        .wt-ring-wrap { display: flex; align-items: center; gap: 8px; }
+        .wt-ring-label { font-size: 12px; color: var(--text-tertiary); }
+        .wt-ring-label strong { color: var(--text); font-weight: 600; }
 
-        .wt-header-right { 
-          display: flex; 
-          align-items: center; 
-          gap: 10px; 
-          flex-shrink: 0; 
+        .wt-filter-tabs {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          margin: 0 12px 10px;
+          padding: 2px;
+          background: var(--bg);
+          border: 0.5px solid var(--border);
+          border-radius: 9px;
         }
-        .wt-ring-wrap { 
-          display: flex; 
-          align-items: center; 
-          gap: 8px; 
+        .wt-filter-tab {
+          flex: 1;
+          padding: 7px 10px;
+          min-height: 32px;
+          border-radius: 7px;
+          border: none;
+          background: none;
+          color: var(--text-tertiary);
+          font-size: 11.5px;
+          font-weight: 600;
+          font-family: var(--font-sans);
+          cursor: pointer;
+          transition: background 0.15s ease, color 0.15s ease;
         }
-        .wt-ring-label { 
-          font-size: 12px; 
-          color: var(--text-tertiary); 
-        }
-        .wt-ring-label strong { 
-          color: var(--text); 
-          font-weight: 500; 
+        .wt-filter-tab:hover { color: var(--text-secondary); }
+        .wt-filter-tab.active {
+          background: var(--bg-card);
+          color: var(--text);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
         }
 
-        .wt-divider { 
-          height: 0.5px; 
-          background: var(--border); 
-          flex-shrink: 0; 
-        }
+        .wt-divider { height: 0.5px; background: var(--border); flex-shrink: 0; }
 
         .wt-add-row {
-          display: flex; 
-          align-items: center; 
+          display: flex;
+          align-items: center;
           gap: 8px;
-          padding: 8px 12px; 
+          padding: 9px 12px;
           flex-shrink: 0;
         }
-        .wt-picker-wrap { 
-          position: relative; 
-          flex-shrink: 0; 
-        }
+        .wt-picker-wrap { position: relative; flex-shrink: 0; }
         .wt-priority-btn {
-          width: 28px;
-          height: 28px;
-          border-radius: 7px;
+          width: 30px;
+          height: 30px;
+          border-radius: 9px;
           border: 0.5px solid var(--border);
           background: var(--bg-surface);
           display: flex;
@@ -418,79 +403,67 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
           justify-content: center;
           padding: 0;
           cursor: pointer;
-          transition: all 0.15s ease;
+          transition: border-color 0.15s ease;
         }
-        .wt-priority-btn:hover { 
-          border-color: var(--text-tertiary); 
-        }
-        .wt-priority-btn:active { 
-          transform: scale(0.95); 
-        }
-        .wt-dot { 
-          width: 7px; 
-          height: 7px; 
-          border-radius: 50%; 
-          display: block; 
-          pointer-events: none; 
+        .wt-priority-btn:hover { border-color: var(--text-tertiary); }
+        .wt-priority-btn:active { transform: scale(0.94); }
+        .wt-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          display: block;
+          pointer-events: none;
+          box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 18%, transparent);
         }
 
         .wt-picker {
-          position: absolute; 
-          top: calc(100% + 6px); 
-          left: 0; 
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
           background: var(--bg-card);
-          border: 0.5px solid var(--border); 
-          border-radius: 8px; 
-          padding: 4px; 
+          border: 0.5px solid var(--border);
+          border-radius: 12px;
+          padding: 5px;
           z-index: 50;
-          min-width: 130px; 
-          box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+          min-width: 132px;
+          box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.4);
         }
         .wt-picker-opt {
-          display: flex; 
-          align-items: center; 
-          gap: 8px; 
-          width: 100%; 
-          padding: 7px 10px; 
-          border-radius: 6px;
-          border: none; 
-          background: transparent; 
-          font-size: 12.5px; 
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          width: 100%;
+          padding: 9px 10px;
+          border-radius: 8px;
+          border: none;
+          background: transparent;
+          font-size: 12.5px;
+          font-weight: 500;
           font-family: var(--font-sans);
-          color: var(--text-secondary); 
-          transition: all 0.1s; 
+          color: var(--text-secondary);
           cursor: pointer;
         }
-        .wt-picker-opt:hover { 
-          background: var(--bg-surface); 
-          color: var(--text); 
-        }
-        .wt-picker-opt.sel { 
-          background: var(--bg-surface); 
-          color: var(--text); 
-          font-weight: 500; 
-        }
+        .wt-picker-opt:hover { background: var(--bg-surface); color: var(--text); }
+        .wt-picker-opt.sel { background: var(--bg-surface); color: var(--text); font-weight: 600; }
 
         .wt-input {
-          flex: 1; 
-          background: none; 
-          border: none; 
-          font-size: 13px; 
+          flex: 1;
+          background: none;
+          border: none;
+          font-size: 13.5px;
           font-family: var(--font-sans);
-          color: var(--text); 
-          outline: none; 
-          min-width: 0; 
-          letter-spacing: -0.1px; 
+          color: var(--text);
+          outline: none;
+          min-width: 0;
+          letter-spacing: -0.1px;
           caret-color: var(--brand);
         }
-        .wt-input::placeholder { 
-          color: var(--text-tertiary); 
-        }
+        .wt-input::placeholder { color: var(--text-tertiary); }
 
         .wt-submit {
-          width: 28px;
-          height: 28px;
-          border-radius: 7px;
+          width: 30px;
+          height: 30px;
+          border-radius: 9px;
           border: none;
           cursor: default;
           display: flex;
@@ -500,116 +473,116 @@ export default function WidgetTasks({ tasks, setTasks, draft, setDraft }: Widget
           padding: 0;
           background: var(--bg-surface);
           color: var(--text-tertiary);
-          transition: all 0.15s ease;
+          transition: background 0.15s ease, color 0.15s ease;
         }
-        .wt-submit.active {
-          background: #145C3C;
-          color: #fff;
-          cursor: pointer;
-        }
-        .wt-submit.active:hover { 
-          background: var(--brand-hover); 
-        }
-        .wt-submit.active:active { 
-          transform: scale(0.95); 
-        }
+        .wt-submit.active { background: var(--brand); color: #fff; cursor: pointer; }
+        .wt-submit.active:hover { background: var(--brand-hover, var(--brand)); }
+        .wt-submit.active:active { transform: scale(0.92); }
 
         .wt-scroll {
-          flex: 1; 
+          flex: 1;
           overflow-y: auto;
-          scrollbar-width: thin; 
+          scrollbar-width: thin;
           scrollbar-color: var(--border) transparent;
         }
-        .wt-scroll::-webkit-scrollbar { 
-          width: 4px; 
-        }
-        .wt-scroll::-webkit-scrollbar-thumb { 
-          background: var(--border); 
-          border-radius: 2px; 
-        }
+        .wt-scroll::-webkit-scrollbar { width: 5px; }
+        .wt-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
         .wt-empty {
-          display: flex; 
-          flex-direction: column; 
-          align-items: center; 
+          display: flex;
+          flex-direction: column;
+          align-items: center;
           justify-content: center;
-          padding: 32px 16px; 
-          gap: 8px; 
+          padding: 36px 16px;
+          gap: 8px;
           color: var(--text-tertiary);
-          font-size: 12.5px; 
-          font-family: var(--font-sans); 
+          font-size: 12.5px;
           text-align: center;
         }
-        .wt-empty-hint { 
-          font-size: 11px; 
-          color: var(--text-disabled); 
-        }
+        .wt-empty svg { opacity: 0.5; }
+        .wt-empty-hint { font-size: 11px; color: var(--text-disabled); }
         .wt-empty-hint kbd {
-          font-size: 10px; 
-          color: var(--text-tertiary); 
+          font-size: 10px;
+          color: var(--text-tertiary);
           background: var(--bg-surface);
-          border: 0.5px solid var(--border); 
-          border-radius: 3px; 
-          padding: 2px 5px; 
+          border: 0.5px solid var(--border);
+          border-radius: 4px;
+          padding: 2px 5px;
           font-family: var(--font-mono);
         }
 
         .wt-all-done {
-          display: flex; 
-          align-items: center; 
-          gap: 7px; 
+          display: flex;
+          align-items: center;
+          gap: 7px;
           padding: 10px 14px 4px;
-          font-size: 11.5px; 
-          font-family: var(--font-sans); 
-          color: var(--brand); 
-          font-weight: 500;
+          font-size: 11.5px;
+          color: var(--brand);
+          font-weight: 600;
         }
 
-        .wt-sep { 
-          height: 0.5px; 
-          background: var(--border); 
-          margin: 2px 14px; 
+        .wt-sep { height: 0.5px; background: var(--border); margin: 2px 14px; }
+
+        .wt-completed-toggle {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          width: calc(100% - 24px);
+          margin: 4px 12px;
+          padding: 9px;
+          min-height: 36px;
+          border: none;
+          background: none;
+          font-size: 11.5px;
+          font-weight: 600;
+          color: var(--text-tertiary);
+          cursor: pointer;
+          border-radius: 9px;
+          transition: background 0.15s ease, color 0.15s ease;
         }
+        .wt-completed-toggle:hover { background: var(--bg-surface); color: var(--text); }
 
         .wt-footer {
-          display: flex; 
-          align-items: center; 
-          justify-content: space-between; 
-          gap: 12px; 
-          flex-wrap: wrap;
-          padding: 8px 12px 10px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 9px 12px 11px;
         }
-        .wt-footer-label { 
-          font-size: 11.5px; 
-          color: var(--text-tertiary); 
-          font-family: var(--font-sans); 
-        }
-        .wt-footer-actions { 
-          display: flex; 
-          align-items: center; 
-          gap: 14px; 
-        }
+        .wt-footer-label { font-size: 11.5px; color: var(--text-tertiary); }
         .wt-footer-btn {
-          display: flex; 
-          align-items: center; 
-          gap: 5px; 
-          background: none; 
-          border: none; 
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          background: none;
+          border: none;
           cursor: pointer;
-          font-size: 11.5px; 
-          font-family: var(--font-sans); 
+          min-height: 32px;
+          font-size: 11.5px;
+          font-weight: 500;
           color: var(--text-tertiary);
-          padding: 0; 
-          transition: color 0.12s;
+          padding: 0 4px;
+          transition: color 0.15s ease;
         }
-        .wt-footer-btn:hover { 
-          color: var(--text); 
+        .wt-footer-btn:hover { color: var(--text); }
+
+        .wt-priority-btn:focus-visible,
+        .wt-picker-opt:focus-visible,
+        .wt-submit:focus-visible,
+        .wt-filter-tab:focus-visible,
+        .wt-completed-toggle:focus-visible,
+        .wt-footer-btn:focus-visible {
+          outline: 2px solid var(--brand);
+          outline-offset: 2px;
         }
 
         @media (hover: none) {
-          .wt-row-del {
-            opacity: 1 !important;
-          }
+          .wt-row-del { opacity: 1 !important; }
+        }
+
+        @media (max-width: 480px) {
+          .wt-header { padding: 12px 13px 8px; }
+          .wt-filter-tabs { margin: 0 10px 9px; }
         }
       `}</style>
     </>
@@ -626,6 +599,7 @@ function TaskRow({
   onRemove: (id: string) => void;
 }) {
   const meta = PRIORITY_META[getPriority(task)];
+  const contextLabel = task.context ? formatContext(task.context) : "";
 
   return (
     <>
@@ -633,22 +607,17 @@ function TaskRow({
         <button
           className={`wt-check${task.completed ? " done" : ""}`}
           onClick={() => onToggle(task.id)}
+          role="checkbox"
+          aria-checked={task.completed}
           aria-label={task.completed ? "Mark incomplete" : "Mark complete"}
         >
           {task.completed && (
             <svg width="9" height="9" viewBox="0 0 8 8" fill="none" aria-hidden="true">
-              <path
-                d="M1.5 4l2 2 3-3"
-                stroke="#fff"
-                strokeWidth="1.3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <path d="M1.5 4l2 2 3-3" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           )}
         </button>
 
-        {/* Always show priority dot in compact view */}
         {!task.completed && (
           <span className="wt-row-dot" style={{ background: meta.color }} aria-hidden="true" />
         )}
@@ -656,11 +625,16 @@ function TaskRow({
         <span
           className={`wt-row-text${task.completed ? " done" : ""}`}
           onClick={() => onToggle(task.id)}
+          title={task.text}
         >
           {task.text}
         </span>
 
-        {task.context && <span className="wt-row-tag">{task.context}</span>}
+        {contextLabel && (
+          <span className="wt-row-tag" title={contextLabel}>
+            {contextLabel}
+          </span>
+        )}
 
         <button className="wt-row-del" onClick={() => onRemove(task.id)} aria-label="Remove task">
           <CloseIcon />
@@ -669,24 +643,21 @@ function TaskRow({
 
       <style>{`
         .wt-row {
-          display: flex; 
-          align-items: center; 
+          display: flex;
+          align-items: center;
           gap: 9px;
-          padding: 6px 12px;
-          transition: background 0.1s;
+          padding: 8px 13px;
+          min-height: 40px;
+          transition: background 0.14s ease;
         }
-        .wt-row:hover { 
-          background: var(--bg-surface); 
-        }
-        .wt-row:hover .wt-row-del { 
-          opacity: 1; 
-        }
+        .wt-row:hover { background: var(--bg-surface); }
+        .wt-row:hover .wt-row-del { opacity: 1; }
 
         .wt-check {
-          width: 16px;
-          height: 16px;
-          border-radius: 5px;
-          border: 1.5px solid var(--border);
+          width: 19px;
+          height: 19px;
+          border-radius: 6px;
+          border: 1.5px solid var(--border-faint);
           background: none;
           display: flex;
           align-items: center;
@@ -696,38 +667,31 @@ function TaskRow({
           cursor: pointer;
           transition: all 0.15s ease;
         }
-        .wt-check.done { 
-          background: #145C3C; 
-          border-color: #145C3C; 
-        }
-        .wt-check:hover:not(.done) { 
-          border-color: var(--text-tertiary); 
-        }
-        .wt-check:active { 
-          transform: scale(0.92); 
-        }
+        .wt-check.done { background: var(--brand); border-color: var(--brand); }
+        .wt-check:hover:not(.done) { border-color: var(--text-tertiary); }
+        .wt-check:active { transform: scale(0.9); }
+        .wt-check:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
-        .wt-row-dot { 
-          width: 5px; 
-          height: 5px; 
-          border-radius: 50%; 
-          flex-shrink: 0; 
-          opacity: 0.75; 
+        .wt-row-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          flex-shrink: 0;
+          opacity: 0.85;
+          box-shadow: 0 0 0 2.5px color-mix(in srgb, currentColor 16%, transparent);
         }
 
         .wt-row-text {
-          flex: 1; 
-          font-size: 13px; 
-          font-family: var(--font-sans); 
+          flex: 1;
+          font-size: 13px;
           color: var(--text);
-          line-height: 1.45; 
-          cursor: pointer; 
-          user-select: none; 
-          min-width: 0; 
+          line-height: 1.45;
+          cursor: pointer;
+          user-select: none;
+          min-width: 0;
           overflow: hidden;
-          text-overflow: ellipsis; 
-          white-space: nowrap; 
-          transition: color 0.15s; 
+          text-overflow: ellipsis;
+          white-space: nowrap;
           letter-spacing: -0.1px;
         }
         .wt-row-text.done {
@@ -737,18 +701,23 @@ function TaskRow({
         }
 
         .wt-row-tag {
-          font-size: 10px; 
-          color: var(--text-tertiary); 
+          font-size: 10px;
+          font-weight: 500;
+          color: var(--text-tertiary);
           background: var(--bg-surface);
-          border: 0.5px solid var(--border); 
-          padding: 2px 6px; 
-          border-radius: 4px; 
+          border: 0.5px solid var(--border);
+          padding: 2px 7px;
+          border-radius: 999px;
           flex-shrink: 0;
+          max-width: 90px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .wt-row-del {
-          width: 28px;
-          height: 28px;
+          width: 30px;
+          height: 30px;
           border-radius: 50%;
           background: none;
           border: none;
@@ -760,41 +729,39 @@ function TaskRow({
           flex-shrink: 0;
           padding: 0;
           opacity: 0;
-          transition: all 0.15s ease;
+          transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
         }
-        .wt-row-del:hover { 
-          color: #E05252; 
-          background: rgba(224, 82, 82, 0.15); 
-        }
-        .wt-row-del:active { 
-          transform: scale(0.94); 
-        }
-        .wt-row-del:focus-visible { 
-          opacity: 1; 
-        }
+        .wt-row-del:hover { color: #E05252; background: rgba(224, 82, 82, 0.14); }
+        .wt-row-del:active { transform: scale(0.9); }
+        .wt-row-del:focus-visible { opacity: 1; outline: 2px solid var(--brand); outline-offset: 2px; }
 
-        @media (hover: none) {
-          .wt-row-del {
-            opacity: 1;
-          }
-        }
+        @media (hover: none) { .wt-row-del { opacity: 1; } }
       `}</style>
     </>
   );
 }
 
-function PlusIcon() {
+function ChevronIcon({ open }: { open: boolean }) {
   return (
     <svg
       width="12"
       height="12"
-      viewBox="0 0 12 12"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.8"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      style={{ transform: open ? "rotate(0deg)" : "rotate(-90deg)", transition: "transform 0.18s ease" }}
     >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
+function PlusIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M6 1v10M1 6h10" />
     </svg>
   );
@@ -802,17 +769,7 @@ function PlusIcon() {
 
 function TrashIcon() {
   return (
-    <svg
-      width="11"
-      height="11"
-      viewBox="0 0 12 12"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M2 4h8M4.5 4V2.5h3V4M10 4l-.8 6H2.8L2 4" />
     </svg>
   );
@@ -820,18 +777,18 @@ function TrashIcon() {
 
 function CloseIcon() {
   return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  );
+}
+
+function ChecklistEmptyIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.55 }}>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4" />
+      <path d="M8.5 12l2.3 2.3L16 9" />
     </svg>
   );
 }

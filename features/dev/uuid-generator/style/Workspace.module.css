@@ -10,10 +10,9 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-height: 600px;
+    min-height: 640px;
 }
 
-/*  Chrome  */
 .ugChrome {
     display: flex;
     align-items: center;
@@ -33,13 +32,13 @@
     flex-wrap: wrap;
 }
 
-/*  Pill Group (Version Selector)  */
 .ugPillGroup {
     display: flex;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     border-radius: var(--ug-radius-md);
     overflow: hidden;
+    max-width: 100%;
 }
 
 .ugPill {
@@ -59,6 +58,7 @@
     transition: all 0.12s;
     white-space: nowrap;
     letter-spacing: 0.02em;
+    flex-shrink: 0;
 }
 
 .ugPill:last-child {
@@ -75,7 +75,6 @@
     color: var(--brand-text);
 }
 
-/*  Format Group  */
 .ugFormatGroup {
     display: flex;
     align-items: center;
@@ -86,6 +85,7 @@
     font-size: 11.5px;
     font-weight: 500;
     color: var(--text-secondary);
+    white-space: nowrap;
 }
 
 .ugSelect {
@@ -106,7 +106,6 @@
     border-color: var(--brand-border);
 }
 
-/*  Case Group  */
 .ugCaseGroup {
     display: flex;
     gap: 2px;
@@ -152,7 +151,6 @@
     color: var(--brand-text);
 }
 
-/*  Info Badge  */
 .ugInfoBadge {
     display: inline-flex;
     align-items: center;
@@ -165,13 +163,13 @@
     border: 0.5px solid var(--brand-border);
     font-size: 10.5px;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .ugInfoBadge i {
     font-size: 11px;
 }
 
-/*  Tabs Bar  */
 .ugTabsBar {
     border-bottom: 0.5px solid var(--border);
     background: var(--bg-surface);
@@ -181,6 +179,7 @@
     display: flex;
     padding: 0 14px;
     gap: 4px;
+    overflow-x: auto;
 }
 
 .ugTab {
@@ -198,6 +197,7 @@
     position: relative;
     transition: color 0.12s;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .ugTab i {
@@ -237,7 +237,6 @@
     font-weight: 700;
 }
 
-/*  Tab Content  */
 .ugTabContent {
     flex: 1;
     display: flex;
@@ -254,7 +253,6 @@
     overflow: hidden;
 }
 
-/*  Footer  */
 .ugFooter {
     border-top: 0.5px solid var(--border);
     background: var(--bg-surface);
@@ -276,7 +274,6 @@
     flex-shrink: 0;
 }
 
-/*  Responsive  */
 @media (max-width: 900px) {
     .ugChrome {
         padding: 8px 12px;
@@ -288,14 +285,8 @@
 
     .ugPillGroup {
         width: 100%;
-        justify-content: space-between;
-    }
-
-    .ugPill {
-        flex: 1;
-        justify-content: center;
-        padding: 0 8px;
-        font-size: 10px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .ugFormatGroup {
@@ -336,13 +327,12 @@
 
 @media (max-width: 480px) {
     .ugPill {
-        font-size: 9px;
-        padding: 0 6px;
+        font-size: 10px;
+        padding: 0 8px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
     .ugPill,
     .ugSelect,
     .ugCaseBtn,
@@ -351,7 +341,6 @@
     }
 }
 
-/*  Focus visible states  */
 .ugPill:focus-visible,
 .ugSelect:focus-visible,
 .ugCaseBtn:focus-visible,

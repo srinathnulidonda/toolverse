@@ -1,8 +1,8 @@
 // features/dev/hash-generator/Workspace.tsx
 "use client";
-import { logger } from "@/lib/logger";
 
-import { useState, useCallback, useMemo, useRef } from "react";
+import { logger } from "@/lib/logger";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
 import {
   generateMultipleHashes,
@@ -21,6 +21,14 @@ import { useHashStore } from "./ts/hashStore";
 import styles from "./style/Workspace.module.css";
 
 type TabView = "single" | "batch" | "verify" | "history";
+type MobilePanel = "input" | "output";
+
+const TABS: { id: TabView; label: string; icon: string; desc: string }[] = [
+  { id: "single", label: "Single", icon: "ti-hash", desc: "Generate hashes for single input" },
+  { id: "batch", label: "Batch", icon: "ti-files", desc: "Process multiple files" },
+  { id: "verify", label: "Verify", icon: "ti-shield-check", desc: "Verify hash integrity" },
+  { id: "history", label: "History", icon: "ti-history", desc: "View generation history" },
+];
 
 export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
   const [input, setInput] = useState("");
@@ -39,16 +47,16 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
   const [pepper, setPepper] = useState("");
   const [hmacKey, setHmacKey] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [mobilePanel, setMobilePanel] = useState<MobilePanel>("input");
 
-  // Verification state
   const [verifyInput, setVerifyInput] = useState("");
   const [verifyHash, setVerifyHash] = useState("");
   const [verifyAlgorithm, setVerifyAlgorithm] = useState<HashAlgorithm>("SHA256");
   const [verifyResult, setVerifyResult] = useState<boolean | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { history, settings, addToHistory, clearHistory, searchHistory, getStatistics } =
-    useHashStore();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const { history, settings, addToHistory, clearHistory, getStatistics } = useHashStore();
 
   const options: Omit<HashOptions, "algorithm"> = useMemo(
     () => ({
@@ -84,7 +92,8 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
         setInputType("file");
         setFileName(file.name);
         setFileSize(file.size);
-        setInput(""); // Clear text input
+        setInput("");
+        setMobilePanel("output");
 
         if (settings.autoSave) {
           addToHistory({
@@ -117,10 +126,11 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
       setInputType("text");
       setFileName("");
       setFileSize(new Blob([input]).size);
+      setMobilePanel("output");
 
       if (settings.autoSave) {
         addToHistory({
-          input: input.substring(0, 1000), // Limit stored input length
+          input: input.substring(0, 1000),
           inputType: "text",
           results,
           tags: [],
@@ -185,12 +195,17 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
     setFileName("");
     setFileSize(new Blob([sample.text]).size);
     setResults([]);
+    setMobilePanel("input");
   }, []);
 
   const handleCopy = useCallback(async (text: string, key: string) => {
-    await navigator.clipboard.writeText(text);
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(""), 1500);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(""), 1500);
+    } catch (error) {
+      logger.error("Failed to copy:", error);
+    }
   }, []);
 
   const handleExport = useCallback(
@@ -219,20 +234,13 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
           break;
         case "csv":
           content = [
-            [
-              "Algorithm",
-              "Hash",
-              "Format",
-              "Execution Time (ms)",
-              "Bit Length",
-              "Security Strength",
-            ],
+            ["Algorithm", "Hash", "Format", "Execution Time (ms)", "Bit Length", "Security Strength"],
             ...results.map((result) => [
               result.algorithm,
               result.hash,
               result.format,
               result.executionTime.toFixed(2),
-              HASH_ALGORITHMS[result.algorithm].bitLength,
+              HASH_ALGORITHMS[result.algorithm]?.bitLength || 0,
               result.strength,
             ]),
           ]
@@ -243,7 +251,7 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
           content = [
             `Hash Report - ${timestamp}`,
             `Input: ${inputType === "file" ? `File: ${fileName} (${formatBytes(fileSize)})` : input.substring(0, 100)}`,
-            `Format: ${format}`,
+            `Format: ${options.format}`,
             "",
             "Hashes:",
             ...results.map((result) => `${result.algorithm}: ${result.hash}`),
@@ -261,7 +269,7 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
       a.click();
       URL.revokeObjectURL(url);
     },
-    [results, input, inputType, fileName, fileSize, selectedAlgorithms, options, format]
+    [results, input, inputType, fileName, fileSize, selectedAlgorithms, options]
   );
 
   const clearAll = useCallback(() => {
@@ -272,602 +280,758 @@ export default function HashGeneratorWorkspace({ tool }: { tool: Tool }) {
     setVerifyInput("");
     setVerifyHash("");
     setVerifyResult(null);
+    setMobilePanel("input");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   }, []);
 
-  const TAB_VIEWS = [
-    {
-      id: "single" as const,
-      label: "Single",
-      icon: "ti-hash",
-      description: "Generate hashes for single input",
-    },
-    {
-      id: "batch" as const,
-      label: "Batch",
-      icon: "ti-files",
-      description: "Process multiple files at once",
-    },
-    {
-      id: "verify" as const,
-      label: "Verify",
-      icon: "ti-shield-check",
-      description: "Verify hash integrity",
-    },
-    {
-      id: "history" as const,
-      label: "History",
-      icon: "ti-history",
-      description: "View generation history",
-    },
-  ];
+  const goToOutput = useCallback(() => {
+    setMobilePanel("output");
+    setTimeout(() => rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
+  }, []);
+
+  const goToInput = useCallback(() => {
+    setMobilePanel("input");
+    setTimeout(() => rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
+  }, []);
 
   const statistics = getStatistics();
 
+  useEffect(() => {
+    if (results.length > 0 && mobilePanel === "input") {
+      setMobilePanel("output");
+    }
+  }, [results]);
+
   return (
-    <>
-      <div className={styles.hgRoot}>
-        {/* Top Chrome */}
-        <div className={styles.hgChrome}>
-          <div className={styles.hgChromeLeft}>
-            <div className={styles.hgTitle}>
+    <div className={styles.hgRoot} ref={rootRef}>
+      <div className={styles.hgChrome}>
+        <div className={styles.hgChromeLeft}>
+          <div className={styles.hgTitle}>
+            <div className={styles.hgTitleIcon}>
               <i className="ti ti-hash" />
-              Hash Generator
             </div>
-          </div>
-          <div className={styles.hgChromeRight}>
-            <button
-              type="button"
-              className={styles.hgChromeBtn}
-              onClick={() => setShowAdvanced(!showAdvanced)}
-            >
-              <i className="ti ti-settings" />
-              <span>Settings</span>
-            </button>
+            Hash Generator
           </div>
         </div>
+        <div className={styles.hgChromeRight}>
+          <button
+            type="button"
+            className={`${styles.hgChromeBtn}${showAdvanced ? ` ${styles.active}` : ""}`}
+            onClick={() => setShowAdvanced((s) => !s)}
+            aria-label="Toggle settings"
+            aria-expanded={showAdvanced}
+          >
+            <i className="ti ti-settings" />
+            <span>Options</span>
+          </button>
+        </div>
+      </div>
 
-        {/* Settings Panel */}
-        {showAdvanced && (
-          <div className={styles.hgSettings}>
-            <div className={styles.hgSettingsRow}>
-              <div className={styles.hgSettingGroup}>
-                <label className={styles.hgSettingLabel}>Output Format</label>
-                <select
-                  className={styles.hgSelect}
-                  value={format}
-                  onChange={(e) => setFormat(e.target.value as HashFormat)}
-                >
-                  <option value="hex">Hexadecimal</option>
-                  <option value="base64">Base64</option>
-                  <option value="base32">Base32</option>
-                </select>
-              </div>
+      {showAdvanced && (
+        <div className={styles.hgSettings}>
+          <div className={styles.hgSettingsRow}>
+            <div className={styles.hgSettingGroup}>
+              <label className={styles.hgSettingLabel} htmlFor="format-select">
+                Output Format
+              </label>
+              <select
+                id="format-select"
+                className={styles.hgSelect}
+                value={format}
+                onChange={(e) => setFormat(e.target.value as HashFormat)}
+              >
+                <option value="hex">Hexadecimal</option>
+                <option value="base64">Base64</option>
+                <option value="base32">Base32</option>
+              </select>
+            </div>
 
-              <div className={styles.hgSettingGroup}>
-                <label className={styles.hgSettingLabel}>Salt (optional)</label>
-                <input
-                  type="text"
-                  className={styles.hgInput}
-                  value={salt}
-                  onChange={(e) => setSalt(e.target.value)}
-                  placeholder="Enter salt for additional security"
-                />
-              </div>
+            <div className={styles.hgSettingGroup}>
+              <label className={styles.hgSettingLabel} htmlFor="salt-input">
+                Salt (optional)
+              </label>
+              <input
+                id="salt-input"
+                type="text"
+                className={styles.hgInput}
+                value={salt}
+                onChange={(e) => setSalt(e.target.value)}
+                placeholder="Enter salt for additional security"
+              />
+            </div>
 
-              <div className={styles.hgSettingGroup}>
-                <label className={styles.hgSettingLabel}>HMAC Key (optional)</label>
-                <input
-                  type="text"
-                  className={styles.hgInput}
-                  value={hmacKey}
-                  onChange={(e) => setHmacKey(e.target.value)}
-                  placeholder="Enter key for HMAC"
-                />
-              </div>
+            <div className={styles.hgSettingGroup}>
+              <label className={styles.hgSettingLabel} htmlFor="hmac-input">
+                HMAC Key (optional)
+              </label>
+              <input
+                id="hmac-input"
+                type="text"
+                className={styles.hgInput}
+                value={hmacKey}
+                onChange={(e) => setHmacKey(e.target.value)}
+                placeholder="Enter key for HMAC"
+              />
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Tab Navigation */}
-        <div className={styles.hgTabsBar}>
-          <nav className={styles.hgTabs}>
-            {TAB_VIEWS.map((tab) => (
+      <div className={styles.hgTabsBar}>
+        <nav className={styles.hgTabs}>
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              className={`${styles.hgTab}${tabView === tab.id ? ` ${styles.active}` : ""}`}
+              onClick={() => setTabView(tab.id)}
+              title={tab.desc}
+              aria-label={tab.label}
+            >
+              <i className={`ti ${tab.icon}`} />
+              <span>{tab.label}</span>
+              {tab.id === "history" && history.length > 0 && (
+                <span className={styles.hgTabBadge}>{history.length}</span>
+              )}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      <div className={styles.hgTabContent}>
+        {tabView === "single" && (
+          <>
+            <div className={styles.hgMobileSwitcher}>
               <button
-                key={tab.id}
                 type="button"
-                className={`${styles.hgTab}${tabView === tab.id ? ` ${styles.active}` : ""}`}
-                onClick={() => setTabView(tab.id)}
-                title={tab.description}
+                className={`${styles.hgSwTab}${mobilePanel === "input" ? ` ${styles.active}` : ""}`}
+                onClick={goToInput}
               >
-                <i className={`ti ${tab.icon}`} />
-                <span>{tab.label}</span>
-                {tab.id === "history" && typeof window !== 'undefined' && history.length > 0 && (
-                  <span className={styles.hgTabBadge}>{history.length}</span>
+                <i className="ti ti-file-text" />
+                Input
+              </button>
+              <div className={styles.hgSwDivider} />
+              <button
+                type="button"
+                className={`${styles.hgSwTab}${mobilePanel === "output" ? ` ${styles.active}` : ""}`}
+                onClick={goToOutput}
+              >
+                <i className="ti ti-sparkles" />
+                Results
+                {results.length > 0 && mobilePanel !== "output" && (
+                  <span className={styles.hgSwDot} />
                 )}
               </button>
-            ))}
-          </nav>
-        </div>
+            </div>
 
-        {/* Tab Content */}
-        <div className={styles.hgTabContent}>
-          {/* Single Hash Tab */}
-          {tabView === "single" && (
-            <div className={styles.hgSingleView}>
-              {/* Algorithm Selection */}
-              <div className={styles.hgAlgorithmsSection}>
-                <div className={styles.hgAlgorithmsHeader}>
-                  <div className={styles.hgAlgorithmsTitle}>
-                    <i className="ti ti-shield-check" />
-                    Select Hash Algorithms
-                  </div>
-                  <div className={styles.hgAlgorithmsActions}>
-                    <button
-                      type="button"
-                      className={styles.hgAlgoPresetBtn}
-                      onClick={selectRecommendedAlgorithms}
-                    >
-                      Recommended
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.hgAlgoPresetBtn}
-                      onClick={selectAllAlgorithms}
-                    >
-                      Select All
-                    </button>
-                  </div>
-                </div>
-
-                <div className={styles.hgAlgorithmsGrid}>
-                  {filteredAlgorithms.map(([algorithm, info]) => (
-                    <button
-                      key={algorithm}
-                      type="button"
-                      className={`${styles.hgAlgorithm}${selectedAlgorithms.has(algorithm as HashAlgorithm) ? ` ${styles.active}` : ""}${info.isDeprecated ? ` ${styles.deprecated}` : ""}`}
-                      onClick={() => toggleAlgorithm(algorithm as HashAlgorithm)}
-                      title={info.description}
-                    >
-                      <i className={`ti ${info.icon}`} style={{ color: info.color }} />
-                      <div className={styles.hgAlgorithmInfo}>
-                        <span className={styles.hgAlgorithmName}>{info.label}</span>
-                        <span className={styles.hgAlgorithmBits}>{info.bitLength} bits</span>
-                        {info.isDeprecated && <span className={styles.hgDeprecatedTag}>Deprecated</span>}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Input Section */}
-              <div className={styles.hgInputSection}>
-                <div className={styles.hgInputHeader}>
-                  <div className={styles.hgInputTitle}>
+            <div className={styles.hgBody}>
+              <div
+                className={`${styles.hgInputPanel}${
+                  mobilePanel === "input" ? ` ${styles.hgMobVisible}` : ` ${styles.hgMobHidden}`
+                }`}
+              >
+                <div className={styles.hgPanelBar}>
+                  <div className={styles.hgPanelLabel}>
                     <i className="ti ti-file-text" />
                     Input Data
                   </div>
-                  <div className={styles.hgInputActions}>
-                    <div className={styles.hgSamples}>
+                  <div className={styles.hgPanelActions}>
+                    {input && (
+                      <span className={styles.hgCharCount}>{input.length.toLocaleString()} ch</span>
+                    )}
+                    <button
+                      type="button"
+                      className={styles.hgChromeBtn}
+                      onClick={() => setInput("")}
+                      disabled={!input}
+                      title="Clear input"
+                      style={{ height: 26, padding: "0 8px" }}
+                    >
+                      <i className="ti ti-x" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className={styles.hgInputScroll}>
+                  <div className={styles.hgInputInner}>
+                    <div className={styles.hgAlgorithmsSection}>
+                      <div className={styles.hgAlgorithmsHeader}>
+                        <div className={styles.hgAlgorithmsTitle}>
+                          <i className="ti ti-shield-check" />
+                          Select Hash Algorithms
+                        </div>
+                        <div className={styles.hgAlgorithmsActions}>
+                          <button
+                            type="button"
+                            className={styles.hgAlgoPresetBtn}
+                            onClick={selectRecommendedAlgorithms}
+                          >
+                            Recommended
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.hgAlgoPresetBtn}
+                            onClick={selectAllAlgorithms}
+                          >
+                            Select All
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className={styles.hgAlgorithmsGrid}>
+                        {filteredAlgorithms.map(([algorithm, info]) => (
+                          <button
+                            key={algorithm}
+                            type="button"
+                            className={`${styles.hgAlgorithm}${
+                              selectedAlgorithms.has(algorithm as HashAlgorithm)
+                                ? ` ${styles.active}`
+                                : ""
+                            }${info.isDeprecated ? ` ${styles.deprecated}` : ""}`}
+                            onClick={() => toggleAlgorithm(algorithm as HashAlgorithm)}
+                            title={info.description}
+                          >
+                            <i className={`ti ${info.icon}`} style={{ color: info.color }} />
+                            <div className={styles.hgAlgorithmInfo}>
+                              <span className={styles.hgAlgorithmName}>{info.label}</span>
+                              <span className={styles.hgAlgorithmBits}>{info.bitLength} bits</span>
+                              {info.isDeprecated && (
+                                <span className={styles.hgDeprecatedTag}>Deprecated</span>
+                              )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className={styles.hgInputSection}>
+                      <div className={styles.hgInputHeader}>
+                        <div className={styles.hgInputTitle}>
+                          <i className="ti ti-file-text" />
+                          Input Data
+                        </div>
+                        <div className={styles.hgInputActions}>
+                          <div className={styles.hgSamples}>
+                            {Object.entries(SAMPLE_DATA)
+                              .slice(0, 3)
+                              .map(([key, sample]) => (
+                                <button
+                                  key={key}
+                                  type="button"
+                                  className={styles.hgSampleBtn}
+                                  onClick={() => loadSample(key as keyof typeof SAMPLE_DATA)}
+                                  title={sample.description}
+                                >
+                                  {sample.label}
+                                </button>
+                              ))}
+                          </div>
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            id="file-input"
+                            className={styles.hgFileInput}
+                            onChange={handleFileUpload}
+                            disabled={isProcessing}
+                          />
+                          <label htmlFor="file-input" className={styles.hgFileBtn}>
+                            <i className="ti ti-upload" />
+                            Upload
+                          </label>
+                        </div>
+                      </div>
+
+                      <div className={styles.hgInputArea}>
+                        <textarea
+                          className={styles.hgTextarea}
+                          value={input}
+                          onChange={(e) => {
+                            setInput(e.target.value);
+                            setInputType("text");
+                            setFileName("");
+                          }}
+                          placeholder="Enter text to hash or upload a file…"
+                          spellCheck={false}
+                          disabled={isProcessing}
+                        />
+
+                        {inputType === "file" && fileName && (
+                          <div className={styles.hgFileInfo}>
+                            <i className="ti ti-file-check" />
+                            <span className={styles.hgFileName}>{fileName}</span>
+                            <span className={styles.hgFileSize}>({formatBytes(fileSize)})</span>
+                          </div>
+                        )}
+
+                        {input.trim() && inputType === "text" && (
+                          <div className={styles.hgInputMeta}>
+                            <span>
+                              {input.length} characters, {formatBytes(new Blob([input]).size)}
+                            </span>
+                            <span>Type: {detectInputType(input)}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className={styles.hgInputFooter}>
+                        <div className={styles.hgInputStats}>
+                          {selectedAlgorithms.size > 0 && (
+                            <span className={styles.hgSelectedCount}>
+                              {selectedAlgorithms.size} algorithm
+                              {selectedAlgorithms.size !== 1 ? "s" : ""} selected
+                            </span>
+                          )}
+                        </div>
+                        <div className={styles.hgInputActionsFooter}>
+                          <button
+                            type="button"
+                            className={`${styles.hgActionBtn} ${styles.hgActionBtnSecondary}`}
+                            onClick={clearAll}
+                            disabled={!input && !fileName}
+                          >
+                            <i className="ti ti-trash" />
+                            Clear
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.hgActionBtn} ${styles.hgActionBtnPrimary}`}
+                            onClick={handleTextHash}
+                            disabled={
+                              isProcessing ||
+                              (!input.trim() && !fileName) ||
+                              selectedAlgorithms.size === 0
+                            }
+                          >
+                            <i
+                              className={`ti ${
+                                isProcessing ? `ti-loader ${styles.hgSpin}` : "ti-hash"
+                              }`}
+                            />
+                            {isProcessing ? "Processing…" : "Generate Hashes"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {input && results.length > 0 && (
+                  <div className={styles.hgMobCta}>
+                    <button type="button" className={styles.hgCtaBtn} onClick={goToOutput}>
+                      <i className="ti ti-sparkles" />
+                      View Generated Hashes
+                      <i className="ti ti-chevron-right" style={{ marginLeft: "auto", opacity: 0.7 }} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className={styles.hgGutter}>
+                <div className={styles.hgGutterLine} />
+                <div className={styles.hgGutterNode}>
+                  <i className="ti ti-arrows-exchange" />
+                </div>
+                <div className={styles.hgGutterLine} />
+              </div>
+
+              <div
+                className={`${styles.hgOutputPanel}${
+                  mobilePanel === "output" ? ` ${styles.hgMobVisible}` : ` ${styles.hgMobHidden}`
+                }`}
+              >
+                <div className={styles.hgPanelBar}>
+                  <div className={styles.hgPanelLabel}>
+                    <i className="ti ti-sparkles" />
+                    Generated Hashes
+                  </div>
+                  <div className={styles.hgPanelActions}>
+                    {results.length > 0 && (
+                      <span className={styles.hgCharCount}>
+                        {results.length} hash{results.length !== 1 ? "es" : ""}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {!results.length && (
+                  <div className={styles.hgEmpty}>
+                    <div className={styles.hgEmptyIcon}>
+                      <i className="ti ti-hash" />
+                    </div>
+                    <h3 className={styles.hgEmptyTitle}>Generate Cryptographic Hashes</h3>
+                    <p className={styles.hgEmptyDescription}>
+                      Enter text, upload a file, or try a sample to generate secure hash values
+                      using industry-standard algorithms.
+                    </p>
+                    <div className={styles.hgEmptySamples}>
                       {Object.entries(SAMPLE_DATA)
                         .slice(0, 3)
                         .map(([key, sample]) => (
                           <button
                             key={key}
                             type="button"
-                            className={styles.hgSampleBtn}
+                            className={styles.hgEmptySampleBtn}
                             onClick={() => loadSample(key as keyof typeof SAMPLE_DATA)}
-                            title={sample.description}
                           >
-                            {sample.label}
+                            Try {sample.label}
                           </button>
                         ))}
                     </div>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      id="file-input"
-                      className={styles.hgFileInput}
-                      onChange={handleFileUpload}
-                      disabled={isProcessing}
-                    />
-                    <label htmlFor="file-input" className={styles.hgFileBtn}>
-                      <i className="ti ti-upload" />
-                      Upload File
-                    </label>
                   </div>
-                </div>
+                )}
 
-                <div className={styles.hgInputArea}>
-                  <textarea
-                    className={styles.hgTextarea}
-                    value={input}
-                    onChange={(e) => {
-                      setInput(e.target.value);
-                      setInputType("text");
-                      setFileName("");
-                    }}
-                    placeholder="Enter text to hash or upload a file..."
-                    spellCheck={false}
-                    disabled={isProcessing}
-                  />
-
-                  {inputType === "file" && fileName && (
-                    <div className={styles.hgFileInfo}>
-                      <i className="ti ti-file-check" />
-                      <span className={styles.hgFileName}>{fileName}</span>
-                      <span className={styles.hgFileSize}>({formatBytes(fileSize)})</span>
-                    </div>
-                  )}
-
-                  {input.trim() && inputType === "text" && (
-                    <div className={styles.hgInputMeta}>
-                      <span className={styles.hgInputSize}>
-                        {input.length} characters, {formatBytes(new Blob([input]).size)}
-                      </span>
-                      <span className={styles.hgInputType}>Type: {detectInputType(input)}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className={styles.hgInputFooter}>
-                  <div className={styles.hgInputStats}>
-                    {selectedAlgorithms.size > 0 && (
-                      <span className={styles.hgSelectedCount}>
-                        {selectedAlgorithms.size} algorithm
-                        {selectedAlgorithms.size !== 1 ? "s" : ""} selected
-                      </span>
-                    )}
-                  </div>
-                  <div className={styles.hgInputActionsFooter}>
-                    <button
-                      type="button"
-                      className={`${styles.hgActionBtn} ${styles.hgActionBtnSecondary}`}
-                      onClick={clearAll}
-                      disabled={!input && !fileName}
-                    >
-                      <i className="ti ti-trash" />
-                      Clear
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.hgActionBtn} ${styles.hgActionBtnPrimary}`}
-                      onClick={handleTextHash}
-                      disabled={
-                        isProcessing ||
-                        (!input.trim() && !fileName) ||
-                        selectedAlgorithms.size === 0
-                      }
-                    >
-                      <i className={`ti ${isProcessing ? `ti-loader ${styles.hgSpin}` : "ti-hash"}`} />
-                      {isProcessing ? "Processing..." : "Generate Hashes"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Results Section */}
-              {results.length > 0 && (
-                <div className={styles.hgResultsSection}>
-                  <div className={styles.hgResultsHeader}>
-                    <div className={styles.hgResultsTitle}>
-                      <i className="ti ti-sparkles" />
-                      Generated Hashes
-                      <span className={styles.hgResultsCount}>{results.length}</span>
-                    </div>
-                    <div className={styles.hgResultsActions}>
-                      <button
-                        type="button"
-                        className={styles.hgExportBtn}
-                        onClick={() => handleExport("txt")}
-                        title="Export as text"
-                      >
-                        <i className="ti ti-file-text" />
-                        TXT
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.hgExportBtn}
-                        onClick={() => handleExport("csv")}
-                        title="Export as CSV"
-                      >
-                        <i className="ti ti-file-spreadsheet" />
-                        CSV
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.hgExportBtn}
-                        onClick={() => handleExport("json")}
-                        title="Export as JSON"
-                      >
-                        <i className="ti ti-file-code" />
-                        JSON
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className={styles.hgResultsGrid}>
-                    {results.map((result) => {
-                      const algorithmInfo = HASH_ALGORITHMS[result.algorithm];
-                      return (
-                        <div key={result.algorithm} className={styles.hgResultCard}>
-                          <div className={styles.hgResultHeader}>
-                            <div className={styles.hgResultInfo}>
-                              <i
-                                className={`ti ${algorithmInfo.icon}`}
-                                style={{ color: algorithmInfo.color }}
-                              />
-                              <span className={styles.hgResultAlgorithm}>{result.algorithm}</span>
-                              <span className={styles.hgResultFormat}>{result.format}</span>
-                            </div>
-                            <div className={styles.hgResultMeta}>
-                              <span className={styles.hgResultTime}>
-                                {result.executionTime.toFixed(2)}ms
-                              </span>
-                              <div className={`${styles.hgStrengthBadge} ${styles[`hgStrength${result.strength.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('')}`]}`}>
-                                {result.strength.replace("-", " ")}
-                              </div>
-                            </div>
+                {results.length > 0 && (
+                  <div className={styles.hgOutputScroll}>
+                    <div className={styles.hgOutputInner}>
+                      <div className={styles.hgResultsSection}>
+                        <div className={styles.hgResultsHeader}>
+                          <div className={styles.hgResultsTitle}>
+                            <i className="ti ti-sparkles" />
+                            Generated Hashes
+                            <span className={styles.hgResultsCount}>{results.length}</span>
                           </div>
-                          <div className={styles.hgResultHash}>{result.hash}</div>
-                          <div className={styles.hgResultFooter}>
-                            <span className={styles.hgResultLength}>
-                              {result.hash.length} characters
-                            </span>
+                          <div className={styles.hgResultsActions}>
                             <button
                               type="button"
-                              className={`${styles.hgCopyBtn}${copiedKey === result.algorithm ? ` ${styles.copied}` : ""}`}
-                              onClick={() => handleCopy(result.hash, result.algorithm)}
+                              className={styles.hgExportBtn}
+                              onClick={() => handleExport("txt")}
+                              title="Export as text"
                             >
-                              <i
-                                className={`ti ${copiedKey === result.algorithm ? "ti-check" : "ti-copy"}`}
-                              />
-                              {copiedKey === result.algorithm ? "Copied" : "Copy"}
+                              <i className="ti ti-file-text" />
+                              TXT
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.hgExportBtn}
+                              onClick={() => handleExport("csv")}
+                              title="Export as CSV"
+                            >
+                              <i className="ti ti-file-spreadsheet" />
+                              CSV
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.hgExportBtn}
+                              onClick={() => handleExport("json")}
+                              title="Export as JSON"
+                            >
+                              <i className="ti ti-file-code" />
+                              JSON
                             </button>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
 
-                  {/* Analysis */}
-                  <div className={styles.hgAnalysisSection}>
-                    <HashAnalysis
-                      results={results}
-                      inputSize={inputType === "file" ? fileSize : new Blob([input]).size}
-                    />
-                  </div>
-                </div>
-              )}
+                        <div className={styles.hgResultsGrid}>
+                          {results.map((result) => {
+                            const algorithmInfo = HASH_ALGORITHMS[result.algorithm];
+                            if (!algorithmInfo) return null;
 
-              {/* Empty State */}
-              {results.length === 0 && !isProcessing && (
-                <div className={styles.hgEmptyState}>
-                  <div className={styles.hgEmptyIcon}>
-                    <i className="ti ti-hash" />
-                  </div>
-                  <h3 className={styles.hgEmptyTitle}>Generate Cryptographic Hashes</h3>
-                  <p className={styles.hgEmptyDescription}>
-                    Enter text, upload a file, or try a sample to generate secure hash values using
-                    industry-standard algorithms.
-                  </p>
-                  <div className={styles.hgEmptySamples}>
-                    {Object.entries(SAMPLE_DATA)
-                      .slice(0, 3)
-                      .map(([key, sample]) => (
-                        <button
-                          key={key}
-                          type="button"
-                          className={styles.hgEmptySampleBtn}
-                          onClick={() => loadSample(key as keyof typeof SAMPLE_DATA)}
-                        >
-                          Try {sample.label}
-                        </button>
-                      ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+                            const strengthClass = result.strength
+                              .split("-")
+                              .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                              .join("");
 
-          {/* Batch Processing Tab */}
-          {tabView === "batch" && (
-            <HashBatch algorithms={Array.from(selectedAlgorithms)} options={options} />
-          )}
-
-          {/* Verification Tab */}
-          {tabView === "verify" && (
-            <div className={styles.hgVerifyView}>
-              <div className={styles.hgVerifySection}>
-                <div className={styles.hgVerifyHeader}>
-                  <div className={styles.hgVerifyTitle}>
-                    <i className="ti ti-shield-check" />
-                    Hash Verification
-                  </div>
-                </div>
-
-                <div className={styles.hgVerifyForm}>
-                  <div className={styles.hgVerifyGroup}>
-                    <label className={styles.hgVerifyLabel}>Original Text/Data</label>
-                    <textarea
-                      className={styles.hgTextarea}
-                      value={verifyInput}
-                      onChange={(e) => setVerifyInput(e.target.value)}
-                      placeholder="Enter the original text or data..."
-                      rows={4}
-                    />
-                  </div>
-
-                  <div className={styles.hgVerifyGroup}>
-                    <label className={styles.hgVerifyLabel}>Expected Hash</label>
-                    <input
-                      type="text"
-                      className={styles.hgInput}
-                      value={verifyHash}
-                      onChange={(e) => setVerifyHash(e.target.value)}
-                      placeholder="Enter the hash to verify against..."
-                    />
-                  </div>
-
-                  <div className={styles.hgVerifyOptions}>
-                    <div className={styles.hgVerifyGroup}>
-                      <label className={styles.hgVerifyLabel}>Algorithm</label>
-                      <select
-                        className={styles.hgSelect}
-                        value={verifyAlgorithm}
-                        onChange={(e) => setVerifyAlgorithm(e.target.value as HashAlgorithm)}
-                      >
-                        {filteredAlgorithms.map(([algorithm, info]) => (
-                          <option key={algorithm} value={algorithm}>
-                            {info.label} ({info.bitLength} bits)
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <button
-                      type="button"
-                      className={`${styles.hgActionBtn} ${styles.hgActionBtnPrimary}`}
-                      onClick={handleVerify}
-                      disabled={!verifyInput.trim() || !verifyHash.trim() || isProcessing}
-                    >
-                      <i
-                        className={`ti ${isProcessing ? `ti-loader ${styles.hgSpin}` : "ti-shield-check"}`}
-                      />
-                      Verify Hash
-                    </button>
-                  </div>
-
-                  {verifyResult !== null && (
-                    <div
-                      className={`${styles.hgVerifyResult} ${styles[`hgVerifyResult${verifyResult ? "Success" : "Failure"}`]}`}
-                    >
-                      <i
-                        className={`ti ${verifyResult ? "ti-shield-check-filled" : "ti-shield-x-filled"}`}
-                      />
-                      <div className={styles.hgVerifyResultContent}>
-                        <strong>{verifyResult ? "Hash Verified ✓" : "Hash Mismatch ✗"}</strong>
-                        <p>
-                          {verifyResult
-                            ? "The provided hash matches the generated hash. Data integrity confirmed."
-                            : "The provided hash does not match the generated hash. Data may have been modified."}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* History Tab */}
-          {tabView === "history" && (
-            <div className={styles.hgHistoryView}>
-              {history.length === 0 ? (
-                <div className={styles.hgEmptyState}>
-                  <div className={styles.hgEmptyIcon}>
-                    <i className="ti ti-history" />
-                  </div>
-                  <h3 className={styles.hgEmptyTitle}>No History Yet</h3>
-                  <p className={styles.hgEmptyDescription}>
-                    Your hash generation history will appear here. History is automatically saved
-                    when auto-save is enabled in settings.
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <div className={styles.hgHistoryHeader}>
-                    <div className={styles.hgHistoryTitle}>
-                      <i className="ti ti-history" />
-                      Hash Generation History
-                      <span className={styles.hgHistoryCount}>{history.length}</span>
-                    </div>
-                    <div className={styles.hgHistoryActions}>
-                      <button
-                        type="button"
-                        className={`${styles.hgActionBtn} ${styles.hgActionBtnSecondary}`}
-                        onClick={clearHistory}
-                      >
-                        <i className="ti ti-trash" />
-                        Clear History
-                      </button>
-                    </div>
-                  </div>
-
-                  {statistics.totalEntries > 0 && (
-                    <div className={styles.hgStatistics}>
-                      <div className={styles.hgStat}>
-                        <span className={styles.hgStatValue}>{statistics.totalEntries}</span>
-                        <span className={styles.hgStatLabel}>Total Hashes</span>
-                      </div>
-                      <div className={styles.hgStat}>
-                        <span className={styles.hgStatValue}>
-                          {statistics.mostUsedAlgorithm || "N/A"}
-                        </span>
-                        <span className={styles.hgStatLabel}>Most Used</span>
-                      </div>
-                      <div className={styles.hgStat}>
-                        <span className={styles.hgStatValue}>
-                          {statistics.averageProcessingTime.toFixed(1)}ms
-                        </span>
-                        <span className={styles.hgStatLabel}>Avg. Time</span>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className={styles.hgHistoryList}>
-                    {history.slice(0, 50).map((entry) => (
-                      <div key={entry.id} className={styles.hgHistoryItem}>
-                        <div className={styles.hgHistoryItemHeader}>
-                          <div className={styles.hgHistoryItemInfo}>
-                            <span className={styles.hgHistoryItemInput}>
-                              {entry.inputType === "file" ? `📁 ${entry.fileName}` : entry.input}
-                            </span>
-                            <span className={styles.hgHistoryItemTime}>
-                              {new Date(entry.timestamp).toLocaleString()}
-                            </span>
-                          </div>
-                          <div className={styles.hgHistoryItemAlgorithms}>
-                            {entry.results.slice(0, 3).map((result) => (
-                              <span key={result.algorithm} className={styles.hgAlgorithmTag}>
-                                {result.algorithm}
-                              </span>
-                            ))}
-                            {entry.results.length > 3 && (
-                              <span className={`${styles.hgAlgorithmTag} ${styles.hgAlgorithmTagMore}`}>
-                                +{entry.results.length - 3}
-                              </span>
-                            )}
-                          </div>
+                            return (
+                              <div key={result.algorithm} className={styles.hgResultCard}>
+                                <div className={styles.hgResultHeader}>
+                                  <div className={styles.hgResultInfo}>
+                                    <i
+                                      className={`ti ${algorithmInfo.icon}`}
+                                      style={{ color: algorithmInfo.color }}
+                                    />
+                                    <div>
+                                      <span className={styles.hgResultAlgorithm}>
+                                        {result.algorithm}
+                                      </span>
+                                      <span className={styles.hgResultFormat}>{result.format}</span>
+                                    </div>
+                                  </div>
+                                  <div className={styles.hgResultMeta}>
+                                    <span className={styles.hgResultTime}>
+                                      {result.executionTime.toFixed(2)}ms
+                                    </span>
+                                    <div
+                                      className={`${styles.hgStrengthBadge} ${
+                                        styles[`hgStrength${strengthClass}`]
+                                      }`}
+                                    >
+                                      {result.strength.replace("-", " ")}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className={styles.hgResultHash}>{result.hash}</div>
+                                <div className={styles.hgResultFooter}>
+                                  <span className={styles.hgResultLength}>
+                                    {result.hash.length} characters
+                                  </span>
+                                  <button
+                                    type="button"
+                                    className={`${styles.hgCopyBtn}${
+                                      copiedKey === result.algorithm ? ` ${styles.copied}` : ""
+                                    }`}
+                                    onClick={() => handleCopy(result.hash, result.algorithm)}
+                                  >
+                                    <i
+                                      className={`ti ${
+                                        copiedKey === result.algorithm ? "ti-check" : "ti-copy"
+                                      }`}
+                                    />
+                                    {copiedKey === result.algorithm ? "Copied" : "Copy"}
+                                  </button>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-        </div>
 
-        {/* Footer */}
-        <div className={styles.hgFooter}>
-          <div className={styles.hgFooterInfo}>
-            <i className="ti ti-shield-lock" />
-            <span>Everything runs in your browser — no data ever leaves this page.</span>
-          </div>
-          {results.length > 0 && (
-            <div className={styles.hgFooterStats}>
-              <span>
-                {results.length} hash{results.length !== 1 ? "es" : ""} generated
-              </span>
-              <span>•</span>
-              <span>{format.toUpperCase()} format</span>
+                      <div className={styles.hgAnalysisSection}>
+                        <div className={styles.hgAnalysisHeader}>
+                          <i className="ti ti-chart-pie" />
+                          Analysis
+                        </div>
+                        <HashAnalysis
+                          results={results}
+                          inputSize={inputType === "file" ? fileSize : new Blob([input]).size}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {results.length > 0 && (
+                  <div className={styles.hgMobActions}>
+                    <button
+                      type="button"
+                      className={styles.hgMobBtn}
+                      onClick={goToInput}
+                    >
+                      <i className="ti ti-edit" />
+                      Edit Input
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.hgMobBtn}
+                      onClick={() => handleExport("txt")}
+                    >
+                      <i className="ti ti-download" />
+                      Export
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
+
+        {tabView === "batch" && <HashBatch algorithms={Array.from(selectedAlgorithms)} options={options} />}
+
+        {tabView === "verify" && (
+          <div className={styles.hgVerifyView}>
+            <div className={styles.hgVerifySection}>
+              <div className={styles.hgVerifyHeader}>
+                <div className={styles.hgVerifyTitle}>
+                  <i className="ti ti-shield-check" />
+                  Hash Verification
+                </div>
+              </div>
+
+              <div className={styles.hgVerifyForm}>
+                <div className={styles.hgVerifyGroup}>
+                  <label className={styles.hgVerifyLabel} htmlFor="verify-input">
+                    Original Text/Data
+                  </label>
+                  <textarea
+                    id="verify-input"
+                    className={styles.hgTextarea}
+                    value={verifyInput}
+                    onChange={(e) => setVerifyInput(e.target.value)}
+                    placeholder="Enter the original text or data…"
+                    rows={4}
+                  />
+                </div>
+
+                <div className={styles.hgVerifyGroup}>
+                  <label className={styles.hgVerifyLabel} htmlFor="verify-hash">
+                    Expected Hash
+                  </label>
+                  <input
+                    id="verify-hash"
+                    type="text"
+                    className={styles.hgInput}
+                    value={verifyHash}
+                    onChange={(e) => setVerifyHash(e.target.value)}
+                    placeholder="Enter the hash to verify against…"
+                  />
+                </div>
+
+                <div className={styles.hgVerifyOptions}>
+                  <div className={styles.hgVerifyGroup}>
+                    <label className={styles.hgVerifyLabel} htmlFor="verify-algo">
+                      Algorithm
+                    </label>
+                    <select
+                      id="verify-algo"
+                      className={styles.hgSelect}
+                      value={verifyAlgorithm}
+                      onChange={(e) => setVerifyAlgorithm(e.target.value as HashAlgorithm)}
+                    >
+                      {filteredAlgorithms.map(([algorithm, info]) => (
+                        <option key={algorithm} value={algorithm}>
+                          {info.label} ({info.bitLength} bits)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <button
+                    type="button"
+                    className={`${styles.hgActionBtn} ${styles.hgActionBtnPrimary}`}
+                    onClick={handleVerify}
+                    disabled={!verifyInput.trim() || !verifyHash.trim() || isProcessing}
+                  >
+                    <i
+                      className={`ti ${
+                        isProcessing ? `ti-loader ${styles.hgSpin}` : "ti-shield-check"
+                      }`}
+                    />
+                    Verify Hash
+                  </button>
+                </div>
+
+                {verifyResult !== null && (
+                  <div
+                    className={`${styles.hgVerifyResult} ${
+                      verifyResult ? styles.hgVerifyResultSuccess : styles.hgVerifyResultFailure
+                    }`}
+                  >
+                    <i
+                      className={`ti ${
+                        verifyResult ? "ti-shield-check-filled" : "ti-shield-x-filled"
+                      }`}
+                    />
+                    <div className={styles.hgVerifyResultContent}>
+                      <strong>{verifyResult ? "Hash Verified ✓" : "Hash Mismatch ✗"}</strong>
+                      <p>
+                        {verifyResult
+                          ? "The provided hash matches the generated hash. Data integrity confirmed."
+                          : "The provided hash does not match the generated hash. Data may have been modified."}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tabView === "history" && (
+          <div className={styles.hgHistoryView}>
+            {history.length === 0 ? (
+              <div className={styles.hgEmpty}>
+                <div className={styles.hgEmptyIcon}>
+                  <i className="ti ti-history" />
+                </div>
+                <h3 className={styles.hgEmptyTitle}>No History Yet</h3>
+                <p className={styles.hgEmptyDescription}>
+                  Your hash generation history will appear here. History is automatically saved
+                  when auto-save is enabled in settings.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className={styles.hgHistoryHeader}>
+                  <div className={styles.hgHistoryTitle}>
+                    <i className="ti ti-history" />
+                    Hash Generation History
+                    <span className={styles.hgHistoryCount}>{history.length}</span>
+                  </div>
+                  <div className={styles.hgHistoryActions}>
+                    <button
+                      type="button"
+                      className={`${styles.hgActionBtn} ${styles.hgActionBtnSecondary}`}
+                      onClick={clearHistory}
+                    >
+                      <i className="ti ti-trash" />
+                      Clear History
+                    </button>
+                  </div>
+                </div>
+
+                {statistics.totalEntries > 0 && (
+                  <div className={styles.hgStatistics}>
+                    <div className={styles.hgStat}>
+                      <span className={styles.hgStatValue}>{statistics.totalEntries}</span>
+                      <span className={styles.hgStatLabel}>Total Hashes</span>
+                    </div>
+                    <div className={styles.hgStat}>
+                      <span className={styles.hgStatValue}>
+                        {statistics.mostUsedAlgorithm || "N/A"}
+                      </span>
+                      <span className={styles.hgStatLabel}>Most Used</span>
+                    </div>
+                    <div className={styles.hgStat}>
+                      <span className={styles.hgStatValue}>
+                        {statistics.averageProcessingTime.toFixed(1)}ms
+                      </span>
+                      <span className={styles.hgStatLabel}>Avg Time</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className={styles.hgHistoryList}>
+                  {history.slice(0, 50).map((entry) => (
+                    <div key={entry.id} className={styles.hgHistoryItem}>
+                      <div className={styles.hgHistoryItemHeader}>
+                        <div className={styles.hgHistoryItemInfo}>
+                          <span className={styles.hgHistoryItemInput}>
+                            {entry.inputType === "file" ? `📁 ${entry.fileName}` : entry.input}
+                          </span>
+                          <span className={styles.hgHistoryItemTime}>
+                            {new Date(entry.timestamp).toLocaleString()}
+                          </span>
+                        </div>
+                        <div className={styles.hgHistoryItemAlgorithms}>
+                          {entry.results.slice(0, 3).map((result) => (
+                            <span key={result.algorithm} className={styles.hgAlgorithmTag}>
+                              {result.algorithm}
+                            </span>
+                          ))}
+                          {entry.results.length > 3 && (
+                            <span
+                              className={`${styles.hgAlgorithmTag} ${styles.hgAlgorithmTagMore}`}
+                            >
+                              +{entry.results.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
-    </>
+
+      <div className={styles.hgFooter}>
+        <div className={styles.hgFooterInfo}>
+          <i className="ti ti-shield-lock" />
+          <span>All processing happens in your browser — no data ever leaves this page</span>
+        </div>
+        {results.length > 0 && (
+          <div className={styles.hgFooterStats}>
+            <span>
+              {results.length} hash{results.length !== 1 ? "es" : ""}
+            </span>
+            <span>·</span>
+            <span>{format.toUpperCase()}</span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

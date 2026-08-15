@@ -1,7 +1,8 @@
 // features/dev/regex-tester/ts/regexStore.ts
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useHistoryStore } from "@/lib/useHistoryStore";
-import type { RegexFlags, TestCase, RegexPattern, PatternCategory } from "./utils";
+import { SAMPLE_PATTERNS, normalizeFlags, generateId } from "./utils";
+import type { RegexFlags, RegexPattern } from "./utils";
 
 const PATTERNS_KEY = "regex-patterns";
 const HISTORY_KEY = "regex-history";
@@ -17,10 +18,39 @@ export interface HistoryEntry {
 }
 
 export function useRegexStore() {
-  // Patterns storage (favorites/library) - using useState
   const [patterns, setPatterns] = useState<RegexPattern[]>([]);
+  const [patternsLoaded, setPatternsLoaded] = useState(false);
 
-  // History storage - using useHistoryStore
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      setPatternsLoaded(true);
+      return;
+    }
+    try {
+      const raw = window.localStorage.getItem(PATTERNS_KEY);
+      const stored: RegexPattern[] = raw
+        ? (JSON.parse(raw) as RegexPattern[]).map((p) => ({
+          ...p,
+          flags: normalizeFlags(p.flags),
+        }))
+        : [];
+      const storedIds = new Set(stored.map((p) => p.id));
+      const missingBuiltIns = SAMPLE_PATTERNS.filter((p) => !storedIds.has(p.id));
+      setPatterns([...stored, ...missingBuiltIns]);
+    } catch {
+      setPatterns([...SAMPLE_PATTERNS]);
+    } finally {
+      setPatternsLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !patternsLoaded) return;
+    try {
+      window.localStorage.setItem(PATTERNS_KEY, JSON.stringify(patterns));
+    } catch {}
+  }, [patterns, patternsLoaded]);
+
   const historyStore = useHistoryStore<HistoryEntry>({
     key: HISTORY_KEY,
     maxItems: MAX_HISTORY,
@@ -54,16 +84,16 @@ export function useRegexStore() {
     clearHistory: historyClearHistory,
   } = historyStore;
 
-  // Patterns API
   const savePattern = (pattern: Omit<RegexPattern, "id" | "createdAt" | "updatedAt">) => {
     const newPattern: RegexPattern = {
       ...pattern,
-      id: Date.now().toString(),
+      id: generateId(),
+      isBuiltIn: false,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
 
-    setPatterns((prev) => [...prev, newPattern]);
+    setPatterns((prev) => [newPattern, ...prev]);
     return newPattern;
   };
 
@@ -74,18 +104,17 @@ export function useRegexStore() {
   };
 
   const deletePattern = (id: string) => {
-    setPatterns((prev) => prev.filter((p) => p.id !== id));
+    setPatterns((prev) => prev.filter((p) => !(p.id === id && !p.isBuiltIn)));
   };
 
   const toggleFavorite = (id: string) => {
     setPatterns((prev) => prev.map((p) => (p.id === id ? { ...p, favorite: !p.favorite } : p)));
   };
 
-  // History API
   const addToHistory = (entry: Omit<HistoryEntry, "id" | "timestamp">) => {
     const newEntry: HistoryEntry = {
       ...entry,
-      id: Date.now().toString(),
+      id: generateId(),
       timestamp: Date.now(),
     };
 
@@ -97,20 +126,40 @@ export function useRegexStore() {
   };
 
   const deleteHistoryEntry = (id: string) => {
-    // Since we don't have direct remove, we filter and replace
-    const updated = history.filter((entry) => entry.id !== id);
+    const remaining = history.filter((entry) => entry.id !== id);
     historyClearHistory();
-    updated.forEach((entry) => {
+    [...remaining].reverse().forEach((entry) => {
       historyAddToHistory(entry);
     });
   };
 
   const importPatterns = (newPatterns: RegexPattern[]) => {
-    setPatterns((prev) => [...newPatterns, ...prev]);
+    const sanitized: RegexPattern[] = newPatterns
+      .filter(
+        (p): p is RegexPattern =>
+          !!p && typeof p === "object" && typeof p.pattern === "string" && typeof p.name === "string"
+      )
+      .map((p) => ({
+        ...p,
+        id: generateId(),
+        isBuiltIn: false,
+        flags: normalizeFlags(p.flags),
+        tags: Array.isArray(p.tags) ? p.tags : [],
+        category: p.category ?? "custom",
+        description: p.description || "Imported regex pattern",
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      }));
+
+    setPatterns((prev) => [...sanitized, ...prev]);
   };
 
   const exportPatterns = (): string => {
-    return JSON.stringify(patterns, null, 2);
+    return JSON.stringify(
+      patterns.filter((p) => !p.isBuiltIn),
+      null,
+      2
+    );
   };
 
   return {

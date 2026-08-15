@@ -5,34 +5,24 @@ import { formatCurrency } from "@/lib/utils";
 import type { SIPCalculationResult } from "./ts/sipEngine";
 import styles from "./style/ResultSummary.module.css";
 
-const SIP_STATUS_CONFIG: Record<string, { label: string; icon: string; color: string; bg: string }> = {
-  REGULAR: {
+type SIPMode = "regular" | "step-up" | "goal-based";
+
+const MODE_STATUS_CONFIG: Record<SIPMode, { label: string; icon: string; color: string; bg: string }> = {
+  regular: {
     label: "Regular SIP",
     icon: "ti-piggy-bank",
     color: "#059669",
     bg: "rgba(5, 150, 105, 0.1)",
   },
-  STEP_UP: {
+  "step-up": {
     label: "Step-Up SIP",
     icon: "ti-trending-up",
-    color: "#059669",
-    bg: "rgba(5, 150, 105, 0.1)",
+    color: "#0D6EFD",
+    bg: "rgba(13, 110, 253, 0.1)",
   },
-  GOAL_BASED: {
+  "goal-based": {
     label: "Goal-Based SIP",
     icon: "ti-target",
-    color: "#059669",
-    bg: "rgba(5, 150, 105, 0.1)",
-  },
-  HIGH_RETURN: {
-    label: "High Return Projection",
-    icon: "ti-trending-up",
-    color: "#D97706",
-    bg: "rgba(217, 119, 6, 0.1)",
-  },
-  LONG_TERM: {
-    label: "Long Term Wealth Creation",
-    icon: "ti-clock",
     color: "#7C3AED",
     bg: "rgba(124, 58, 237, 0.1)",
   },
@@ -48,12 +38,71 @@ type ResultSummaryProps = {
   inflationRate: number;
   stepUpPercentage: number;
   goalAmount: number;
-  mode: "regular" | "step-up" | "goal-based";
+  mode: SIPMode;
   onCopy: (text: string, key: string) => void;
   copiedKey: string;
   onDownloadPDF: () => void;
   isGeneratingPDF: boolean;
 };
+
+function buildInsights(params: {
+  mode: SIPMode;
+  expectedReturn: number;
+  tenureValue: number;
+  tenureUnit: 'years' | 'months';
+  stepUpPercentage: number;
+  inflationRate: number;
+  lumpSum: number;
+  calculation: SIPCalculationResult;
+}) {
+  const { mode, expectedReturn, tenureValue, tenureUnit, stepUpPercentage, inflationRate, lumpSum, calculation } = params;
+  const tenureInYears = tenureUnit === 'years' ? tenureValue : tenureValue / 12;
+
+  const warnings: string[] = [];
+  const recommendations: string[] = [];
+
+  if (expectedReturn > 20) {
+    warnings.push(
+      `An expected return of ${expectedReturn}% p.a. is very aggressive. Most diversified equity funds historically average 10%–15% p.a.`
+    );
+  } else if (expectedReturn > 15) {
+    warnings.push(
+      `An expected return of ${expectedReturn}% p.a. is on the higher side. Consider a more conservative estimate for planning.`
+    );
+  }
+
+  if (mode === "step-up" && stepUpPercentage > 25) {
+    warnings.push(
+      `A ${stepUpPercentage}% annual step-up is aggressive and may be difficult to sustain over the full tenure.`
+    );
+  }
+
+  if (tenureInYears < 1) {
+    warnings.push("Very short investment tenures significantly limit the benefit of compounding.");
+  }
+
+  if (mode === "goal-based" && (calculation.monthlySIPRequired ?? 0) <= 0) {
+    recommendations.push("Your lump sum alone is projected to meet this goal — no additional monthly SIP is required.");
+  }
+
+  if (inflationRate === 0) {
+    recommendations.push("Add an expected inflation rate to see the real, inflation-adjusted value of your investment.");
+  }
+
+  if (mode === "regular" && lumpSum === 0 && tenureInYears >= 5) {
+    recommendations.push("Adding a lump sum investment upfront can meaningfully accelerate long-term compounding.");
+  }
+
+  if (tenureInYears >= 10) {
+    recommendations.push("Long tenures of 10+ years allow compounding to work most effectively in your favor.");
+  }
+
+  const explanation = mode === "goal-based"
+    ? `To reach a target of ${formatCurrency(params.calculation.maturityAmount)} over ${tenureValue} ${tenureUnit}, you need a monthly SIP of ${formatCurrency(calculation.monthlySIPRequired ?? 0)}, assuming a ${expectedReturn}% annual return.`
+    : `Investing consistently at a ${expectedReturn}% annual return over ${tenureValue} ${tenureUnit} is projected to grow your capital from ${formatCurrency(calculation.totalInvested)} to ${formatCurrency(calculation.maturityAmount)}.`;
+
+  return { warnings, recommendations, explanation };
+}
 
 export function ResultSummary({
   calculation,
@@ -71,31 +120,32 @@ export function ResultSummary({
   onDownloadPDF,
   isGeneratingPDF,
 }: ResultSummaryProps) {
-  let statusKey: keyof typeof SIP_STATUS_CONFIG;
+  const statusConfig = MODE_STATUS_CONFIG[mode];
+  const { warnings, recommendations, explanation } = buildInsights({
+    mode,
+    expectedReturn,
+    tenureValue,
+    tenureUnit,
+    stepUpPercentage,
+    inflationRate,
+    lumpSum,
+    calculation,
+  });
 
-  if (mode === "regular") {
-    statusKey = "REGULAR";
-  } else if (mode === "step-up") {
-    statusKey = "STEP_UP";
-  } else if (mode === "goal-based") {
-    statusKey = "GOAL_BASED";
-  } else {
-    statusKey = "REGULAR";
-  }
+  const primaryCardLabel = mode === "goal-based"
+    ? "Required Monthly SIP"
+    : mode === "step-up"
+      ? "Starting Monthly SIP"
+      : "Monthly SIP";
 
-  if (expectedReturn > 15) {
-    statusKey = "HIGH_RETURN";
-  }
-  if ((tenureUnit === 'years' && tenureValue > 10) || (tenureUnit === 'months' && tenureValue > 120)) {
-    statusKey = "LONG_TERM";
-  }
-
-  const statusConfig = SIP_STATUS_CONFIG[statusKey];
+  const primaryCardValue = mode === "goal-based"
+    ? formatCurrency(calculation.monthlySIPRequired ?? 0)
+    : formatCurrency(monthlyInvestment);
 
   let resultText = '';
-  resultText += `SIP Calculation Result - ${mode === "goal-based" ? "Goal-Based SIP" : mode === "step-up" ? "Step-Up SIP" : "Regular SIP"}\n\n`;
+  resultText += `SIP Calculation Result - ${statusConfig.label}\n\n`;
   resultText += `═══════════════════════════════════\n`;
-  resultText += `MONTHLY SIP: ${formatCurrency(monthlyInvestment)}\n`;
+  resultText += `${primaryCardLabel.toUpperCase()}: ${primaryCardValue}\n`;
   resultText += `═══════════════════════════════════\n\n`;
   if (lumpSum > 0) {
     resultText += `Initial Lump Sum: ${formatCurrency(lumpSum)}\n`;
@@ -109,7 +159,6 @@ export function ResultSummary({
     resultText += `Target Amount: ${formatCurrency(goalAmount)}\n`;
   }
   resultText += `\n`;
-  resultText += `Status: ${statusConfig.label}\n`;
   resultText += `Total Amount Invested: ${formatCurrency(calculation.totalInvested)}\n`;
   resultText += `Estimated Returns: ${formatCurrency(calculation.returns)}\n`;
   resultText += `Maturity Amount: ${formatCurrency(calculation.maturityAmount)}\n`;
@@ -117,13 +166,12 @@ export function ResultSummary({
     resultText += `Inflation-Adjusted Maturity: ${formatCurrency(calculation.inflationAdjustedAmount ?? 0)}\n`;
     resultText += `Real Returns: ${formatCurrency(calculation.realReturns ?? 0)}\n`;
   }
-  resultText += `\n`;
-  resultText += `Projected Value Breakdown:\n`;
-  resultText += `• Principal (Invested): ${formatCurrency(calculation.totalInvested)}\n`;
-  resultText += `• Returns/Gains: ${formatCurrency(calculation.returns)}\n`;
-  if (inflationRate > 0) {
-    const inflationImpact = calculation.maturityAmount - (calculation.inflationAdjustedAmount ?? 0);
-    resultText += `• Inflation Impact: ${formatCurrency(inflationImpact)}\n`;
+  resultText += `\nExplanation:\n${explanation}\n`;
+  if (warnings.length > 0) {
+    resultText += `\nWarnings:\n${warnings.map((w) => `• ${w}`).join('\n')}\n`;
+  }
+  if (recommendations.length > 0) {
+    resultText += `\nRecommendations:\n${recommendations.map((r) => `• ${r}`).join('\n')}\n`;
   }
   resultText = resultText.trim();
 
@@ -142,7 +190,7 @@ export function ResultSummary({
           <i className={`ti ${statusConfig.icon}`} aria-hidden="true" />
         </div>
         <div className={styles.sipStatusContent}>
-          <span className={styles.sipStatusLabel}>Calculation Status</span>
+          <span className={styles.sipStatusLabel}>SIP Type</span>
           <strong className={styles.sipStatusValue} style={{ color: statusConfig.color }}>
             {statusConfig.label}
           </strong>
@@ -155,14 +203,8 @@ export function ResultSummary({
             <i className="ti ti-piggy-bank" aria-hidden="true" />
           </div>
           <div className={styles.sipCardContent}>
-            <span className={styles.sipCardLabel}>
-              {mode === "goal-based" ? "Required Monthly SIP" : "Monthly SIP"}
-            </span>
-            <strong className={styles.sipCardValue}>
-              {mode === "goal-based"
-                ? formatCurrency(calculation.monthlySIPRequired!)
-                : formatCurrency(monthlyInvestment)}
-            </strong>
+            <span className={styles.sipCardLabel}>{primaryCardLabel}</span>
+            <strong className={styles.sipCardValue}>{primaryCardValue}</strong>
           </div>
         </div>
 
@@ -196,6 +238,48 @@ export function ResultSummary({
           </div>
         </div>
       </div>
+
+      <div className={styles.sipExplanation}>
+        <h4 className={styles.sipExplanationHeading}>
+          <i className="ti ti-bulb" aria-hidden="true" />
+          Explanation
+        </h4>
+        <p className={styles.sipExplanationText}>{explanation}</p>
+      </div>
+
+      {warnings.length > 0 && (
+        <div className={styles.sipWarnings}>
+          <h4 className={styles.sipWarningsHeading}>
+            <i className="ti ti-alert-triangle" aria-hidden="true" />
+            Warnings
+          </h4>
+          <div className={styles.sipWarningsList}>
+            {warnings.map((warning, index) => (
+              <div key={index} className={styles.sipWarningItem}>
+                <i className="ti ti-alert-circle" aria-hidden="true" />
+                <span>{warning}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {recommendations.length > 0 && (
+        <div className={styles.sipRecommendations}>
+          <h4 className={styles.sipRecommendationsHeading}>
+            <i className="ti ti-bulb" aria-hidden="true" />
+            Recommendations
+          </h4>
+          <div className={styles.sipRecommendationsList}>
+            {recommendations.map((recommendation, index) => (
+              <div key={index} className={styles.sipRecommendationItem}>
+                <i className="ti ti-check" aria-hidden="true" />
+                <span>{recommendation}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {inflationRate > 0 && (
         <div className={styles.sipInflationSection}>

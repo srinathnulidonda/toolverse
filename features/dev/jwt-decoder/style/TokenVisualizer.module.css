@@ -4,17 +4,45 @@
     flex-direction: column;
     gap: 16px;
     padding: 16px;
+    flex: 1;
+    background: var(--bg-surface);
+    overflow: auto;
+}
+
+.tvCard {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tvCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+}
+
+.tvCardHeader i {
+    font-size: 13px;
+}
+
+.tvCardBody {
+    padding: 14px;
 }
 
 .tvVisual {
     display: flex;
     align-items: stretch;
-    gap: 0;
-    height: 80px;
-    border-radius: var(--radius-md);
+    height: 72px;
+    border-radius: 10px;
     overflow: hidden;
     border: 0.5px solid var(--border);
 }
@@ -24,16 +52,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
-    min-width: 60px;
+    gap: 3px;
+    min-width: 50px;
     position: relative;
-    transition: all 0.2s;
+    transition: filter 0.15s;
+    cursor: default;
 }
 
 .tvPart:hover {
-    filter: brightness(1.1);
-    z-index: 1;
-    transform: scale(1.02);
+    filter: brightness(1.08);
 }
 
 .tvPartHeader {
@@ -49,9 +76,9 @@
 }
 
 .tvPartLabel {
-    font-size: 11px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -63,42 +90,51 @@
     font-family: var(--font-mono);
 }
 
+.tvPartPct {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: var(--font-mono);
+}
+
 .tvDot {
     display: flex;
     align-items: center;
-    padding: 0 2px;
-    font-size: 20px;
+    justify-content: center;
+    width: 16px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--text-disabled);
     background: var(--bg-surface);
+    flex-shrink: 0;
 }
 
 .tvStats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .tvStat {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 12px;
-    background: var(--bg-surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-md);
+    gap: 3px;
+    padding: 12px 14px;
+    background: var(--bg-card);
 }
 
 .tvStatLabel {
     font-size: 10px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-tertiary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
 }
 
 .tvStatValue {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--text);
     font-family: var(--font-mono);
@@ -106,10 +142,8 @@
 
 .tvBreakdown {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
-    padding-top: 8px;
-    border-top: 0.5px solid var(--border-faint);
 }
 
 .tvBreakdownItem {
@@ -122,8 +156,8 @@
 }
 
 .tvBreakdownColor {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 3px;
     flex-shrink: 0;
 }
@@ -140,7 +174,77 @@
     background: #8b5cf6;
 }
 
+.tvPartDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tvPartDetail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--bg-card);
+}
+
+.tvPartDetailColor {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.tvPartDetailName {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+}
+
+.tvPartDetailMeta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tvPartDetailSize {
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+.tvPartDetailPct {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    width: 42px;
+    text-align: right;
+}
+
+.tvPartDetailBar {
+    width: 80px;
+    height: 6px;
+    background: var(--bg-surface);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.tvPartDetailFill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+}
+
 @media (max-width: 768px) {
+    .tvRoot {
+        padding: 12px;
+    }
+
     .tvStats {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -155,5 +259,13 @@
 
     .tvPartSize {
         font-size: 11px;
+    }
+
+    .tvPartPct {
+        display: none;
+    }
+
+    .tvPartDetailBar {
+        display: none;
     }
 }

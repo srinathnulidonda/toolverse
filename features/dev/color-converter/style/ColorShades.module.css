@@ -154,6 +154,8 @@
     padding: 10px 14px;
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .csDisplayLabel {
@@ -197,6 +199,12 @@
     border-color: var(--brand-border);
 }
 
+.csCopyAllBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
 .csGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -223,6 +231,11 @@
 .csColorSwatch:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.csColorSwatch:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
 }
 
 .csBaseBadge {
@@ -285,6 +298,36 @@
     background: var(--brand-light);
     color: var(--brand-text);
     border-color: var(--brand-border);
+}
+
+.csEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 50px 24px;
+    text-align: center;
+}
+
+.csEmptyIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--text-disabled);
+}
+
+.csEmptyTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
 }
 
 .csExport {
@@ -352,9 +395,15 @@
     color: var(--brand-text);
 }
 
+.csExportCopyBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
 @media (max-width: 768px) {
     .csRoot {
         padding: 12px;
+        gap: 12px;
     }
 
     .csTypeSelector {
@@ -363,6 +412,12 @@
 
     .csGrid {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .csColorSwatch {
+        height: 68px;
     }
 }
 

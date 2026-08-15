@@ -3,12 +3,56 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.uaBody {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+    min-height: 0;
+    overflow: hidden;
+}
+
+.uaCol {
+    display: flex;
+    flex-direction: column;
     gap: 16px;
     padding: 16px;
     overflow: auto;
+    min-height: 0;
 }
 
-/*  Input Section  */
+.uaGutter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-surface);
+    border-left: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+}
+
+.uaGutterLine {
+    flex: 1;
+    width: 0.5px;
+    background: var(--border);
+}
+
+.uaGutterNode {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
 .uaInputSection {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
@@ -82,8 +126,8 @@
 
 .uaTextarea {
     width: 100%;
-    min-height: 80px;
-    padding: 12px 14px;
+    min-height: 140px;
+    padding: 14px 16px;
     font-family: var(--font-mono);
     font-size: 13px;
     line-height: 1.7;
@@ -96,6 +140,14 @@
 
 .uaTextarea::placeholder {
     color: var(--text-disabled);
+}
+
+.uaCharCount {
+    padding: 6px 14px;
+    font-size: 10.5px;
+    font-family: var(--font-mono);
+    color: var(--text-disabled);
+    border-top: 0.5px solid var(--border-faint);
 }
 
 .uaErrorBar {
@@ -120,7 +172,6 @@
     flex-shrink: 0;
 }
 
-/*  Results  */
 .uaResults {
     display: flex;
     flex-direction: column;
@@ -181,6 +232,7 @@
 
 .uaStatusContent {
     flex: 1;
+    min-width: 0;
 }
 
 .uaStatusTitle {
@@ -225,7 +277,6 @@
     }
 }
 
-/*  Details  */
 .uaDetails {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
@@ -255,7 +306,7 @@
 
 .uaDetailsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 10px;
 }
 
@@ -267,6 +318,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;
 }
 
 .uaDetailWide {
@@ -372,7 +424,6 @@
     border: 0.5px solid var(--border);
 }
 
-/*  Conversions  */
 .uaConversions {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
@@ -420,6 +471,7 @@
     color: var(--text);
     word-break: break-all;
     line-height: 1.6;
+    min-width: 0;
 }
 
 .uaCopyIcon {
@@ -443,11 +495,16 @@
     border-color: var(--brand-border);
 }
 
+.uaCopyIcon.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
 .uaCopyIcon i {
     font-size: 12px;
 }
 
-/*  Empty State  */
 .uaEmpty {
     flex: 1;
     display: flex;
@@ -455,15 +512,18 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 60px 24px;
+    padding: 48px 24px;
     text-align: center;
+    background: var(--bg-surface);
+    border: 0.5px dashed var(--border);
+    border-radius: var(--radius-lg);
 }
 
 .uaEmptyIcon {
     width: 56px;
     height: 56px;
     border-radius: 14px;
-    background: var(--bg-surface);
+    background: var(--bg-card);
     border: 0.5px solid var(--border);
     display: flex;
     align-items: center;
@@ -488,10 +548,19 @@
     line-height: 1.6;
 }
 
-/*  Responsive  */
 @media (max-width: 768px) {
-    .uaRoot {
+    .uaBody {
+        grid-template-columns: 1fr;
+        overflow: visible;
+    }
+
+    .uaGutter {
+        display: none;
+    }
+
+    .uaCol {
         padding: 12px;
+        overflow: visible;
     }
 
     .uaDetailsGrid {
@@ -504,7 +573,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
     .uaSampleBtn,
     .uaClearBtn,
     .uaCopyIcon {

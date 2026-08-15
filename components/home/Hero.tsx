@@ -27,7 +27,6 @@ export default function Hero() {
           width: "100%",
         }}
       >
-        {/* Eyebrow */}
         <p
           className="hero-eyebrow"
           style={{
@@ -43,7 +42,6 @@ export default function Hero() {
           PDF · Images · Finance · Dev · Resume
         </p>
 
-        {/* Headline */}
         <h1
           className="hero-title"
           style={{
@@ -56,10 +54,10 @@ export default function Hero() {
             fontFamily: font,
           }}
         >
-          One tab. <span style={{ color: "var(--brand)" }}>Every file task.</span>
+          All your tools.{" "}
+          <span style={{ color: "var(--brand)" }}>One place.</span>
         </h1>
 
-        {/* Body */}
         <p
           className="hero-body"
           style={{
@@ -75,32 +73,31 @@ export default function Hero() {
           Built for speed — zero setup, zero friction.
         </p>
 
-        {/* Search bar */}
         <SearchBar />
 
-        {/* Social proof strip */}
         <SocialProof />
       </div>
 
       <style>{`
-                @media (max-width: 480px) {
-                    .hero-section { padding: 16px 20px 36px !important; }
-                    .hero-eyebrow { font-size: 10px !important; letter-spacing: 0.2px !important; margin-bottom: 10px !important; }
-                    .hero-title {
-                        font-size: 27px !important;
-                        letter-spacing: -0.6px !important;
-                        line-height: 1.2 !important;
-                        margin-bottom: 8px !important;
-                        white-space: nowrap !important;
-                    }
-                    .hero-body { font-size: 10px !important; line-height: 1.5 !important; margin-bottom: 18px !important; }
-                }
+        @media (max-width: 480px) {
+          .hero-section { padding: 16px 20px 36px !important; }
+          .hero-eyebrow { font-size: 10px !important; letter-spacing: 0.2px !important; margin-bottom: 10px !important; }
+          .hero-title {
+            font-size: 26px !important;
+            letter-spacing: -0.5px !important;
+            line-height: 1.28 !important;
+            margin-bottom: 8px !important;
+            white-space: normal !important;
+            max-width: 300px;
+          }
+          .hero-body { font-size: 12px !important; line-height: 1.5 !important; margin-bottom: 18px !important; }
+        }
 
-                @media (max-width: 340px) {
-                    .hero-title { font-size: 25px !important; letter-spacing: -0.4px !important; margin-bottom: 6px !important; }
-                    .hero-body { font-size: 9.5px !important; }
-                }
-            `}</style>
+        @media (max-width: 340px) {
+          .hero-title { font-size: 23px !important; letter-spacing: -0.4px !important; margin-bottom: 6px !important; max-width: 260px; }
+          .hero-body { font-size: 11px !important; }
+        }
+      `}</style>
     </section>
   );
 }

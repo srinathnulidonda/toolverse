@@ -22,7 +22,6 @@ type SIPInputFormProps = {
   onInflationRateChange: (value: string) => void;
   onStepUpPercentageChange: (value: string) => void;
   onGoalAmountChange: (value: string) => void;
-  isValidForm: boolean;
   hasCalculation: boolean;
   onViewResults: () => void;
 };
@@ -33,10 +32,10 @@ const MODE_OPTIONS: {
   label: string;
   desc: string;
 }[] = [
-    { id: "regular", icon: "ti-repeat", label: "Regular SIP", desc: "Fixed amount every month" },
-    { id: "step-up", icon: "ti-trending-up", label: "Step-Up SIP", desc: "Increase amount yearly" },
-    { id: "goal-based", icon: "ti-target", label: "Goal-Based SIP", desc: "Solve for a target corpus" },
-  ];
+  { id: "regular", icon: "ti-repeat", label: "Regular SIP", desc: "Fixed amount every month" },
+  { id: "step-up", icon: "ti-trending-up", label: "Step-Up SIP", desc: "Increase amount yearly" },
+  { id: "goal-based", icon: "ti-target", label: "Goal-Based SIP", desc: "Solve for a target corpus" },
+];
 
 export function SIPInputForm({
   mode,
@@ -63,11 +62,16 @@ export function SIPInputForm({
   const isStepUp = mode === "step-up";
   const isGoalBased = mode === "goal-based";
 
+  const returnNum = parseFloat(expectedReturn) || 0;
+  const stepUpNum = parseFloat(stepUpPercentage) || 0;
+  const tenureNum = parseInt(tenureValue, 10) || 0;
+  const tenureInMonths = tenureUnit === "years" ? tenureNum * 12 : tenureNum;
+
   return (
     <div className={styles.sipInputForm}>
       <div className={styles.sipFormSection}>
         <h4 className={styles.sipSectionTitle}>
-          <i className="ti ti-adjustments-dollar" aria-hidden="true" />
+          <i className="ti ti-adjustments" aria-hidden="true" />
           Investment Type
         </h4>
 
@@ -113,6 +117,7 @@ export function SIPInputForm({
                 <input
                   id="sip-monthly"
                   type="number"
+                  inputMode="decimal"
                   className={styles.sipAmountInput}
                   value={monthlyInvestment}
                   onChange={(e) => onMonthlyInvestmentChange(e.target.value)}
@@ -136,6 +141,7 @@ export function SIPInputForm({
                 <input
                   id="sip-goal"
                   type="number"
+                  inputMode="decimal"
                   className={styles.sipAmountInput}
                   value={goalAmount}
                   onChange={(e) => onGoalAmountChange(e.target.value)}
@@ -145,6 +151,9 @@ export function SIPInputForm({
                   required
                 />
               </div>
+              <p className={styles.sipFieldHelp}>
+                Your lump sum (if any) is applied first; the required SIP covers the remaining gap
+              </p>
             </div>
           )}
 
@@ -157,6 +166,7 @@ export function SIPInputForm({
               <input
                 id="sip-lumpsum"
                 type="number"
+                inputMode="decimal"
                 className={styles.sipAmountInput}
                 value={lumpSum}
                 onChange={(e) => onLumpSumChange(e.target.value)}
@@ -177,6 +187,7 @@ export function SIPInputForm({
               <input
                 id="sip-tenure"
                 type="number"
+                inputMode="numeric"
                 className={styles.sipInput}
                 value={tenureValue}
                 onChange={(e) => onTenureValueChange(e.target.value)}
@@ -184,6 +195,7 @@ export function SIPInputForm({
                 min="1"
                 step="1"
                 required
+                aria-describedby="sip-tenure-hint"
               />
               <select
                 className={styles.sipUnitSelect}
@@ -195,6 +207,12 @@ export function SIPInputForm({
                 <option value="months">Months</option>
               </select>
             </div>
+            {tenureInMonths > 0 && tenureInMonths < 12 && (
+              <p id="sip-tenure-hint" className={`${styles.sipFieldHint} ${styles.warning}`}>
+                <i className="ti ti-info-circle" aria-hidden="true" />
+                Short tenures limit the benefit of compounding
+              </p>
+            )}
           </div>
 
           <div className={styles.sipField}>
@@ -206,6 +224,7 @@ export function SIPInputForm({
               <input
                 id="sip-return"
                 type="number"
+                inputMode="decimal"
                 className={styles.sipPercentInput}
                 value={expectedReturn}
                 onChange={(e) => onExpectedReturnChange(e.target.value)}
@@ -214,17 +233,27 @@ export function SIPInputForm({
                 max="30"
                 step="0.1"
                 required
+                aria-describedby="sip-return-hint"
               />
               <span className={styles.sipPercentSymbol}>%</span>
             </div>
-            <p className={styles.sipFieldHelp}>Typical range: 8%–15% p.a. for equity funds</p>
+            {returnNum > 20 ? (
+              <p id="sip-return-hint" className={`${styles.sipFieldHint} ${styles.error}`}>
+                <i className="ti ti-alert-triangle" aria-hidden="true" />
+                Very aggressive assumption — most equity funds average 10%–15% p.a.
+              </p>
+            ) : (
+              <p id="sip-return-hint" className={styles.sipFieldHelp}>
+                Typical range: 8%–15% p.a. for equity funds
+              </p>
+            )}
           </div>
         </div>
       </div>
 
       <div className={styles.sipFormSection}>
         <h4 className={styles.sipSectionTitle}>
-          <i className="ti ti-settings-2" aria-hidden="true" />
+          <i className="ti ti-settings" aria-hidden="true" />
           Advanced Options
         </h4>
         <p className={styles.sipSectionHelp}>
@@ -240,6 +269,7 @@ export function SIPInputForm({
               <input
                 id="sip-inflation"
                 type="number"
+                inputMode="decimal"
                 className={styles.sipPercentInput}
                 value={inflationRate}
                 onChange={(e) => onInflationRateChange(e.target.value)}
@@ -263,6 +293,7 @@ export function SIPInputForm({
                 <input
                   id="sip-stepup"
                   type="number"
+                  inputMode="decimal"
                   className={styles.sipPercentInput}
                   value={stepUpPercentage}
                   onChange={(e) => onStepUpPercentageChange(e.target.value)}
@@ -271,10 +302,20 @@ export function SIPInputForm({
                   max="50"
                   step="0.1"
                   required
+                  aria-describedby="sip-stepup-hint"
                 />
                 <span className={styles.sipPercentSymbol}>%</span>
               </div>
-              <p className={styles.sipFieldHelp}>Increase in SIP amount every year</p>
+              {stepUpNum > 25 ? (
+                <p id="sip-stepup-hint" className={`${styles.sipFieldHint} ${styles.warning}`}>
+                  <i className="ti ti-info-circle" aria-hidden="true" />
+                  High step-up rates can be hard to sustain year after year
+                </p>
+              ) : (
+                <p id="sip-stepup-hint" className={styles.sipFieldHelp}>
+                  Increase in SIP amount every year
+                </p>
+              )}
             </div>
           )}
         </div>

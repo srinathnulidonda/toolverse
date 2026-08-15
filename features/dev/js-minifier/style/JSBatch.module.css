@@ -4,9 +4,11 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
-    overflow: auto;
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
     background: var(--bg-surface);
+    min-height: 0;
 }
 
 .jbSection {
@@ -14,13 +16,14 @@
     border: 0.5px solid var(--border);
     border-radius: 12px;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .jbSectionHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 11px 16px;
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
     gap: 12px;
@@ -47,6 +50,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .jbActionBtn {
@@ -61,6 +65,7 @@
     cursor: pointer;
     transition: all 0.12s;
     border: 0.5px solid var(--border);
+    white-space: nowrap;
 }
 
 .jbActionBtn:disabled {
@@ -80,6 +85,7 @@
 
 .jbActionBtnPrimary:hover:not(:disabled) {
     background: var(--brand-hover);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .jbActionBtnGhost {
@@ -92,7 +98,6 @@
     color: var(--text);
 }
 
-/* Upload */
 .jbUploadArea {
     padding: 16px;
 }
@@ -105,7 +110,7 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 24px;
+    padding: 28px 24px;
     border: 2px dashed var(--border);
     border-radius: 10px;
     cursor: pointer;
@@ -113,23 +118,30 @@
     background: var(--bg-surface);
 }
 
-.jbDropZone:hover {
+.jbDropZone:hover,
+.jbDropZone:focus-within {
     border-color: var(--brand);
     background: var(--brand-light);
 }
 
 .jbDropIcon {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 12px;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 24px;
     color: var(--text-tertiary);
     flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.jbDropZone:hover .jbDropIcon {
+    color: var(--brand);
+    border-color: var(--brand-border);
 }
 
 .jbDropTitle {
@@ -145,12 +157,11 @@
     margin: 0;
 }
 
-/* Summary bar */
 .jbSummaryBar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 16px;
+    padding: 10px 16px;
     background: var(--bg-surface);
     border-top: 0.5px solid var(--border);
     gap: 12px;
@@ -161,32 +172,35 @@
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .jbSummaryStat {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-secondary);
     font-weight: 500;
 }
 
 .jbSummaryStat i {
-    font-size: 12px;
+    font-size: 13px;
+    color: var(--text-tertiary);
 }
 
-/* Progress */
 .jbProgressWrap {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     border-radius: 12px;
     padding: 16px;
+    flex-shrink: 0;
 }
 
 .jbProgressTop {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
 }
 
@@ -207,6 +221,7 @@
     background: var(--bg-surface);
     border-radius: 99px;
     overflow: hidden;
+    border: 0.5px solid var(--border);
 }
 
 .jbProgressFill {
@@ -216,13 +231,14 @@
     transition: width 0.3s ease;
 }
 
-/* Badges */
 .jbBadge {
     font-size: 10px;
     font-weight: 600;
     padding: 2px 7px;
     border-radius: 99px;
     text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
 }
 
 .jbBadgeSuccess {
@@ -239,9 +255,9 @@
 
 @media (prefers-color-scheme: dark) {
     .jbBadgeError {
-        background: #1f1517;
+        background: rgba(220, 38, 38, 0.15);
         color: #f87171;
-        border-color: #3c1518;
+        border-color: rgba(220, 38, 38, 0.3);
     }
 }
 
@@ -249,9 +265,10 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     color: #166534;
+    white-space: nowrap;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -260,7 +277,6 @@
     }
 }
 
-/* Results */
 .jbResults {
     display: flex;
     flex-direction: column;
@@ -272,6 +288,11 @@
     background: var(--bg-card);
     display: flex;
     flex-direction: column;
+    transition: background 0.12s;
+}
+
+.jbResultRow:hover {
+    background: var(--bg-surface);
 }
 
 .jbResultInfo {
@@ -279,9 +300,10 @@
     align-items: center;
     gap: 10px;
     padding: 12px 16px;
+    flex-wrap: wrap;
 }
 
-.jbResultInfo>i {
+.jbResultInfo > i {
     font-size: 16px;
     color: var(--text-secondary);
     flex-shrink: 0;
@@ -302,6 +324,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    min-width: 0;
 }
 
 .jbResultSize {
@@ -316,6 +339,7 @@
     font-family: var(--font-mono);
     color: var(--text-tertiary);
     flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .jbResultSavings.positive {
@@ -346,6 +370,7 @@
     border-radius: 99px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
 .jbStatus i {
@@ -378,15 +403,15 @@
 
 @media (prefers-color-scheme: dark) {
     .jbStatusProcessing {
-        background: #0a1628;
+        background: rgba(29, 78, 216, 0.15);
         color: #93c5fd;
-        border-color: #1e3a5f;
+        border-color: rgba(29, 78, 216, 0.3);
     }
 
     .jbStatusError {
-        background: #1f1517;
+        background: rgba(220, 38, 38, 0.15);
         color: #f87171;
-        border-color: #3c1518;
+        border-color: rgba(220, 38, 38, 0.3);
     }
 }
 
@@ -404,12 +429,14 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.12s;
+    flex-shrink: 0;
 }
 
 .jbIconBtn:hover,
 .jbRemoveBtn:hover:not(:disabled) {
     background: var(--bg-card);
     color: var(--text);
+    border-color: var(--text-tertiary);
 }
 
 .jbIconBtn.copied {
@@ -425,28 +452,30 @@
 
 .jbErrorRow {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
     padding: 10px 16px;
     background: #fef2f2;
     color: #dc2626;
     font-size: 12px;
-    border-top: 0.5px solid var(--border);
+    border-top: 0.5px solid #fecaca;
+    line-height: 1.5;
 }
 
 @media (prefers-color-scheme: dark) {
     .jbErrorRow {
-        background: #1f1517;
+        background: rgba(220, 38, 38, 0.1);
         color: #f87171;
+        border-color: rgba(220, 38, 38, 0.2);
     }
 }
 
 .jbErrorRow i {
     font-size: 14px;
     flex-shrink: 0;
+    margin-top: 1px;
 }
 
-/* Empty */
 .jbEmpty {
     flex: 1;
     display: flex;
@@ -456,23 +485,24 @@
     gap: 14px;
     padding: 60px 24px;
     text-align: center;
+    min-height: 300px;
 }
 
 .jbEmptyIcon {
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     border-radius: 14px;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
+    font-size: 28px;
     color: var(--text-disabled);
 }
 
 .jbEmptyTitle {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     color: var(--text);
     margin: 0;
@@ -493,30 +523,54 @@
 }
 
 .jbSpin {
-    animation: spin 0.8s linear infinite;
+    animation: spin 0.7s linear infinite;
     display: inline-block;
 }
 
 @media (max-width: 768px) {
     .jbRoot {
         padding: 12px;
+        gap: 12px;
     }
 
     .jbDropZone {
         flex-direction: column;
         text-align: center;
+        padding: 24px 16px;
+        gap: 12px;
     }
 
     .jbSummaryBar {
         flex-direction: column;
         align-items: stretch;
+        gap: 10px;
     }
 
     .jbSummaryStats {
         justify-content: space-around;
     }
 
-    .jbResultInfo {
+    .jbHeaderRight {
         flex-wrap: wrap;
+    }
+
+    .jbResultInfo {
+        gap: 8px;
+    }
+
+    .jbResultNameWrap {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .jbSectionHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .jbSummaryStats {
+        gap: 10px;
     }
 }

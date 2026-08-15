@@ -35,15 +35,13 @@ export function ResultDetails({
     ? `${tenureValue} years (${tenureInMonths} months)`
     : `${tenureValue} months`;
 
-  const startDate = new Date().toISOString().split('T')[0];
-  const startDateFormatted = new Date(startDate).toLocaleDateString();
+  const startDateFormatted = new Date().toLocaleDateString();
 
-  const investedShare = calculation.totalInvested + calculation.returns > 0
-    ? (calculation.totalInvested / (calculation.totalInvested + calculation.returns)) * 100
-    : 0;
-  const returnsShare = calculation.totalInvested + calculation.returns > 0
-    ? (calculation.returns / (calculation.totalInvested + calculation.returns)) * 100
-    : 0;
+  const totalBase = calculation.totalInvested + calculation.returns;
+  const investedShare = totalBase > 0 ? (calculation.totalInvested / totalBase) * 100 : 0;
+  const returnsShare = totalBase > 0 ? (calculation.returns / totalBase) * 100 : 0;
+
+  const monthlySIPRequired = calculation.monthlySIPRequired ?? 0;
 
   return (
     <div className={styles.sipResultDetails}>
@@ -59,12 +57,14 @@ export function ResultDetails({
               {mode === 'regular' ? 'Regular SIP' : mode === 'step-up' ? 'Step-Up SIP' : 'Goal-Based SIP'}
             </span>
           </div>
-          <div className={styles.sipDetailItem}>
-            <span className={styles.sipDetailLabel}>Monthly Investment</span>
-            <span className={`${styles.sipDetailValue} ${styles.sipMono}`}>
-              {formatCurrency(monthlyInvestment)}
-            </span>
-          </div>
+          {mode !== 'goal-based' && (
+            <div className={styles.sipDetailItem}>
+              <span className={styles.sipDetailLabel}>Monthly Investment</span>
+              <span className={`${styles.sipDetailValue} ${styles.sipMono}`}>
+                {formatCurrency(monthlyInvestment)}
+              </span>
+            </div>
+          )}
           <div className={styles.sipDetailItem}>
             <span className={styles.sipDetailLabel}>Expected Return</span>
             <span className={styles.sipDetailValue}>
@@ -150,15 +150,7 @@ export function ResultDetails({
             <div className={styles.sipDetailItem}>
               <span className={styles.sipDetailLabel}>Required Monthly SIP</span>
               <span className={`${styles.sipDetailValue} ${styles.sipMono}`}>
-                {formatCurrency(calculation.monthlySIPRequired!)}
-              </span>
-            </div>
-          )}
-          {mode === 'goal-based' && (
-            <div className={styles.sipDetailItem}>
-              <span className={styles.sipDetailLabel}>Lump Sum Contribution</span>
-              <span className={styles.sipDetailValue}>
-                {lumpSum && lumpSum > 0 ? formatCurrency(lumpSum) : '₹0'}
+                {formatCurrency(monthlySIPRequired)}
               </span>
             </div>
           )}
@@ -201,22 +193,22 @@ export function ResultDetails({
 
       <div className={styles.sipDetailSection}>
         <h4 className={styles.sipDetailHeading}>
-          <i className="ti ti-list-ol" aria-hidden="true" />
+          <i className="ti ti-table" aria-hidden="true" />
           Year-wise Growth Schedule
         </h4>
         <p className={styles.sipScheduleNote}>
-          Showing yearly breakdown. Download PDF for detailed month-by-month schedule.
+          Showing yearly breakdown. Download PDF for a complete report.
         </p>
         <div className={styles.sipScheduleTable}>
           <table>
             <thead>
               <tr>
                 <th>Year</th>
-                <th>Invested That Year (₹)</th>
-                <th>Cumulative Invested (₹)</th>
-                <th>Interest Earned That Year (₹)</th>
-                <th>Cumulative Interest (₹)</th>
-                <th>Year-End Balance (₹)</th>
+                <th>Invested That Year</th>
+                <th>Cumulative Invested</th>
+                <th>Interest Earned That Year</th>
+                <th>Cumulative Interest</th>
+                <th>Year-End Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -259,15 +251,13 @@ export function ResultDetails({
             <div className={styles.sipGoalItem}>
               <span className={styles.sipGoalLabel}>Required Monthly SIP</span>
               <span className={styles.sipGoalValue}>
-                {formatCurrency(calculation.monthlySIPRequired!)}
+                {formatCurrency(monthlySIPRequired)}
               </span>
             </div>
             <div className={styles.sipGoalItem}>
               <span className={styles.sipGoalLabel}>Total Investment Needed</span>
               <span className={styles.sipGoalValue}>
-                {formatCurrency(
-                  calculation.monthlySIPRequired! * tenureInMonths + (lumpSum || 0)
-                )}
+                {formatCurrency(calculation.totalInvested)}
               </span>
             </div>
             <div className={styles.sipGoalItem}>

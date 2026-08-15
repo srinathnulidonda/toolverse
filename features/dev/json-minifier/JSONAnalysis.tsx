@@ -95,7 +95,7 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
 
     if (node.type === "array") {
       return (
-        <span className={styles.jvaSchemaArray}>
+        <span>
           <span className={`${styles.jvaSchemaType} ${styles.jvaSchemaTypeArray}`}>array[{node.count}]</span>
           {node.items && node.items.type !== "unknown" && (
             <> of {renderSchema(node.items, depth + 1)}</>
@@ -119,7 +119,6 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
   return (
     <>
       <div className={styles.jvaRoot}>
-        {/* Summary Cards */}
         <div className={styles.jvaCards}>
           <div className={styles.jvaCard}>
             <div
@@ -170,7 +169,6 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
           </div>
         </div>
 
-        {/* Size Analysis */}
         <div className={styles.jvaSection}>
           <div className={styles.jvaSectionHeader}>
             <i className="ti ti-chart-bar" />
@@ -203,7 +201,7 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
                     style={{ width: `${Math.abs(stats.savingsPercent)}%` }}
                   />
                 </div>
-                <span className={`${styles.jvaSizeVal} ${stats.savings > 0 ? "good" : "warn"}`}>
+                <span className={`${styles.jvaSizeVal} ${stats.savings > 0 ? styles.good : styles.warn}`}>
                   {formatBytes(Math.abs(stats.savings))} ({Math.abs(stats.savingsPercent)}%)
                 </span>
               </div>
@@ -238,7 +236,6 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
           </div>
         </div>
 
-        {/* Type Distribution */}
         {typeDistribution.length > 0 && (
           <div className={styles.jvaSection}>
             <div className={styles.jvaSectionHeader}>
@@ -269,7 +266,6 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
           </div>
         )}
 
-        {/* Features */}
         <div className={styles.jvaSection}>
           <div className={styles.jvaSectionHeader}>
             <i className="ti ti-info-circle" />
@@ -287,14 +283,14 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
                 icon: "ti-copy",
               },
             ].map((f) => (
-              <div key={f.label} className={`${styles.jvaFeature} ${f.active ? "on" : "off"}`}>
+              <div key={f.label} className={`${styles.jvaFeature} ${f.active ? styles.on : styles.off}`}>
                 <i className={`ti ${f.icon}`} />
                 <span>{f.label}</span>
                 <i className={`ti ${f.active ? "ti-check" : "ti-minus"} ${styles.jvaFeatureTick}`} />
               </div>
             ))}
             {analysis.deepestPath && (
-              <div className={`${styles.jvaFeature} on`}>
+              <div className={`${styles.jvaFeature} ${styles.on}`}>
                 <i className="ti ti-route" />
                 <span>
                   Deepest path: <code>{analysis.deepestPath}</code>
@@ -302,7 +298,7 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
               </div>
             )}
             {analysis.largestArray > 0 && (
-              <div className={`${styles.jvaFeature} on`}>
+              <div className={`${styles.jvaFeature} ${styles.on}`}>
                 <i className="ti ti-list" />
                 <span>
                   Largest array: <strong>{analysis.largestArray} items</strong>
@@ -312,7 +308,6 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
           </div>
         </div>
 
-        {/* Schema */}
         <div className={styles.jvaSection}>
           <div className={styles.jvaSectionHeader}>
             <i className="ti ti-hierarchy" />
@@ -321,7 +316,6 @@ export default function JSONAnalysis({ analysis, issues, stats }: JSONAnalysisPr
           <div className={styles.jvaSchemaWrap}>{renderSchema(analysis.schema)}</div>
         </div>
 
-        {/* Issues */}
         {issues.length > 0 && (
           <div className={styles.jvaSection}>
             <div className={styles.jvaSectionHeader}>

@@ -2,24 +2,18 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import useLocalStorage from "@/lib/useLocalStorage";
+import { useTasks } from "@/lib/useTasks";
 import {
   Task,
   Priority,
-  TASKS_STORAGE_KEY,
   PRIORITY_META,
   PRIORITY_ORDER,
   getPriority,
-  cleanTasks,
-  uid,
+  formatContext,
 } from "@/components/widgets/widgetTypes";
 
 export default function TodaysTasks() {
-  const [rawTasks, setRawTasks] = useLocalStorage<Task[]>(TASKS_STORAGE_KEY, []);
-  const tasks = cleanTasks(rawTasks);
-  const setTasks = (value: Task[] | ((prev: Task[]) => Task[])) => {
-    setRawTasks(value);
-  };
+  const { tasks, addTask, toggleTask, removeTask, clearCompleted } = useTasks();
 
   const [input, setInput] = useState("");
   const [priority, setPriority] = useState<Priority>("medium");
@@ -46,6 +40,15 @@ export default function TodaysTasks() {
   }, [mounted]);
 
   useEffect(() => {
+    if (!showPicker) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowPicker(false);
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [showPicker]);
+
+  useEffect(() => {
     if (!mounted) return;
 
     const handler = (e: KeyboardEvent) => {
@@ -66,39 +69,13 @@ export default function TodaysTasks() {
       return;
     }
 
-    const currentPage = typeof window !== "undefined" ? window.location.pathname : "";
-    let context = "";
-    if (currentPage.includes("/tools/")) {
-      const cleanPath = currentPage.replace(/\/$/, "");
-      context = cleanPath.split("/").pop() || "";
-    }
-
-    const newTask: Task = {
-      id: uid(),
-      text,
-      completed: false,
-      priority,
-      createdAt: Date.now(),
-      context,
-    };
-
-    setTasks((prevTasks) => [newTask, ...prevTasks]);
+    addTask(text, priority);
     setInput("");
     inputRef.current?.focus();
   }
 
-  const toggle = (id: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
-  };
-
-  const remove = (id: string) => {
-    setTasks((prevTasks) => prevTasks.filter((t) => t.id !== id));
-  };
-
-  const clearDone = () => {
-    setTasks((prevTasks) => prevTasks.filter((t) => !t.completed));
+  const handleClearDone = () => {
+    clearCompleted();
   };
 
   const total = tasks.length;
@@ -137,20 +114,13 @@ export default function TodaysTasks() {
           {showProgress && (
             <div className="td-progress">
               <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+                <circle cx="15" cy="15" r="11" fill="none" stroke="var(--border)" strokeWidth="2.5" />
                 <circle
                   cx="15"
                   cy="15"
                   r="11"
                   fill="none"
-                  stroke="var(--border)"
-                  strokeWidth="2.5"
-                />
-                <circle
-                  cx="15"
-                  cy="15"
-                  r="11"
-                  fill="none"
-                  stroke={allDone ? "#4CAF82" : "#145C3C"}
+                  stroke={allDone ? "#4CAF82" : "var(--brand)"}
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeDasharray={circumference}
@@ -185,6 +155,8 @@ export default function TodaysTasks() {
               className="td-priority-btn"
               onClick={() => setShowPicker((p) => !p)}
               aria-label={`Priority: ${priority}`}
+              aria-haspopup="listbox"
+              aria-expanded={showPicker}
             >
               <span className="td-dot" style={{ background: PRIORITY_META[priority].color }} />
             </button>
@@ -228,23 +200,11 @@ export default function TodaysTasks() {
             placeholder="Add a task…"
             maxLength={120}
             className="td-input"
+            aria-label="New task"
           />
 
-          <button
-            type="submit"
-            className={`td-submit${input.trim() ? " active" : ""}`}
-            aria-label="Add task"
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+          <button type="submit" className={`td-submit${input.trim() ? " active" : ""}`} aria-label="Add task">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M6 1v10M1 6h10" />
             </svg>
           </button>
@@ -255,17 +215,7 @@ export default function TodaysTasks() {
         <div className="td-tasks-scroll">
           {showEmptyState && (
             <div className="td-empty">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--border)"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--border)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <rect x="3" y="3" width="18" height="18" rx="3" />
                 <path d="M9 12l2 2 4-4" />
               </svg>
@@ -279,21 +229,8 @@ export default function TodaysTasks() {
           {showTasks && allDone && (
             <div className="td-all-done">
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <circle
-                  cx="7"
-                  cy="7"
-                  r="6.5"
-                  fill="var(--brand-light)"
-                  stroke="var(--brand)"
-                  strokeWidth="0.8"
-                />
-                <path
-                  d="M4.5 7l1.8 1.8L9.5 5"
-                  stroke="var(--brand)"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
+                <circle cx="7" cy="7" r="6.5" fill="var(--brand-light)" stroke="var(--brand)" strokeWidth="0.8" />
+                <path d="M4.5 7l1.8 1.8L9.5 5" stroke="var(--brand)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               All done — great work today
             </div>
@@ -310,7 +247,7 @@ export default function TodaysTasks() {
               return (
                 <div key={task.id}>
                   {isFirstCompleted && <div className="td-sep" />}
-                  <TaskRow task={task} onToggle={toggle} onRemove={remove} />
+                  <TaskRow task={task} onToggle={toggleTask} onRemove={removeTask} />
                 </div>
               );
             })}
@@ -321,18 +258,8 @@ export default function TodaysTasks() {
             <div className="td-divider" />
             <div className="td-footer">
               <span className="td-footer-label">{done} completed</span>
-              <button onClick={clearDone} className="td-clear-btn">
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
+              <button onClick={handleClearDone} className="td-clear-btn">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M2 4h8M4.5 4V2.5h3V4M10 4l-.8 6H2.8L2 4" />
                 </svg>
                 Clear done
@@ -361,11 +288,7 @@ export default function TodaysTasks() {
           padding: 14px 16px 10px;
           gap: 8px;
         }
-        .td-header-left {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-        }
+        .td-header-left { display: flex; flex-direction: column; gap: 2px; }
         .td-label {
           font-size: 11px;
           font-weight: 500;
@@ -374,51 +297,21 @@ export default function TodaysTasks() {
           letter-spacing: 0.08em;
           font-family: var(--font-sans);
         }
-        .td-date {
-          font-size: 11px;
-          color: var(--text-tertiary);
-          font-family: var(--font-sans);
-          min-height: 16px;
-        }
-        .td-progress {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          flex-shrink: 0;
-        }
-        .td-progress-label {
-          font-size: 12px;
-          color: var(--text-tertiary);
-          font-family: var(--font-sans);
-        }
-        .td-progress-label strong {
-          color: var(--text);
-          font-weight: 500;
-        }
+        .td-date { font-size: 11px; color: var(--text-tertiary); font-family: var(--font-sans); min-height: 16px; }
+        .td-progress { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .td-progress-label { font-size: 12px; color: var(--text-tertiary); font-family: var(--font-sans); }
+        .td-progress-label strong { color: var(--text); font-weight: 500; }
 
-        .td-divider {
-          height: 0.5px;
-          background: var(--border);
-          flex-shrink: 0;
-        }
+        .td-divider { height: 0.5px; background: var(--border); flex-shrink: 0; }
 
-        .td-add-row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 12px;
-          flex-shrink: 0;
-        }
+        .td-add-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; flex-shrink: 0; }
 
-        .td-picker-wrap {
-          position: relative;
-          flex-shrink: 0;
-        }
+        .td-picker-wrap { position: relative; flex-shrink: 0; }
 
         .td-priority-btn {
-          width: 24px;
-          height: 24px;
-          border-radius: 6px;
+          width: 30px;
+          height: 30px;
+          border-radius: 8px;
           border: 0.5px solid var(--border);
           background: none;
           display: flex;
@@ -430,13 +323,7 @@ export default function TodaysTasks() {
         }
         .td-priority-btn:hover { border-color: var(--text-tertiary); }
 
-        .td-dot {
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          display: block;
-          pointer-events: none;
-        }
+        .td-dot { width: 7px; height: 7px; border-radius: 50%; display: block; pointer-events: none; }
 
         .td-picker {
           position: absolute;
@@ -456,7 +343,8 @@ export default function TodaysTasks() {
           align-items: center;
           gap: 8px;
           width: 100%;
-          padding: 6px 8px;
+          padding: 8px;
+          min-height: 36px;
           border-radius: 5px;
           border: none;
           background: transparent;
@@ -467,7 +355,7 @@ export default function TodaysTasks() {
           transition: background 0.1s;
         }
         .td-picker-opt:hover { background: var(--bg-surface); color: var(--text); }
-        .td-picker-opt.sel   { background: var(--bg-surface); color: var(--text); font-weight: 500; }
+        .td-picker-opt.sel { background: var(--bg-surface); color: var(--text); font-weight: 500; }
 
         .td-input {
           flex: 1;
@@ -484,9 +372,9 @@ export default function TodaysTasks() {
         .td-input::placeholder { color: var(--text-tertiary); }
 
         .td-submit {
-          width: 24px;
-          height: 24px;
-          border-radius: 6px;
+          width: 30px;
+          height: 30px;
+          border-radius: 8px;
           border: none;
           cursor: default;
           display: flex;
@@ -498,11 +386,7 @@ export default function TodaysTasks() {
           color: var(--text-tertiary);
           transition: background 0.15s, color 0.15s;
         }
-        .td-submit.active {
-          background: #145C3C;
-          color: #fff;
-          cursor: pointer;
-        }
+        .td-submit.active { background: var(--brand); color: #fff; cursor: pointer; }
         .td-submit.active:hover { background: var(--brand-hover); }
 
         .td-tasks-scroll {
@@ -513,10 +397,7 @@ export default function TodaysTasks() {
           scrollbar-color: var(--border) transparent;
         }
         .td-tasks-scroll::-webkit-scrollbar { width: 4px; }
-        .td-tasks-scroll::-webkit-scrollbar-thumb {
-          background: var(--border);
-          border-radius: 2px;
-        }
+        .td-tasks-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
         .td-empty {
           display: flex;
@@ -552,23 +433,10 @@ export default function TodaysTasks() {
           font-weight: 500;
         }
 
-        .td-sep {
-          height: 0.5px;
-          background: var(--border);
-          margin: 2px 14px;
-        }
+        .td-sep { height: 0.5px; background: var(--border); margin: 2px 14px; }
 
-        .td-footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 8px 12px 10px;
-        }
-        .td-footer-label {
-          font-size: 11px;
-          color: var(--text-tertiary);
-          font-family: var(--font-sans);
-        }
+        .td-footer { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 10px; }
+        .td-footer-label { font-size: 11px; color: var(--text-tertiary); font-family: var(--font-sans); }
         .td-clear-btn {
           display: flex;
           align-items: center;
@@ -576,13 +444,107 @@ export default function TodaysTasks() {
           background: none;
           border: none;
           cursor: pointer;
+          min-height: 32px;
           font-size: 11px;
           font-family: var(--font-sans);
           color: var(--text-tertiary);
-          padding: 0;
+          padding: 0 4px;
           transition: color 0.12s;
         }
         .td-clear-btn:hover { color: var(--text); }
+
+        .td-row { display: flex; align-items: center; gap: 9px; padding: 8px 12px; min-height: 40px; transition: background 0.1s; }
+        .td-row:hover { background: var(--bg-surface); }
+        .td-row:hover .td-row-del { opacity: 1; }
+
+        .td-check {
+          width: 18px;
+          height: 18px;
+          border-radius: 5px;
+          border: 1.2px solid var(--border-faint);
+          background: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          padding: 0;
+          transition: all 0.15s;
+        }
+        .td-check.done { background: var(--brand); border-color: var(--brand); }
+        .td-check:hover:not(.done) { border-color: var(--text-tertiary); }
+
+        .td-row-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; opacity: 0.75; }
+
+        .td-row-text {
+          flex: 1;
+          font-size: 13px;
+          font-family: var(--font-sans);
+          color: var(--text);
+          line-height: 1.45;
+          cursor: pointer;
+          user-select: none;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          transition: color 0.15s;
+          letter-spacing: -0.1px;
+        }
+        .td-row-text.done { text-decoration: line-through; text-decoration-color: var(--text-disabled); color: var(--text-tertiary); }
+
+        .td-context-tag {
+          font-size: 10px;
+          color: var(--text-tertiary);
+          background: var(--bg-surface);
+          border: 0.5px solid var(--border);
+          padding: 2px 6px;
+          border-radius: 4px;
+          flex-shrink: 0;
+          max-width: 90px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .td-row-del {
+          width: 28px;
+          height: 28px;
+          border-radius: 6px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: var(--text-tertiary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          padding: 0;
+          opacity: 0;
+          font-size: 16px;
+          line-height: 1;
+          transition: opacity 0.12s, color 0.12s, background 0.12s;
+        }
+        .td-row-del:hover { color: #E05252; background: var(--error-bg); }
+        .td-row-del:focus-visible { opacity: 1; }
+
+        @media (hover: none) { .td-row-del { opacity: 1; } }
+
+        .td-priority-btn:focus-visible,
+        .td-picker-opt:focus-visible,
+        .td-check:focus-visible,
+        .td-row-del:focus-visible,
+        .td-clear-btn:focus-visible,
+        .td-submit:focus-visible {
+          outline: 2px solid var(--brand);
+          outline-offset: 2px;
+        }
+
+        @media (max-width: 480px) {
+          .td-header { padding: 12px 14px 8px; }
+          .td-add-row { padding: 8px 10px; }
+          .td-tasks-scroll { max-height: 220px; }
+        }
       `}</style>
     </>
   );
@@ -600,147 +562,40 @@ function TaskRow({
   const meta = PRIORITY_META[getPriority(task)];
 
   return (
-    <>
-      <div className="td-row">
-        <button
-          className={`td-check${task.completed ? " done" : ""}`}
-          onClick={() => onToggle(task.id)}
-          aria-label={task.completed ? "Mark incomplete" : "Mark complete"}
-        >
-          {task.completed && (
-            <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
-              <path
-                d="M1.5 4l2 2 3-3"
-                stroke="#fff"
-                strokeWidth="1.3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          )}
-        </button>
-
-        {!task.completed && (
-          <span className="td-row-dot" style={{ background: meta.color }} aria-hidden="true" />
+    <div className="td-row">
+      <button
+        className={`td-check${task.completed ? " done" : ""}`}
+        onClick={() => onToggle(task.id)}
+        role="checkbox"
+        aria-checked={task.completed}
+        aria-label={task.completed ? "Mark incomplete" : "Mark complete"}
+      >
+        {task.completed && (
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <path d="M1.5 4l2 2 3-3" stroke="#fff" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         )}
+      </button>
 
-        <span
-          className={`td-row-text${task.completed ? " done" : ""}`}
-          onClick={() => onToggle(task.id)}
-        >
-          {task.text}
+      {!task.completed && <span className="td-row-dot" style={{ background: meta.color }} aria-hidden="true" />}
+
+      <span
+        className={`td-row-text${task.completed ? " done" : ""}`}
+        onClick={() => onToggle(task.id)}
+        title={task.text}
+      >
+        {task.text}
+      </span>
+
+      {task.context && (
+        <span className="td-context-tag" title={formatContext(task.context)}>
+          {formatContext(task.context)}
         </span>
+      )}
 
-        {task.context && <span className="td-context-tag">{task.context}</span>}
-
-        <button className="td-row-del" onClick={() => onRemove(task.id)} aria-label="Remove task">
-          ×
-        </button>
-      </div>
-
-      <style>{`
-        .td-row {
-          display: flex;
-          align-items: center;
-          gap: 9px;
-          padding: 6px 12px;
-          cursor: default;
-          transition: background 0.1s;
-        }
-        .td-row:hover { background: var(--bg-surface); }
-        .td-row:hover .td-row-del { opacity: 1; }
-
-        .td-check {
-          width: 15px;
-          height: 15px;
-          border-radius: 4px;
-          border: 1.2px solid var(--border-faint);
-          background: none;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          padding: 0;
-          transition: all 0.15s;
-        }
-        .td-check.done {
-          background: #145C3C;
-          border-color: #145C3C;
-        }
-        .td-check:hover:not(.done) { border-color: var(--text-tertiary); }
-
-        .td-row-dot {
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          flex-shrink: 0;
-          opacity: 0.75;
-        }
-
-        .td-row-text {
-          flex: 1;
-          font-size: 13px;
-          font-family: var(--font-sans);
-          color: var(--text);
-          line-height: 1.45;
-          cursor: pointer;
-          user-select: none;
-          min-width: 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          transition: color 0.15s;
-          letter-spacing: -0.1px;
-        }
-        .td-row-text.done {
-          text-decoration: line-through;
-          text-decoration-color: var(--text-disabled);
-          color: var(--text-tertiary);
-        }
-
-        .td-context-tag {
-          font-size: 10px;
-          color: var(--text-tertiary);
-          background: var(--bg-surface);
-          border: 0.5px solid var(--border);
-          padding: 2px 6px;
-          border-radius: 4px;
-          flex-shrink: 0;
-        }
-
-        .td-row-del {
-          width: 18px;
-          height: 18px;
-          border-radius: 4px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          color: var(--text-tertiary);
-          font-size: 16px;
-          line-height: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          padding: 0;
-          opacity: 0;
-          transition: opacity 0.12s, color 0.12s, background 0.12s;
-        }
-        .td-row-del:hover {
-          color: #E05252;
-          background: var(--error-bg);
-        }
-        .td-row-del:focus-visible {
-          opacity: 1;
-        }
-
-        @media (hover: none) {
-          .td-row-del {
-            opacity: 1;
-          }
-        }
-      `}</style>
-    </>
+      <button className="td-row-del" onClick={() => onRemove(task.id)} aria-label="Remove task">
+        ×
+      </button>
+    </div>
   );
 }

@@ -1,5 +1,6 @@
+//lib/useHistoryStore.ts
 import { useState, useEffect, useMemo } from "react";
-import useLocalStorage from "@/lib/useLocalStorage";
+import { logger } from "@/lib/logger";
 
 export interface HistoryStoreOptions<T> {
   key: string;
@@ -29,7 +30,59 @@ export function useHistoryStore<T extends { id: string }>(options: HistoryStoreO
     deserialize = (raw) => raw, // default identity
   } = options;
 
-  const [rawItems, setRawItems] = useLocalStorage<any[]>(key, []);
+  const [rawItems, setRawItems] = useState<any[]>(() => {
+    // During SSR, we cannot access localStorage, so we return the initial value (empty array).
+    // On the client, we will update this in the useEffect below.
+    return [];
+  });
+
+  // Hydrate from localStorage on the client.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    try {
+      const item = window.localStorage.getItem(key);
+      const parsed = parseStored<any[]>(item, key);
+      if (parsed === null) {
+        // Corrupt data - use default
+        const defaultValue: any[] = []; // initial value for rawItems is empty array
+        const wrapped = JSON.stringify({ v: CURRENT_VERSION, data: defaultValue });
+        try {
+          window.localStorage.setItem(key, wrapped);
+        } catch (writeError) {
+          if (process.env.NODE_ENV !== "production") {
+            logger.warn(`Failed to write default value to localStorage:`, writeError);
+          }
+        }
+        setRawItems(defaultValue);
+        return;
+      }
+
+      if (parsed.isNew) {
+        // Brand new key - no warning needed
+        const defaultValue: any[] = []; // initial value for rawItems is empty array
+        const wrapped = JSON.stringify({ v: CURRENT_VERSION, data: defaultValue });
+        try {
+          window.localStorage.setItem(key, wrapped);
+        } catch (writeError) {
+          if (process.env.NODE_ENV !== "production") {
+            logger.warn(`Failed to write default value to localStorage:`, writeError);
+          }
+        }
+        setRawItems(defaultValue);
+        return;
+      }
+
+      // Migrate if needed
+      const migratedData = migrateData<any[]>(parsed, [], key); // default rawItems is empty array
+      setRawItems(migratedData);
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        logger.warn(`Error reading localStorage key "${key}":`, error);
+      }
+      setRawItems([]);
+    }
+  }, [key]);
 
   const history = useMemo(() => {
     const valid: T[] = [];
@@ -122,4 +175,61 @@ function JSON_equal(a: any, b: any): boolean {
   } catch {
     return a === b;
   }
+}
+
+// Helper for parsing stored data (copied from useLocalStorage.ts)
+const CURRENT_VERSION = 1;
+
+interface StorageChangeDetail {
+  key: string;
+  newValue: string | null;
+}
+
+function parseStored<T>(
+  item: string | null,
+  key: string
+): { data: T; version: number; isNew: boolean } | null {
+  // Distinguish between new key (null) vs empty string or corrupt data
+  const isNewKey = item === null;
+
+  if (isNewKey) {
+    return { data: null as any, version: -1, isNew: true };
+  }
+
+  try {
+    const parsed = JSON.parse(item);
+    if (typeof parsed === "object" && parsed !== null && "v" in parsed && "data" in parsed) {
+      const version = Number(parsed.v);
+      if (!Number.isNaN(version)) {
+        return { data: parsed.data as T, version: version, isNew: false };
+      }
+    }
+    // Legacy format: raw value (not wrapped)
+    return { data: parsed as T, version: 0, isNew: false };
+  } catch (error) {
+    if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+        logger.warn(`Failed to parse storage for key "${key}". Data may be corrupt.`, error);
+    }
+    return null;
+  }
+}
+
+function migrateData<T>(parsed: { data: T; version: number }, defaultValue: T, key: string): T {
+  if (parsed.version === CURRENT_VERSION) {
+    return parsed.data;
+  }
+
+  if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+    logger.warn(
+      `Migrating storage for key "${key}" from v${parsed.version} to v${CURRENT_VERSION}.`
+    );
+  }
+
+  // Handle legacy version (v0) - use the data as-is
+  if (parsed.version === 0) {
+    return parsed.data;
+  }
+
+  // Unknown version - use default
+  return defaultValue;
 }

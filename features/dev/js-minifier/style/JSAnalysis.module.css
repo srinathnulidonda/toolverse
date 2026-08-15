@@ -1,18 +1,19 @@
 /* features/dev/js-minifier/style/JSAnalysis.module.css */
 .jaRoot {
     flex: 1;
-    padding: 16px;
-    overflow: auto;
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 16px;
     background: var(--bg-surface);
+    min-height: 0;
 }
 
-/*  Cards  */
 .jaCards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
 }
 
@@ -24,21 +25,28 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.jaCard:hover {
+    border-color: var(--brand-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .jaCardIcon {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 19px;
     flex-shrink: 0;
 }
 
 .jaCardBody {
     min-width: 0;
+    flex: 1;
 }
 
 .jaCardLabel {
@@ -48,27 +56,29 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 3px;
+    white-space: nowrap;
 }
 
 .jaCardValue {
     font-size: 18px;
     font-weight: 700;
     color: var(--text);
+    line-height: 1.2;
 }
 
-/*  Section  */
 .jaSection {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     border-radius: 12px;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .jaSectionHeader {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 16px;
+    padding: 11px 16px;
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
     font-size: 11px;
@@ -87,9 +97,9 @@
     display: flex;
     gap: 6px;
     margin-left: auto;
+    flex-wrap: wrap;
 }
 
-/*  Size Chart  */
 .jaSizeChart {
     padding: 16px;
     display: flex;
@@ -108,7 +118,7 @@
     font-size: 11px;
     font-weight: 600;
     color: var(--text-tertiary);
-    width: 60px;
+    width: 62px;
     flex-shrink: 0;
 }
 
@@ -123,7 +133,7 @@
 .jaSizeBar {
     height: 100%;
     border-radius: 99px;
-    transition: width 0.4s ease;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .jaSizeBarOriginal {
@@ -143,7 +153,7 @@
     font-weight: 600;
     font-family: var(--font-mono);
     color: var(--text-secondary);
-    width: 90px;
+    width: 100px;
     text-align: right;
     flex-shrink: 0;
 }
@@ -158,10 +168,9 @@
     }
 }
 
-/*  Meta Grid  */
 .jaMetaGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--border);
 }
@@ -171,7 +180,7 @@
     padding: 12px 16px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
 }
 
 .jaMetaLabel {
@@ -183,16 +192,15 @@
 }
 
 .jaMetaValue {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--text);
     font-family: var(--font-mono);
 }
 
-/*  Features  */
 .jaFeatures {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--border);
 }
@@ -205,6 +213,11 @@
     gap: 8px;
     font-size: 12px;
     font-weight: 500;
+    transition: background 0.12s;
+}
+
+.jaFeature:hover {
+    background: var(--bg-surface);
 }
 
 .jaFeature i:first-child {
@@ -214,6 +227,7 @@
 
 .jaFeature span {
     flex: 1;
+    min-width: 0;
 }
 
 .jaFeatureOn {
@@ -235,14 +249,15 @@
 .jaFeatureCheck {
     color: #22c55e !important;
     font-size: 13px !important;
+    flex-shrink: 0;
 }
 
 .jaFeatureOffIcon {
     color: var(--border) !important;
     font-size: 13px !important;
+    flex-shrink: 0;
 }
 
-/*  Issues  */
 .jaIssueBadge {
     font-size: 10px;
     font-weight: 600;
@@ -250,6 +265,7 @@
     border-radius: 99px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
 .jaIssueBadgeError {
@@ -269,17 +285,17 @@
 
 @media (prefers-color-scheme: dark) {
     .jaIssueBadgeError {
-        background: #1f1517;
+        background: rgba(220, 38, 38, 0.15);
         color: #f87171;
     }
 
     .jaIssueBadgeWarning {
-        background: #451a03;
+        background: rgba(217, 119, 6, 0.15);
         color: #fbbf24;
     }
 
     .jaIssueBadgeInfo {
-        background: #0a1628;
+        background: rgba(37, 99, 235, 0.15);
         color: #93c5fd;
     }
 }
@@ -297,11 +313,16 @@
     align-items: flex-start;
     gap: 12px;
     padding: 12px 16px;
+    transition: background 0.12s;
+}
+
+.jaIssue:hover {
+    background: var(--bg-surface);
 }
 
 .jaIssueIcon {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -328,17 +349,17 @@
 
 @media (prefers-color-scheme: dark) {
     .jaIssueError .jaIssueIcon {
-        background: #1f1517;
+        background: rgba(220, 38, 38, 0.15);
         color: #f87171;
     }
 
     .jaIssueWarning .jaIssueIcon {
-        background: #451a03;
+        background: rgba(217, 119, 6, 0.15);
         color: #fbbf24;
     }
 
     .jaIssueInfo .jaIssueIcon {
-        background: #0a1628;
+        background: rgba(37, 99, 235, 0.15);
         color: #93c5fd;
     }
 }
@@ -352,7 +373,7 @@
     font-size: 13px;
     color: var(--text);
     line-height: 1.5;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 }
 
 .jaIssueMeta {
@@ -361,6 +382,7 @@
     gap: 8px;
     font-size: 11px;
     color: var(--text-tertiary);
+    flex-wrap: wrap;
 }
 
 .jaIssueMeta code {
@@ -368,9 +390,10 @@
     padding: 1px 5px;
     background: var(--bg-surface);
     border-radius: 4px;
+    border: 0.5px solid var(--border);
+    font-family: var(--font-mono);
 }
 
-/*  Clean State  */
 .jaClean {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
@@ -381,6 +404,7 @@
     align-items: center;
     text-align: center;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .jaCleanIcon {
@@ -392,12 +416,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
+    font-size: 24px;
 }
 
 @media (prefers-color-scheme: dark) {
     .jaCleanIcon {
-        background: #022c22;
+        background: rgba(34, 197, 94, 0.15);
         color: #4ade80;
     }
 }
@@ -415,11 +439,64 @@
     margin: 0;
 }
 
+@media (max-width: 1024px) {
+    .jaCards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaFeatures {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaMetaGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .jaRoot {
         padding: 12px;
+        gap: 12px;
     }
 
+    .jaCards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .jaCard {
+        padding: 12px;
+    }
+
+    .jaCardIcon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .jaCardValue {
+        font-size: 16px;
+    }
+
+    .jaFeatures {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaMetaGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaSizeValue {
+        width: 80px;
+        font-size: 10px;
+    }
+
+    .jaIssueCounts {
+        gap: 4px;
+    }
+}
+
+@media (max-width: 480px) {
     .jaCards {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -430,5 +507,10 @@
 
     .jaMetaGrid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaSizeLabel {
+        width: 52px;
+        font-size: 10px;
     }
 }

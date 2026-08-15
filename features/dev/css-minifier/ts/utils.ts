@@ -1,5 +1,4 @@
 // features/dev/css-minifier/ts/utils.ts
-import { formatBytes } from "@/utils";
 
 export interface MinifyOptions {
   removeComments: boolean;
@@ -8,18 +7,37 @@ export interface MinifyOptions {
   preserveImportant: boolean;
 }
 
+export interface MinifyStats {
+  original: number;
+  minified: number;
+  savings: number;
+  savingsPercent: number;
+  rules: number;
+  mediaQueries: number;
+  keyframes: number;
+}
+
 export interface MinifyResult {
   output: string;
-  stats: {
-    original: number;
-    minified: number;
-    savings: number;
-    savingsPercent: number;
-    rules: number;
-    mediaQueries: number;
-    keyframes: number;
-  };
+  stats: MinifyStats;
 }
+
+export interface CSSHistoryEntry {
+  id: string;
+  input: string;
+  output: string;
+  timestamp: number;
+  stats?: MinifyStats;
+}
+
+export const DEFAULT_MINIFY_OPTIONS: MinifyOptions = {
+  removeComments: true,
+  removeWhitespace: true,
+  removeLastSemicolon: true,
+  preserveImportant: true,
+};
+
+export const MAX_STORED_TEXT_LENGTH = 20000;
 
 export const SAMPLE_CSS = `.container {
   max-width: 1200px;
@@ -50,31 +68,19 @@ export const SAMPLE_CSS = `.container {
   }
 }`;
 
-export function minifyCSS(
-  css: string,
-  options: MinifyOptions = {
-    removeComments: true,
-    removeWhitespace: true,
-    removeLastSemicolon: true,
-    preserveImportant: true,
-  }
-): string {
+export function minifyCSS(css: string, options: MinifyOptions = DEFAULT_MINIFY_OPTIONS): string {
   let result = css;
 
-  // Remove comments (but preserve /*! important comments */ if option is set)
   if (options.removeComments) {
     if (options.preserveImportant) {
-      // Temporarily replace important comments
       const importantComments: string[] = [];
       result = result.replace(/\/\*![\s\S]*?\*\//g, (match) => {
         importantComments.push(match);
         return `___IMPORTANT_COMMENT_${importantComments.length - 1}___`;
       });
 
-      // Remove regular comments
       result = result.replace(/\/\*[\s\S]*?\*\//g, "");
 
-      // Restore important comments
       importantComments.forEach((comment, index) => {
         result = result.replace(`___IMPORTANT_COMMENT_${index}___`, comment);
       });
@@ -84,13 +90,8 @@ export function minifyCSS(
   }
 
   if (options.removeWhitespace) {
-    // Collapse whitespace
     result = result.replace(/\s+/g, " ");
-
-    // Remove space around delimiters
     result = result.replace(/\s*([{}:;,>+~])\s*/g, "$1");
-
-    // Remove space after opening and before closing brackets
     result = result.replace(/\s*\(\s*/g, "(");
     result = result.replace(/\s*\)\s*/g, ")");
     result = result.replace(/\s*\[\s*/g, "[");
@@ -98,42 +99,32 @@ export function minifyCSS(
   }
 
   if (options.removeLastSemicolon) {
-    // Remove last semicolon before closing brace
     result = result.replace(/;}/g, "}");
   }
 
-  // Remove leading/trailing whitespace
-  result = result.trim();
-
-  return result;
+  return result.trim();
 }
 
-export function analyzeCSS(css: string): MinifyResult["stats"] {
-  const original = new Blob([css]).size;
-  const minified = new Blob([minifyCSS(css)]).size;
-  const savings = original - minified;
+export function processCSS(input: string, options: MinifyOptions = DEFAULT_MINIFY_OPTIONS): MinifyResult {
+  const output = minifyCSS(input, options);
+
+  const original = new Blob([input]).size;
+  const minified = new Blob([output]).size;
+  const savings = Math.max(0, original - minified);
   const savingsPercent = original > 0 ? Math.round((savings / original) * 100) : 0;
 
-  const rules = (css.match(/\{/g) || []).length;
-  const mediaQueries = (css.match(/@media/g) || []).length;
-  const keyframes = (css.match(/@keyframes/g) || []).length;
+  const rules = (input.match(/\{/g) || []).length;
+  const mediaQueries = (input.match(/@media/g) || []).length;
+  const keyframes = (input.match(/@keyframes/g) || []).length;
 
   return {
-    original,
-    minified,
-    savings,
-    savingsPercent,
-    rules,
-    mediaQueries,
-    keyframes,
+    output,
+    stats: { original, minified, savings, savingsPercent, rules, mediaQueries, keyframes },
   };
 }
 
-export function processCSS(input: string, options?: MinifyOptions): MinifyResult {
-  const output = minifyCSS(input, options);
-  const stats = analyzeCSS(input);
-
-  return { output, stats };
+export function analyzeCSS(css: string, options: MinifyOptions = DEFAULT_MINIFY_OPTIONS): MinifyStats {
+  return processCSS(css, options).stats;
 }
 
 export function validateCSS(css: string): { valid: boolean; error?: string } {
@@ -141,7 +132,6 @@ export function validateCSS(css: string): { valid: boolean; error?: string } {
     return { valid: false, error: "Empty input" };
   }
 
-  // Basic validation: check for balanced braces
   const openBraces = (css.match(/\{/g) || []).length;
   const closeBraces = (css.match(/\}/g) || []).length;
 
@@ -153,4 +143,15 @@ export function validateCSS(css: string): { valid: boolean; error?: string } {
   }
 
   return { valid: true };
+}
+
+export function createId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+}
+
+export function capText(text: string, max: number = MAX_STORED_TEXT_LENGTH): string {
+  return text.length > max ? text.slice(0, max) : text;
 }

@@ -3,7 +3,7 @@
 
 import { logger } from "@/lib/logger";
 import { formatCurrency } from "@/lib/utils";
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import type { Tool } from "@/lib/tools";
 import {
   calculateSIP,
@@ -38,6 +38,9 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
   const [viewTab, setViewTab] = useState<ViewTab>("summary");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
+  const sampleMenuRef = useRef<HTMLDivElement>(null);
+  const outputPanelRef = useRef<HTMLDivElement>(null);
+
   const { saveToHistory } = useSIPStore();
 
   const parsed = useMemo(() => {
@@ -64,29 +67,50 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
     goalAmount,
   ]);
 
+  const hasAnyInput = useMemo(() => {
+    return Boolean(
+      monthlyInvestment ||
+      expectedReturn ||
+      tenureValue ||
+      lumpSum ||
+      inflationRate ||
+      stepUpPercentage ||
+      goalAmount
+    );
+  }, [monthlyInvestment, expectedReturn, tenureValue, lumpSum, inflationRate, stepUpPercentage, goalAmount]);
+
   const isValidForm = useMemo(() => {
+    const returnValue = parseFloat(expectedReturn);
+    const tenureNum = parseInt(tenureValue, 10);
+
+    const monthlyValid =
+      mode === "regular" || mode === "step-up"
+        ? monthlyInvestment.trim() !== "" && parseFloat(monthlyInvestment) > 0
+        : true;
+
+    const goalValid =
+      mode === "goal-based" ? goalAmount.trim() !== "" && parseFloat(goalAmount) > 0 : true;
+
+    const stepUpValid =
+      mode === "step-up"
+        ? stepUpPercentage.trim() !== "" &&
+          parseFloat(stepUpPercentage) >= 0 &&
+          parseFloat(stepUpPercentage) <= 50
+        : true;
+
     return (
-      ((mode === "regular" || mode === "step-up") ? monthlyInvestment.trim() !== "" : true) &&
+      monthlyValid &&
+      goalValid &&
+      stepUpValid &&
       expectedReturn !== "" &&
-      parseFloat(expectedReturn) >= 0.1 &&
-      parseFloat(expectedReturn) <= 30 &&
+      returnValue >= 0.1 &&
+      returnValue <= 30 &&
       tenureValue.trim() !== "" &&
-      parseInt(tenureValue, 10) > 0 &&
-      (mode === "goal-based" ? goalAmount.trim() !== "" : true) &&
-      (mode === "step-up" ? stepUpPercentage.trim() !== "" : true) &&
+      tenureNum > 0 &&
       (lumpSum === "" || parseFloat(lumpSum) >= 0) &&
       (inflationRate === "" || (parseFloat(inflationRate) >= 0 && parseFloat(inflationRate) <= 20))
     );
-  }, [
-    mode,
-    monthlyInvestment,
-    expectedReturn,
-    tenureValue,
-    lumpSum,
-    inflationRate,
-    stepUpPercentage,
-    goalAmount,
-  ]);
+  }, [mode, monthlyInvestment, expectedReturn, tenureValue, lumpSum, inflationRate, stepUpPercentage, goalAmount]);
 
   const calculation = useMemo((): SIPCalculationResult | null => {
     if (!isValidForm) return null;
@@ -97,6 +121,28 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
       return null;
     }
   }, [isValidForm, parsed]);
+
+  useEffect(() => {
+    if (!showSampleMenu) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sampleMenuRef.current && !sampleMenuRef.current.contains(event.target as Node)) {
+        setShowSampleMenu(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setShowSampleMenu(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showSampleMenu]);
 
   const handleCopy = useCallback(async (text: string, key: string) => {
     try {
@@ -111,8 +157,11 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
   const handleSaveCalculation = useCallback(() => {
     if (!calculation) return;
     try {
+      const titleAmount = mode === "goal-based" ? calculation.monthlySIPRequired ?? 0 : parsed.monthlyInvestment;
+      const modeLabel = mode === "goal-based" ? "Goal-Based SIP" : mode === "step-up" ? "Step-Up SIP" : "Regular SIP";
+
       saveToHistory({
-        title: `${mode === "goal-based" ? "Goal-Based SIP" : mode === "step-up" ? "Step-Up SIP" : "Regular SIP"} - ₹${formatCurrency(parsed.monthlyInvestment)}/month`,
+        title: `${modeLabel} - ${formatCurrency(titleAmount)}/month`,
         input: {
           mode,
           monthlyInvestment: parsed.monthlyInvestment,
@@ -189,10 +238,7 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
     if (window.innerWidth <= 768) {
       setMobilePanel("output");
     } else {
-      const outputPanel = document.querySelector(`.${styles.sipPanelOutput}`);
-      if (outputPanel) {
-        outputPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      outputPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, []);
 
@@ -211,7 +257,7 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
             <span>Settings</span>
           </button>
 
-          <div className={styles.sipSampleDropdown}>
+          <div className={styles.sipSampleDropdown} ref={sampleMenuRef}>
             <button
               type="button"
               className={`${styles.sipBtn} ${styles.sipBtnIcon}`}
@@ -254,7 +300,7 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
             type="button"
             className={`${styles.sipBtn} ${styles.sipBtnGhost}`}
             onClick={handleReset}
-            disabled={!monthlyInvestment && !expectedReturn && !tenureValue}
+            disabled={!hasAnyInput}
             aria-label="Reset form"
           >
             <i className="ti ti-refresh" aria-hidden="true" />
@@ -303,7 +349,7 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
           onClick={() => setMobilePanel("input")}
         >
           Input
-          {(!isValidForm && monthlyInvestment) && (
+          {!isValidForm && hasAnyInput && (
             <span className={`${styles.sipMobileBadge} ${styles.error}`}>
               <i className="ti ti-alert-circle" aria-hidden="true" />
             </span>
@@ -363,7 +409,6 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
               onInflationRateChange={setInflationRate}
               onStepUpPercentageChange={setStepUpPercentage}
               onGoalAmountChange={setGoalAmount}
-              isValidForm={isValidForm}
               hasCalculation={!!calculation}
               onViewResults={handleViewResults}
             />
@@ -373,7 +418,8 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
         <div className={styles.sipDivider} aria-hidden="true" />
 
         <div
-          className={`${styles.sipPanel} ${styles.sipPanelOutput} ${mobilePanel === "output" ? styles.mobileVisible : styles.mobileHidden}`}
+          ref={outputPanelRef}
+          className={`${styles.sipPanel} ${mobilePanel === "output" ? styles.mobileVisible : styles.mobileHidden}`}
         >
           <div className={styles.sipPanelHeader}>
             <div className={styles.sipPanelTitle}>
@@ -411,7 +457,7 @@ export default function SIPCalculatorWorkspace(_: { tool: Tool }) {
             {!calculation && (
               <div className={styles.sipEmpty}>
                 <div className={styles.sipEmptyIcon}>
-                  <i className="ti ti-moneybag" aria-hidden="true" />
+                  <i className="ti ti-calculator" aria-hidden="true" />
                 </div>
                 <h3 className={styles.sipEmptyTitle}>No Calculation Yet</h3>
                 <p className={styles.sipEmptyText}>

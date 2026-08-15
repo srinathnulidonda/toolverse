@@ -6,6 +6,7 @@
     gap: 16px;
     padding: 16px;
     overflow: auto;
+    background: var(--bg-surface);
 }
 
 .tcpControls {
@@ -13,20 +14,22 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 10px 14px;
-    background: var(--bg-surface);
+    padding: 12px 16px;
+    background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--tc-radius-lg, 12px);
+    border-radius: var(--tc-radius-lg);
     flex-wrap: wrap;
 }
 
 .tcpControlsTitle {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .tcpControlsTitle i {
@@ -42,21 +45,21 @@
 .tcpBtn {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    height: 28px;
-    padding: 0 11px;
-    border-radius: var(--tc-radius-md, 8px);
+    gap: 6px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--tc-radius-md);
     border: 0.5px solid var(--border);
     background: var(--bg-card);
     color: var(--text-secondary);
-    font-size: 11px;
+    font-size: 11.5px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.12s;
 }
 
 .tcpBtn i {
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .tcpBtn:hover:not(:disabled) {
@@ -69,7 +72,6 @@
     cursor: not-allowed;
 }
 
-/*  Result  */
 .tcpResult {
     display: flex;
     flex-direction: column;
@@ -77,7 +79,7 @@
     padding: 20px;
     background: var(--brand-light);
     border: 0.5px solid var(--brand-border);
-    border-radius: var(--tc-radius-lg, 12px);
+    border-radius: var(--tc-radius-lg);
 }
 
 .tcpResult.reversed {
@@ -92,6 +94,12 @@
     }
 }
 
+.tcpResultTop {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
 .tcpResultIcon {
     width: 48px;
     height: 48px;
@@ -102,6 +110,7 @@
     align-items: center;
     justify-content: center;
     font-size: 22px;
+    flex-shrink: 0;
 }
 
 .tcpResult.reversed .tcpResultIcon {
@@ -112,6 +121,7 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
 }
 
 .tcpResultLabel {
@@ -162,7 +172,7 @@
     gap: 2px;
     padding: 8px 14px;
     background: var(--bg-card);
-    border-radius: var(--tc-radius-md, 8px);
+    border-radius: var(--tc-radius-md);
     min-width: 60px;
 }
 
@@ -170,6 +180,7 @@
     font-size: 18px;
     font-weight: 700;
     color: var(--text);
+    font-family: var(--font-mono);
 }
 
 .tcpBreakdownLabel {
@@ -185,6 +196,7 @@
     gap: 8px;
     padding-top: 10px;
     border-top: 0.5px solid var(--brand-border);
+    flex-wrap: wrap;
 }
 
 .tcpTotalLabel {
@@ -201,7 +213,6 @@
     border-radius: 4px;
 }
 
-/*  Inputs  */
 .tcpInputs {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -215,7 +226,7 @@
     padding: 14px;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--tc-radius-lg, 12px);
+    border-radius: var(--tc-radius-lg);
 }
 
 .tcpInputHeader {
@@ -265,7 +276,7 @@
     padding: 0 12px;
     background: var(--bg-surface);
     border: 0.5px solid var(--border);
-    border-radius: var(--tc-radius-md, 8px);
+    border-radius: var(--tc-radius-md);
     font-family: var(--font-mono);
     font-size: 13px;
     color: var(--text);
@@ -287,7 +298,7 @@
     gap: 6px;
     padding: 8px 10px;
     background: var(--brand-light);
-    border-radius: var(--tc-radius-md, 8px);
+    border-radius: var(--tc-radius-md);
     font-size: 11px;
     color: var(--brand-text);
 }
@@ -302,14 +313,15 @@
     align-items: center;
     gap: 6px;
     padding: 8px 10px;
-    background: var(--error-bg);
-    border-radius: var(--tc-radius-md, 8px);
+    background: #fef2f2;
+    border-radius: var(--tc-radius-md);
     font-size: 11px;
-    color: #b91c1c;
+    color: #dc2626;
 }
 
 @media (prefers-color-scheme: dark) {
     .tcpInputError {
+        background: #1f1517;
         color: #f87171;
     }
 }
@@ -327,48 +339,45 @@
     font-size: 20px;
 }
 
-/*  Empty State  */
 .tcpEmpty {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     padding: 60px 24px;
     text-align: center;
 }
 
 .tcpEmptyIcon {
-    width: 52px;
-    height: 52px;
-    border-radius: 13px;
-    background: var(--bg-surface);
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
     border: 0.5px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 26px;
     color: var(--text-disabled);
-    margin-bottom: 6px;
 }
 
 .tcpEmptyTitle {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     color: var(--text);
     margin: 0;
 }
 
 .tcpEmptyDesc {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-tertiary);
     margin: 0;
-    max-width: 340px;
+    max-width: 360px;
     line-height: 1.6;
 }
 
-/*  Responsive  */
 @media (max-width: 900px) {
     .tcpInputs {
         grid-template-columns: 1fr;
@@ -391,7 +400,11 @@
     }
 
     .tcpControls {
-        padding: 8px 12px;
+        padding: 10px 12px;
+    }
+
+    .tcpResultTop {
+        flex-wrap: wrap;
     }
 
     .tcpResult {
@@ -419,7 +432,8 @@
 @media (prefers-reduced-motion: reduce) {
 
     .tcpBtn,
-    .tcpNowBtn {
+    .tcpNowBtn,
+    .tcpInput {
         transition: none;
     }
 }

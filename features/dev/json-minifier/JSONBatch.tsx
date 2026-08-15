@@ -59,8 +59,11 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
     setIsProcessing(true);
     setProgress(0);
 
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
+    const finalItems: BatchItem[] = items.map((item) => ({ ...item }));
+
+    for (let i = 0; i < finalItems.length; i++) {
+      const item = finalItems[i];
+      finalItems[i] = { ...item, status: "processing" };
       setItems((prev) =>
         prev.map((p) => (p.id === item.id ? { ...p, status: "processing" as const } : p))
       );
@@ -68,28 +71,31 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
 
       try {
         const result = processJSON(item.content, options);
+        finalItems[i] = { ...finalItems[i], status: "completed", result };
         setItems((prev) =>
           prev.map((p) => (p.id === item.id ? { ...p, status: "completed" as const, result } : p))
         );
       } catch (err) {
+        const message = err instanceof Error ? err.message : "Parse error";
+        finalItems[i] = { ...finalItems[i], status: "error", error: message };
         setItems((prev) =>
           prev.map((p) =>
             p.id === item.id
               ? {
                 ...p,
                 status: "error" as const,
-                error: err instanceof Error ? err.message : "Parse error",
+                error: message,
               }
               : p
           )
         );
       }
 
-      setProgress(Math.round(((i + 1) / items.length) * 100));
+      setProgress(Math.round(((i + 1) / finalItems.length) * 100));
     }
 
     setIsProcessing(false);
-    onComplete?.(items.filter((i) => i.status === "completed"));
+    onComplete?.(finalItems.filter((i) => i.status === "completed"));
   }, [items, options, isProcessing, onComplete]);
 
   const downloadItem = useCallback(
@@ -112,9 +118,13 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
 
   const copyItem = useCallback(async (item: BatchItem) => {
     if (!item.result) return;
-    await navigator.clipboard.writeText(item.result.output);
-    setCopiedId(item.id);
-    setTimeout(() => setCopiedId(""), 1500);
+    try {
+      await navigator.clipboard.writeText(item.result.output);
+      setCopiedId(item.id);
+      setTimeout(() => setCopiedId(""), 1500);
+    } catch {
+      logger.error("Failed to copy to clipboard");
+    }
   }, []);
 
   const removeItem = useCallback((id: string) => {
@@ -128,7 +138,6 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
   return (
     <>
       <div className={styles.jbRoot}>
-        {/* Upload */}
         <div className={styles.jbSection}>
           <div className={styles.jbSectionHeader}>
             <div className={styles.jbSectionTitle}>
@@ -202,7 +211,6 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
           )}
         </div>
 
-        {/* Progress */}
         {isProcessing && (
           <div className={styles.jbProgressWrap}>
             <div className={styles.jbProgressTop}>
@@ -217,7 +225,6 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
           </div>
         )}
 
-        {/* Results */}
         {items.length > 0 && (
           <div className={styles.jbSection}>
             <div className={styles.jbSectionHeader}>
@@ -264,7 +271,7 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
                     </div>
                     {item.result && (
                       <span
-                        className={`${styles.jbResultSavings} ${item.result.stats.savings > 0 ? "positive" : ""}`}
+                        className={`${styles.jbResultSavings} ${item.result.stats.savings > 0 ? styles.positive : ""}`}
                       >
                         {item.result.stats.savings > 0
                           ? `↓ ${formatBytes(item.result.stats.savings)} (${item.result.stats.savingsPercent}%)`
@@ -294,7 +301,7 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
                       <>
                         <button
                           type="button"
-                          className={`${styles.jbIconBtn} ${copiedId === item.id ? "copied" : ""}`}
+                          className={`${styles.jbIconBtn} ${copiedId === item.id ? styles.copied : ""}`}
                           onClick={() => copyItem(item)}
                           title="Copy"
                         >
@@ -333,7 +340,6 @@ export default function JSONBatch({ options, onComplete }: JSONBatchProps) {
           </div>
         )}
 
-        {/* Empty */}
         {items.length === 0 && (
           <div className={styles.jbEmpty}>
             <div className={styles.jbEmptyIcon}>

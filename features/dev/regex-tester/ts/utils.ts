@@ -1,17 +1,15 @@
 // features/dev/regex-tester/ts/utils.ts
-import { formatBytes } from "@/utils";
-
 export type Flag = "g" | "i" | "m" | "s" | "u" | "y";
 export type ViewTab = "test" | "replace" | "library" | "explainer" | "history";
 export type CodeLanguage = "javascript" | "python" | "java" | "csharp" | "php" | "ruby" | "go";
 
 export interface RegexFlags {
-  g: boolean; // global
-  i: boolean; // case insensitive
-  m: boolean; // multiline
-  s: boolean; // dotAll
-  u: boolean; // unicode
-  y: boolean; // sticky
+  g: boolean;
+  i: boolean;
+  m: boolean;
+  s: boolean;
+  u: boolean;
+  y: boolean;
 }
 
 export interface Match {
@@ -35,6 +33,7 @@ export interface ReplaceResult {
   replaced: string;
   replacementCount: number;
   matches: Match[];
+  error?: string;
 }
 
 export interface PatternAnalysis {
@@ -58,6 +57,7 @@ export interface RegexPattern {
   createdAt: number;
   updatedAt: number;
   favorite?: boolean;
+  isBuiltIn?: boolean;
 }
 
 export interface TestCase {
@@ -90,6 +90,21 @@ export const FLAG_DEFINITIONS = [
   { id: "y" as Flag, label: "Sticky", desc: "Match from lastIndex only", icon: "ti-pin" },
 ];
 
+export function normalizeFlags(flags?: Partial<RegexFlags> | null): RegexFlags {
+  return {
+    g: !!flags?.g,
+    i: !!flags?.i,
+    m: !!flags?.m,
+    s: !!flags?.s,
+    u: !!flags?.u,
+    y: !!flags?.y,
+  };
+}
+
+export function generateId(): string {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
 export const SAMPLE_PATTERNS: RegexPattern[] = [
   {
     id: "email",
@@ -105,6 +120,7 @@ export const SAMPLE_PATTERNS: RegexPattern[] = [
     ],
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isBuiltIn: true,
   },
   {
     id: "url",
@@ -117,6 +133,7 @@ export const SAMPLE_PATTERNS: RegexPattern[] = [
     tags: ["url", "link", "http", "https"],
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isBuiltIn: true,
   },
   {
     id: "phone-us",
@@ -128,6 +145,7 @@ export const SAMPLE_PATTERNS: RegexPattern[] = [
     tags: ["phone", "us", "contact", "telephone"],
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isBuiltIn: true,
   },
   {
     id: "hex-color",
@@ -139,6 +157,7 @@ export const SAMPLE_PATTERNS: RegexPattern[] = [
     tags: ["color", "hex", "css", "design"],
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isBuiltIn: true,
   },
   {
     id: "ipv4",
@@ -151,6 +170,7 @@ export const SAMPLE_PATTERNS: RegexPattern[] = [
     tags: ["ip", "network", "address"],
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isBuiltIn: true,
   },
   {
     id: "date-iso",
@@ -162,6 +182,7 @@ export const SAMPLE_PATTERNS: RegexPattern[] = [
     tags: ["date", "iso", "datetime"],
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isBuiltIn: true,
   },
   {
     id: "credit-card",
@@ -173,6 +194,7 @@ export const SAMPLE_PATTERNS: RegexPattern[] = [
     tags: ["credit", "card", "payment", "financial"],
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isBuiltIn: true,
   },
   {
     id: "html-tag",
@@ -184,10 +206,10 @@ export const SAMPLE_PATTERNS: RegexPattern[] = [
     tags: ["html", "tag", "markup"],
     createdAt: Date.now(),
     updatedAt: Date.now(),
+    isBuiltIn: true,
   },
 ];
 
-// Pattern execution and analysis
 export function executePattern(
   pattern: string,
   flags: RegexFlags,
@@ -195,7 +217,6 @@ export function executePattern(
 ): { matches: Match[]; error?: string; performance: number } {
   const startTime = performance.now();
 
-  // Input length limits to prevent ReDoS
   const MAX_INPUT_LENGTH = 50000;
   const MAX_PATTERN_LENGTH = 200;
   const MAX_ITERATIONS = 10000;
@@ -223,7 +244,6 @@ export function executePattern(
 
     const regex = new RegExp(pattern, flagString);
     const matches: Match[] = [];
-    const lines = testString.split("\n");
 
     if (flags.g) {
       let match;
@@ -243,7 +263,6 @@ export function executePattern(
           columnNumber: lineInfo.column,
         });
 
-        // Prevent infinite loops
         if (match.index === regex.lastIndex) {
           regex.lastIndex++;
         }
@@ -294,6 +313,18 @@ export function performReplace(
   testString: string,
   replacement: string
 ): ReplaceResult {
+  const { matches, error } = executePattern(pattern, flags, testString);
+
+  if (error) {
+    return {
+      original: testString,
+      replaced: testString,
+      replacementCount: 0,
+      matches: [],
+      error,
+    };
+  }
+
   try {
     const flagString = Object.entries(flags)
       .filter(([, enabled]) => enabled)
@@ -301,7 +332,6 @@ export function performReplace(
       .join("");
 
     const regex = new RegExp(pattern, flagString);
-    const { matches } = executePattern(pattern, flags, testString);
     const replaced = testString.replace(regex, replacement);
 
     return {
@@ -310,12 +340,13 @@ export function performReplace(
       replacementCount: matches.length,
       matches,
     };
-  } catch (error) {
+  } catch (err) {
     return {
       original: testString,
       replaced: testString,
       replacementCount: 0,
       matches: [],
+      error: err instanceof Error ? err.message : "Invalid pattern",
     };
   }
 }
@@ -339,7 +370,6 @@ export function analyzePattern(pattern: string): PatternAnalysis {
     const suggestions: string[] = [];
     const performanceWarnings: string[] = [];
 
-    // Detect features
     if (pattern.includes("(?<")) features.push("Named capture groups");
     if (pattern.includes("(?:")) features.push("Non-capturing groups");
     if (pattern.includes("(?=") || pattern.includes("(?!")) features.push("Lookahead");
@@ -350,7 +380,6 @@ export function analyzePattern(pattern: string): PatternAnalysis {
     if (pattern.includes("|")) features.push("Alternation");
     if (/[*+]{2,}/.test(pattern)) features.push("Nested quantifiers");
 
-    // Performance warnings
     if (/(\.\*){2,}/.test(pattern)) {
       performanceWarnings.push("Multiple .* can cause catastrophic backtracking");
     }
@@ -361,7 +390,6 @@ export function analyzePattern(pattern: string): PatternAnalysis {
       performanceWarnings.push("Very long pattern may be slow");
     }
 
-    // Suggestions
     if (pattern.includes(".*") && !pattern.includes(".*?")) {
       suggestions.push("Consider using .*? for non-greedy matching");
     }
@@ -398,10 +426,76 @@ export function analyzePattern(pattern: string): PatternAnalysis {
   }
 }
 
+export interface ExplanationNode {
+  type: "anchor" | "charclass" | "group" | "quantifier" | "literal" | "special";
+  value: string;
+  description: string;
+  position: number;
+}
+
+function findGroups(pattern: string): ExplanationNode[] {
+  const nodes: ExplanationNode[] = [];
+  let i = 0;
+
+  while (i < pattern.length) {
+    const ch = pattern[i];
+
+    if (ch === "\\") {
+      i += 2;
+      continue;
+    }
+
+    if (ch === "[") {
+      const end = pattern.indexOf("]", i + 1);
+      i = end === -1 ? pattern.length : end + 1;
+      continue;
+    }
+
+    if (ch === "(") {
+      let depth = 1;
+      let j = i + 1;
+      while (j < pattern.length && depth > 0) {
+        if (pattern[j] === "\\") {
+          j += 2;
+          continue;
+        }
+        if (pattern[j] === "(") depth++;
+        else if (pattern[j] === ")") depth--;
+        j++;
+      }
+
+      const groupText = pattern.slice(i, j);
+      let description = "Capture group";
+
+      if (groupText.startsWith("(?<=")) description = "Positive lookbehind";
+      else if (groupText.startsWith("(?<!")) description = "Negative lookbehind";
+      else if (groupText.startsWith("(?<")) description = "Named capture group";
+      else if (groupText.startsWith("(?=")) description = "Positive lookahead";
+      else if (groupText.startsWith("(?!")) description = "Negative lookahead";
+      else if (groupText.startsWith("(?:")) description = "Non-capturing group";
+
+      nodes.push({
+        type: "group",
+        value: groupText.length > 26 ? `${groupText.slice(0, 26)}…` : groupText,
+        description,
+        position: i,
+      });
+
+      i = j;
+      continue;
+    }
+
+    i++;
+  }
+
+  return nodes;
+}
+
 export function explainPattern(pattern: string): ExplanationNode[] {
+  if (!pattern) return [];
+
   const nodes: ExplanationNode[] = [];
 
-  // This is a simplified explainer - a full implementation would use a proper regex parser
   if (pattern.startsWith("^")) {
     nodes.push({
       type: "anchor",
@@ -420,9 +514,8 @@ export function explainPattern(pattern: string): ExplanationNode[] {
     });
   }
 
-  // Character classes
   const charClassRegex = /\[([^\]]+)\]/g;
-  let match;
+  let match: RegExpExecArray | null;
   while ((match = charClassRegex.exec(pattern)) !== null) {
     nodes.push({
       type: "charclass",
@@ -432,25 +525,28 @@ export function explainPattern(pattern: string): ExplanationNode[] {
     });
   }
 
-  // Quantifiers
+  nodes.push(...findGroups(pattern));
+
   const quantifierRegex = /([*+?]|\{\d+,?\d*\})/g;
   while ((match = quantifierRegex.exec(pattern)) !== null) {
+    const currentMatch = match;
+    const insideCharClass = nodes.some(
+      (n) =>
+        n.type === "charclass" &&
+        currentMatch.index >= n.position &&
+        currentMatch.index < n.position + n.value.length
+    );
+    if (insideCharClass) continue;
+
     nodes.push({
       type: "quantifier",
-      value: match[0],
-      description: getQuantifierDescription(match[0]),
-      position: match.index,
+      value: currentMatch[0],
+      description: getQuantifierDescription(currentMatch[0]),
+      position: currentMatch.index,
     });
   }
 
-  return nodes;
-}
-
-export interface ExplanationNode {
-  type: "anchor" | "charclass" | "group" | "quantifier" | "literal" | "special";
-  value: string;
-  description: string;
-  position: number;
+  return nodes.sort((a, b) => a.position - b.position);
 }
 
 function getQuantifierDescription(quantifier: string): string {
@@ -485,14 +581,35 @@ export function generateCode(pattern: string, flags: RegexFlags, language: CodeL
     case "javascript":
       return `const regex = /${pattern}/${flagString};\nconst matches = text.match(regex);`;
 
-    case "python":
-      return `import re\n\npattern = r"${pattern}"\nmatches = re.findall(pattern, text${flags.i ? ", re.IGNORECASE" : ""})`;
+    case "python": {
+      const pyFlags = [
+        flags.i && "re.IGNORECASE",
+        flags.m && "re.MULTILINE",
+        flags.s && "re.DOTALL",
+      ].filter(Boolean);
+      const flagArg = pyFlags.length ? `, ${pyFlags.join(" | ")}` : "";
+      return `import re\n\npattern = r"${pattern}"\nmatches = re.findall(pattern, text${flagArg})`;
+    }
 
-    case "java":
-      return `import java.util.regex.*;\n\nPattern pattern = Pattern.compile("${pattern}"${flags.i ? ", Pattern.CASE_INSENSITIVE" : ""});\nMatcher matcher = pattern.matcher(text);`;
+    case "java": {
+      const javaFlags = [
+        flags.i && "Pattern.CASE_INSENSITIVE",
+        flags.m && "Pattern.MULTILINE",
+        flags.s && "Pattern.DOTALL",
+      ].filter(Boolean);
+      const flagArg = javaFlags.length ? `, ${javaFlags.join(" | ")}` : "";
+      return `import java.util.regex.*;\n\nPattern pattern = Pattern.compile("${pattern}"${flagArg});\nMatcher matcher = pattern.matcher(text);`;
+    }
 
-    case "csharp":
-      return `using System.Text.RegularExpressions;\n\nvar regex = new Regex(@"${pattern}"${flags.i ? ", RegexOptions.IgnoreCase" : ""});\nvar matches = regex.Matches(text);`;
+    case "csharp": {
+      const csFlags = [
+        flags.i && "RegexOptions.IgnoreCase",
+        flags.m && "RegexOptions.Multiline",
+        flags.s && "RegexOptions.Singleline",
+      ].filter(Boolean);
+      const flagArg = csFlags.length ? `, ${csFlags.join(" | ")}` : "";
+      return `using System.Text.RegularExpressions;\n\nvar regex = new Regex(@"${pattern}"${flagArg});\nvar matches = regex.Matches(text);`;
+    }
 
     case "php":
       return `$pattern = '/${pattern}/${flagString}';\npreg_match_all($pattern, $text, $matches);`;

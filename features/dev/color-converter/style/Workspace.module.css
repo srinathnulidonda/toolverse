@@ -1,5 +1,4 @@
 /* features/dev/color-converter/style/Workspace.module.css */
-
 .ccRoot {
     --cc-radius-sm: 6px;
     --cc-radius-md: 8px;
@@ -11,18 +10,18 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-height: 600px;
+    min-height: 680px;
 }
 
-/*  Chrome  */
 .ccChrome {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 12px 16px;
-    border-bottom: 0.5px solid var(--border);
+    padding: 10px 16px;
     background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
     flex-wrap: wrap;
 }
 
@@ -30,7 +29,8 @@
 .ccChromeRight {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .ccTitle {
@@ -38,67 +38,241 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
 }
 
-.ccTitle i {
-    font-size: 16px;
+.ccTitleIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    background: var(--brand-light);
     color: var(--brand);
+    flex-shrink: 0;
 }
 
-.ccCurrentColor {
+.ccTitleBadge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border: 0.5px solid var(--border);
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+}
+
+.ccCurrentColorWrap {
+    position: relative;
     width: 32px;
     height: 32px;
     border-radius: var(--cc-radius-md);
-    border: 0.5px solid var(--border);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
     cursor: pointer;
-    transition: transform 0.12s;
 }
 
-.ccCurrentColor:hover {
+.ccCurrentColor {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--cc-radius-md);
+    border: 0.5px solid var(--border);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.12s;
+    pointer-events: none;
+}
+
+.ccCurrentColorWrap:hover .ccCurrentColor {
     transform: scale(1.08);
 }
 
-.ccPresetGroup {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+.ccCurrentColorInput {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    padding: 0;
 }
 
-.ccPresetLabel {
-    font-size: 11px;
+.ccBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--cc-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.ccBtn i {
+    font-size: 13px;
+}
+
+.ccBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ccBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ccBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.ccSettingsBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--cc-radius-md);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ccSettingsBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ccSettingsBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.ccSettingsBtn i {
+    font-size: 13px;
+}
+
+.ccSettings {
+    padding: 14px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.ccSettingsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px 28px;
+}
+
+.ccSettingGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ccSettingLabel {
+    font-size: 10px;
     font-weight: 600;
     color: var(--text-tertiary);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
 }
 
-.ccPresetBtn {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+.ccPresetGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
+    max-width: 520px;
+}
+
+.ccPresetSwatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 10px 0 6px;
+    border-radius: 99px;
     border: 0.5px solid var(--border);
+    background: var(--bg-card);
     cursor: pointer;
     transition: all 0.12s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.ccPresetBtn:hover {
-    transform: scale(1.12);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+.ccPresetSwatch:hover {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
 }
 
-/*  Tabs  */
+.ccPresetDot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+}
+
+.ccPresetName {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ccRandomBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 12px;
+    border-radius: var(--cc-radius-md);
+    border: 0.5px dashed var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    align-self: flex-start;
+}
+
+.ccRandomBtn:hover {
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+    background: var(--brand-light);
+}
+
 .ccTabsBar {
     border-bottom: 0.5px solid var(--border);
     background: var(--bg-surface);
+    flex-shrink: 0;
 }
 
 .ccTabs {
     display: flex;
-    padding: 0 16px;
+    padding: 0 14px;
+    overflow-x: auto;
 }
 
 .ccTab {
@@ -106,15 +280,17 @@
     align-items: center;
     gap: 6px;
     height: 40px;
-    padding: 0 16px;
+    padding: 0 14px;
     border: none;
     background: transparent;
     color: var(--text-tertiary);
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     position: relative;
     transition: color 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .ccTab i {
@@ -122,7 +298,7 @@
 }
 
 .ccTab:hover {
-    color: var(--text);
+    color: var(--text-secondary);
 }
 
 .ccTab.active {
@@ -133,17 +309,14 @@
     content: "";
     position: absolute;
     bottom: 0;
-    left: 12px;
-    right: 12px;
+    left: 10px;
+    right: 10px;
     height: 2px;
     background: var(--brand);
     border-radius: 2px 2px 0 0;
 }
 
-.ccBadge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.ccTabBadge {
     min-width: 18px;
     height: 18px;
     padding: 0 5px;
@@ -151,10 +324,19 @@
     background: var(--brand-light);
     color: var(--brand-text);
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/*  Tab Content  */
+.ccTabDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f59e0b;
+}
+
 .ccTabContent {
     flex: 1;
     display: flex;
@@ -163,38 +345,124 @@
     overflow: hidden;
 }
 
-/*  Footer  */
 .ccFooter {
     display: flex;
     align-items: center;
-    gap: 7px;
-    padding: 10px 16px;
-    border-top: 0.5px solid var(--border);
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 16px;
     background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
     font-size: 11px;
-    color: var(--text-disabled);
+    flex-shrink: 0;
+    flex-wrap: wrap;
 }
 
-.ccFooter i {
+.ccFooterLeft {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-tertiary);
+}
+
+.ccFooterLeft i {
     font-size: 13px;
+    color: var(--brand);
 }
 
-/*  Responsive  */
-@media (max-width: 768px) {
-    .ccChrome {
-        padding: 10px 12px;
+.ccFooterRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+}
+
+.ccFooterPass {
+    color: #16a34a;
+}
+
+.ccFooterFail {
+    color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ccFooterPass {
+        color: #4ade80;
     }
 
-    .ccPresetLabel {
+    .ccFooterFail {
+        color: #f87171;
+    }
+}
+
+.ccLabel {
+    display: inline;
+}
+
+@media (max-width: 768px) {
+    .ccRoot {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100dvh;
+    }
+
+    .ccLabel {
         display: none;
+    }
+
+    .ccChrome {
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .ccSettings {
+        padding: 12px;
+    }
+
+    .ccSettingsGrid {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .ccPresetGrid {
+        max-width: none;
+        grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+    }
+
+    .ccTabs {
+        padding: 0 8px;
+    }
+
+    .ccTab span {
+        display: none;
+    }
+
+    .ccTab {
+        padding: 0 10px;
+    }
+
+    .ccFooter {
+        flex-direction: column;
+        text-align: center;
+        gap: 6px;
+    }
+
+    .ccFooterRight {
+        justify-content: center;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
+    .ccBtn,
+    .ccSettingsBtn,
     .ccTab,
-    .ccCurrentColor,
-    .ccPresetBtn {
+    .ccPresetSwatch,
+    .ccRandomBtn,
+    .ccCurrentColor {
         transition: none;
     }
 }

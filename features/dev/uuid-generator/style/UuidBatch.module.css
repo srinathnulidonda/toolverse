@@ -5,11 +5,11 @@
     flex-direction: column;
     gap: 12px;
     padding: 16px;
-    overflow: hidden;
+    overflow: auto;
     position: relative;
+    min-height: 0;
 }
 
-/*  Controls  */
 .ubControls {
     display: flex;
     align-items: center;
@@ -62,6 +62,7 @@
     align-items: center;
     justify-content: center;
     transition: background 0.12s;
+    flex-shrink: 0;
 }
 
 .ubCountBtn:hover:not(:disabled) {
@@ -97,6 +98,7 @@
 .ubQuickBtns {
     display: flex;
     gap: 4px;
+    flex-wrap: wrap;
 }
 
 .ubQuickBtn {
@@ -148,6 +150,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.12s;
+    white-space: nowrap;
 }
 
 .ubGenerateBtn:hover:not(:disabled) {
@@ -177,7 +180,6 @@
     animation: spin 1s linear infinite;
 }
 
-/*  Stats  */
 .ubStats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -192,6 +194,7 @@
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-md);
+    min-width: 0;
 }
 
 .ubStat i {
@@ -205,15 +208,18 @@
     font-weight: 700;
     color: var(--text);
     font-family: var(--font-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .ubStatLabel {
     font-size: 11px;
     color: var(--text-tertiary);
     margin-left: auto;
+    flex-shrink: 0;
 }
 
-/*  Export  */
 .ubExport {
     display: flex;
     align-items: center;
@@ -299,12 +305,11 @@
     }
 }
 
-/*  Results  */
 .ubResults {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    min-height: 300px;
     overflow: hidden;
 }
 
@@ -317,13 +322,16 @@
     gap: 10px;
     padding: 48px 24px;
     text-align: center;
+    background: var(--bg-surface);
+    border: 0.5px dashed var(--border);
+    border-radius: var(--radius-lg);
 }
 
 .ubEmptyIcon {
     width: 56px;
     height: 56px;
     border-radius: 14px;
-    background: var(--bg-surface);
+    background: var(--bg-card);
     border: 0.5px solid var(--border);
     display: flex;
     align-items: center;
@@ -356,6 +364,7 @@
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
     overflow: hidden;
+    min-height: 0;
 }
 
 .ubListHeader {
@@ -375,6 +384,7 @@
 .ubList {
     flex: 1;
     overflow: auto;
+    min-height: 0;
 }
 
 .ubListItem {
@@ -406,6 +416,9 @@
     font-family: var(--font-mono);
     color: var(--text);
     letter-spacing: 0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .ubListMore {
@@ -416,7 +429,6 @@
     font-style: italic;
 }
 
-/*  Progress  */
 .ubProgressOverlay {
     position: absolute;
     inset: 0;
@@ -426,6 +438,7 @@
     align-items: center;
     justify-content: center;
     z-index: 100;
+    padding: 16px;
 }
 
 .ubProgressCard {
@@ -433,7 +446,7 @@
     border: 0.5px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 24px 32px;
-    min-width: 300px;
+    width: min(300px, 100%);
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -469,7 +482,6 @@
     font-family: var(--font-mono);
 }
 
-/*  Responsive  */
 @media (max-width: 768px) {
     .ubRoot {
         padding: 12px;
@@ -483,6 +495,16 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 10px;
+        width: 100%;
+    }
+
+    .ubControlsRight {
+        width: 100%;
+    }
+
+    .ubGenerateBtn {
+        flex: 1;
+        justify-content: center;
     }
 
     .ubListNum {
@@ -495,7 +517,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
     .ubCountBtn,
     .ubQuickBtn,
     .ubGenerateBtn,

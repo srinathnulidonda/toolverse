@@ -12,28 +12,42 @@ interface DiffStatsProps {
   result: DiffResult | null;
 }
 
-export default function DiffStats({ originalText, modifiedText, result }: DiffStatsProps) {
+type StatType = "neutral" | "add" | "remove" | "success" | "warning";
+
+export default function DiffStats({
+  originalText,
+  modifiedText,
+  result,
+}: DiffStatsProps) {
   const detailedStats = useMemo(() => {
     if (!result) return null;
 
     const originalBytes = new Blob([originalText]).size;
     const modifiedBytes = new Blob([modifiedText]).size;
     const sizeDiff = modifiedBytes - originalBytes;
-    const sizeChangePercent = originalBytes > 0 ? Math.round((sizeDiff / originalBytes) * 100) : 0;
+    const sizeChangePercent =
+      originalBytes > 0 ? Math.round((sizeDiff / originalBytes) * 100) : 0;
 
     const originalLines = originalText.split("\n").length;
     const modifiedLines = modifiedText.split("\n").length;
     const lineDiff = modifiedLines - originalLines;
 
-    // Calculate complexity metrics
     const originalWords = originalText.split(/\s+/).filter(Boolean).length;
     const modifiedWords = modifiedText.split(/\s+/).filter(Boolean).length;
     const wordDiff = modifiedWords - originalWords;
 
     return {
       files: {
-        original: { size: originalBytes, lines: originalLines, words: originalWords },
-        modified: { size: modifiedBytes, lines: modifiedLines, words: modifiedWords },
+        original: {
+          size: originalBytes,
+          lines: originalLines,
+          words: originalWords,
+        },
+        modified: {
+          size: modifiedBytes,
+          lines: modifiedLines,
+          words: modifiedWords,
+        },
         diff: { size: sizeDiff, lines: lineDiff, words: wordDiff, sizeChangePercent },
       },
       changes: result.stats,
@@ -41,8 +55,10 @@ export default function DiffStats({ originalText, modifiedText, result }: DiffSt
         diffRatio:
           result.stats.totalLines > 0
             ? Math.round(
-              ((result.stats.added + result.stats.removed) / result.stats.totalLines) * 100
-            )
+                ((result.stats.added + result.stats.removed) /
+                  result.stats.totalLines) *
+                  100
+              )
             : 0,
         similarity: result.stats.similarity,
       },
@@ -51,14 +67,22 @@ export default function DiffStats({ originalText, modifiedText, result }: DiffSt
 
   if (!detailedStats) {
     return (
-      <div className={styles.dsEmpty}>
-        <div className={styles.dsEmptyIcon}>
-          <i className="ti ti-chart-bar" />
+      <div className={styles.dsRoot}>
+        <div className={styles.dsEmpty}>
+          <div className={styles.dsEmptyIcon}>
+            <i className="ti ti-chart-bar" />
+          </div>
+          <p className={styles.dsEmptyText}>
+            Compare files to see detailed statistics
+          </p>
         </div>
-        <p className={styles.dsEmptyText}>Compare files to see detailed statistics</p>
       </div>
     );
   }
+
+  const getStatClassName = (type: StatType): string => {
+    return `${styles.dsStat} ${styles[`dsStat${type.charAt(0).toUpperCase() + type.slice(1)}`]}`;
+  };
 
   const statGroups = [
     {
@@ -69,24 +93,24 @@ export default function DiffStats({ originalText, modifiedText, result }: DiffSt
           label: "Original",
           value: `${formatBytes(detailedStats.files.original.size)}`,
           subtitle: `${detailedStats.files.original.lines.toLocaleString()} lines, ${detailedStats.files.original.words.toLocaleString()} words`,
-          type: "neutral",
+          type: "neutral" as StatType,
         },
         {
           label: "Modified",
           value: `${formatBytes(detailedStats.files.modified.size)}`,
           subtitle: `${detailedStats.files.modified.lines.toLocaleString()} lines, ${detailedStats.files.modified.words.toLocaleString()} words`,
-          type: "neutral",
+          type: "neutral" as StatType,
         },
         {
           label: "Size Change",
           value: `${detailedStats.files.diff.sizeChangePercent >= 0 ? "+" : ""}${detailedStats.files.diff.sizeChangePercent}%`,
           subtitle: `${detailedStats.files.diff.size >= 0 ? "+" : ""}${formatBytes(Math.abs(detailedStats.files.diff.size))}`,
           type:
-            detailedStats.files.diff.sizeChangePercent > 10
+            (detailedStats.files.diff.sizeChangePercent > 10
               ? "warning"
               : detailedStats.files.diff.sizeChangePercent < -10
-                ? "success"
-                : "neutral",
+              ? "success"
+              : "neutral") as StatType,
         },
       ],
     },
@@ -98,19 +122,19 @@ export default function DiffStats({ originalText, modifiedText, result }: DiffSt
           label: "Added",
           value: detailedStats.changes.added.toLocaleString(),
           subtitle: "New lines",
-          type: "add",
+          type: "add" as StatType,
         },
         {
           label: "Removed",
           value: detailedStats.changes.removed.toLocaleString(),
           subtitle: "Deleted lines",
-          type: "remove",
+          type: "remove" as StatType,
         },
         {
           label: "Unchanged",
           value: detailedStats.changes.unchanged.toLocaleString(),
           subtitle: "Identical lines",
-          type: "neutral",
+          type: "neutral" as StatType,
         },
       ],
     },
@@ -123,62 +147,63 @@ export default function DiffStats({ originalText, modifiedText, result }: DiffSt
           value: `${detailedStats.efficiency.similarity}%`,
           subtitle: "Content similarity",
           type:
-            detailedStats.efficiency.similarity > 70
+            (detailedStats.efficiency.similarity > 70
               ? "success"
               : detailedStats.efficiency.similarity > 30
-                ? "neutral"
-                : "warning",
+              ? "neutral"
+              : "warning") as StatType,
         },
         {
           label: "Change Ratio",
           value: `${detailedStats.efficiency.diffRatio}%`,
           subtitle: "Lines affected",
           type:
-            detailedStats.efficiency.diffRatio < 10
+            (detailedStats.efficiency.diffRatio < 10
               ? "success"
               : detailedStats.efficiency.diffRatio < 30
-                ? "neutral"
-                : "warning",
+              ? "neutral"
+              : "warning") as StatType,
         },
         {
           label: "Total Lines",
           value: detailedStats.changes.totalLines.toLocaleString(),
           subtitle: "After changes",
-          type: "neutral",
+          type: "neutral" as StatType,
         },
       ],
     },
   ];
 
   return (
-    <>
-      <div className={styles.dsRoot}>
-        {statGroups.map((group, groupIdx) => (
-          <div key={groupIdx} className={styles.dsGroup}>
-            <div className={styles.dsGroupHeader}>
-              <i className={`ti ${group.icon}`} />
-              <span className={styles.dsGroupTitle}>{group.title}</span>
-            </div>
-            <div className={styles.dsGroupGrid}>
-              {group.stats.map((stat, statIdx) => (
-                <div key={statIdx} className={`${styles.dsStat} ${styles[`dsStat--${stat.type}`]}`}>
-                  <div className={styles.dsStatValue}>{stat.value}</div>
-                  <div className={styles.dsStatLabel}>{stat.label}</div>
-                  {stat.subtitle && <div className={styles.dsStatSubtitle}>{stat.subtitle}</div>}
-                </div>
-              ))}
-            </div>
+    <div className={styles.dsRoot}>
+      {statGroups.map((group, groupIdx) => (
+        <div key={groupIdx} className={styles.dsGroup}>
+          <div className={styles.dsGroupHeader}>
+            <i className={`ti ${group.icon}`} />
+            <span className={styles.dsGroupTitle}>{group.title}</span>
           </div>
-        ))}
+          <div className={styles.dsGroupGrid}>
+            {group.stats.map((stat, statIdx) => (
+              <div key={statIdx} className={getStatClassName(stat.type)}>
+                <div className={styles.dsStatValue}>{stat.value}</div>
+                <div className={styles.dsStatLabel}>{stat.label}</div>
+                {stat.subtitle && (
+                  <div className={styles.dsStatSubtitle}>{stat.subtitle}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
 
-        {/* Quick Summary */}
-        <div className={styles.dsSummary}>
-          <div className={styles.dsSummaryIcon}>
-            <i className="ti ti-info-circle" />
-          </div>
-          <div className={styles.dsSummaryText}>{result?.summary || "No changes detected"}</div>
+      <div className={styles.dsSummary}>
+        <div className={styles.dsSummaryIcon}>
+          <i className="ti ti-info-circle" />
+        </div>
+        <div className={styles.dsSummaryText}>
+          {result?.summary || "No changes detected"}
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -6,38 +6,40 @@
     overflow: auto;
     padding: 16px;
     flex: 1;
+    background: var(--bg-surface);
 }
 
 .ceControls {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .ceSearch {
     position: relative;
     flex: 1;
-    min-width: 200px;
+    min-width: 180px;
 }
 
 .ceSearch i {
     position: absolute;
-    left: 12px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-disabled);
     pointer-events: none;
 }
 
 .ceSearchInput {
     width: 100%;
-    height: 36px;
-    padding: 0 36px 0 36px;
+    height: 32px;
+    padding: 0 32px 0 32px;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-md);
-    font-size: 13px;
+    border-radius: 8px;
+    font-size: 12px;
     color: var(--text);
     font-family: var(--font-sans);
     transition: border-color 0.12s;
@@ -54,7 +56,7 @@
 
 .ceSearchClear {
     position: absolute;
-    right: 8px;
+    right: 6px;
     top: 50%;
     transform: translateY(-50%);
     width: 20px;
@@ -75,36 +77,41 @@
     color: var(--text);
 }
 
+.ceSearchClear i {
+    font-size: 11px;
+}
+
 .ceFilters {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .ceFilterGroup {
     display: flex;
-    gap: 0;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-md);
+    border-radius: 8px;
     overflow: hidden;
 }
 
 .ceFilterBtn {
-    height: 36px;
-    padding: 0 12px;
+    height: 32px;
+    padding: 0 10px;
     border: none;
     border-right: 0.5px solid var(--border);
     background: transparent;
     color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 11px;
+    font-weight: 600;
     font-family: var(--font-sans);
     cursor: pointer;
     transition: all 0.12s;
     display: flex;
     align-items: center;
     gap: 4px;
+    white-space: nowrap;
 }
 
 .ceFilterBtn:last-child {
@@ -122,19 +129,20 @@
 }
 
 .ceFilterBtn i {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .ceDivider {
     width: 0.5px;
-    height: 20px;
+    height: 18px;
     background: var(--border);
+    flex-shrink: 0;
 }
 
 .ceSection {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .ceSectionHeader {
@@ -148,7 +156,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -156,23 +164,23 @@
 }
 
 .ceSectionTitle i {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .ceClaimsList {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .ceClaim {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 14px 16px;
+    gap: 8px;
+    padding: 12px 14px;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-md);
+    border-radius: 10px;
     transition: border-color 0.12s;
 }
 
@@ -184,19 +192,19 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
 }
 
 .ceClaimMain {
     flex: 1;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
 }
 
 .ceExpandBtn {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
     border: none;
     background: transparent;
@@ -216,28 +224,28 @@
 }
 
 .ceExpandBtn i {
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .ceClaimInfo {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
     min-width: 0;
 }
 
 .ceClaimKeyRow {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     flex-wrap: wrap;
 }
 
 .ceClaimKey {
     font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
     color: var(--text);
 }
 
@@ -246,21 +254,22 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding: 2px 6px;
+    padding: 1px 5px;
     border-radius: 3px;
+    flex-shrink: 0;
 }
 
-.ceClaimType--registered {
+.ceClaimTypeRegistered {
     background: #3b82f6;
     color: white;
 }
 
-.ceClaimType--public {
+.ceClaimTypePublic {
     background: #10b981;
     color: white;
 }
 
-.ceClaimType--private {
+.ceClaimTypePrivate {
     background: var(--text-disabled);
     color: var(--bg-card);
 }
@@ -268,7 +277,7 @@
 .ceClaimMetaRow {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     flex-wrap: wrap;
     font-size: 11px;
 }
@@ -285,17 +294,21 @@
 .ceClaimDesc {
     color: var(--text-tertiary);
     flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .ceCopyBtn {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
     flex-shrink: 0;
     border: 0.5px solid var(--border);
     background: var(--bg-card);
     color: var(--text-secondary);
     cursor: pointer;
-    border-radius: var(--radius-sm);
+    border-radius: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -309,16 +322,47 @@
 
 .ceCopyBtn.copied {
     background: var(--brand-light);
-    color: var(--brand);
+    color: var(--brand-text);
     border-color: var(--brand-border);
 }
 
 .ceCopyBtn i {
-    font-size: 13px;
+    font-size: 12px;
+}
+
+.ceCopyBtnLabel {
+    font-size: 11px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 8px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.12s;
+}
+
+.ceCopyBtnLabel:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ceCopyBtnLabel.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.ceCopyBtnLabel i {
+    font-size: 12px;
 }
 
 .ceClaimValue {
-    padding-left: 28px;
+    padding-left: 24px;
     font-family: var(--font-mono);
     font-size: 12px;
     color: var(--text);
@@ -363,7 +407,7 @@
 .ceValueObject {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
 }
 
 .ceBracket {
@@ -373,18 +417,18 @@
 
 .ceArrayItems,
 .ceObjectProps {
-    padding-left: 16px;
-    border-left: 1.5px solid var(--border-faint);
-    margin: 4px 0;
+    padding-left: 14px;
+    border-left: 1.5px solid var(--border);
+    margin: 3px 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
 }
 
 .ceArrayItem,
 .ceObjectProp {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: baseline;
 }
 
@@ -398,12 +442,12 @@
 .ceTimestampInfo {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    margin-top: 8px;
+    gap: 3px;
+    margin-top: 6px;
     padding: 8px 10px;
     background: var(--bg-surface);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
+    border-radius: 7px;
     font-family: var(--font-sans);
 }
 
@@ -418,6 +462,7 @@
 .ceTimestampRow i {
     font-size: 12px;
     color: var(--text-tertiary);
+    flex-shrink: 0;
 }
 
 .ceTimestampRelative {
@@ -427,27 +472,27 @@
 .ceCategorized {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .ceCategory {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .ceCategoryHeader {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 12px;
+    padding: 7px 10px;
     background: var(--bg-surface);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 11px;
-    font-weight: 600;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.07em;
     color: var(--text-secondary);
 }
 
@@ -460,8 +505,9 @@
     font-size: 10px;
     color: var(--text-disabled);
     background: var(--bg-card);
-    padding: 2px 6px;
-    border-radius: 3px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    font-weight: 600;
 }
 
 .ceEmpty {
@@ -472,10 +518,11 @@
     gap: 8px;
     padding: 40px 20px;
     color: var(--text-disabled);
+    text-align: center;
 }
 
 .ceEmpty i {
-    font-size: 32px;
+    font-size: 28px;
 }
 
 .ceEmpty p {
@@ -484,8 +531,13 @@
 }
 
 @media (max-width: 768px) {
+    .ceRoot {
+        padding: 12px;
+    }
+
     .ceControls {
         flex-direction: column;
+        align-items: stretch;
     }
 
     .ceSearch {
@@ -494,9 +546,15 @@
 
     .ceFilters {
         overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 2px;
     }
 
     .ceClaimValue {
         padding-left: 0;
+    }
+
+    .ceClaimDesc {
+        display: none;
     }
 }

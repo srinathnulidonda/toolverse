@@ -1,9 +1,15 @@
 // features/dev/diff-checker/ts/diffEngine.ts
-import { logger } from "@/lib/logger";
 export type DiffAlgorithm = "myers" | "word" | "character";
 export type DiffViewMode = "split" | "unified" | "inline";
 export type FileType =
-  "text" | "javascript" | "typescript" | "css" | "html" | "json" | "markdown" | "xml";
+  | "text"
+  | "javascript"
+  | "typescript"
+  | "css"
+  | "html"
+  | "json"
+  | "markdown"
+  | "xml";
 
 export interface DiffOptions {
   algorithm: DiffAlgorithm;
@@ -55,7 +61,7 @@ export const SAMPLE_DIFFS = {
 }
 
 const discount = 0.1;
-logger.log("Discount:", discount);`,
+console.log("Discount:", discount);`,
     modified: `function calculateTotal(items, tax = 0.08) {
     let total = 0;
     for (let item of items) {
@@ -66,11 +72,11 @@ logger.log("Discount:", discount);`,
 
 const discount = 0.15;
 const maxDiscount = 50;
-logger.log("Discount:", discount, "Max:", maxDiscount);`,
+console.log("Discount:", discount, "Max:", maxDiscount);`,
   },
   css: {
     original: `.button {
-    background: #blue;
+    background: blue;
     padding: 10px;
     border: none;
 }`,
@@ -96,10 +102,9 @@ export function computeDiff(
     wrapLines: true,
   }
 ): DiffResult {
-  let processedText1 = text1;
-  let processedText2 = text2;
+  let processedText1 = text1 || "";
+  let processedText2 = text2 || "";
 
-  // Apply preprocessing based on options
   if (options.ignoreCase) {
     processedText1 = processedText1.toLowerCase();
     processedText2 = processedText2.toLowerCase();
@@ -129,15 +134,19 @@ export function computeDiff(
   return result;
 }
 
-function computeMyersDiff(lines1: string[], lines2: string[], contextLines: number): DiffResult {
-  const lcs = longestCommonSubsequence(lines1, lines2);
+function computeMyersDiff(
+  lines1: string[],
+  lines2: string[],
+  contextLines: number
+): DiffResult {
   const diffLines: DiffLine[] = [];
 
-  let i = 0,
-    j = 0,
-    added = 0,
-    removed = 0,
-    unchanged = 0;
+  let i = 0;
+  let j = 0;
+  let added = 0;
+  let removed = 0;
+  let unchanged = 0;
+  let modified = 0;
 
   while (i < lines1.length || j < lines2.length) {
     if (i < lines1.length && j < lines2.length) {
@@ -152,7 +161,6 @@ function computeMyersDiff(lines1: string[], lines2: string[], contextLines: numb
         i++;
         j++;
       } else {
-        // Check for modifications vs separate add/remove
         const isModification = isSimilarLine(lines1[i], lines2[j]);
 
         if (isModification) {
@@ -165,20 +173,18 @@ function computeMyersDiff(lines1: string[], lines2: string[], contextLines: numb
             isWordDiff: true,
             wordDiffs,
           });
-          added++;
+          modified++;
           i++;
           j++;
         } else {
-          // Separate remove and add
-          if (i < lines1.length) {
-            diffLines.push({
-              type: "remove",
-              content: lines1[i],
-              originalLineNum: i + 1,
-            });
-            removed++;
-            i++;
-          }
+          diffLines.push({
+            type: "remove",
+            content: lines1[i],
+            originalLineNum: i + 1,
+          });
+          removed++;
+          i++;
+
           if (j < lines2.length) {
             diffLines.push({
               type: "add",
@@ -198,7 +204,7 @@ function computeMyersDiff(lines1: string[], lines2: string[], contextLines: numb
       });
       removed++;
       i++;
-    } else {
+    } else if (j < lines2.length) {
       diffLines.push({
         type: "add",
         content: lines2[j],
@@ -210,14 +216,15 @@ function computeMyersDiff(lines1: string[], lines2: string[], contextLines: numb
   }
 
   const totalLines = Math.max(lines1.length, lines2.length);
-  const similarity = totalLines > 0 ? Math.round((unchanged / totalLines) * 100) : 100;
+  const similarity =
+    totalLines > 0 ? Math.round((unchanged / totalLines) * 100) : 100;
 
   return {
     lines: diffLines,
     stats: {
       added,
       removed,
-      modified: 0, // Will be calculated from word diffs
+      modified,
       unchanged,
       totalLines,
       similarity,
@@ -233,44 +240,56 @@ function computeWordDiff(
   originalText1: string,
   originalText2: string
 ): DiffResult {
-  const words1 = originalText1.split(/\s+/);
-  const words2 = originalText2.split(/\s+/);
+  const words1 = originalText1.split(/\s+/).filter(Boolean);
+  const words2 = originalText2.split(/\s+/).filter(Boolean);
 
   const diffLines: DiffLine[] = [];
-  const lcs = longestCommonSubsequence(words1, words2);
 
-  let added = 0,
-    removed = 0;
+  let added = 0;
+  let removed = 0;
+  let unchanged = 0;
   let currentLine = "";
   let lineType: DiffLine["type"] = "unchanged";
 
-  // This is a simplified word diff - in practice you'd want more sophisticated word-level diffing
-  for (let i = 0; i < Math.max(words1.length, words2.length); i++) {
-    if (words1[i] === words2[i]) {
-      currentLine += (words1[i] || "") + " ";
+  const maxLen = Math.max(words1.length, words2.length);
+
+  for (let i = 0; i < maxLen; i++) {
+    if (i < words1.length && i < words2.length && words1[i] === words2[i]) {
+      currentLine += words1[i] + " ";
+      unchanged++;
     } else {
-      if (words1[i]) {
+      if (i < words1.length && words1[i]) {
         removed++;
         lineType = "remove";
       }
-      if (words2[i]) {
+      if (i < words2.length && words2[i]) {
         added++;
         lineType = "add";
       }
       currentLine += (words2[i] || words1[i] || "") + " ";
     }
 
-    if (currentLine.includes("\n") || i === Math.max(words1.length, words2.length) - 1) {
-      diffLines.push({
-        type: lineType,
-        content: currentLine.trim(),
-        originalLineNum: diffLines.length + 1,
-        modifiedLineNum: diffLines.length + 1,
-      });
+    if (
+      currentLine.includes("\n") ||
+      i === maxLen - 1 ||
+      currentLine.length > 80
+    ) {
+      if (currentLine.trim()) {
+        diffLines.push({
+          type: lineType,
+          content: currentLine.trim(),
+          originalLineNum: diffLines.length + 1,
+          modifiedLineNum: diffLines.length + 1,
+        });
+      }
       currentLine = "";
       lineType = "unchanged";
     }
   }
+
+  const totalWords = Math.max(words1.length, words2.length);
+  const similarity =
+    totalWords > 0 ? Math.round((unchanged / totalWords) * 100) : 100;
 
   return {
     lines: diffLines,
@@ -278,13 +297,9 @@ function computeWordDiff(
       added,
       removed,
       modified: 0,
-      unchanged: words1.length + words2.length - added - removed,
+      unchanged,
       totalLines: diffLines.length,
-      similarity: Math.round(
-        ((words1.length + words2.length - added - removed) /
-          Math.max(words1.length, words2.length)) *
-        100
-      ),
+      similarity,
       linesOfContext: 0,
     },
     summary: `${added} words added, ${removed} words removed`,
@@ -295,14 +310,14 @@ function computeCharacterDiff(text1: string, text2: string): DiffResult {
   const chars1 = text1.split("");
   const chars2 = text2.split("");
 
-  // Simplified character diff
   const diffLines: DiffLine[] = [];
-  let added = 0,
-    removed = 0,
-    unchanged = 0;
+  let added = 0;
+  let removed = 0;
+  let unchanged = 0;
 
   const maxLen = Math.max(chars1.length, chars2.length);
   let currentLine = "";
+  let currentType: DiffLine["type"] = "unchanged";
 
   for (let i = 0; i < maxLen; i++) {
     const char1 = chars1[i];
@@ -311,22 +326,27 @@ function computeCharacterDiff(text1: string, text2: string): DiffResult {
     if (char1 === char2) {
       currentLine += char1 || "";
       unchanged++;
+      currentType = "unchanged";
     } else {
       if (char1 !== undefined) removed++;
       if (char2 !== undefined) added++;
       currentLine += char2 || char1 || "";
+      currentType = added > removed ? "add" : removed > added ? "remove" : "unchanged";
     }
 
     if (currentLine.includes("\n") || i === maxLen - 1) {
       diffLines.push({
-        type: added > removed ? "add" : removed > added ? "remove" : "unchanged",
+        type: currentType,
         content: currentLine.replace(/\n$/, ""),
         originalLineNum: diffLines.length + 1,
         modifiedLineNum: diffLines.length + 1,
       });
       currentLine = "";
+      currentType = "unchanged";
     }
   }
+
+  const similarity = maxLen > 0 ? Math.round((unchanged / maxLen) * 100) : 100;
 
   return {
     lines: diffLines,
@@ -336,7 +356,7 @@ function computeCharacterDiff(text1: string, text2: string): DiffResult {
       modified: 0,
       unchanged,
       totalLines: diffLines.length,
-      similarity: Math.round((unchanged / maxLen) * 100),
+      similarity,
       linesOfContext: 0,
     },
     summary: `${added} characters added, ${removed} characters removed`,
@@ -354,15 +374,13 @@ function computeWordDiffForLines(line1: string, line2: string): WordDiff[] {
     const word1 = words1[i];
     const word2 = words2[i];
 
-    if (word1 === word2) {
-      if (word1 !== undefined) {
-        wordDiffs.push({ type: "unchanged", content: word1 });
-      }
+    if (word1 === word2 && word1 !== undefined) {
+      wordDiffs.push({ type: "unchanged", content: word1 });
     } else {
-      if (word1 !== undefined) {
+      if (word1 !== undefined && word1 !== word2) {
         wordDiffs.push({ type: "remove", content: word1 });
       }
-      if (word2 !== undefined) {
+      if (word2 !== undefined && word1 !== word2) {
         wordDiffs.push({ type: "add", content: word2 });
       }
     }
@@ -390,8 +408,9 @@ function longestCommonSubsequence(arr1: string[], arr2: string[]): number[][] {
 }
 
 function isSimilarLine(line1: string, line2: string): boolean {
+  if (!line1 || !line2) return false;
   const similarity = calculateStringSimilarity(line1, line2);
-  return similarity > 0.6; // 60% similarity threshold
+  return similarity > 0.6;
 }
 
 function calculateStringSimilarity(str1: string, str2: string): number {
@@ -406,40 +425,57 @@ function calculateStringSimilarity(str1: string, str2: string): number {
 }
 
 function levenshteinDistance(str1: string, str2: string): number {
-  const matrix = Array.from({ length: str1.length + 1 }, (_, i) =>
-    Array.from({ length: str2.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  const len1 = str1.length;
+  const len2 = str2.length;
+
+  const matrix: number[][] = Array.from({ length: len1 + 1 }, () =>
+    Array(len2 + 1).fill(0)
   );
 
-  for (let i = 1; i <= str1.length; i++) {
-    for (let j = 1; j <= str2.length; j++) {
+  for (let i = 0; i <= len1; i++) {
+    matrix[i][0] = i;
+  }
+
+  for (let j = 0; j <= len2; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= len1; i++) {
+    for (let j = 1; j <= len2; j++) {
       if (str1[i - 1] === str2[j - 1]) {
         matrix[i][j] = matrix[i - 1][j - 1];
       } else {
         matrix[i][j] = Math.min(
-          matrix[i - 1][j] + 1, // deletion
-          matrix[i][j - 1] + 1, // insertion
-          matrix[i - 1][j - 1] + 1 // substitution
+          matrix[i - 1][j] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j - 1] + 1
         );
       }
     }
   }
 
-  return matrix[str1.length][str2.length];
+  return matrix[len1][len2];
 }
 
-function generateSummary(added: number, removed: number, unchanged: number, total: number): string {
+function generateSummary(
+  added: number,
+  removed: number,
+  unchanged: number,
+  total: number
+): string {
   if (total === 0) return "No content to compare";
   if (added === 0 && removed === 0) return "Files are identical";
 
-  const parts = [];
+  const parts: string[] = [];
   if (added > 0) parts.push(`${added} line${added === 1 ? "" : "s"} added`);
-  if (removed > 0) parts.push(`${removed} line${removed === 1 ? "" : "s"} removed`);
+  if (removed > 0)
+    parts.push(`${removed} line${removed === 1 ? "" : "s"} removed`);
 
   return parts.join(", ");
 }
 
 export function detectFileType(filename: string, content: string): FileType {
-  const ext = filename.toLowerCase().split(".").pop();
+  const ext = filename.toLowerCase().split(".").pop() || "";
 
   switch (ext) {
     case "js":
@@ -451,6 +487,7 @@ export function detectFileType(filename: string, content: string): FileType {
     case "css":
     case "scss":
     case "sass":
+    case "less":
       return "css";
     case "html":
     case "htm":
@@ -469,7 +506,23 @@ export function detectFileType(filename: string, content: string): FileType {
 }
 
 export function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+  if (bytes === 0) return "0 B";
+  if (bytes < 0) return "0 B";
+
+  const units = ["B", "KB", "MB", "GB"];
+  const base = 1024;
+  const index = Math.min(
+    Math.floor(Math.log(bytes) / Math.log(base)),
+    units.length - 1
+  );
+
+  const value = bytes / Math.pow(base, index);
+
+  if (value < 10) {
+    return `${value.toFixed(2)} ${units[index]}`;
+  } else if (value < 100) {
+    return `${value.toFixed(1)} ${units[index]}`;
+  } else {
+    return `${Math.round(value)} ${units[index]}`;
+  }
 }

@@ -1,7 +1,7 @@
 // components/home/SearchBar.tsx
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
@@ -9,6 +9,7 @@ const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-ser
 export default function SearchBar() {
   const [query, setQuery] = useState("");
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -17,6 +18,17 @@ export default function SearchBar() {
     } else {
       router.push("/search");
     }
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Escape" && query) {
+      setQuery("");
+    }
+  }
+
+  function clearQuery() {
+    setQuery("");
+    inputRef.current?.focus();
   }
 
   return (
@@ -37,7 +49,6 @@ export default function SearchBar() {
           transition: "all 0.2s ease",
         }}
       >
-        {/* Search icon */}
         <span
           className="hero-search-icon"
           style={{
@@ -69,14 +80,17 @@ export default function SearchBar() {
         </label>
         <input
           id="search-input"
+          ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Search tools..."
           className="hero-search-input"
+          autoComplete="off"
           style={{
             flex: 1,
-            padding: "12px 18px 12px 42px",
+            padding: query ? "12px 36px 12px 42px" : "12px 18px 12px 42px",
             background: "transparent",
             border: "none",
             fontSize: "14px",
@@ -89,6 +103,24 @@ export default function SearchBar() {
             borderRadius: "9999px",
           }}
         />
+
+        {query && (
+          <button
+            type="button"
+            onClick={clearQuery}
+            className="hero-search-clear"
+            aria-label="Clear search"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path
+                d="M2.5 2.5l7 7M9.5 2.5l-7 7"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+        )}
       </form>
 
       <style>{`
@@ -109,6 +141,31 @@ export default function SearchBar() {
             0 4px 12px rgba(0, 0, 0, 0.16) !important;
         }
 
+        .hero-search-clear {
+          position: absolute;
+          right: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          border: none;
+          background: var(--bg-surface);
+          color: var(--text-tertiary);
+          cursor: pointer;
+          flex-shrink: 0;
+          transition: background 0.12s, color 0.12s;
+        }
+        .hero-search-clear:hover {
+          background: var(--border);
+          color: var(--text);
+        }
+        .hero-search-clear:focus-visible {
+          outline: 2px solid var(--brand);
+          outline-offset: 2px;
+        }
+
         @media (max-width: 480px) {
           .hero-search-form {
             max-width: 260px !important;
@@ -124,8 +181,14 @@ export default function SearchBar() {
           }
 
           .hero-search-input {
-            padding: 8px 14px 8px 32px !important;
+            padding: 8px 30px 8px 32px !important;
             font-size: 12px !important;
+          }
+
+          .hero-search-clear {
+            right: 10px;
+            width: 16px;
+            height: 16px;
           }
         }
 

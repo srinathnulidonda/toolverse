@@ -1,38 +1,38 @@
-/* features/dev/timestamp-converter/style/TimestampHistory.css */
-.th-root {
+/* features/dev/timestamp-converter/style/TimestampHistory.module.css */
+.thRoot {
     flex: 1;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background: var(--bg-surface);
 }
 
-.th-header {
+.thHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 12px 16px;
-    background: var(--bg-surface);
+    background: var(--bg-card);
     border-bottom: 0.5px solid var(--border);
     gap: 12px;
     flex-shrink: 0;
 }
 
-.th-header-label {
+.thHeaderLabel {
     display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 11px;
+    gap: 8px;
+    font-size: 13px;
     font-weight: 600;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    color: var(--text);
 }
 
-.th-header-label i {
-    font-size: 12px;
+.thHeaderLabel i {
+    font-size: 15px;
+    color: var(--text-secondary);
 }
 
-.th-count-badge {
+.thCountBadge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -40,134 +40,155 @@
     height: 20px;
     padding: 0 6px;
     border-radius: 99px;
-    background: var(--brand-light);
-    color: var(--brand-text);
-    font-size: 10px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 11px;
     font-weight: 600;
 }
 
-.th-clear-btn {
+.thClearBtn {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    height: 28px;
+    height: 30px;
     padding: 0 11px;
-    border-radius: var(--tc-radius-md, 8px);
+    border-radius: var(--tc-radius-md);
     border: 0.5px solid var(--border);
-    background: var(--bg-card);
+    background: var(--bg-surface);
     color: var(--text-secondary);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.12s;
 }
 
-.th-clear-btn i {
-    font-size: 12px;
+.thClearBtn i {
+    font-size: 13px;
 }
 
-.th-clear-btn:hover {
-    background: var(--error-bg);
-    color: #b91c1c;
+.thClearBtn:hover {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
 }
 
 @media (prefers-color-scheme: dark) {
-    .th-clear-btn:hover {
+    .thClearBtn:hover {
+        background: #1f1517;
         color: #f87171;
+        border-color: #3c1518;
     }
 }
 
-.th-list {
+.thList {
     flex: 1;
     overflow: auto;
     padding: 12px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
-.th-item {
+.thItem {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--tc-radius-lg, 12px);
+    border-radius: var(--tc-radius-lg);
     overflow: hidden;
     transition: border-color 0.12s;
 }
 
-.th-item:hover {
+.thItem:hover {
     border-color: var(--brand-border);
 }
 
-.th-item-header {
+.thItemHeader {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 10px;
     padding: 10px 14px;
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border-faint);
 }
 
-.th-item-time {
+.thItemIcon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--brand-light);
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.thItemTime {
     display: flex;
     align-items: center;
     gap: 5px;
     font-size: 11px;
     color: var(--text-tertiary);
+    flex: 1;
+    min-width: 0;
 }
 
-.th-item-time i {
+.thItemTime i {
     font-size: 12px;
+    flex-shrink: 0;
 }
 
-.th-restore-btn {
+.thRestoreBtn {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    height: 24px;
-    padding: 0 8px;
-    border-radius: var(--tc-radius-md, 8px);
+    height: 26px;
+    padding: 0 9px;
+    border-radius: var(--tc-radius-md);
     border: 0.5px solid var(--border);
     background: var(--bg-card);
     color: var(--text-secondary);
-    font-size: 10px;
+    font-size: 10.5px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.12s;
+    flex-shrink: 0;
 }
 
-.th-restore-btn i {
+.thRestoreBtn i {
     font-size: 11px;
 }
 
-.th-restore-btn:hover {
+.thRestoreBtn:hover {
     background: var(--brand-light);
     color: var(--brand-text);
     border-color: var(--brand-border);
 }
 
-.th-item-content {
+.thItemContent {
     padding: 12px 14px;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.th-item-row {
+.thItemRow {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 11.5px;
 }
 
-.th-item-label {
+.thItemLabel {
     font-size: 10px;
     font-weight: 600;
     color: var(--text-tertiary);
     text-transform: uppercase;
     min-width: 45px;
+    flex-shrink: 0;
 }
 
-.th-item-content code {
+.thItemContent code {
     font-family: var(--font-mono);
     font-size: 11.5px;
     color: var(--text);
@@ -177,7 +198,7 @@
     word-break: break-all;
 }
 
-.th-item-footer {
+.thItemFooter {
     padding: 10px 14px;
     background: var(--bg-surface);
     border-top: 0.5px solid var(--border-faint);
@@ -186,7 +207,7 @@
     flex-wrap: wrap;
 }
 
-.th-option-tag {
+.thOptionTag {
     display: inline-flex;
     align-items: center;
     height: 20px;
@@ -197,67 +218,79 @@
     color: var(--text-tertiary);
     font-size: 10px;
     font-weight: 500;
+    text-transform: capitalize;
 }
 
-.th-empty {
+.thEmpty {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     padding: 60px 24px;
     text-align: center;
 }
 
-.th-empty-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 13px;
-    background: var(--bg-surface);
+.thEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
     border: 0.5px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 26px;
     color: var(--text-disabled);
-    margin-bottom: 6px;
 }
 
-.th-empty-title {
-    font-size: 14px;
+.thEmptyTitle {
+    font-size: 16px;
     font-weight: 600;
     color: var(--text);
     margin: 0;
 }
 
-.th-empty-desc {
-    font-size: 12px;
+.thEmptyDesc {
+    font-size: 13px;
     color: var(--text-tertiary);
     margin: 0;
-    max-width: 320px;
+    max-width: 340px;
     line-height: 1.6;
 }
 
 @media (max-width: 768px) {
-    .th-label-text {
+    .thLabelText {
         display: none;
     }
 
-    .th-btn-text {
+    .thBtnText {
         display: none;
     }
 
-    .th-list {
+    .thList {
         padding: 10px;
+    }
+
+    .thItemHeader {
+        padding: 8px 12px;
+    }
+
+    .thItemContent {
+        padding: 10px 12px;
+    }
+
+    .thItemFooter {
+        padding: 8px 12px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
-    .th-clear-btn,
-    .th-restore-btn,
-    .th-item {
+    .thClearBtn,
+    .thRestoreBtn,
+    .thItem {
         transition: none;
     }
 }

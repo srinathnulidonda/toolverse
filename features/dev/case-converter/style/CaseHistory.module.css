@@ -1,4 +1,4 @@
-/* features\dev\case-converter\style\CaseHistory.module.css */
+/* features/dev/case-converter/style/CaseHistory.module.css */
 .chRoot {
     flex: 1;
     display: flex;
@@ -6,7 +6,6 @@
     overflow: hidden;
 }
 
-/*  Header  */
 .chHeader {
     display: flex;
     align-items: center;
@@ -68,19 +67,19 @@
 }
 
 .chClearBtn:hover {
-    background: var(--error-bg);
-    color: #b91c1c;
-    border-color: #f3d2d2;
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
 }
 
 @media (prefers-color-scheme: dark) {
     .chClearBtn:hover {
+        background: #1f1517;
         color: #f87171;
-        border-color: #5a2a2a;
+        border-color: #3c1518;
     }
 }
 
-/*  List  */
 .chList {
     flex: 1;
     overflow: auto;
@@ -110,17 +109,33 @@
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border-faint);
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .chItemConversion {
     display: flex;
     align-items: center;
     gap: 7px;
+    min-width: 0;
+}
+
+.chItemFrom {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+}
+
+.chItemConversion i {
+    font-size: 12px;
+    color: var(--text-disabled);
+    flex-shrink: 0;
 }
 
 .chItemCase {
     display: inline-flex;
     align-items: center;
+    gap: 4px;
     height: 22px;
     padding: 0 8px;
     border-radius: 99px;
@@ -129,11 +144,12 @@
     font-size: 11px;
     font-weight: 600;
     font-family: var(--font-mono);
+    white-space: nowrap;
 }
 
 .chItemCase i {
-    font-size: 12px;
-    color: var(--text-disabled);
+    font-size: 11px;
+    color: var(--brand-text);
 }
 
 .chItemMeta {
@@ -145,6 +161,40 @@
 .chItemTime {
     font-size: 11px;
     color: var(--text-tertiary);
+    white-space: nowrap;
+}
+
+.chItemActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chIconBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--ccRadiusMd);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.chIconBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.chIconBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
 }
 
 .chRestoreBtn {
@@ -161,6 +211,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.12s;
+    white-space: nowrap;
 }
 
 .chRestoreBtn i {
@@ -206,7 +257,6 @@
     line-height: 1.6;
 }
 
-/*  Empty State  */
 .chEmpty {
     flex: 1;
     display: flex;
@@ -247,7 +297,6 @@
     line-height: 1.6;
 }
 
-/*  Responsive  */
 @media (max-width: 768px) {
     .chList {
         padding: 12px;
@@ -269,6 +318,7 @@
 
     .chClearBtn,
     .chRestoreBtn,
+    .chIconBtn,
     .chItem {
         transition: none;
     }

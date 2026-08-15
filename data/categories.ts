@@ -55,17 +55,6 @@ export const CATEGORIES: Category[] = [
     bgDark: "#1F1500",
   },
   {
-    slug: "resume",
-    label: "Resume",
-    icon: "ti-file-cv",
-    description:
-      "Build, analyze, and optimize your resume with professional templates and AI hints.",
-    color: "#145C3C",
-    colorDark: "#4CAF82",
-    bgLight: "#E8F5EF",
-    bgDark: "#0B1F16",
-  },
-  {
     slug: "social",
     label: "Social",
     icon: "ti-share",

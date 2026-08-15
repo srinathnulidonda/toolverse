@@ -46,6 +46,7 @@
     font-size: 14px;
     color: var(--text);
     outline: none;
+    min-width: 0;
 }
 
 .rxlSearchInput::placeholder {
@@ -64,6 +65,7 @@
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.12s;
+    flex-shrink: 0;
 }
 
 .rxlClearSearch:hover {
@@ -432,7 +434,6 @@
     line-height: 1.6;
 }
 
-/* Dialog */
 .rxlDialogOverlay {
     position: fixed;
     inset: 0;
@@ -447,6 +448,7 @@
 .rxlDialog {
     width: 100%;
     max-width: 560px;
+    max-height: calc(100dvh - 40px);
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-xl);
@@ -454,6 +456,8 @@
         0 20px 25px -5px rgba(0, 0, 0, 0.1),
         0 10px 10px -5px rgba(0, 0, 0, 0.04);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .rxlDialogHeader {
@@ -463,6 +467,7 @@
     gap: 16px;
     padding: 18px 20px;
     border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
 }
 
 .rxlDialogTitle {
@@ -491,6 +496,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.12s;
+    flex-shrink: 0;
 }
 
 .rxlDialogClose:hover {
@@ -507,6 +513,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    overflow-y: auto;
 }
 
 .rxlDialogDesc {
@@ -539,12 +546,37 @@
     color: var(--text-disabled);
 }
 
+.rxlImportError {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--error-bg);
+    border: 0.5px solid #fecaca;
+    border-radius: var(--radius-md);
+    color: #dc2626;
+    font-size: 12.5px;
+}
+
+.rxlImportError i {
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .rxlImportError {
+        border-color: #7f1d1d;
+        color: #f87171;
+    }
+}
+
 .rxlDialogFooter {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     padding: 16px 20px;
     border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
 }
 
 .rxlDialogBtn {
@@ -592,8 +624,30 @@
         padding: 12px;
     }
 
+    .rxlHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rxlSearchWrap {
+        min-width: 0;
+    }
+
+    .rxlHeaderActions {
+        justify-content: space-between;
+    }
+
     .rxlPatterns.gridView {
         grid-template-columns: 1fr;
+    }
+
+    .rxlDialogBody {
+        padding: 16px;
+    }
+
+    .rxlDialogHeader,
+    .rxlDialogFooter {
+        padding: 14px 16px;
     }
 }
 

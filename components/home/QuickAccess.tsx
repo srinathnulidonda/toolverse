@@ -24,7 +24,6 @@ export default function QuickAccess() {
   const [pinned, setPinned] = useLocalStorage<string[]>(PINNED_KEY, []);
   const [recent, setRecent] = useLocalStorage<string[]>(RECENT_KEY, []);
 
-  // Prevent hydration mismatch by only showing localStorage-dependent content after mount
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -55,11 +54,9 @@ export default function QuickAccess() {
     setRecent([]);
   }, [setRecent]);
 
-  // Use localStorage values only after mount to prevent hydration mismatch
   const effectivePinned = mounted ? pinned : [];
   const effectiveRecent = mounted ? recent : [];
 
-  // Build ordered, deduplicated list using real TOOLS data (correct hrefs)
   const order = [...effectivePinned, ...effectiveRecent, ...DEFAULT_SLUGS];
   const seen = new Set<string>();
   const items: typeof TOOLS = [];
@@ -75,10 +72,8 @@ export default function QuickAccess() {
   return (
     <>
       <div className="qa-card">
-        {/* Header */}
         <div className="qa-header">
           <span className="qa-label">Quick access</span>
-          {/* Only show clear button after mount to prevent hydration mismatch */}
           {effectiveRecent.length > 0 && (
             <button onClick={clearRecent} className="qa-clear-btn">
               <i className="ti ti-x" aria-hidden="true" />
@@ -89,44 +84,46 @@ export default function QuickAccess() {
 
         <div className="qa-divider" />
 
-        {/* Tool list */}
         <ul className="qa-list">
           {items.map((item) => {
             const isPinned = effectivePinned.includes(item.slug);
             const isRecent = !isPinned && effectiveRecent.includes(item.slug);
 
             return (
-              <li key={item.slug}>
-                <Link href={item.href} className="qa-item" onClick={() => recordVisit(item.slug)}>
+              <li key={item.slug} className="qa-list-item">
+                {/* Fixed: pin button is now a sibling, not nested inside the
+                    Link — nesting <button> inside <a> is invalid HTML and
+                    broke screen-reader focus order. */}
+                <Link
+                  href={item.href}
+                  className="qa-item"
+                  onClick={() => recordVisit(item.slug)}
+                >
                   <span className="qa-icon">
                     <i className={`ti ${item.icon}`} aria-hidden="true" />
                   </span>
 
                   <span className="qa-name">{item.label}</span>
 
-                  {/* Only show recent badge after mount to prevent hydration mismatch */}
                   {isRecent && (
                     <span className="qa-badge" aria-label="Recently used">
                       recent
                     </span>
                   )}
-
-                  <button
-                    className={`qa-pin${isPinned ? " pinned" : ""}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      togglePin(item.slug);
-                    }}
-                    aria-label={isPinned ? `Unpin ${item.label}` : `Pin ${item.label}`}
-                    aria-pressed={isPinned}
-                  >
-                    <i
-                      className={`ti ${isPinned ? "ti-star-filled" : "ti-star"}`}
-                      aria-hidden="true"
-                    />
-                  </button>
                 </Link>
+
+                <button
+                  type="button"
+                  className={`qa-pin${isPinned ? " pinned" : ""}`}
+                  onClick={() => togglePin(item.slug)}
+                  aria-label={isPinned ? `Unpin ${item.label}` : `Pin ${item.label}`}
+                  aria-pressed={isPinned}
+                >
+                  <i
+                    className={`ti ${isPinned ? "ti-star-filled" : "ti-star"}`}
+                    aria-hidden="true"
+                  />
+                </button>
               </li>
             );
           })}
@@ -188,22 +185,36 @@ export default function QuickAccess() {
           gap: 1px;
         }
 
+        .qa-list-item {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          border-radius: var(--radius-md);
+          transition: background 0.12s;
+        }
+        .qa-list-item:hover {
+          background: var(--bg-surface);
+        }
+        .qa-list-item:hover .qa-icon {
+          background: var(--border);
+        }
+        .qa-list-item:hover .qa-pin {
+          opacity: 1;
+        }
+
         .qa-item {
           display: flex;
           align-items: center;
           gap: 10px;
-          padding: 7px 8px;
+          padding: 7px 4px 7px 8px;
           border-radius: var(--radius-md);
           text-decoration: none;
           cursor: pointer;
-          transition: background 0.12s;
+          flex: 1;
+          min-width: 0;
         }
         .qa-item:hover {
-          background: var(--bg-surface);
           text-decoration: none;
-        }
-        .qa-item:hover .qa-pin {
-          opacity: 1;
         }
 
         .qa-icon {
@@ -218,9 +229,6 @@ export default function QuickAccess() {
           color: var(--text-secondary);
           flex-shrink: 0;
           transition: background 0.12s;
-        }
-        .qa-item:hover .qa-icon {
-          background: var(--border);
         }
 
         .qa-name {
@@ -251,7 +259,8 @@ export default function QuickAccess() {
           cursor: pointer;
           color: var(--text-disabled);
           font-size: 14px;
-          padding: 2px;
+          padding: 4px;
+          margin-right: 6px;
           opacity: 0;
           flex-shrink: 0;
           transition: opacity 0.12s, color 0.12s;
@@ -267,6 +276,21 @@ export default function QuickAccess() {
         .qa-pin:hover {
           color: var(--text);
           background: var(--border);
+        }
+
+        /* Fixed: pin was only reachable via :hover, making it invisible
+           and unusable on touch devices with no hover capability. */
+        @media (hover: none) {
+          .qa-pin {
+            opacity: 1;
+          }
+        }
+
+        .qa-item:focus-visible,
+        .qa-pin:focus-visible,
+        .qa-clear-btn:focus-visible {
+          outline: 2px solid var(--brand);
+          outline-offset: 2px;
         }
       `}</style>
     </>

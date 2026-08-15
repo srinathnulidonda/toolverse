@@ -1,231 +1,233 @@
 <div align="center">
+  <img src="public/logo.png" alt="Toolverse Logo" width="380" />
+  <h1>Toolverse</h1>
+  <p><strong>A free, privacy-first utility hub — 50+ browser-based tools for PDF, image, developer, finance, resume, and social tasks. No sign-up. No uploads. No limits.</strong></p>
 
-<img src="public/logo.png" alt="Toolverse Logo" width="380">
-
-
-### Free utility hub offering 50+ client‑side tools for PDF, image, development, finance, resume, and social tasks – **all processing stays in your browser**
-
-[![Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-brightgreen)](https://toolverse.vercel.app)
-[![Documentation](https://img.shields.io/badge/Documentation-Read_Docs-blue)](https://github.com/srinathnulidonda/toolverse#readme)
-[![Report Bug](https://img.shields.io/badge/Report_Bug-Open_Issue-red)](https://github.com/srinathnulidonda/toolverse/issues)
-[![Request Feature](https://img.shields.io/badge/Request_Feature-Open_Issue-yellow)](https://github.com/srinathnulidonda/toolverse/issues)
-[![Discord](https://img.shields.io/discord/placeholder?label=Discord&color=7289DA&logo=discord)](https://discord.gg/yourserver)
-
+  <div>
+    <a href="https://toolverses.vercel.app" target="_blank">
+      <img src="https://img.shields.io/badge/Live_Demo-Visit_Site-brightgreen?style=for-the-badge&logo=vercel" alt="Live Demo" />
+    </a>
+    <a href="#readme" target="_blank">
+      <img src="https://img.shields.io/badge/Documentation-Read_Docs-blue?style=for-the-badge&logo=readthedocs" alt="Documentation" />
+    </a>
+    <a href="https://github.com/srinathnulidonda/toolverse/issues" target="_blank">
+      <img src="https://img.shields.io/badge/Report_Bug-Open_Issue-red?style=for-the-badge&logo=github" alt="Report Bug" />
+    </a>
+    <a href="https://github.com/srinathnulidonda/toolverse/issues" target="_blank">
+      <img src="https://img.shields.io/badge/Request_Feature-Open_Issue-yellow?style=for-the-badge&logo=github" alt="Request Feature" />
+    </a>
+  </div>
 </div>
 
-## ✨ Features
+<br />
 
-- **50+ Client-Side Tools** - PDF, image, developer, finance, resume, and social tools - all processing stays in the browser (zero uploads)
-- **Next.js 16 with Turbopack** - Blazing fast builds and updates
-- **TypeScript Strict Mode** - Enterprise-grade type safety
-- **Centralized History Store** - `useHistoryStore` hook for seamless state management
-- **Production-Ready Logger** - Automatically strips console calls in production
-- **Error Boundaries** - Graceful UI fallback for unexpected errors
-- **Full Test Suite** - Vitest (jsdom) with 80% coverage threshold
-- **Professional Code Quality** - Linted with ESLint, formatted with Prettier
-- **Responsive Design** - Works flawlessly on mobile, tablet, and desktop
-- **Accessibility Focused** - WCAG 2.1 compliant components
-- **PWA Ready** - Installable web app with offline capabilities
+<details>
+  <summary><h3>Table of Contents</h3></summary>
 
-## 🛠️ Tool Categories
+  - [About](#about)
+  - [Features](#features)
+  - [Tool Categories](#tool-categories)
+  - [Built-In Productivity Widget](#built-in-productivity-widget)
+  - [Tech Stack](#tech-stack)
+  - [Screenshots](#screenshots)
+  - [Quick Start](#quick-start)
+  - [Usage Examples](#usage-examples)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Contact & Support](#contact--support)
+  - [Acknowledgments](#acknowledgments)
+
+</details>
+
+## About
+
+Toolverse is a free utility platform for people who want things done fast without giving up their data. Every tool — from PDF compression to JSON formatting — runs entirely in your browser using modern JavaScript and WebAssembly. No file ever touches a server, no account is required, and there are no artificial usage limits.
+
+Whether you're a developer, designer, student, or business professional, Toolverse gives you instant access to 50+ production-grade tools in one place.
+
+## Features
+
+- **Privacy-first** — 100% client-side processing; files never leave your device
+- **Instant and fast** — built on the Next.js App Router with optimized, on-demand rendering
+- **No sign-up, no limits** — every tool is free forever, with zero registration walls
+- **Built-in task and notes widget** — a floating, draggable productivity widget available on every page
+- **Installable as a PWA** — works offline once loaded, with a full app manifest
+- **Light and dark mode** — automatic theme detection based on system preference
+- **Accessible by design** — skip-to-content links, semantic HTML, keyboard-friendly navigation
+- **Structured for search** — JSON-LD metadata, dynamic sitemap, and canonical URLs
+- **Open source** — fully transparent codebase, open for review and contribution
+
+## Tool Categories
+
+Toolverse organizes 50+ tools into six focused categories:
 
 | Category | Tools | Description |
-|----------|-------|-------------|
-| 📄 **PDF** | 9 tools | Compress, merge, split, convert, rotate PDFs |
-| 🖼️ **Image** | 8 tools | Compress, resize, convert, crop, remove background |
-| ⚙️ **Developer** | 24 tools | JSON utils, formatters, validators, generators, converters |
-| 💰 **Finance** | 10 tools | GST, EMI, SIP, tax calculators, currency converter |
-| 📄 **Resume** | 5 tools | Builder, checker, cover letter, LinkedIn summary |
-| 🔗 **Social** | 4 tools | QR codes, meta tags, hashtag generator, tweet cards |
+|---|---|---|
+| PDF | 9 tools | Compress, merge, split, convert, and rotate PDFs |
+| Image | 8 tools | Compress, resize, convert, crop, and remove backgrounds |
+| Developer | 24 tools | JSON utilities, formatters, validators, generators, converters |
+| Finance | 10 tools | GST, EMI, SIP, tax calculators, currency converter |
+| Resume | 5 tools | Resume builder, checker, cover letter, LinkedIn summary |
+| Social | 4 tools | QR codes, meta tags, hashtag generator, tweet cards |
 
-## 🚀 Quick Start
+Browse the full list at [`/tools`](https://toolverses.vercel.app/tools) or explore by category.
 
-### Prerequisites
+## Built-In Productivity Widget
 
-- Node.js ≥ 18
-- pnpm (recommended) or npm/yarn
+Every page on Toolverse includes a floating widget so you never have to leave your workflow to jot something down:
 
-### Installation
+- Tasks with priority levels and quick search
+- Notes and checklists with autosave
+- Draggable — position it anywhere on screen
+- Keyboard shortcut — press `Cmd+K` / `Ctrl+K` to open instantly
+- Stored locally — nothing is ever synced to a server
 
-```bash
-# Clone the repository
-git clone <repository-url>
-cd toolverse
+## Tech Stack
 
-# Install dependencies
-pnpm install          # or npm install / yarn
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Language:** TypeScript
+- **Styling:** CSS Modules
+- **Icons:** [Tabler Icons](https://tabler.io/icons)
+- **Deployment:** [Vercel](https://vercel.com/)
 
-# Start development server
-pnpm dev              # http://localhost:3000
-```
-
-### Production Build
-
-```bash
-# Build for production
-pnpm build
-
-# Run the built app
-pnpm start
-```
-
-## 📖 Usage Examples
-
-### Using Developer Tools
-
-```bash
-# Format JSON
-pnpm dev
-# Navigate to /tools/json-formatter
-
-# Generate secure passwords  
-# Visit /tools/password-generator
-
-# Convert timestamps
-# Go to /tools/timestamp-converter
-```
-
-### Using Finance Tools
-
-```bash
-# Calculate GST
-# Visit /tools/gst-calculator
-
-# Generate invoices
-# Go to /tools/gst-invoice-generator
-
-# Calculate EMI
-# Navigate to /tools/emi-calculator
-```
-
-## 📸 Screenshots
+## Screenshots
 
 <div align="center">
-  <img src=".github/assets/screenshots/home.png" alt="Toolverse Home Page" width="800"/>
+  <img src=".github/assets/screenshots/home.png" alt="Toolverse Home Page" width="800" />
   <p><em>Toolverse Home Page</em></p>
 </div>
 
-
 <div align="center">
-  <img src=".github/assets/screenshots/qr-generator.png" alt="QR Code Generator Tool" width="400"/>
-  <img src=".github/assets/screenshots/html-formatter.png" alt="HTML Formatter Tool" width="400"/>
-  <p><em>QR Code Generator (left) and HTML Formatter (right) tools in action</em></p>
+  <img src=".github/assets/screenshots/qr-generator.png" alt="QR Code Generator Tool" width="400" />
+  <img src=".github/assets/screenshots/html-formatter.png" alt="HTML Formatter Tool" width="400" />
+  <p><em>QR Code Generator (left) and HTML Formatter (right)</em></p>
 </div>
 
 <div align="center">
-  <img src=".github/assets/screenshots/gst-calculator.png" alt="GST Calculator Tool" width="400"/>
-  <p><em>GST Calculator tool in action</em></p>
+  <img src=".github/assets/screenshots/gst-calculator.png" alt="GST Calculator Tool" width="400" />
+  <p><em>GST Calculator in action</em></p>
 </div>
 
-## 📁 Project Structure
+<details>
+  <summary><h3>Quick Start</h3></summary>
 
-```
-toolverse/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout with providers
-│   ├── page.tsx            # Homepage
-│   ├── tools/              # Tools directory
-│   │   ├── page.tsx        # Tools index
-│   │   └── [slug]/         # Individual tool pages
-│   │       ├── page.tsx    # Tool description/marketing
-│   │       └── client-page.tsx # Actual tool implementation
-│   ├── (legal)/            # Legal pages (cookies, privacy, terms)
-│   └── (marketing)/        # Marketing pages (about, contact, faq)
-├── components/             # Reusable UI components
-│   ├── layout/             # Layout components (navbar, footer)
-│   ├── home/               # Homepage sections
-│   ├── tools-directory/    # Tools browsing components
-│   ├── category-tools/     # Category-specific tool components
-│   ├── tool/               # Individual tool components
-│   ├── shared/             # Shared utilities (history, workspace)
-│   ├── search/             # Search functionality
-│   ├── categories/         # Category browsing
-│   └── ui/                 # Primitive UI components
-├── data/                   # Centralized data layer
-│   ├── tools.ts            # Tool definitions (50+ tools)
-│   ├── categories.ts       # Category metadata
-│   └── collections.ts      # Tool collections
-├── lib/                    # Utility functions & hooks
-│   ├── tools.ts            # Tool-related helpers
-│   ├── historyStore.ts     # Centralized history management
-│   └── logger.ts           # Production-ready logger
-├── public/                 # Static assets
-│   ├── favicon.png         # Browser favicon
-│   ├── logo.png            # Application logo
-│   └── manifest.json       # PWA manifest
-└── styles/                 # Global CSS styles
-```
+  ### Prerequisites
 
-## 🔧 Available Scripts
+  - Node.js ≥ 18
+  - pnpm (recommended) or npm/yarn
 
-| Script | Description |
-|--------|-------------|
-| `pnpm dev` | Start Next.js development server (`next dev`) |
-| `pnpm build` | Production build (`next build`) |
-| `pnpm start` | Run the built application (`next start`) |
-| `pnpm lint` | Run ESLint for code quality checks |
-| `pnpm format` | Format code with Prettier |
-| `pnpm test` | Run Vitest test suite |
-| `pnpm test:watch` | Run tests in watch mode |
-| `pnpm type-check` | Run TypeScript type checking |
+  ### Installation
 
-## 🌐 Environment Variables
+  ```bash
+  # Clone the repository
+  git clone https://github.com/srinathnulidonda/toolverse.git
+  cd toolverse
 
-| Variable | Required? | Description |
-|----------|-----------|-------------|
-| `NEXT_PUBLIC_SENTRY_DSN` | No | Sentry DSN for error tracking (set in `.env.local`) |
-| `NEXT_PUBLIC_APP_URL` | **Yes** | Base URL for metadata generation (e.g., `https://toolverse.vercel.app`) |
+  # Install dependencies
+  pnpm install          # or npm install / yarn
 
-## 🤝 Contributing
+  # Start the development server
+  pnpm dev              # http://localhost:3000
+  ```
 
-We welcome contributions! Please follow these steps:
+  ### Environment Variables
 
-1. **Fork** the repository
-2. **Create** your feature branch (`git checkout -b feature/amazing-feature`)
-3. **Make** your changes
-4. **Ensure** lint passes: `pnpm lint && pnpm format`
-5. **Verify** tests pass: `pnpm test`
-6. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-7. **Push** to the branch (`git push origin feature/amazing-feature`)
-8. **Open** a Pull Request
+  Create a `.env.local` file in the project root:
 
-### Development Guidelines
+  ```bash
+  NEXT_PUBLIC_APP_URL=https://toolverses.vercel.app
+  ```
 
-- Follow existing code style (ESLint + Prettier)
-- Write tests for new functionality
-- Keep components small and focused
-- Use TypeScript strictly - avoid `any` types
-- Add JSDoc comments for complex functions
-- Ensure accessibility compliance (WCAG 2.1)
-- Optimize for performance - minimize re-renders
+  ### Production Build
 
-### Reporting Issues
+  ```bash
+  # Build for production
+  pnpm build
 
-Please use the [GitHub Issues](https://github.com/srinathnulidonda/toolverse/issues) to report bugs or request features. Include:
+  # Run the built app
+  pnpm start
+  ```
 
-- Clear description of the issue
-- Steps to reproduce
-- Expected vs actual behavior
-- Screenshots (if applicable)
-- Environment details (browser, OS, etc.)
+</details>
 
-## 📄 License
+<details>
+  <summary><h3>Usage Examples</h3></summary>
 
-This project is private / UNLICENSED.
+  ### Developer Tools
 
-## 📞 Contact & Support
+  ```bash
+  pnpm dev
+  # Format JSON          → /tools/json-formatter
+  # Generate passwords   → /tools/password-generator
+  # Convert timestamps   → /tools/timestamp-converter
+  ```
 
-- **Questions?** Open an issue or reach out at srinathnulidonda@gmail.com
-- **Documentation:** Visit individual tool pages for usage instructions
-- **Updates:** Follow for new tool releases and feature improvements
+  ### Finance Tools
 
-## 🙏 Acknowledgments
+  ```bash
+  # Calculate GST         → /tools/gst-calculator
+  # Generate invoices     → /tools/gst-invoice-generator
+  # Calculate EMI         → /tools/emi-calculator
+  ```
+
+  ### PDF Tools
+
+  ```bash
+  # Merge PDFs            → /tools/pdf-merger
+  # Compress PDFs         → /tools/pdf-compressor
+  # Split PDFs            → /tools/pdf-splitter
+  ```
+
+</details>
+
+<details>
+  <summary><h3>Contributing</h3></summary>
+
+  Contributions are welcome. To get started:
+
+  1. **Fork** the repository
+  2. **Create** your feature branch — `git checkout -b feature/amazing-feature`
+  3. **Make** your changes
+  4. **Lint and format** — `pnpm lint && pnpm format`
+  5. **Test** — `pnpm test`
+  6. **Commit** — `git commit -m "Add amazing feature"`
+  7. **Push** — `git push origin feature/amazing-feature`
+  8. **Open a Pull Request**
+
+  ### Development Guidelines
+
+  - Follow existing code style (ESLint + Prettier)
+  - Use TypeScript strictly — avoid `any`
+  - Keep components small and focused
+  - Ensure accessibility compliance (WCAG 2.1)
+  - Optimize for performance — minimize unnecessary re-renders
+
+  ### Reporting Issues
+
+  Use [GitHub Issues](https://github.com/srinathnulidonda/toolverse/issues) and include:
+
+  - A clear description of the issue
+  - Steps to reproduce
+  - Expected vs. actual behavior
+  - Screenshots, if applicable
+  - Browser and OS details
+
+</details>
+
+
+## Contact & Support
+
+- **Questions or bugs?** Open an [issue](https://github.com/srinathnulidonda/toolverse/issues) or email srinathnulidonda@gmail.com
+- **Tool help?** Each tool page includes its own usage instructions
+- **FAQ:** Visit [`/faq`](https://toolverses.vercel.app/faq) for common questions
+
+## Acknowledgments
 
 - Built with [Next.js](https://nextjs.org/)
-- Icons powered by [Templarian](https://templarian.com/)
+- Icons by [Tabler Icons](https://tabler.io/icons)
 - Inspired by the open-source developer tools community
-- Special thanks to all contributors and users
+- Thanks to all contributors and users
 
 <div align="center">
-  <sub>Built with ❤️ by <a href="https://github.com/srinathnulidonda">Srinath Nulidonda</a></sub>
+  <sub>Built with care by <a href="https://github.com/srinathnulidonda">Srinath Nulidonda</a></sub>
 </div>

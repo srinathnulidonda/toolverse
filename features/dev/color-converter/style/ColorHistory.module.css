@@ -6,7 +6,6 @@
     overflow: hidden;
 }
 
-/*  Header  */
 .chHeader {
     display: flex;
     align-items: center;
@@ -68,19 +67,19 @@
 }
 
 .chClearBtn:hover {
-    background: var(--error-bg);
-    color: #b91c1c;
-    border-color: #f3d2d2;
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
 }
 
 @media (prefers-color-scheme: dark) {
     .chClearBtn:hover {
+        background: #1f1517;
         color: #f87171;
-        border-color: #5a2a2a;
+        border-color: #3c1518;
     }
 }
 
-/*  List  */
 .chList {
     flex: 1;
     overflow: auto;
@@ -108,6 +107,7 @@
     justify-content: space-between;
     padding: 12px 14px;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .chItemLeft {
@@ -142,8 +142,60 @@
 }
 
 .chItemMeta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     font-size: 11px;
     color: var(--text-tertiary);
+}
+
+.chFormatBadge {
+    display: inline-flex;
+    align-items: center;
+    height: 16px;
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.chItemActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.chIconBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--cc-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.chIconBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.chIconBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
 }
 
 .chRestoreBtn {
@@ -173,7 +225,6 @@
     border-color: var(--brand-border);
 }
 
-/*  Empty State  */
 .chEmpty {
     flex: 1;
     display: flex;
@@ -214,7 +265,6 @@
     line-height: 1.6;
 }
 
-/*  Responsive  */
 @media (max-width: 768px) {
     .chList {
         padding: 12px;
@@ -222,11 +272,19 @@
 
     .chItemHeader {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
+    }
+
+    .chItemLeft {
+        width: 100%;
+    }
+
+    .chItemActions {
+        width: 100%;
     }
 
     .chRestoreBtn {
-        width: 100%;
+        flex: 1;
         justify-content: center;
     }
 }
@@ -235,6 +293,7 @@
 
     .chClearBtn,
     .chRestoreBtn,
+    .chIconBtn,
     .chItem {
         transition: none;
     }

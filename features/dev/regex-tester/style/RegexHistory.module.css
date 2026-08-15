@@ -46,6 +46,7 @@
     font-size: 14px;
     color: var(--text);
     outline: none;
+    min-width: 0;
 }
 
 .rxhSearchInput::placeholder {
@@ -64,6 +65,7 @@
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.12s;
+    flex-shrink: 0;
 }
 
 .rxhClearSearch:hover {
@@ -405,6 +407,24 @@
 @media (max-width: 768px) {
     .rxhRoot {
         padding: 12px;
+    }
+
+    .rxhHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rxhSearchWrap {
+        min-width: 0;
+    }
+
+    .rxhHeaderActions {
+        justify-content: space-between;
+    }
+
+    .rxhStatsBar {
+        gap: 14px;
+        padding: 12px 14px;
     }
 
     .rxhEntryHeader {

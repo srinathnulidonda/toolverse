@@ -3,6 +3,7 @@
 
 import { useMemo, useState, useCallback } from "react";
 import { generateShades, generateTints, generateTones, hexToRgb, rgbToHsl } from "./ts/utils";
+import styles from "./style/ColorShades.module.css";
 
 interface ColorShadesProps {
   baseColor: string;
@@ -11,12 +12,33 @@ interface ColorShadesProps {
 
 type ShadeType = "shades" | "tints" | "tones";
 
-import styles from "./style/ColorShades.module.css";
+const TYPES: { id: ShadeType; label: string; description: string; icon: string }[] = [
+  {
+    id: "shades",
+    label: "Shades",
+    description: "Mix with black (lightness variation)",
+    icon: "ti-moon",
+  },
+  {
+    id: "tints",
+    label: "Tints",
+    description: "Mix with white (lighter variations)",
+    icon: "ti-sun",
+  },
+  {
+    id: "tones",
+    label: "Tones",
+    description: "Mix with gray (saturation variation)",
+    icon: "ti-adjustments",
+  },
+];
 
 export default function ColorShades({ baseColor, onColorSelect }: ColorShadesProps) {
   const [selectedType, setSelectedType] = useState<ShadeType>("shades");
   const [count, setCount] = useState(10);
   const [copiedColor, setCopiedColor] = useState("");
+  const [copiedAll, setCopiedAll] = useState(false);
+  const [copiedCss, setCopiedCss] = useState(false);
 
   const colors = useMemo(() => {
     switch (selectedType) {
@@ -32,100 +54,118 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
   }, [baseColor, selectedType, count]);
 
   const handleCopyColor = useCallback(async (color: string) => {
-    await navigator.clipboard.writeText(color.toUpperCase());
-    setCopiedColor(color);
-    setTimeout(() => setCopiedColor(""), 1500);
+    try {
+      await navigator.clipboard.writeText(color.toUpperCase());
+      setCopiedColor(color);
+      setTimeout(() => setCopiedColor(""), 1500);
+    } catch {
+      setCopiedColor("");
+    }
   }, []);
 
   const handleCopyAll = useCallback(async () => {
-    const text = colors.map((c) => c.toUpperCase()).join("\n");
-    await navigator.clipboard.writeText(text);
+    try {
+      await navigator.clipboard.writeText(colors.map((c) => c.toUpperCase()).join("\n"));
+      setCopiedAll(true);
+      setTimeout(() => setCopiedAll(false), 1500);
+    } catch {
+      setCopiedAll(false);
+    }
   }, [colors]);
 
-  const TYPES = [
-    {
-      id: "shades" as const,
-      label: "Shades",
-      description: "Mix with black (lightness variation)",
-      icon: "ti-moon",
+  const handleCopyCss = useCallback(async () => {
+    const css = `:root {\n${colors.map((c, i) => `  --shade-${i + 1}: ${c};`).join("\n")}\n}`;
+    try {
+      await navigator.clipboard.writeText(css);
+      setCopiedCss(true);
+      setTimeout(() => setCopiedCss(false), 1500);
+    } catch {
+      setCopiedCss(false);
+    }
+  }, [colors]);
+
+  const handleSwatchKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>, color: string) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onColorSelect(color);
+      }
     },
-    {
-      id: "tints" as const,
-      label: "Tints",
-      description: "Mix with white (lighter variations)",
-      icon: "ti-sun",
-    },
-    {
-      id: "tones" as const,
-      label: "Tones",
-      description: "Mix with gray (saturation variation)",
-      icon: "ti-adjustments",
-    },
-  ];
+    [onColorSelect]
+  );
 
   return (
-    <>
-      <div className={styles.csRoot}>
-        {/*  Controls  */}
-        <div className={styles.csControls}>
-          <div className={styles.csTypeSelector}>
-            {TYPES.map((type) => (
-              <button
-                key={type.id}
-                type="button"
-                className={`${styles.csTypeBtn}${selectedType === type.id ? ` ${styles.active}` : ""}`}
-                onClick={() => setSelectedType(type.id)}
-              >
-                <i className={`ti ${type.icon}`} />
-                <div className={styles.csTypeText}>
-                  <span className={styles.csTypeLabel}>{type.label}</span>
-                  <span className={styles.csTypeDesc}>{type.description}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          <div className={styles.csCountControl}>
-            <label className={styles.csCountLabel}>
-              <i className="ti ti-adjustments-horizontal" />
-              Count: {count}
-            </label>
-            <input
-              type="range"
-              className={styles.csRange}
-              min="5"
-              max="15"
-              value={count}
-              onChange={(e) => setCount(Number(e.target.value))}
-            />
-            <div className={styles.csRangeMarks}>
-              <span>5</span>
-              <span>10</span>
-              <span>15</span>
-            </div>
-          </div>
+    <div className={styles.csRoot}>
+      <div className={styles.csControls}>
+        <div className={styles.csTypeSelector}>
+          {TYPES.map((type) => (
+            <button
+              key={type.id}
+              type="button"
+              className={`${styles.csTypeBtn} ${selectedType === type.id ? styles.active : ""}`}
+              onClick={() => setSelectedType(type.id)}
+            >
+              <i className={`ti ${type.icon}`} />
+              <div className={styles.csTypeText}>
+                <span className={styles.csTypeLabel}>{type.label}</span>
+                <span className={styles.csTypeDesc}>{type.description}</span>
+              </div>
+            </button>
+          ))}
         </div>
 
-        {/*  Color Grid  */}
-        <div className={styles.csDisplay}>
-          <div className={styles.csDisplayHeader}>
-            <div className={styles.csDisplayLabel}>
-              <i className="ti ti-palette" />
-              {colors.length} Colors
-            </div>
-            <button type="button" className={styles.csCopyAllBtn} onClick={handleCopyAll}>
-              <i className="ti ti-copy" />
-              Copy All
-            </button>
+        <div className={styles.csCountControl}>
+          <label className={styles.csCountLabel} htmlFor="cs-count-range">
+            <i className="ti ti-adjustments-horizontal" />
+            Count: {count}
+          </label>
+          <input
+            id="cs-count-range"
+            type="range"
+            className={styles.csRange}
+            min="5"
+            max="15"
+            value={count}
+            onChange={(e) => setCount(Number(e.target.value))}
+          />
+          <div className={styles.csRangeMarks}>
+            <span>5</span>
+            <span>10</span>
+            <span>15</span>
           </div>
+        </div>
+      </div>
 
+      <div className={styles.csDisplay}>
+        <div className={styles.csDisplayHeader}>
+          <div className={styles.csDisplayLabel}>
+            <i className="ti ti-palette" />
+            {colors.length} Colors
+          </div>
+          <button
+            type="button"
+            className={`${styles.csCopyAllBtn} ${copiedAll ? styles.copied : ""}`}
+            onClick={handleCopyAll}
+            disabled={!colors.length}
+          >
+            <i className={`ti ${copiedAll ? "ti-check" : "ti-copy"}`} />
+            {copiedAll ? "Copied" : "Copy All"}
+          </button>
+        </div>
+
+        {colors.length === 0 ? (
+          <div className={styles.csEmpty}>
+            <div className={styles.csEmptyIcon}>
+              <i className="ti ti-palette-off" />
+            </div>
+            <p className={styles.csEmptyTitle}>No colors generated</p>
+          </div>
+        ) : (
           <div className={styles.csGrid}>
             {colors.map((color, idx) => {
               const rgb = hexToRgb(color);
               const hsl = rgb ? rgbToHsl(rgb.r, rgb.g, rgb.b) : null;
-              const isBase =
-                color.toUpperCase() === baseColor.toUpperCase() ||
-                (selectedType === "shades" && idx === Math.floor(count / 2));
+              const isBase = color.toLowerCase() === baseColor.toLowerCase();
 
               return (
                 <div key={idx} className={styles.csColorItem}>
@@ -133,8 +173,10 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     className={styles.csColorSwatch}
                     style={{ background: color }}
                     onClick={() => onColorSelect(color)}
+                    onKeyDown={(e) => handleSwatchKeyDown(e, color)}
                     role="button"
                     tabIndex={0}
+                    aria-label={`Select color ${color}`}
                   >
                     {isBase && (
                       <div className={styles.csBaseBadge}>
@@ -146,15 +188,14 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                     <code className={styles.csColorHex}>{color.toUpperCase()}</code>
                     {hsl && (
                       <div className={styles.csColorHsl}>
-                        {selectedType === "shades" && `L: ${hsl.l}%`}
-                        {selectedType === "tints" && `L: ${hsl.l}%`}
-                        {selectedType === "tones" && `S: ${hsl.s}%`}
+                        {selectedType === "tones" ? `S: ${hsl.s}%` : `L: ${hsl.l}%`}
                       </div>
                     )}
                     <button
                       type="button"
-                      className={`${styles.csCopyBtn}${copiedColor === color ? ` ${styles.copied}` : ""}`}
+                      className={`${styles.csCopyBtn} ${copiedColor === color ? styles.copied : ""}`}
                       onClick={() => handleCopyColor(color)}
+                      aria-label={`Copy ${color}`}
                     >
                       <i className={`ti ${copiedColor === color ? "ti-check" : "ti-copy"}`} />
                     </button>
@@ -163,34 +204,31 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
               );
             })}
           </div>
-        </div>
-
-        {/*  CSS Export  */}
-        <div className={styles.csExport}>
-          <div className={styles.csExportHeader}>
-            <i className="ti ti-file-code" />
-            CSS Variables
-          </div>
-          <div className={styles.csExportCode}>
-            <code>
-              {`:root {\n`}
-              {colors.map((c, i) => `  --shade-${i + 1}: ${c};\n`).join("")}
-              {`}`}
-            </code>
-          </div>
-          <button
-            type="button"
-            className={styles.csExportCopyBtn}
-            onClick={() => {
-              const css = `:root {\n${colors.map((c, i) => `  --shade-${i + 1}: ${c};`).join("\n")}\n}`;
-              navigator.clipboard.writeText(css);
-            }}
-          >
-            <i className="ti ti-copy" />
-            Copy CSS
-          </button>
-        </div>
+        )}
       </div>
-    </>
+
+      <div className={styles.csExport}>
+        <div className={styles.csExportHeader}>
+          <i className="ti ti-file-code" />
+          CSS Variables
+        </div>
+        <div className={styles.csExportCode}>
+          <code>
+            {`:root {\n`}
+            {colors.map((c, i) => `  --shade-${i + 1}: ${c};\n`).join("")}
+            {`}`}
+          </code>
+        </div>
+        <button
+          type="button"
+          className={`${styles.csExportCopyBtn} ${copiedCss ? styles.copied : ""}`}
+          onClick={handleCopyCss}
+          disabled={!colors.length}
+        >
+          <i className={`ti ${copiedCss ? "ti-check" : "ti-copy"}`} />
+          {copiedCss ? "Copied" : "Copy CSS"}
+        </button>
+      </div>
+    </div>
   );
 }

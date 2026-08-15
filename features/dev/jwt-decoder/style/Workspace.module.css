@@ -1,24 +1,23 @@
 /* features/dev/jwt-decoder/style/Workspace.module.css */
-
 .jwtwRoot {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-xl);
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
+    min-height: 680px;
     overflow: hidden;
-    min-height: 600px;
 }
 
-/* Chrome/Top Bar */
 .jwtwChrome {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 10px 14px;
+    padding: 10px 16px;
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
     flex-wrap: wrap;
 }
 
@@ -30,7 +29,35 @@
     flex-wrap: wrap;
 }
 
-/* Presets Dropdown */
+.jwtwTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.jwtwTitleIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: #eff6ff;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwtwTitleIcon {
+        background: #0a1628;
+        color: #93c5fd;
+    }
+}
+
 .jwtwPresets {
     position: relative;
 }
@@ -39,9 +66,9 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: var(--radius-md);
+    height: 30px;
+    padding: 0 11px;
+    border-radius: 8px;
     border: 0.5px solid var(--border);
     background: var(--bg-card);
     color: var(--text-secondary);
@@ -55,19 +82,19 @@
 .jwtwPresetsTrigger:hover {
     background: var(--bg-surface);
     color: var(--text);
-    border-color: var(--brand-border);
 }
 
 .jwtwPresetsTrigger i {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .jwtwChevron {
     transition: transform 0.2s;
-    font-size: 12px !important;
+    font-size: 11px !important;
+    color: var(--text-tertiary);
 }
 
-.jwtwChevron.open {
+.jwtwChevronOpen {
     transform: rotate(180deg);
 }
 
@@ -75,10 +102,10 @@
     position: absolute;
     top: calc(100% + 6px);
     left: 0;
-    min-width: 200px;
+    min-width: 190px;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
+    border-radius: 10px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     z-index: 100;
@@ -89,11 +116,11 @@
     align-items: center;
     gap: 8px;
     width: 100%;
-    padding: 10px 14px;
+    padding: 9px 13px;
     border: none;
     background: transparent;
     color: var(--text-secondary);
-    font-size: 13px;
+    font-size: 12px;
     font-family: var(--font-sans);
     cursor: pointer;
     transition: background 0.12s;
@@ -106,18 +133,18 @@
 }
 
 .jwtwPresetItem i {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-tertiary);
+    flex-shrink: 0;
 }
 
-/* Icon Button */
 .jwtwIconBtn {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: var(--radius-md);
+    height: 30px;
+    padding: 0 11px;
+    border-radius: 8px;
     border: 0.5px solid var(--border);
     background: transparent;
     color: var(--text-secondary);
@@ -129,27 +156,35 @@
 }
 
 .jwtwIconBtn:hover {
-    background: var(--error-bg);
+    background: #fef2f2;
     color: #dc2626;
-    border-color: #fca5a5;
+    border-color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwtwIconBtn:hover {
+        background: #1f1517;
+        color: #f87171;
+        border-color: #3c1518;
+    }
 }
 
 .jwtwIconBtn i {
-    font-size: 14px;
+    font-size: 13px;
 }
 
-/* Badges */
 .jwtwBadge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    height: 28px;
-    padding: 0 10px;
+    gap: 4px;
+    height: 26px;
+    padding: 0 9px;
     border-radius: 99px;
     border: 0.5px solid;
     font-size: 11px;
     font-weight: 600;
     font-family: var(--font-sans);
+    flex-shrink: 0;
 }
 
 .jwtwBadge i {
@@ -194,14 +229,13 @@
     }
 }
 
-/* Action Button */
 .jwtwActionBtn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    height: 32px;
-    padding: 0 14px;
-    border-radius: var(--radius-md);
+    gap: 5px;
+    height: 30px;
+    padding: 0 11px;
+    border-radius: 8px;
     border: 0.5px solid var(--border);
     background: var(--bg-card);
     color: var(--text-secondary);
@@ -219,7 +253,7 @@
 
 .jwtwActionBtn.copied {
     background: var(--brand-light);
-    color: var(--brand);
+    color: var(--brand-text);
     border-color: var(--brand-border);
 }
 
@@ -227,188 +261,203 @@
     font-size: 13px;
 }
 
-/* Input Section */
-.jwtwInputSection {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 16px;
-    border-bottom: 0.5px solid var(--border-faint);
+.jwtwBody {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
 
-.jwtwInputHeader {
+.jwtwInputPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.jwtwInputPanelBar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    height: 38px;
+    padding: 0 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+    gap: 8px;
 }
 
-.jwtwInputLabel {
+.jwtwPanelLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+}
+
+.jwtwPanelLabel i {
+    font-size: 12px;
+}
+
+.jwtwPanelActions {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-tertiary);
 }
 
-.jwtwInputLabel i {
-    font-size: 13px;
-}
-
-.jwtwInputMeta {
-    font-size: 11px;
-    color: var(--text-disabled);
+.jwtwCharCount {
+    font-size: 10px;
     font-family: var(--font-mono);
+    color: var(--text-disabled);
 }
 
 .jwtwInput {
-    width: 100%;
-    padding: 12px 14px;
-    background: var(--bg-surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-md);
+    flex: 1;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: none;
+    border-left: 2px solid transparent;
     font-family: var(--font-mono);
     font-size: 12.5px;
     line-height: 1.65;
     color: var(--text);
-    resize: vertical;
-    min-height: 100px;
-    transition: border-color 0.12s;
+    resize: none;
+    outline: none;
+    min-height: 0;
+    transition: border-color 0.15s;
 }
 
-.jwtwInput:focus {
-    outline: none;
-    border-color: var(--brand);
+.jwtwInputError {
+    border-left-color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwtwInputError {
+        border-left-color: #f87171;
+    }
 }
 
 .jwtwInput::placeholder {
     color: var(--text-disabled);
 }
 
-/* Error */
-.jwtwError {
+.jwtwErrorBanner {
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    padding: 12px 14px;
-    background: var(--error-bg);
-    border: 0.5px solid #fecaca;
-    border-radius: var(--radius-md);
-    color: #991b1b;
+    padding: 10px 14px;
+    background: #fef2f2;
+    border-top: 0.5px solid #fecaca;
+    color: #dc2626;
     font-size: 12px;
+    flex-shrink: 0;
 }
 
 @media (prefers-color-scheme: dark) {
-    .jwtwError {
-        border-color: #7f1d1d;
+    .jwtwErrorBanner {
+        background: #1f1517;
+        border-color: #3c1518;
         color: #f87171;
     }
 }
 
-.jwtwError i {
-    font-size: 15px;
+.jwtwErrorBanner i {
+    font-size: 14px;
     flex-shrink: 0;
     margin-top: 1px;
 }
 
-.jwtwError strong {
+.jwtwErrorBanner strong {
     display: block;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    font-size: 12px;
 }
 
-.jwtwError p {
+.jwtwErrorBanner p {
     margin: 0;
     font-size: 11px;
     font-family: var(--font-mono);
+    color: inherit;
+    opacity: 0.8;
 }
 
-/* Empty State */
-.jwtwEmpty {
+.jwtwGutter {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 80px 24px;
-    gap: 12px;
-    text-align: center;
-    flex: 1;
+    background: var(--bg-surface);
+    border-left: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
 }
 
-.jwtwEmptyIcon {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    background: var(--bg-surface);
+.jwtwGutterLine {
+    flex: 1;
+    width: 0.5px;
+    background: var(--border);
+}
+
+.jwtwGutterNode {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-card);
     border: 0.5px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    color: var(--text-disabled);
-    margin-bottom: 8px;
-}
-
-.jwtwEmptyTitle {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-    margin: 0;
-}
-
-.jwtwEmptyDesc {
     font-size: 13px;
     color: var(--text-tertiary);
-    max-width: 420px;
-    line-height: 1.6;
-    margin: 0;
+    flex-shrink: 0;
 }
 
-.jwtwEmptyBtn {
-    display: inline-flex;
+.jwtwOutputPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.jwtwOutputPanelBar {
+    display: flex;
     align-items: center;
-    gap: 6px;
-    height: 36px;
-    padding: 0 18px;
-    margin-top: 8px;
-    border-radius: var(--radius-md);
-    border: none;
-    background: var(--brand);
-    color: white;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: var(--font-sans);
-    cursor: pointer;
-    transition: all 0.12s;
+    justify-content: space-between;
+    height: 38px;
+    padding: 0 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+    gap: 8px;
 }
 
-.jwtwEmptyBtn:hover {
-    background: var(--brand-hover);
-    transform: translateY(-1px);
+.jwtwTabsBar {
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
-.jwtwEmptyBtn i {
-    font-size: 15px;
-}
-
-/* Tabs */
 .jwtwTabs {
     display: flex;
-    gap: 0;
-    padding: 0 16px;
-    border-bottom: 0.5px solid var(--border);
-    background: var(--bg-surface);
+    padding: 0 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.jwtwTabs::-webkit-scrollbar {
+    display: none;
 }
 
 .jwtwTab {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 44px;
-    padding: 0 16px;
+    height: 40px;
+    padding: 0 12px;
     border: none;
     background: transparent;
     color: var(--text-tertiary);
@@ -419,10 +468,15 @@
     position: relative;
     transition: color 0.12s;
     white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.jwtwTab i {
+    font-size: 13px;
 }
 
 .jwtwTab:hover {
-    color: var(--text);
+    color: var(--text-secondary);
 }
 
 .jwtwTab.active {
@@ -433,19 +487,43 @@
     content: "";
     position: absolute;
     bottom: 0;
-    left: 12px;
-    right: 12px;
+    left: 8px;
+    right: 8px;
     height: 2px;
     background: var(--brand);
     border-radius: 2px 2px 0 0;
 }
 
-.jwtwTab i {
-    font-size: 14px;
+.jwtwTabBadge {
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 99px;
+    background: #fef2f2;
+    color: #dc2626;
+    font-size: 9px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Content */
-.jwtwContent {
+@media (prefers-color-scheme: dark) {
+    .jwtwTabBadge {
+        background: #1f1517;
+        color: #f87171;
+    }
+}
+
+.jwtwTabDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f59e0b;
+    flex-shrink: 0;
+}
+
+.jwtwOutputContent {
     flex: 1;
     min-height: 0;
     overflow: hidden;
@@ -453,48 +531,260 @@
     flex-direction: column;
 }
 
-.jwtwPanel {
+.jwtwEmpty {
     flex: 1;
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--bg-card);
 }
 
-/* Raw JSON Panel */
+.jwtwEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-disabled);
+}
+
+.jwtwEmptyTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.jwtwEmptyDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.6;
+}
+
+.jwtwEmptySamples {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.jwtwEmptySampleBtn {
+    height: 32px;
+    padding: 0 14px;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: var(--font-sans);
+}
+
+.jwtwEmptySampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jwtwMobileSwitcher {
+    display: none;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwtwSwTab {
+    flex: 1;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.jwtwSwTab.active {
+    color: var(--text);
+}
+
+.jwtwSwTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--brand);
+}
+
+.jwtwSwDivider {
+    width: 0.5px;
+    background: var(--border);
+    align-self: stretch;
+    margin: 10px 0;
+}
+
+.jwtwSwDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+}
+
+.jwtwMobCta {
+    display: none;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwtwCtaBtn {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: none;
+    border-radius: 10px;
+    background: var(--brand);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.jwtwCtaBtn:hover {
+    background: var(--brand-hover);
+}
+
+.jwtwCtaBtn i {
+    font-size: 15px;
+}
+
+.jwtwMobActions {
+    display: none;
+    gap: 8px;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwtwMobBtn {
+    flex: 1;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jwtwMobBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jwtwMobBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jwtwMobBtn i {
+    font-size: 14px;
+}
+
 .jwtwRaw {
     display: flex;
     flex-direction: column;
     gap: 16px;
     padding: 16px;
+    flex: 1;
+    overflow: auto;
+    background: var(--bg-surface);
 }
 
 .jwtwRawSection {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .jwtwRawHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    font-size: 11px;
+    padding: 9px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-tertiary);
 }
 
-.jwtwCopyBtnSm {
-    width: 24px;
-    height: 24px;
-    border: 0.5px solid var(--border);
-    background: transparent;
-    color: var(--text-disabled);
-    cursor: pointer;
-    border-radius: var(--radius-sm);
+.jwtwRawHeaderLeft {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 7px;
+}
+
+.jwtwRawDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.jwtwCopyBtnSm {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 24px;
+    padding: 0 8px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: var(--font-sans);
     transition: all 0.12s;
 }
 
@@ -505,20 +795,18 @@
 
 .jwtwCopyBtnSm.copied {
     background: var(--brand-light);
-    color: var(--brand);
+    color: var(--brand-text);
     border-color: var(--brand-border);
 }
 
 .jwtwCopyBtnSm i {
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .jwtwRawCode {
     margin: 0;
     padding: 14px 16px;
-    background: var(--bg-surface);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-md);
+    background: var(--bg-card);
     font-family: var(--font-mono);
     font-size: 12px;
     line-height: 1.7;
@@ -532,49 +820,129 @@
     white-space: pre-wrap;
 }
 
-/* Footer */
 .jwtwFooter {
     display: flex;
     align-items: center;
     gap: 7px;
-    padding: 10px 16px;
+    padding: 9px 16px;
     background: var(--bg-surface);
     border-top: 0.5px solid var(--border);
     font-size: 11px;
     color: var(--text-disabled);
     font-family: var(--font-sans);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-.jwtwFooter i {
+.jwtwFooterLeft {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.jwtwFooterLeft i {
     font-size: 13px;
+    color: var(--brand);
 }
 
-/* Responsive */
+.jwtwFooterRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+}
+
+.jwtwValid {
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.jwtwInvalid {
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwtwValid {
+        color: #4ade80;
+    }
+
+    .jwtwInvalid {
+        color: #f87171;
+    }
+}
+
 @media (max-width: 768px) {
-    .jwtwBtnLabel {
+    .jwtwRoot {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100dvh;
+    }
+
+    .jwtwChrome {
+        gap: 8px;
+    }
+
+    .jwtwBody {
+        grid-template-columns: 1fr;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .jwtwGutter {
         display: none;
     }
 
-    .jwtwTabs {
-        overflow-x: auto;
-        scrollbar-width: none;
+    .jwtwInputPanel,
+    .jwtwOutputPanel {
+        grid-column: 1;
+        grid-row: 1;
+        position: absolute;
+        inset: 0;
     }
 
-    .jwtwTabs::-webkit-scrollbar {
-        display: none;
+    .jwtwMobVisible {
+        z-index: 1;
+        visibility: visible;
     }
 
-    .jwtwTab {
-        padding: 0 12px;
+    .jwtwMobHidden {
+        z-index: 0;
+        visibility: hidden;
+        pointer-events: none;
     }
 
-    .jwtwEmpty {
-        padding: 60px 20px;
+    .jwtwMobileSwitcher {
+        display: flex;
+    }
+
+    .jwtwMobCta {
+        display: block;
+    }
+
+    .jwtwMobActions {
+        display: flex;
+    }
+
+    .jwtwFooter {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+    }
+
+    .jwtwFooterRight {
+        justify-content: center;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .jwtwRoot,
     .jwtwRoot * {
         transition: none !important;
     }

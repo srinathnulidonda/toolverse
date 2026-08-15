@@ -1,0 +1,251 @@
+/* features/pdf/jpg-to-pdf/style/ProcessingStage.module.css */
+.processContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 56px 24px;
+    text-align: center;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.spinnerWrap {
+    position: relative;
+    width: 76px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.spinner {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid var(--border-faint);
+    border-top-color: var(--brand);
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinnerIcon {
+    position: relative;
+    font-size: 24px;
+    color: var(--brand);
+}
+
+.stageInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+}
+
+.stageTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    font-family: var(--font-sans);
+}
+
+.stageDetail {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin: 0;
+    font-family: var(--font-mono);
+}
+
+.progressTrack {
+    width: 100%;
+    max-width: 280px;
+    height: 6px;
+    background: var(--border-faint);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand), var(--brand-hover));
+    border-radius: 999px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stepsRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    position: relative;
+    min-width: 0;
+}
+
+.step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: calc(50% + 14px);
+    right: calc(-50% + 14px);
+    height: 2px;
+    background: var(--border-faint);
+    z-index: 0;
+}
+
+.done:not(:last-child)::after {
+    background: var(--brand);
+}
+
+.stepDot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border-faint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: white;
+    z-index: 1;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.done .stepDot {
+    background: var(--brand);
+    border-color: var(--brand);
+}
+
+.active .stepDot {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.pending {
+    opacity: 0.55;
+}
+
+.stepLabel {
+    font-size: 9.5px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.active .stepLabel {
+    color: var(--brand-text);
+    font-weight: 700;
+}
+
+.done .stepLabel {
+    color: var(--text-secondary);
+}
+
+.hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin: 4px 0 0 0;
+    font-family: var(--font-sans);
+    text-align: center;
+}
+
+.hint i {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+    .stepsRow {
+        display: none;
+    }
+    .processContainer {
+        padding: 40px 16px;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    .processContainer {
+        padding: 32px 12px;
+        gap: 14px;
+    }
+    .spinnerWrap {
+        width: 64px;
+        height: 64px;
+    }
+    .stageTitle {
+        font-size: 14.5px;
+    }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+    .processContainer {
+        padding: 20px 16px;
+        gap: 10px;
+    }
+    .spinnerWrap {
+        width: 52px;
+        height: 52px;
+    }
+    .spinnerIcon {
+        font-size: 18px;
+    }
+    .stepsRow {
+        display: none;
+    }
+    .hint {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .processContainer {
+        animation: none;
+    }
+    .spinner {
+        animation: none;
+    }
+    .progressFill,
+    .stepDot {
+        transition: none;
+    }
+}

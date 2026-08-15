@@ -9,31 +9,87 @@
     min-height: 680px;
 }
 
-/* Command Bar */
-.rxtCommandBar {
+.rxtChrome {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 12px 16px;
+    gap: 12px;
+    padding: 10px 16px;
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
     flex-wrap: wrap;
 }
 
-.rxtCmdLeft,
-.rxtCmdRight {
+.rxtChromeLeft,
+.rxtChromeRight {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
+}
+
+.rxtTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.rxtTitleIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: var(--brand-light);
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.rxtValidBadge,
+.rxtInvalidBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+}
+
+.rxtValidBadge {
+    color: #16a34a;
+    background: #dcfce7;
+}
+
+.rxtInvalidBadge {
+    color: #dc2626;
+    background: #fef2f2;
+}
+
+@media (prefers-color-scheme: dark) {
+    .rxtValidBadge {
+        background: #022c22;
+        color: #4ade80;
+    }
+
+    .rxtInvalidBadge {
+        background: #1f1517;
+        color: #f87171;
+    }
 }
 
 .rxtQuickActions {
     display: flex;
     align-items: center;
     gap: 6px;
-    flex-wrap: wrap;
+    overflow-x: auto;
+    max-width: 320px;
 }
 
 .rxtQuickLabel {
@@ -42,7 +98,8 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-disabled);
-    margin-right: 4px;
+    margin-right: 2px;
+    flex-shrink: 0;
 }
 
 .rxtQuickBtn {
@@ -59,6 +116,8 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .rxtQuickBtn i {
@@ -71,65 +130,71 @@
     border-color: var(--brand-border);
 }
 
-.rxtPatternIndicator {
-    display: flex;
-    align-items: center;
-    height: 30px;
-    padding: 0 12px;
-    background: var(--bg-card);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-md);
-}
-
-.rxtPatternIndicator code {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--brand);
-    font-weight: 600;
-    background: none;
-    border: none;
-    padding: 0;
-}
-
-/* Flags Bar */
-.rxtFlagsBar {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
-    background: var(--bg-surface);
-    border-bottom: 0.5px solid var(--border);
-    overflow-x: auto;
-}
-
-.rxtFlagsLabel {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-tertiary);
-    flex-shrink: 0;
-}
-
-.rxtFlagsLabel i {
-    font-size: 13px;
-}
-
-.rxtFlagsList {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-.rxtFlagToggle {
+.rxtFlagsToggleBtn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    height: 32px;
-    padding: 0 11px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.rxtFlagsToggleBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxtFlagsToggleBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.rxtFlagsToggleBtn i {
+    font-size: 14px;
+}
+
+.rxtFlagsCount {
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 99px;
+    background: var(--brand);
+    color: white;
+    font-size: 9.5px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rxtFlagsPanel {
+    padding: 14px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.rxtFlagsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rxtFlagChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 12px;
     border-radius: var(--radius-md);
     border: 0.5px solid var(--border);
     background: var(--bg-card);
@@ -137,19 +202,14 @@
     font-size: 12px;
     cursor: pointer;
     transition: all 0.12s;
-    flex-shrink: 0;
 }
 
-.rxtFlagToggle i {
-    font-size: 13px;
-}
-
-.rxtFlagToggle:hover {
+.rxtFlagChip:hover {
     background: var(--bg-surface);
     color: var(--text);
 }
 
-.rxtFlagToggle.active {
+.rxtFlagChip.active {
     background: var(--brand-light);
     color: var(--brand-text);
     border-color: var(--brand-border);
@@ -165,15 +225,15 @@
     font-weight: 500;
 }
 
-/* Tabs Bar */
 .rxtTabsBar {
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
 }
 
 .rxtTabs {
     display: flex;
-    padding: 0 16px;
+    padding: 0 14px;
     overflow-x: auto;
 }
 
@@ -182,11 +242,11 @@
     align-items: center;
     gap: 6px;
     height: 42px;
-    padding: 0 16px;
+    padding: 0 14px;
     border: none;
     background: transparent;
     color: var(--text-tertiary);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
     position: relative;
@@ -200,7 +260,7 @@
 }
 
 .rxtTab:hover {
-    color: var(--text);
+    color: var(--text-secondary);
 }
 
 .rxtTab.active {
@@ -211,8 +271,8 @@
     content: "";
     position: absolute;
     bottom: 0;
-    left: 12px;
-    right: 12px;
+    left: 10px;
+    right: 10px;
     height: 2px;
     background: var(--brand);
     border-radius: 2px 2px 0 0;
@@ -222,9 +282,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 6px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
     border-radius: 99px;
     background: var(--brand-light);
     color: var(--brand-text);
@@ -233,7 +293,6 @@
     border: 0.5px solid var(--brand-border);
 }
 
-/* Tab Content */
 .rxtTabContent {
     flex: 1;
     display: flex;
@@ -242,47 +301,40 @@
     overflow: hidden;
 }
 
-/* Footer */
 .rxtFooter {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 10px 16px;
+    gap: 12px;
+    padding: 9px 16px;
     background: var(--bg-surface);
     border-top: 0.5px solid var(--border);
+    font-size: 11px;
+    flex-shrink: 0;
     flex-wrap: wrap;
 }
 
 .rxtFooterLeft {
     display: flex;
     align-items: center;
-    gap: 7px;
-    font-size: 11px;
-    color: var(--text-disabled);
+    gap: 6px;
+    color: var(--text-tertiary);
 }
 
 .rxtFooterLeft i {
     font-size: 13px;
+    color: var(--brand);
 }
 
 .rxtFooterRight {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
 }
 
-.rxtFooterInfo {
-    font-size: 11px;
-    color: var(--text-tertiary);
-}
-
-.rxtFooterInfo strong {
-    color: var(--text);
-    font-weight: 700;
-}
-
-/* Save Dialog */
 .rxtDialogOverlay {
     position: fixed;
     inset: 0;
@@ -298,6 +350,7 @@
 .rxtDialog {
     width: 100%;
     max-width: 560px;
+    max-height: calc(100dvh - 40px);
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     border-radius: var(--radius-xl);
@@ -305,6 +358,8 @@
         0 20px 25px -5px rgba(0, 0, 0, 0.1),
         0 10px 10px -5px rgba(0, 0, 0, 0.04);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .rxtDialogHeader {
@@ -314,6 +369,7 @@
     gap: 16px;
     padding: 20px 22px;
     border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
 }
 
 .rxtDialogTitle {
@@ -343,6 +399,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.12s;
+    flex-shrink: 0;
 }
 
 .rxtDialogClose:hover {
@@ -359,7 +416,6 @@
     display: flex;
     flex-direction: column;
     gap: 18px;
-    max-height: 60vh;
     overflow-y: auto;
 }
 
@@ -448,6 +504,7 @@
     gap: 10px;
     padding: 18px 22px;
     border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
 }
 
 .rxtDialogBtn {
@@ -494,10 +551,17 @@
     cursor: not-allowed;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-    .rxtCommandBar {
+    .rxtWorkspace {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100dvh;
+    }
+
+    .rxtChrome {
         padding: 10px 12px;
+        gap: 8px;
     }
 
     .rxtQuickLabel {
@@ -509,13 +573,21 @@
     }
 
     .rxtQuickBtn {
-        min-width: 36px;
+        min-width: 34px;
         justify-content: center;
         padding: 0 8px;
     }
 
-    .rxtFlagsBar {
-        padding: 10px 12px;
+    .rxtQuickActions {
+        max-width: 140px;
+    }
+
+    .rxtFlagsToggleBtn span {
+        display: none;
+    }
+
+    .rxtFlagsPanel {
+        padding: 12px;
     }
 
     .rxtFlagName {
@@ -523,14 +595,42 @@
     }
 
     .rxtTabs {
+        padding: 0 10px;
+    }
+
+    .rxtTab span {
+        display: none;
+    }
+
+    .rxtTab {
         padding: 0 12px;
+    }
+
+    .rxtFooter {
+        flex-direction: column;
+        text-align: center;
+        gap: 6px;
+    }
+
+    .rxtFooterRight {
+        justify-content: center;
+    }
+
+    .rxtDialogBody {
+        padding: 16px;
+    }
+
+    .rxtDialogHeader,
+    .rxtDialogFooter {
+        padding: 14px 16px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
     .rxtQuickBtn,
-    .rxtFlagToggle,
+    .rxtFlagChip,
+    .rxtFlagsToggleBtn,
     .rxtTab,
     .rxtDialogClose,
     .rxtDialogBtn,

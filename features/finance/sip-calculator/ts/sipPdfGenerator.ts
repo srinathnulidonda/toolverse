@@ -12,9 +12,9 @@ export const PDF_BRAND = {
     productName: "SIP Calculator",
     websiteUrl: "www.toolverse.com",
     logoPath: "/logo-dark.png",
-    primary: [5, 150, 105] as [number, number, number], // Teal color
+    primary: [5, 150, 105] as [number, number, number],
     primaryDark: [2, 102, 71] as [number, number, number],
-    dark: [31, 41, 55] as [number, number, number],
+    dark: [17, 24, 39] as [number, number, number],
     gray: [107, 114, 128] as [number, number, number],
     lightGray: [243, 244, 246] as [number, number, number],
     border: [229, 231, 235] as [number, number, number],
@@ -35,7 +35,7 @@ export interface SIPReportData {
 
 function formatINR(amount: number): string {
     const value = isFinite(amount) ? amount : 0;
-    return `₹ ${value.toLocaleString("en-IN", {
+    return `Rs. ${value.toLocaleString("en-IN", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     })}`;
@@ -218,6 +218,9 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
         timeStyle: "short",
     });
     const logo = await loadLogo();
+    const startDateStr = new Date().toISOString().split("T")[0];
+    const isGoalBased = data.mode === "goal-based";
+    const tenureMonths = data.tenureUnit === "years" ? data.tenureValue * 12 : data.tenureValue;
 
     let y = CONTENT_TOP;
 
@@ -243,9 +246,8 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
         { label: "Monthly SIP", value: formatINR(data.monthlyInvestment), mono: false },
         { label: "Expected Return", value: `${data.expectedReturn}% p.a.`, mono: false },
         { label: "Investment Tenure", value: `${data.tenureValue} ${data.tenureUnit}`, mono: false },
-        { label: "Start Date", value: formatDate(new Date().toISOString().split('T')[0]), mono: true },
+        { label: "Start Date", value: formatDate(startDateStr), mono: true },
     ];
-
     const colW = infoBoxW / infoCols.length;
 
     infoCols.forEach((col, i) => {
@@ -268,133 +270,57 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
 
     y += infoBoxH + BLOCK_PAD;
 
-    // Mode-specific fields
-    ensureSpace(20);
-    const modeInfoBoxH = 20;
-    doc.setFillColor(...PDF_BRAND.lightGray);
-    doc.roundedRect(MARGIN_X, y, infoBoxW, modeInfoBoxH, 2, 2, "F");
+    ensureSpace(14);
+    y += 4;
 
-    let modeInfoCols: Array<{ label: string; value: string; mono: boolean }> = [];
-
-    switch (data.mode) {
-        case "regular":
-            modeInfoCols = [
-                { label: "SIP Type", value: "Regular SIP", mono: false },
-                { label: "Lump Sum", value: data.lumpSum && data.lumpSum > 0 ? formatINR(data.lumpSum) : "None", mono: false },
-                { label: "Inflation Rate", value: data.inflationRate && data.inflationRate > 0 ? `${data.inflationRate}%` : "None", mono: false },
-                { label: "Step-Up", value: "Not Applicable", mono: false }
-            ];
-            break;
-        case "step-up":
-            modeInfoCols = [
-                { label: "SIP Type", value: "Step-Up SIP", mono: false },
-                { label: "Annual Step-Up", value: `${data.stepUpPercentage}%`, mono: false },
-                { label: "Lump Sum", value: data.lumpSum && data.lumpSum > 0 ? formatINR(data.lumpSum) : "None", mono: false },
-                { label: "Inflation Rate", value: data.inflationRate && data.inflationRate > 0 ? `${data.inflationRate}%` : "None", mono: false }
-            ];
-            break;
-        case "goal-based":
-            modeInfoCols = [
-                { label: "SIP Type", value: "Goal-Based SIP", mono: false },
-                { label: "Target Amount", value: formatINR(data.goalAmount || 0), mono: false },
-                { label: "Required Monthly SIP", value: formatINR(data.calculation.monthlySIPRequired || 0), mono: false },
-                { label: "Lump Sum", value: data.lumpSum && data.lumpSum > 0 ? formatINR(data.lumpSum) : "None", mono: false }
-            ];
-            break;
-    }
-
-    const modeColW = infoBoxW / modeInfoCols.length;
-
-    modeInfoCols.forEach((col, i) => {
-        const x = MARGIN_X + i * modeColW + 5;
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(7);
-        doc.setTextColor(...PDF_BRAND.gray);
-        doc.text(col.label.toUpperCase(), x, y + 7.5);
-        doc.setFont(col.mono ? "courier" : "helvetica", "bold");
-        doc.setFontSize(col.mono ? 8.5 : 9.5);
-        doc.setTextColor(...PDF_BRAND.dark);
-        doc.text(col.value, x, y + 14.5, { maxWidth: modeColW - 8 });
-
-        if (i > 0) {
-            doc.setDrawColor(...PDF_BRAND.border);
-            doc.setLineWidth(0.2);
-            doc.line(MARGIN_X + i * modeColW, y + 4, MARGIN_X + i * modeColW, y + modeInfoBoxH - 4);
-        }
-    });
-
-    y += modeInfoBoxH + BLOCK_PAD;
-
-    ensureSpace(30);
-    const cardW1 = (pageWidth - MARGIN_X * 2 - 6) / 2;
-    const cardW2 = (pageWidth - MARGIN_X * 2 - 12) / 3;
-
-    // First row of cards
-    ensureSpace(24);
-    doc.setFillColor(...PDF_BRAND.primary);
-    doc.roundedRect(MARGIN_X, y, cardW1, 20, 2, 2, "F");
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
-    doc.setTextColor(255, 255, 255);
-    doc.text("Total Invested", MARGIN_X + 5, y + 7);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.setTextColor(255, 255, 255);
-    doc.text(formatINR(data.calculation.totalInvested), MARGIN_X + 5, y + 15);
+    doc.setTextColor(...PDF_BRAND.gray);
+    doc.text("CALCULATION SUMMARY", MARGIN_X, y);
 
-    const card2X = MARGIN_X + cardW1 + 6;
-    doc.setFillColor(...PDF_BRAND.primary);
-    doc.roundedRect(card2X, y, cardW1, 20, 2, 2, "F");
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
-    doc.setTextColor(255, 255, 255);
-    doc.text("Estimated Returns", card2X + 5, y + 7);
+    const heroLabel = isGoalBased ? "Required Monthly SIP" : "Maturity Amount";
+    const heroValue = isGoalBased
+        ? (data.calculation.monthlySIPRequired || 0)
+        : data.calculation.maturityAmount;
+
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.setTextColor(255, 255, 255);
-    doc.text(formatINR(data.calculation.returns), card2X + 5, y + 15);
+    doc.setFontSize(13);
+    doc.setTextColor(...PDF_BRAND.primary);
+    doc.text(heroLabel, MARGIN_X, y + 7);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.setTextColor(...PDF_BRAND.primaryDark);
+    doc.text(formatINR(heroValue), MARGIN_X, y + 15);
 
     y += 20 + SECTION_GAP;
 
-    // Second row of cards
     ensureSpace(24);
-    const card3X = MARGIN_X;
+    const cardW = (pageWidth - MARGIN_X * 2 - 6) / 2;
+
     doc.setFillColor(...PDF_BRAND.primary);
-    doc.roundedRect(card3X, y, cardW1, 20, 2, 2, "F");
+    doc.roundedRect(MARGIN_X, y, cardW, 20, 2, 2, "F");
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8);
     doc.setTextColor(255, 255, 255);
-    doc.text("Maturity Amount", card3X + 5, y + 7);
+    doc.text("Estimated Returns", MARGIN_X + 5, y + 7);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(14);
     doc.setTextColor(255, 255, 255);
-    doc.text(formatINR(data.calculation.maturityAmount), card3X + 5, y + 15);
+    doc.text(formatINR(data.calculation.returns), MARGIN_X + 5, y + 15);
 
-    const card4X = MARGIN_X + cardW1 + 6;
-    if (data.inflationRate && data.inflationRate > 0 && data.calculation.inflationAdjustedAmount !== undefined) {
-        doc.setFillColor(...PDF_BRAND.primary);
-        doc.roundedRect(card4X, y, cardW1, 20, 2, 2, "F");
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
-        doc.setTextColor(255, 255, 255);
-        doc.text("Inflation-Adjusted Amt", card4X + 5, y + 7);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.setTextColor(255, 255, 255);
-        doc.text(formatINR(data.calculation.inflationAdjustedAmount), card4X + 5, y + 15);
-    } else {
-        doc.setFillColor(...PDF_BRAND.lightGray);
-        doc.setDrawColor(...PDF_BRAND.border);
-        doc.roundedRect(card4X, y, cardW1, 20, 2, 2, "FD");
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(8);
-        doc.setTextColor(...PDF_BRAND.gray);
-        doc.text("Inflation-Adjusted Amt", card4X + 5, y + 7);
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(9.5);
-        doc.setTextColor(220, 38, 38);
-        doc.text("N/A", card4X + 5, y + 15);
-    }
+    const card2X = MARGIN_X + cardW + 6;
+    doc.setFillColor(...PDF_BRAND.lightGray);
+    doc.setDrawColor(...PDF_BRAND.border);
+    doc.roundedRect(card2X, y, cardW, 20, 2, 2, "FD");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(...PDF_BRAND.gray);
+    doc.text("Total Invested", card2X + 5, y + 7);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(...PDF_BRAND.primaryDark);
+    doc.text(formatINR(data.calculation.totalInvested), card2X + 5, y + 15);
 
     y += 20 + SECTION_GAP;
 
@@ -410,14 +336,27 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
                 ? `${data.tenureValue} years (${data.tenureValue * 12} months)`
                 : `${data.tenureValue} months`,
         ],
-        ["Start Date", formatDate(new Date().toISOString().split('T')[0])],
-        ["Initial Lump Sum", data.lumpSum && data.lumpSum > 0 ? formatINR(data.lumpSum) : "₹ 0.00"],
+        ["Start Date", formatDate(startDateStr)],
+        [
+            "SIP Type",
+            data.mode === "regular"
+                ? "Regular SIP"
+                : data.mode === "step-up"
+                    ? "Step-Up SIP"
+                    : "Goal-Based SIP",
+        ],
+        ["Initial Lump Sum", data.lumpSum && data.lumpSum > 0 ? formatINR(data.lumpSum) : "None"],
         ["Inflation Rate", data.inflationRate && data.inflationRate > 0 ? `${data.inflationRate}%` : "None"],
-        ["SIP Type", data.mode === "regular" ? "Regular SIP" : data.mode === "step-up" ? "Step-Up SIP" : "Goal-Based SIP"],
-        ...(data.mode === "step-up" ? [["Annual Step-Up", `${data.stepUpPercentage}%`]] : []),
-        ...(data.mode === "goal-based" ? [["Target Amount", formatINR(data.goalAmount || 0)]] : []),
-        ...(data.mode === "goal-based" ? [["Required Monthly SIP", formatINR(data.calculation.monthlySIPRequired || 0)]] : [])
-    ].filter((row): row is [string, string] => Array.isArray(row) && row.length === 2);
+        ...(data.mode === "step-up"
+            ? ([["Annual Step-Up", `${data.stepUpPercentage}%`]] as [string, string][])
+            : []),
+        ...(isGoalBased
+            ? ([
+                ["Target Amount", formatINR(data.goalAmount || 0)],
+                ["Required Monthly SIP", formatINR(data.calculation.monthlySIPRequired || 0)],
+            ] as [string, string][])
+            : []),
+    ];
 
     autoTable(doc, {
         startY: y,
@@ -428,7 +367,7 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
         styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark, valign: "middle" },
         headStyles: { fillColor: PDF_BRAND.primary, textColor: 255, fontStyle: "bold" },
         columnStyles: {
-            0: { cellWidth: 70, fontStyle: "bold" },
+            0: { cellWidth: 55, fontStyle: "bold" },
             1: { fontStyle: "normal" },
         },
         didParseCell: (hookData) => {
@@ -440,34 +379,33 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
 
     y = (doc as any).lastAutoTable.finalY + SECTION_GAP;
 
-    if (data.mode === "goal-based") {
+    if (isGoalBased) {
         ensureSpace(14 + 16);
-        y = sectionTitle(doc, y, "Goal Analysis");
+        y = sectionTitle(doc, y, "Goal-Based SIP Details");
+
+        const totalInvestmentNeeded =
+            (data.calculation.monthlySIPRequired || 0) * tenureMonths + (data.lumpSum || 0);
 
         const goalRows: [string, string][] = [
             ["Target Amount", formatINR(data.goalAmount || 0)],
             ["Present Value of Lump Sum", formatINR(data.lumpSum || 0)],
             ["Required Monthly SIP", formatINR(data.calculation.monthlySIPRequired || 0)],
-            ["Total Investment Needed", formatINR(
-                (data.calculation.monthlySIPRequired || 0) *
-                (data.tenureUnit === 'years' ? data.tenureValue * 12 : data.tenureValue) +
-                (data.lumpSum || 0)
-            )],
+            ["Total Investment Needed", formatINR(totalInvestmentNeeded)],
             ["Expected Returns", formatINR(data.calculation.returns)],
-            ["Total Future Value", formatINR(data.calculation.maturityAmount)]
+            ["Total Future Value", formatINR(data.calculation.maturityAmount)],
         ];
 
         autoTable(doc, {
             startY: y,
             margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
-            head: [["Particulars", "Amount"]],
+            head: [["Particulars", "Amount/Value"]],
             body: goalRows,
             theme: "plain",
             styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark, valign: "middle" },
             headStyles: { fillColor: PDF_BRAND.primary, textColor: 255, fontStyle: "bold" },
             columnStyles: {
-                0: { cellWidth: 70, fontStyle: "bold" },
-                1: { fontStyle: "bold" },
+                0: { cellWidth: 55, fontStyle: "bold" },
+                1: { cellWidth: PAGE.width - MARGIN_X * 2 - 55, fontStyle: "bold" },
             },
             didParseCell: (hookData) => {
                 hookData.cell.styles.halign = "left";
@@ -480,23 +418,62 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
     }
 
     ensureSpace(14 + 16);
+    y = sectionTitle(doc, y, "Investment vs Returns Breakdown");
+
+    const breakdownRows: [string, string][] = [
+        ["Total Invested (Principal)", formatINR(data.calculation.totalInvested)],
+        ["Returns Earned", formatINR(data.calculation.returns)],
+        ["Future Value (Maturity)", formatINR(data.calculation.maturityAmount)],
+    ];
+
+    if (data.inflationRate && data.inflationRate > 0 && data.calculation.inflationAdjustedAmount !== undefined) {
+        breakdownRows.push(
+            ["Inflation-Adjusted Value", formatINR(data.calculation.inflationAdjustedAmount)],
+            ["Real Returns (After Inflation)", formatINR(data.calculation.realReturns || 0)]
+        );
+    }
+
+    autoTable(doc, {
+        startY: y,
+        margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
+        head: [["Component", "Amount"]],
+        body: breakdownRows,
+        theme: "plain",
+        styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark, valign: "middle" },
+        headStyles: { fillColor: PDF_BRAND.primary, textColor: 255, fontStyle: "bold" },
+        columnStyles: {
+            0: { cellWidth: 55, fontStyle: "bold" },
+            1: { fontStyle: "bold" },
+        },
+        didParseCell: (hookData) => {
+            hookData.cell.styles.halign = "left";
+        },
+        alternateRowStyles: { fillColor: PDF_BRAND.lightGray },
+        didDrawPage: () => drawHeader(doc, logo, reportId, generatedStr),
+    });
+
+    y = (doc as any).lastAutoTable.finalY + SECTION_GAP;
+
+    ensureSpace(30);
     y = sectionTitle(doc, y, "Year-wise Growth Schedule");
 
-    // Prepare yearly breakdown data
-    const yearlyData = data.calculation.yearlyBreakdown.map((year) => [
-        year.year,
-        formatINR(year.investedThatYear),
-        formatINR(year.cumulativeInvested),
-        formatINR(year.interestThatYear),
-        formatINR(year.cumulativeInterest),
-        formatINR(year.yearEndBalance)
+    // Column order & headers follow standard investment growth schedule format:
+    // Year | Invested That Year | Cumulative Invested | Interest That Year | Cumulative Interest | Year-End Balance
+    // All columns left-aligned (header + data), matching the EMI amortization table format.
+    const yearlyData = data.calculation.yearlyBreakdown.map((yr) => [
+        yr.year,
+        formatINR(yr.investedThatYear),
+        formatINR(yr.cumulativeInvested),
+        formatINR(yr.interestThatYear),
+        formatINR(yr.cumulativeInterest),
+        formatINR(yr.yearEndBalance),
     ]);
 
     autoTable(doc, {
         startY: y,
         margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
         head: [
-            ["Year", "Invested That Year", "Cumulative Invested", "Interest That Year", "Cumulative Interest", "Year-End Balance"]
+            ["Year", "Invested That Year", "Cumulative Invested", "Interest That Year", "Cumulative Interest", "Year-End Balance"],
         ],
         body: yearlyData,
         theme: "striped",
@@ -518,44 +495,6 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
 
     y = (doc as any).lastAutoTable.finalY + SECTION_GAP;
 
-    // Investment vs Returns Breakdown
-    ensureSpace(14 + 16);
-    y = sectionTitle(doc, y, "Investment vs Returns Breakdown");
-
-    const breakdownRows: [string, string][] = [
-        ["Total Invested (Principal)", formatINR(data.calculation.totalInvested)],
-        ["Returns Earned", formatINR(data.calculation.returns)],
-        ["Future Value (Maturity)", formatINR(data.calculation.maturityAmount)]
-    ];
-
-    if (data.inflationRate && data.inflationRate > 0 && data.calculation.inflationAdjustedAmount !== undefined) {
-        breakdownRows.push(
-            ["Inflation-Adjusted Value", formatINR(data.calculation.inflationAdjustedAmount)],
-            ["Real Returns (After Inflation)", formatINR(data.calculation.realReturns || 0)]
-        );
-    }
-
-    autoTable(doc, {
-        startY: y,
-        margin: { top: CONTENT_TOP, left: MARGIN_X, right: MARGIN_X, bottom: 24 },
-        head: [["Component", "Amount"]],
-        body: breakdownRows,
-        theme: "plain",
-        styles: { fontSize: 9, cellPadding: 3, textColor: PDF_BRAND.dark, valign: "middle" },
-        headStyles: { fillColor: PDF_BRAND.primary, textColor: 255, fontStyle: "bold" },
-        columnStyles: {
-            0: { cellWidth: 80, fontStyle: "bold" },
-            1: { fontStyle: "bold" },
-        },
-        didParseCell: (hookData) => {
-            hookData.cell.styles.halign = "left";
-        },
-        alternateRowStyles: { fillColor: PDF_BRAND.lightGray },
-        didDrawPage: () => drawHeader(doc, logo, reportId, generatedStr),
-    });
-
-    y = (doc as any).lastAutoTable.finalY + SECTION_GAP;
-
     const totalPages = doc.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i);
@@ -567,6 +506,9 @@ export async function generateSIPReportPDF(data: SIPReportData): Promise<jsPDF> 
 
 export async function downloadSIPReportPDF(data: SIPReportData): Promise<void> {
     const doc = await generateSIPReportPDF(data);
-    const safeName = (data.mode === "regular" ? "Regular-SIP" : data.mode === "step-up" ? "StepUp-SIP" : "GoalBased-SIP") + "-" + Date.now().toString(36).toUpperCase();
-    doc.save('SIP-Report-' + safeName + '.pdf');
+    const safeName =
+        (data.mode === "regular" ? "Regular-SIP" : data.mode === "step-up" ? "StepUp-SIP" : "GoalBased-SIP") +
+        "-" +
+        Date.now().toString(36).toUpperCase();
+    doc.save(`SIP-Report-${safeName}.pdf`);
 }

@@ -1,16 +1,17 @@
 /* features/dev/js-minifier/style/Workspace.module.css */
-/*  Root  */
 .jwRoot {
     background: var(--bg-card);
     border: 0.5px solid var(--border);
     border-radius: 16px;
     display: flex;
     flex-direction: column;
-    min-height: 680px;
+    height: 720px;
+    min-height: 600px;
+    max-height: 90vh;
     overflow: hidden;
+    position: relative;
 }
 
-/*  Chrome  */
 .jwChrome {
     display: flex;
     align-items: center;
@@ -21,6 +22,7 @@
     border-bottom: 0.5px solid var(--border);
     flex-shrink: 0;
     flex-wrap: wrap;
+    min-height: 52px;
 }
 
 .jwChromeLeft,
@@ -43,7 +45,7 @@
     width: 28px;
     height: 28px;
     border-radius: 7px;
-    background: #f59e0b20;
+    background: rgba(245, 158, 11, 0.12);
     color: #f59e0b;
     display: flex;
     align-items: center;
@@ -63,7 +65,6 @@
     letter-spacing: 0.05em;
 }
 
-/* Mode pills */
 .jwModePills {
     display: flex;
     gap: 3px;
@@ -123,7 +124,6 @@
     font-size: 13px;
 }
 
-/*  Settings Panel  */
 .jwSettings {
     padding: 14px 16px;
     background: var(--bg-surface);
@@ -134,10 +134,9 @@
 .jwSettingsGrid {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px 24px;
+    gap: 14px 28px;
 }
 
-/* Toggle switch */
 .jwToggle {
     display: flex;
     align-items: center;
@@ -157,11 +156,11 @@
     background: var(--border);
     border: 0.5px solid var(--border);
     position: relative;
-    transition: background 0.2s;
+    transition: background 0.2s, border-color 0.2s;
     flex-shrink: 0;
 }
 
-.jwToggle input:checked~.jwToggleTrack {
+.jwToggle input:checked ~ .jwToggleTrack {
     background: var(--brand);
     border-color: var(--brand);
 }
@@ -178,7 +177,7 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.jwToggle input:checked~.jwToggleTrack .jwToggleThumb {
+.jwToggle input:checked ~ .jwToggleTrack .jwToggleThumb {
     transform: translateX(16px);
 }
 
@@ -186,9 +185,9 @@
     font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
+    white-space: nowrap;
 }
 
-/*  Tabs  */
 .jwTabsBar {
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
@@ -199,6 +198,11 @@
     display: flex;
     padding: 0 14px;
     overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.jwTabs::-webkit-scrollbar {
+    display: none;
 }
 
 .jwTab {
@@ -229,6 +233,7 @@
 
 .jwTab.active {
     color: var(--text);
+    font-weight: 600;
 }
 
 .jwTab.active::after {
@@ -261,9 +266,9 @@
     height: 6px;
     border-radius: 50%;
     background: #f59e0b;
+    flex-shrink: 0;
 }
 
-/*  Content  */
 .jwContent {
     flex: 1;
     min-height: 0;
@@ -272,7 +277,6 @@
     overflow: hidden;
 }
 
-/*  Minify View  */
 .jwMinifyView {
     flex: 1;
     display: flex;
@@ -281,13 +285,12 @@
     overflow: hidden;
 }
 
-/* Toolbar */
 .jwToolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    padding: 8px 14px;
+    padding: 7px 14px;
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
     flex-shrink: 0;
@@ -308,6 +311,7 @@
     color: var(--text-disabled);
     text-transform: uppercase;
     letter-spacing: 0.08em;
+    white-space: nowrap;
 }
 
 .jwSampleBtn {
@@ -338,6 +342,7 @@
     font-weight: 600;
     color: var(--text-tertiary);
     font-family: var(--font-mono);
+    white-space: nowrap;
 }
 
 .jwGzipBadge i {
@@ -345,7 +350,6 @@
     color: #22c55e;
 }
 
-/* Mobile switcher */
 .jwMobileSwitcher {
     display: none;
     background: var(--bg-surface);
@@ -372,6 +376,7 @@
 
 .jwSwTab.active {
     color: var(--text);
+    font-weight: 600;
 }
 
 .jwSwTab.active::after {
@@ -382,6 +387,7 @@
     right: 20%;
     height: 2px;
     background: var(--brand);
+    border-radius: 2px 2px 0 0;
 }
 
 .jwSwDivider {
@@ -396,9 +402,9 @@
     height: 6px;
     border-radius: 50%;
     background: var(--brand);
+    flex-shrink: 0;
 }
 
-/* Body */
 .jwBody {
     display: grid;
     grid-template-columns: 1fr 40px 1fr;
@@ -412,6 +418,7 @@
     flex-direction: column;
     overflow: hidden;
     min-height: 0;
+    min-width: 0;
 }
 
 .jwPanelBar {
@@ -435,6 +442,7 @@
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.09em;
+    white-space: nowrap;
 }
 
 .jwPanelLabel i {
@@ -451,6 +459,7 @@
     font-size: 10px;
     font-family: var(--font-mono);
     color: var(--text-disabled);
+    white-space: nowrap;
 }
 
 .jwIconBtn {
@@ -466,6 +475,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.12s;
+    flex-shrink: 0;
 }
 
 .jwIconBtn:hover:not(:disabled) {
@@ -493,6 +503,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.12s;
+    white-space: nowrap;
 }
 
 .jwCopyBtn:hover {
@@ -522,6 +533,8 @@
     resize: none;
     outline: none;
     min-height: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .jwTextarea::placeholder {
@@ -566,7 +579,6 @@
     opacity: 0.7;
 }
 
-/* Gutter */
 .jwGutter {
     display: flex;
     flex-direction: column;
@@ -574,6 +586,7 @@
     background: var(--bg-surface);
     border-left: 0.5px solid var(--border);
     border-right: 0.5px solid var(--border);
+    flex-shrink: 0;
 }
 
 .jwGutterLine {
@@ -593,9 +606,9 @@
     justify-content: center;
     color: var(--text-disabled);
     font-size: 13px;
+    flex-shrink: 0;
 }
 
-/* Output */
 .jwEmpty {
     flex: 1;
     display: flex;
@@ -606,13 +619,14 @@
     padding: 40px 24px;
     text-align: center;
     background: var(--bg-card);
+    overflow: hidden;
 }
 
 .jwEmptyIcon {
     width: 52px;
     height: 52px;
     border-radius: 13px;
-    background: #f59e0b15;
+    background: rgba(245, 158, 11, 0.08);
     color: #f59e0b;
     display: flex;
     align-items: center;
@@ -631,7 +645,7 @@
     font-size: 13px;
     color: var(--text-tertiary);
     margin: 0;
-    max-width: 300px;
+    max-width: 280px;
     line-height: 1.6;
 }
 
@@ -674,9 +688,11 @@
     white-space: pre-wrap;
     word-break: break-all;
     min-height: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
 }
 
-/* Stats bar */
 .jwStatsBar {
     display: flex;
     align-items: center;
@@ -686,6 +702,11 @@
     border-top: 0.5px solid var(--border);
     flex-shrink: 0;
     overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.jwStatsBar::-webkit-scrollbar {
+    display: none;
 }
 
 .jwStat {
@@ -727,11 +748,13 @@
     padding: 3px 8px;
     background: #dcfce7;
     border-radius: 6px;
+    border: 0.5px solid #bbf7d0;
 }
 
 @media (prefers-color-scheme: dark) {
     .jwStatHighlight {
-        background: #022c22;
+        background: rgba(34, 197, 94, 0.1);
+        border-color: rgba(34, 197, 94, 0.2);
     }
 }
 
@@ -741,7 +764,7 @@
     gap: 5px;
     height: 28px;
     padding: 0 10px;
-    border: 0.5px solid var(--border);
+    border: 0.5px solid var(--brand);
     border-radius: 7px;
     background: var(--brand);
     color: white;
@@ -755,13 +778,13 @@
 
 .jwDownloadBtn:hover {
     background: var(--brand-hover);
+    border-color: var(--brand-hover);
 }
 
 .jwDownloadBtn i {
     font-size: 12px;
 }
 
-/* Mobile actions */
 .jwMobActions {
     display: none;
     gap: 8px;
@@ -803,7 +826,6 @@
     font-size: 15px;
 }
 
-/* Tab empty */
 .jwTabEmpty {
     flex: 1;
     display: flex;
@@ -814,6 +836,7 @@
     padding: 60px 24px;
     text-align: center;
     background: var(--bg-surface);
+    overflow: hidden;
 }
 
 .jwTabEmptyIcon {
@@ -840,14 +863,14 @@
     font-size: 13px;
     color: var(--text-tertiary);
     margin: 0;
-    max-width: 380px;
+    max-width: 360px;
     line-height: 1.6;
 }
 
 .jwTabEmptyBtn {
     height: 40px;
     padding: 0 20px;
-    border: 0.5px solid var(--border);
+    border: none;
     border-radius: 10px;
     background: var(--brand);
     color: white;
@@ -861,7 +884,6 @@
     background: var(--brand-hover);
 }
 
-/* History */
 .jwHistory {
     flex: 1;
     display: flex;
@@ -936,8 +958,9 @@
 
 .jwHistoryList {
     flex: 1;
-    overflow: auto;
-    padding: 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
     min-height: 0;
 }
 
@@ -952,10 +975,12 @@
     border-radius: 10px;
     margin-bottom: 6px;
     transition: all 0.12s;
+    cursor: pointer;
 }
 
 .jwHistoryItem:hover {
     border-color: var(--brand-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .jwHistoryItemLeft {
@@ -970,7 +995,7 @@
     width: 34px;
     height: 34px;
     border-radius: 8px;
-    background: #f59e0b15;
+    background: rgba(245, 158, 11, 0.08);
     color: #f59e0b;
     display: flex;
     align-items: center;
@@ -993,6 +1018,9 @@
     font-size: 11px;
     color: var(--text-tertiary);
     font-family: var(--font-mono);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .jwHistoryItemRight {
@@ -1026,18 +1054,18 @@
     }
 }
 
-/* Footer */
 .jwFooter {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 9px 16px;
+    padding: 8px 16px;
     background: var(--bg-surface);
     border-top: 0.5px solid var(--border);
     font-size: 11px;
     flex-shrink: 0;
     flex-wrap: wrap;
+    min-height: 38px;
 }
 
 .jwFooterLeft {
@@ -1050,6 +1078,7 @@
 .jwFooterLeft i {
     font-size: 13px;
     color: var(--brand);
+    flex-shrink: 0;
 }
 
 .jwFooterRight {
@@ -1066,6 +1095,7 @@
     display: flex;
     align-items: center;
     gap: 3px;
+    font-weight: 600;
 }
 
 .jwInvalid {
@@ -1073,6 +1103,7 @@
     display: flex;
     align-items: center;
     gap: 3px;
+    font-weight: 600;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1085,29 +1116,25 @@
     }
 }
 
-/* Mobile classes that weren't in original but are referenced */
-.mobVisible {
-    z-index: 1;
-    visibility: visible;
+@media (max-width: 1024px) {
+    .jwRoot {
+        height: 680px;
+    }
 }
 
-.mobHidden {
-    z-index: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-/*  Mobile  */
 @media (max-width: 768px) {
     .jwRoot {
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-        min-height: 100dvh;
+        border-radius: 12px;
+        border-left: 0.5px solid var(--border);
+        border-right: 0.5px solid var(--border);
+        height: auto;
+        min-height: 100svh;
+        max-height: none;
     }
 
     .jwChrome {
         gap: 8px;
+        padding: 8px 12px;
     }
 
     .jwSettingsBtn span {
@@ -1119,13 +1146,13 @@
     }
 
     .jwModePill {
-        padding: 0 7px;
+        padding: 0 8px;
         font-size: 10px;
     }
 
     .jwSettingsGrid {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
     }
 
     .jwTabs {
@@ -1137,18 +1164,24 @@
     }
 
     .jwTab {
-        padding: 0 10px;
+        padding: 0 12px;
     }
 
     .jwToolbar {
         flex-direction: column;
         align-items: stretch;
+        gap: 8px;
     }
 
     .jwToolbarLeft {
         justify-content: flex-start;
         overflow-x: auto;
         flex-wrap: nowrap;
+        scrollbar-width: none;
+    }
+
+    .jwToolbarLeft::-webkit-scrollbar {
+        display: none;
     }
 
     .jwMobileSwitcher {
@@ -1159,6 +1192,7 @@
         grid-template-columns: 1fr;
         position: relative;
         overflow: hidden;
+        min-height: 360px;
     }
 
     .jwGutter {
@@ -1172,14 +1206,16 @@
         inset: 0;
     }
 
-    .jwPanel.mobVisible {
-        z-index: 1;
+    .mobVisible {
+        z-index: 2;
         visibility: visible;
+        opacity: 1;
     }
 
-    .jwPanel.mobHidden {
-        z-index: 0;
+    .mobHidden {
+        z-index: 1;
         visibility: hidden;
+        opacity: 0;
         pointer-events: none;
     }
 
@@ -1196,23 +1232,60 @@
     }
 
     .jwStatsBar {
-        flex-wrap: wrap;
-        gap: 8px;
+        flex-wrap: nowrap;
+        gap: 10px;
     }
 
     .jwFooter {
         flex-direction: column;
         text-align: center;
-        gap: 6px;
+        gap: 4px;
+        padding: 8px 12px;
     }
 
     .jwFooterRight {
         justify-content: center;
     }
+
+    .jwHistoryItem {
+        flex-wrap: wrap;
+    }
+
+    .jwHistoryItemRight {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .jwChrome {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .jwChromeRight {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .jwTitle {
+        font-size: 13px;
+    }
+
+    .jwBody {
+        min-height: 320px;
+    }
+
+    .jwEmpty {
+        padding: 30px 16px;
+    }
+
+    .jwEmptyDesc {
+        max-width: 100%;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-
     .jwModePill,
     .jwSettingsBtn,
     .jwTab,
@@ -1225,7 +1298,11 @@
     .jwDownloadBtn,
     .jwHistoryItem,
     .jwToggleTrack,
-    .jwToggleThumb {
+    .jwToggleThumb,
+    .jaSizeBar,
+    .mobVisible,
+    .mobHidden {
         transition: none;
+        animation: none;
     }
 }

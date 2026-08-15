@@ -3,7 +3,7 @@
 import { logger } from "@/lib/logger";
 
 import { useState, useMemo } from "react";
-import { SAMPLE_PATTERNS, type RegexPattern, type PatternCategory } from "./ts/utils";
+import type { RegexPattern, PatternCategory } from "./ts/utils";
 import styles from "./style/RegexLibrary.module.css";
 
 interface RegexLibraryProps {
@@ -30,6 +30,7 @@ export default function RegexLibrary({
   const [view, setView] = useState<"grid" | "list">("grid");
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [importText, setImportText] = useState("");
+  const [importError, setImportError] = useState("");
 
   const categories: Array<{
     id: PatternCategory | "all" | "favorites";
@@ -47,21 +48,18 @@ export default function RegexLibrary({
       { id: "custom", label: "Custom", icon: "ti-edit" },
     ];
 
-  const allPatterns = useMemo(() => {
-    return [...SAMPLE_PATTERNS, ...patterns];
-  }, [patterns]);
+  const favoriteCount = useMemo(() => patterns.filter((p) => p.favorite).length, [patterns]);
+  const customCount = useMemo(() => patterns.filter((p) => !p.isBuiltIn).length, [patterns]);
 
   const filteredPatterns = useMemo(() => {
-    let result = allPatterns;
+    let result = patterns;
 
-    // Category filter
     if (selectedCategory === "favorites") {
       result = result.filter((p) => p.favorite);
     } else if (selectedCategory !== "all") {
       result = result.filter((p) => p.category === selectedCategory);
     }
 
-    // Search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
@@ -74,7 +72,7 @@ export default function RegexLibrary({
     }
 
     return result;
-  }, [allPatterns, selectedCategory, searchQuery]);
+  }, [patterns, selectedCategory, searchQuery]);
 
   const handleExport = () => {
     const data = onExport();
@@ -88,25 +86,33 @@ export default function RegexLibrary({
   };
 
   const handleImport = () => {
+    setImportError("");
     try {
-      const imported = JSON.parse(importText) as RegexPattern[];
-      onImport(imported);
+      const parsed = JSON.parse(importText);
+      if (!Array.isArray(parsed)) {
+        setImportError("Expected a JSON array of patterns");
+        return;
+      }
+      onImport(parsed as RegexPattern[]);
       setImportText("");
       setShowImportDialog(false);
     } catch (error) {
       logger.error("Invalid JSON format:", error);
-      // In a real app, we would set error state to show in UI
+      setImportError("Invalid JSON — please check the format and try again");
     }
   };
 
-  const isCustomPattern = (pattern: RegexPattern) => {
-    return !SAMPLE_PATTERNS.some((p) => p.id === pattern.id);
+  const closeImportDialog = () => {
+    setShowImportDialog(false);
+    setImportText("");
+    setImportError("");
   };
+
+  const isCustomPattern = (pattern: RegexPattern) => !pattern.isBuiltIn;
 
   return (
     <>
       <div className={styles.rxlRoot}>
-        {/* Header */}
         <div className={styles.rxlHeader}>
           <div className={styles.rxlSearchWrap}>
             <i className="ti ti-search" />
@@ -157,7 +163,7 @@ export default function RegexLibrary({
               type="button"
               className={styles.rxlActionBtn}
               onClick={handleExport}
-              disabled={patterns.length === 0}
+              disabled={customCount === 0}
             >
               <i className="ti ti-download" />
               Export
@@ -165,7 +171,6 @@ export default function RegexLibrary({
           </div>
         </div>
 
-        {/* Categories */}
         <div className={styles.rxlCategories}>
           {categories.map((cat) => (
             <button
@@ -176,17 +181,14 @@ export default function RegexLibrary({
             >
               <i className={`ti ${cat.icon}`} />
               <span>{cat.label}</span>
-              {cat.id === "all" && <span className={styles.rxlCategoryCount}>{allPatterns.length}</span>}
-              {cat.id === "favorites" && allPatterns.filter((p) => p.favorite).length > 0 && (
-                <span className={styles.rxlCategoryCount}>
-                  {allPatterns.filter((p) => p.favorite).length}
-                </span>
+              {cat.id === "all" && <span className={styles.rxlCategoryCount}>{patterns.length}</span>}
+              {cat.id === "favorites" && favoriteCount > 0 && (
+                <span className={styles.rxlCategoryCount}>{favoriteCount}</span>
               )}
             </button>
           ))}
         </div>
 
-        {/* Patterns Grid/List */}
         {filteredPatterns.length === 0 ? (
           <div className={styles.rxlEmpty}>
             <div className={styles.rxlEmptyIcon}>
@@ -270,20 +272,15 @@ export default function RegexLibrary({
           </div>
         )}
 
-        {/* Import Dialog */}
         {showImportDialog && (
-          <div className={styles.rxlDialogOverlay} onClick={() => setShowImportDialog(false)}>
+          <div className={styles.rxlDialogOverlay} onClick={closeImportDialog}>
             <div className={styles.rxlDialog} onClick={(e) => e.stopPropagation()}>
               <div className={styles.rxlDialogHeader}>
                 <h3 className={styles.rxlDialogTitle}>
                   <i className="ti ti-upload" />
                   Import Patterns
                 </h3>
-                <button
-                  type="button"
-                  className={styles.rxlDialogClose}
-                  onClick={() => setShowImportDialog(false)}
-                >
+                <button type="button" className={styles.rxlDialogClose} onClick={closeImportDialog}>
                   <i className="ti ti-x" />
                 </button>
               </div>
@@ -293,17 +290,26 @@ export default function RegexLibrary({
                 <textarea
                   className={styles.rxlImportTextarea}
                   value={importText}
-                  onChange={(e) => setImportText(e.target.value)}
+                  onChange={(e) => {
+                    setImportText(e.target.value);
+                    if (importError) setImportError("");
+                  }}
                   placeholder='[{"name":"My Pattern","pattern":"..."}]'
                   rows={10}
                 />
+                {importError && (
+                  <div className={styles.rxlImportError}>
+                    <i className="ti ti-alert-circle" />
+                    {importError}
+                  </div>
+                )}
               </div>
 
               <div className={styles.rxlDialogFooter}>
                 <button
                   type="button"
                   className={`${styles.rxlDialogBtn} ${styles.rxlCancelBtn}`}
-                  onClick={() => setShowImportDialog(false)}
+                  onClick={closeImportDialog}
                 >
                   Cancel
                 </button>

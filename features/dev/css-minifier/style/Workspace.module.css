@@ -10,7 +10,6 @@
     min-height: 600px;
 }
 
-/*  Chrome  */
 .cmChrome {
     display: flex;
     align-items: center;
@@ -43,7 +42,6 @@
     font-size: 16px;
 }
 
-/*  Tabs Bar  */
 .cmTabsBar {
     border-bottom: 0.5px solid var(--border);
     background: var(--bg-surface);
@@ -52,6 +50,7 @@
 .cmTabs {
     display: flex;
     padding: 0 14px;
+    overflow-x: auto;
 }
 
 .cmTab {
@@ -68,6 +67,7 @@
     cursor: pointer;
     position: relative;
     transition: color 0.12s;
+    white-space: nowrap;
 }
 
 .cmTab i {
@@ -76,6 +76,11 @@
 
 .cmTab:hover {
     color: var(--text);
+}
+
+.cmTab:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: -2px;
 }
 
 .cmTab.active {
@@ -107,7 +112,6 @@
     font-weight: 600;
 }
 
-/*  Tab Content  */
 .cmTabContent {
     flex: 1;
     display: flex;
@@ -116,7 +120,18 @@
     overflow: hidden;
 }
 
-/*  Footer  */
+.cmPane {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cmPane.active {
+    display: flex;
+}
+
 .cmFooter {
     display: flex;
     align-items: center;
@@ -132,8 +147,11 @@
     font-size: 13px;
 }
 
-/*  Responsive  */
 @media (max-width: 768px) {
+    .cmRoot {
+        min-height: 520px;
+    }
+
     .cmChrome {
         padding: 8px 10px;
     }

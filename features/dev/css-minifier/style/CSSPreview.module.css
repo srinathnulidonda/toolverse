@@ -8,7 +8,6 @@
     overflow: hidden;
 }
 
-/* Options */
 .cpOptions {
     display: flex;
     align-items: center;
@@ -55,6 +54,11 @@
 
 .cpToggle input:disabled+.cpToggleTrack {
     opacity: 0.5;
+}
+
+.cpToggle input:focus-visible+.cpToggleTrack {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
 }
 
 .cpToggleThumb {
@@ -105,12 +109,19 @@
     border-color: var(--brand-border);
 }
 
-/* Mobile tabs */
+.cpSampleBtn:focus-visible,
+.cpClearBtn:focus-visible,
+.cpCopyBtn:focus-visible,
+.cpDownloadBtn:focus-visible,
+.cpMobileTab:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
 .cpMobileTabs {
     display: none;
 }
 
-/* Panels */
 .cpPanels {
     flex: 1;
     display: grid;
@@ -209,6 +220,29 @@
     border-color: var(--brand-border);
 }
 
+.cpWarning {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--error-bg);
+    color: #b91c1c;
+    font-size: 11px;
+    font-weight: 500;
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.cpWarning i {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .cpWarning {
+        color: #f87171;
+    }
+}
+
 .cpTextarea {
     flex: 1;
     padding: 14px 16px;
@@ -221,6 +255,10 @@
     color: var(--text);
     resize: none;
     overflow: auto;
+}
+
+.cpTextarea:focus {
+    background: var(--bg-surface);
 }
 
 .cpTextarea::placeholder {
@@ -341,7 +379,6 @@
     line-height: 1.6;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .cpMobileTabs {
         display: flex;
@@ -407,5 +444,34 @@
 
     .cpPanel.mobileVisible {
         display: flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .cpOptions {
+        gap: 10px;
+        padding: 10px 12px;
+    }
+
+    .cpSampleBtn {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .cpToggleLabel {
+        font-size: 11px;
+    }
+
+    .cpPanel {
+        min-height: 300px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cpToggleTrack,
+    .cpToggleThumb {
+        transition: none;
     }
 }

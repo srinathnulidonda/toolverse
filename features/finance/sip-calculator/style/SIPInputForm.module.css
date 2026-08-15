@@ -4,12 +4,17 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .sipFormSection {
     display: flex;
     flex-direction: column;
     gap: 14px;
+    min-width: 0;
 }
 
 .sipSectionTitle {
@@ -36,7 +41,6 @@
     font-family: var(--font-sans);
 }
 
-/* ---- Mode selector ---- */
 .sipModeGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -56,6 +60,8 @@
     cursor: pointer;
     text-align: left;
     transition: all 0.12s;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .sipModeCard:hover {
@@ -93,17 +99,21 @@
     flex-direction: column;
     gap: 2px;
     font-family: var(--font-sans);
+    min-width: 0;
+    width: 100%;
 }
 
 .sipModeText strong {
     font-size: 13px;
     color: var(--text);
+    overflow-wrap: break-word;
 }
 
 .sipModeText span {
     font-size: 11px;
     color: var(--text-secondary);
     font-weight: 400;
+    overflow-wrap: break-word;
 }
 
 .sipModeCheck {
@@ -129,7 +139,6 @@
     transform: scale(1);
 }
 
-/* ---- Fields ---- */
 .sipFormGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -140,6 +149,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;
 }
 
 .sipLabel {
@@ -165,6 +175,7 @@
 
 .sipInput {
     flex: 1;
+    width: 100%;
     height: 40px;
     padding: 0 12px;
     border: 0.5px solid var(--border);
@@ -176,6 +187,7 @@
     outline: none;
     transition: all 0.12s;
     min-width: 0;
+    box-sizing: border-box;
 }
 
 .sipInput:focus {
@@ -187,6 +199,8 @@
     position: relative;
     display: flex;
     align-items: center;
+    min-width: 0;
+    width: 100%;
 }
 
 .sipCurrencySymbol {
@@ -212,6 +226,8 @@
     font-family: var(--font-mono);
     outline: none;
     transition: all 0.12s;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .sipAmountInput:focus {
@@ -223,6 +239,8 @@
     position: relative;
     display: flex;
     align-items: center;
+    min-width: 0;
+    width: 100%;
 }
 
 .sipPercentInput {
@@ -238,6 +256,8 @@
     font-family: var(--font-mono);
     outline: none;
     transition: all 0.12s;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .sipPercentInput:focus {
@@ -258,10 +278,13 @@
 .sipCombinedField {
     display: flex;
     gap: 8px;
+    min-width: 0;
+    width: 100%;
 }
 
 .sipUnitSelect {
     width: 110px;
+    flex-shrink: 0;
     height: 40px;
     padding: 0 10px;
     border: 0.5px solid var(--border);
@@ -273,7 +296,7 @@
     cursor: pointer;
     outline: none;
     transition: all 0.12s;
-    flex-shrink: 0;
+    box-sizing: border-box;
 }
 
 .sipUnitSelect:focus {
@@ -287,6 +310,42 @@
     margin: 0;
     line-height: 1.4;
     font-family: var(--font-sans);
+    overflow-wrap: break-word;
+}
+
+.sipFieldHint {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 11px;
+    margin: 0;
+    line-height: 1.4;
+    font-family: var(--font-sans);
+    overflow-wrap: break-word;
+}
+
+.sipFieldHint i {
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.sipFieldHint.error {
+    color: #B91C1C;
+}
+
+.sipFieldHint.warning {
+    color: #D97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .sipFieldHint.error {
+        color: #F87171;
+    }
+
+    .sipFieldHint.warning {
+        color: #FBBF24;
+    }
 }
 
 .sipStaticValue {
@@ -302,7 +361,6 @@
     font-family: var(--font-sans);
 }
 
-/* ---- View results CTA (mobile) ---- */
 .sipFormActions {
     margin-top: 8px;
     padding-top: 16px;
@@ -325,6 +383,7 @@
     transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
 .sipViewResultsBtn::before {
@@ -362,6 +421,7 @@
     flex-direction: column;
     gap: 2px;
     text-align: left;
+    min-width: 0;
 }
 
 .sipBtnContent strong {
@@ -374,6 +434,7 @@
     font-size: 12px;
     opacity: 0.8;
     line-height: 1.3;
+    overflow-wrap: break-word;
 }
 
 .sipViewResultsBtn>i:last-child {
@@ -403,6 +464,69 @@
 
     .sipFormActions {
         display: block;
+    }
+
+    .sipViewResultsBtn {
+        padding: 14px 16px;
+    }
+
+    .sipBtnContent strong {
+        font-size: 13px;
+    }
+
+    .sipBtnDesc {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 380px) {
+    .sipInputForm {
+        padding: 14px;
+        gap: 20px;
+    }
+
+    .sipModeCard {
+        padding: 12px;
+    }
+
+    .sipViewResultsBtn {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .sipCombinedField {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .sipUnitSelect {
+        width: 100%;
+        flex-shrink: 1;
+    }
+
+    .sipAmountInput,
+    .sipPercentInput,
+    .sipInput {
+        font-size: 13px;
+    }
+
+    .sipCurrencySymbol {
+        font-size: 13px;
+        left: 10px;
+    }
+
+    .sipAmountInput {
+        padding-left: 28px;
+    }
+
+    .sipModeGrid {
+        gap: 8px;
+    }
+
+    .sipFormGrid {
+        gap: 12px;
     }
 }
 

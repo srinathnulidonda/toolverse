@@ -1,27 +1,27 @@
-/* features\dev\case-converter\style\Workspace.module.css */
+/* features/dev/case-converter/style/Workspace.module.css */
 .ccRoot {
-    --cc-radius-sm: 6px;
-    --cc-radius-md: 8px;
-    --cc-radius-lg: 12px;
-    --cc-radius-xl: 16px;
+    --ccRadiusSm: 6px;
+    --ccRadiusMd: 8px;
+    --ccRadiusLg: 12px;
+    --ccRadiusXl: 16px;
     background: var(--bg-card);
     border: 0.5px solid var(--border);
-    border-radius: var(--cc-radius-xl);
+    border-radius: var(--ccRadiusXl);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-height: 600px;
+    min-height: 680px;
 }
 
-/*  Chrome  */
 .ccChrome {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 12px 16px;
-    border-bottom: 0.5px solid var(--border);
+    padding: 10px 16px;
     background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
     flex-wrap: wrap;
 }
 
@@ -29,7 +29,8 @@
 .ccChromeRight {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .ccTitle {
@@ -37,26 +38,33 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
 }
 
-.ccTitle i {
-    font-size: 16px;
+.ccTitleIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    background: var(--brand-light);
     color: var(--brand);
+    flex-shrink: 0;
 }
 
-.ccInputBadge {
-    display: inline-flex;
-    align-items: center;
-    height: 22px;
-    padding: 0 8px;
+.ccTitleBadge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
     border-radius: 99px;
     background: var(--bg-card);
-    border: 0.5px solid var(--border);
     color: var(--text-tertiary);
-    font-size: 11px;
-    font-weight: 500;
+    border: 0.5px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .ccBtn {
@@ -65,7 +73,7 @@
     gap: 5px;
     height: 30px;
     padding: 0 12px;
-    border-radius: var(--cc-radius-md);
+    border-radius: var(--ccRadiusMd);
     border: 0.5px solid var(--border);
     background: var(--bg-card);
     color: var(--text-secondary);
@@ -73,6 +81,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.12s;
+    white-space: nowrap;
 }
 
 .ccBtn i {
@@ -89,129 +98,119 @@
     cursor: not-allowed;
 }
 
-/*  Tabs  */
-.ccTabsBar {
-    border-bottom: 0.5px solid var(--border);
-    background: var(--bg-surface);
-}
-
-.ccTabs {
-    display: flex;
-    padding: 0 16px;
-}
-
-.ccTab {
+.ccSettingsBtn {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    height: 40px;
-    padding: 0 16px;
-    border: none;
-    background: transparent;
-    color: var(--text-tertiary);
-    font-size: 12.5px;
+    gap: 5px;
+    height: 30px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--ccRadiusMd);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
-    position: relative;
-    transition: color 0.12s;
+    transition: all 0.12s;
 }
 
-.ccTab i {
-    font-size: 14px;
-}
-
-.ccTab:hover {
+.ccSettingsBtn:hover {
+    background: var(--bg-surface);
     color: var(--text);
 }
 
-.ccTab.active {
-    color: var(--text);
-}
-
-.ccTab.active::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 12px;
-    right: 12px;
-    height: 2px;
-    background: var(--brand);
-    border-radius: 2px 2px 0 0;
-}
-
-.ccBadge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 5px;
-    border-radius: 99px;
+.ccSettingsBtn.active {
     background: var(--brand-light);
     color: var(--brand-text);
-    font-size: 10px;
-    font-weight: 600;
+    border-color: var(--brand-border);
 }
 
-/*  Options Bar  */
-.ccOptionsBar {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 12px 16px;
-    border-bottom: 0.5px solid var(--border-faint);
+.ccSettingsBtn i {
+    font-size: 13px;
+}
+
+.ccSettings {
+    padding: 14px 16px;
     background: var(--bg-surface);
-    flex-wrap: wrap;
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
 }
 
-.ccOptionsGroup {
+.ccSettingsGrid {
     display: flex;
-    align-items: center;
-    gap: 12px;
     flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px 28px;
 }
 
-.ccOptionsLabel {
-    font-size: 11px;
+.ccSettingGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ccSettingLabel {
+    font-size: 10px;
     font-weight: 600;
     color: var(--text-tertiary);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
 }
 
-.ccCheckbox {
+.ccFormatChips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 480px;
+}
+
+.ccFormatChip {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 99px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
     cursor: pointer;
     user-select: none;
+    transition: all 0.12s;
 }
 
-.ccCheckbox input {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    border: 0.5px solid var(--border);
+.ccFormatChip:hover {
+    border-color: var(--brand-border);
+}
+
+.ccFormatChip input {
+    width: 13px;
+    height: 13px;
     cursor: pointer;
     accent-color: var(--brand);
 }
 
-.ccCheckboxLabel {
-    font-size: 12px;
-    color: var(--text-secondary);
-    font-weight: 500;
+.ccFormatChip.active {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
 }
 
-.ccOptionsDivider {
-    width: 1px;
-    height: 20px;
-    background: var(--border);
+.ccFormatChipLabel {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.ccToggleRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
 }
 
 .ccToggle {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     cursor: pointer;
     user-select: none;
 }
@@ -224,7 +223,7 @@
 }
 
 .ccToggleTrack {
-    width: 32px;
+    width: 34px;
     height: 18px;
     background: var(--border);
     border-radius: 99px;
@@ -246,10 +245,11 @@
     background: white;
     border-radius: 50%;
     transition: transform 0.15s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .ccToggle input:checked+.ccToggleTrack .ccToggleThumb {
-    transform: translateX(14px);
+    transform: translateX(16px);
 }
 
 .ccToggleLabel {
@@ -258,7 +258,80 @@
     color: var(--text-secondary);
 }
 
-/*  Tab Content  */
+.ccTabsBar {
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-shrink: 0;
+}
+
+.ccTabs {
+    display: flex;
+    padding: 0 14px;
+    overflow-x: auto;
+}
+
+.ccTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ccTab i {
+    font-size: 14px;
+}
+
+.ccTab:hover {
+    color: var(--text-secondary);
+}
+
+.ccTab.active {
+    color: var(--text);
+}
+
+.ccTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.ccTabBadge {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ccTabDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f59e0b;
+}
+
 .ccTabContent {
     flex: 1;
     display: flex;
@@ -267,49 +340,103 @@
     overflow: hidden;
 }
 
-/*  Footer  */
 .ccFooter {
     display: flex;
     align-items: center;
-    gap: 7px;
-    padding: 10px 16px;
-    border-top: 0.5px solid var(--border);
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 16px;
     background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
     font-size: 11px;
-    color: var(--text-disabled);
+    flex-shrink: 0;
+    flex-wrap: wrap;
 }
 
-.ccFooter i {
+.ccFooterLeft {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-tertiary);
+}
+
+.ccFooterLeft i {
     font-size: 13px;
+    color: var(--brand);
 }
 
-/*  Responsive  */
+.ccFooterRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+}
+
 .ccLabel {
     display: inline;
 }
 
 @media (max-width: 768px) {
+    .ccRoot {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100dvh;
+    }
+
     .ccLabel {
         display: none;
     }
 
     .ccChrome {
-        padding: 10px 12px;
-    }
-
-    .ccOptionsBar {
-        padding: 10px 12px;
-    }
-
-    .ccOptionsGroup {
+        padding: 8px 12px;
         gap: 8px;
+    }
+
+    .ccSettings {
+        padding: 12px;
+    }
+
+    .ccSettingsGrid {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .ccFormatChips {
+        max-width: none;
+    }
+
+    .ccTabs {
+        padding: 0 8px;
+    }
+
+    .ccTab span {
+        display: none;
+    }
+
+    .ccTab {
+        padding: 0 10px;
+    }
+
+    .ccFooter {
+        flex-direction: column;
+        text-align: center;
+        gap: 6px;
+    }
+
+    .ccFooterRight {
+        justify-content: center;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
     .ccBtn,
+    .ccSettingsBtn,
     .ccTab,
+    .ccFormatChip,
     .ccToggleTrack,
     .ccToggleThumb {
         transition: none;

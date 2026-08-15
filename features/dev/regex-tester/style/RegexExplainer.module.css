@@ -31,6 +31,7 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;
+    white-space: nowrap;
 }
 
 .rxeSwitchBtn i {
@@ -82,7 +83,6 @@
     font-style: italic;
 }
 
-/* Worked Examples */
 .rxeExamplesGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
@@ -239,7 +239,6 @@
     font-size: 14px;
 }
 
-/* Code Generation */
 .rxeCopyBtn {
     display: inline-flex;
     align-items: center;
@@ -386,6 +385,7 @@
     padding: 4px 8px;
     border-radius: 5px;
     border: 0.5px solid var(--brand-border);
+    word-break: break-all;
 }
 
 .rxeBreakdownType {
@@ -398,6 +398,7 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    flex-shrink: 0;
 }
 
 .rxeBreakdownType.anchor {
@@ -631,6 +632,16 @@
 @media (max-width: 768px) {
     .rxeRoot {
         padding: 12px;
+        gap: 16px;
+    }
+
+    .rxeSectionSwitcher {
+        width: 100%;
+    }
+
+    .rxeSwitchBtn {
+        flex: 1;
+        justify-content: center;
     }
 
     .rxeExamplesGrid {
@@ -643,10 +654,6 @@
 
     .rxeFlagsList {
         grid-template-columns: 1fr;
-    }
-
-    .rxeSwitchBtn span {
-        display: none;
     }
 }
 

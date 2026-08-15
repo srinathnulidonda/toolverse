@@ -1,20 +1,13 @@
 // components/home/BrowseCategories.tsx
 import Link from "next/link";
-
-const categories = [
-  { label: "PDF", icon: "ti-file-text", count: 18, href: "/tools/pdf" },
-  { label: "Image", icon: "ti-photo", count: 7, href: "/tools/image" },
-  { label: "Developer", icon: "ti-code", count: 9, href: "/tools/dev" },
-  { label: "Finance", icon: "ti-calculator", count: 8, href: "/tools/finance" },
-  { label: "Social", icon: "ti-qrcode", count: 5, href: "/tools/social" },
-  { label: "Resume", icon: "ti-file-cv", count: 4, href: "/tools/resume" },
-];
+import { getCategoriesWithCount } from "@/lib/tools";
 
 export default function BrowseCategories() {
+  const categories = getCategoriesWithCount();
+
   return (
     <>
       <div className="ws-card">
-        {/* Header */}
         <div className="ws-header">
           <span className="ws-label">Workspace</span>
           <Link href="/tools" className="ws-all-link">
@@ -25,20 +18,22 @@ export default function BrowseCategories() {
 
         <div className="ws-divider" />
 
-        {/* Category grid */}
-        <div className="ws-grid">
-          {categories.map((cat) => (
-            <Link key={cat.label} href={cat.href} className="ws-chip">
-              <i className={`ti ${cat.icon} ws-chip-icon`} aria-hidden="true" />
-              <span className="ws-chip-name">{cat.label}</span>
-              <span className="ws-chip-count" aria-label={`${cat.count} tools`}>
-                {cat.count}
-              </span>
-            </Link>
-          ))}
-        </div>
+        {categories.length > 0 ? (
+          <div className="ws-grid">
+            {categories.map((cat) => (
+              <Link key={cat.slug} href={`/tools/${cat.slug}`} className="ws-chip">
+                <i className={`ti ${cat.icon} ws-chip-icon`} aria-hidden="true" />
+                <span className="ws-chip-name">{cat.label}</span>
+                <span className="ws-chip-count" aria-label={`${cat.count} tools`}>
+                  {cat.count}
+                </span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="ws-empty">No categories yet</div>
+        )}
 
-        {/* Footer CTA */}
         <Link href="/categories" className="ws-footer-link">
           <i className="ti ti-layout-grid" aria-hidden="true" />
           Browse all categories
@@ -81,6 +76,7 @@ export default function BrowseCategories() {
           text-decoration: none;
           font-family: var(--font-sans);
           transition: color 0.15s;
+          border-radius: 4px;
         }
         .ws-all-link i { font-size: 11px; }
         .ws-all-link:hover { color: var(--text); text-decoration: none; }
@@ -96,6 +92,14 @@ export default function BrowseCategories() {
           grid-template-columns: 1fr 1fr;
           gap: 6px;
           padding: 10px 12px 8px;
+        }
+
+        .ws-empty {
+          padding: 24px 16px;
+          text-align: center;
+          font-size: 12px;
+          color: var(--text-tertiary);
+          font-family: var(--font-sans);
         }
 
         .ws-chip {
@@ -156,6 +160,13 @@ export default function BrowseCategories() {
           background: var(--bg-surface);
           color: var(--text-secondary);
           text-decoration: none;
+        }
+
+        .ws-chip:focus-visible,
+        .ws-all-link:focus-visible,
+        .ws-footer-link:focus-visible {
+          outline: 2px solid var(--brand);
+          outline-offset: 2px;
         }
       `}</style>
     </>

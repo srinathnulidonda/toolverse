@@ -30,6 +30,13 @@ import ITCCalculatorWorkspace from "@/features/finance/itc-calculator/Workspace"
 import InvoiceGeneratorWorkspace from "@/features/finance/invoice-generator/Workspace";
 import EMICalculatorWorkspace from "@/features/finance/emi-calculator/Workspace";
 import SIPCalculatorWorkspace from "@/features/finance/sip-calculator/Workspace";
+import MergePdfWorkspace from "@/features/pdf/merge-pdf/Workspace";
+import CompressPdfWorkspace from "@/features/pdf/compress-pdf/Workspace";
+import JpgToPdfWorkspace from "@/features/pdf/jpg-to-pdf/Workspace";
+import ImageCompressWorkspace from "@/features/image/image-compress/Workspace";
+import ImageResizeWorkspace from "@/features/image/image-resize/Workspace";
+import RemoveBgWorkspace from "@/features/image/remove-bg/Workspace";
+
 type ToolWorkspaceProps = {
   tool: Tool;
 };
@@ -69,6 +76,16 @@ const WORKSPACES: Record<string, ComponentType<{ tool: Tool }>> = {
   "invoice-generator": InvoiceGeneratorWorkspace,
   "emi-calculator": EMICalculatorWorkspace,
   "sip-calculator": SIPCalculatorWorkspace,
+
+  // PDF tools
+  "merge-pdf": MergePdfWorkspace,
+  "compress-pdf": CompressPdfWorkspace,
+  "jpg-to-pdf": JpgToPdfWorkspace,
+
+  // Image tools
+  "image-compress": ImageCompressWorkspace,
+  "image-resize": ImageResizeWorkspace,
+  "remove-bg": RemoveBgWorkspace,
 };
 
 export default function ToolWorkspace({ tool }: ToolWorkspaceProps) {

@@ -1,11 +1,5 @@
-/**
- * Shared utility functions used across multiple tools.
- */
+// lib/utils.ts
 
-/**
- * Format bytes into a human-readable string.
- * Supports bytes, KB, MB, GB.
- */
 export function formatBytes(bytes: number): string {
   if (bytes === 0) return "0 B";
   const k = 1024;

@@ -9,7 +9,6 @@
     overflow: hidden;
 }
 
-/* Chrome */
 .jwChrome {
     display: flex;
     align-items: center;
@@ -132,7 +131,6 @@
     font-size: 13px;
 }
 
-/* Settings */
 .jwSettings {
     padding: 14px 16px;
     background: var(--bg-surface);
@@ -172,7 +170,6 @@
     cursor: pointer;
 }
 
-/* Toggle */
 .jwToggle {
     display: flex;
     align-items: center;
@@ -221,7 +218,6 @@
     color: var(--text-secondary);
 }
 
-/* Tabs */
 .jwTabsBar {
     background: var(--bg-surface);
     border-bottom: 0.5px solid var(--border);
@@ -296,7 +292,6 @@
     background: #f59e0b;
 }
 
-/* Content */
 .jwContent {
     flex: 1;
     min-height: 0;
@@ -305,7 +300,6 @@
     overflow: hidden;
 }
 
-/* Process View */
 .jwProcessView {
     flex: 1;
     display: flex;
@@ -314,7 +308,6 @@
     overflow: hidden;
 }
 
-/* Toolbar */
 .jwToolbar {
     display: flex;
     align-items: center;
@@ -397,7 +390,6 @@
     border-color: var(--brand-border);
 }
 
-/* Mobile switcher */
 .jwMobileSwitcher {
     display: none;
     background: var(--bg-surface);
@@ -450,7 +442,6 @@
     background: var(--brand);
 }
 
-/* Body */
 .jwBody {
     display: grid;
     grid-template-columns: 1fr 40px 1fr;
@@ -464,6 +455,16 @@
     flex-direction: column;
     overflow: hidden;
     min-height: 0;
+}
+
+.mobVisible {
+    visibility: visible;
+    z-index: 1;
+}
+
+.mobHidden {
+    visibility: visible;
+    z-index: 0;
 }
 
 .jwPanelBar {
@@ -693,7 +694,6 @@
     opacity: 0.7;
 }
 
-/* Gutter */
 .jwGutter {
     display: flex;
     flex-direction: column;
@@ -721,7 +721,6 @@
     font-size: 14px;
 }
 
-/* Output */
 .jwEmpty {
     flex: 1;
     display: flex;
@@ -817,7 +816,6 @@
     min-height: 0;
 }
 
-/* Stats bar */
 .jwStatsBar {
     display: flex;
     align-items: center;
@@ -962,7 +960,6 @@
     font-size: 15px;
 }
 
-/* Tab Empty */
 .jwTabEmpty {
     flex: 1;
     display: flex;
@@ -1020,7 +1017,6 @@
     background: var(--brand-hover);
 }
 
-/* Transform View */
 .jwTransformView {
     flex: 1;
     display: flex;
@@ -1074,7 +1070,6 @@
     font-size: 13px;
 }
 
-/* JSONPath */
 .jwJsonpathRow {
     display: flex;
     gap: 8px;
@@ -1166,7 +1161,6 @@
     word-break: break-all;
 }
 
-/* Convert Grid */
 .jwConvertGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -1257,7 +1251,6 @@
     line-height: 1.6;
 }
 
-/* History */
 .jwHistory {
     flex: 1;
     display: flex;
@@ -1431,7 +1424,6 @@
     }
 }
 
-/* Footer */
 .jwFooter {
     display: flex;
     align-items: center;
@@ -1490,18 +1482,6 @@
     }
 }
 
-.mobVisible {
-    z-index: 1;
-    visibility: visible;
-}
-
-.mobHidden {
-    z-index: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-/* Mobile */
 @media (max-width: 768px) {
     .jwRoot {
         border-radius: 0;
@@ -1578,12 +1558,12 @@
         inset: 0;
     }
 
-    .jwPanel.mobVisible {
+    .mobVisible {
         z-index: 1;
         visibility: visible;
     }
 
-    .jwPanel.mobHidden {
+    .mobHidden {
         z-index: 0;
         visibility: hidden;
         pointer-events: none;
@@ -1628,7 +1608,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-
     .jwModePill,
     .jwSettingsBtn,
     .jwTab,

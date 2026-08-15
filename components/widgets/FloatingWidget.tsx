@@ -1,72 +1,31 @@
-//components/widgets/FloatingWidget.tsx
+// components/widgets/FloatingWidget.tsx
 "use client";
 
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useLocalStorage from "@/lib/useLocalStorage";
+import { useTasks } from "@/lib/useTasks";
+import { useNotes } from "@/lib/useNotes";
 import WidgetTasks from "./WidgetTasks";
 import WidgetNotes from "./WidgetNotes";
 import {
-  Task,
-  Note,
-  Priority,
-  ChecklistItem,
-  TASKS_STORAGE_KEY,
-  NOTES_STORAGE_KEY,
+  TasksDraft,
+  NotesDraft,
+  DEFAULT_TASKS_DRAFT,
+  DEFAULT_NOTES_DRAFT,
   TASKS_DRAFT_KEY,
   NOTES_DRAFT_KEY,
-  cleanTasks,
-  cleanNotes,
 } from "./widgetTypes";
 
 type ViewMode = "minimized" | "expanded" | "full";
 type ActiveTab = "tasks" | "notes";
-type Filter = "all" | "active" | "completed";
 
 const WIDGET_POSITION_KEY = "tv:widget-position";
 const ACTIVE_TAB_KEY = "tv:active-tab";
 
-const MAX_PANEL_HEIGHT = 600; // Match actual CSS
-const MAX_PANEL_WIDTH = 380; // Match actual CSS
+const MAX_PANEL_HEIGHT = 600;
+const MAX_PANEL_WIDTH = 380;
 const DRAG_THRESHOLD = 4;
-
-interface TasksDraft {
-  input: string;
-  priority: Priority;
-  showPicker: boolean;
-  search: string;
-  filter: Filter;
-  showCompleted: boolean;
-}
-
-interface NotesDraft {
-  activeNote: string | null;
-  title: string;
-  content: string;
-  type?: "note" | "checklist";
-  items?: ChecklistItem[];
-  composerOpen: boolean;
-  showCompleted?: boolean;
-}
-
-const DEFAULT_TASKS_DRAFT: TasksDraft = {
-  input: "",
-  priority: "medium",
-  showPicker: false,
-  search: "",
-  filter: "all",
-  showCompleted: true,
-};
-
-const DEFAULT_NOTES_DRAFT: NotesDraft = {
-  activeNote: null,
-  title: "",
-  content: "",
-  type: "note",
-  items: [],
-  composerOpen: false,
-  showCompleted: true,
-};
 
 export default function FloatingWidget() {
   const [mounted, setMounted] = useState(false);
@@ -82,14 +41,8 @@ export default function FloatingWidget() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
-  const [rawTasks, setRawTasks] = useLocalStorage<Task[]>(TASKS_STORAGE_KEY, []);
-  const [rawNotes, setRawNotes] = useLocalStorage<Note[]>(NOTES_STORAGE_KEY, []);
-
-  const tasks = useMemo(() => cleanTasks(rawTasks), [rawTasks]);
-  const notes = useMemo(() => cleanNotes(rawNotes), [rawNotes]);
-
-  const setTasks = (value: Task[] | ((prev: Task[]) => Task[])) => setRawTasks(value);
-  const setNotes = (value: Note[] | ((prev: Note[]) => Note[])) => setRawNotes(value);
+  const { tasks, addTask, toggleTask, removeTask, clearCompleted } = useTasks();
+  const { notes, saveNote, deleteNote, restoreNote, togglePin } = useNotes();
 
   const [notesDraft, setNotesDraft] = useLocalStorage<NotesDraft>(
     NOTES_DRAFT_KEY,
@@ -125,7 +78,6 @@ export default function FloatingWidget() {
     }
   }, [mounted, persistedPosition, isDragging]);
 
-  // Auto-drop to expanded when switching to tasks while in full mode
   useEffect(() => {
     if (viewMode === "full" && activeTab === "tasks") {
       setViewMode("expanded");
@@ -139,7 +91,6 @@ export default function FloatingWidget() {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
 
-    // Use actual measured panel size on mobile
     let maxHeight = currentViewMode === "expanded" ? MAX_PANEL_HEIGHT : 100;
     let maxWidth = currentViewMode === "expanded" ? MAX_PANEL_WIDTH : 100;
 
@@ -192,7 +143,6 @@ export default function FloatingWidget() {
     }
   }, [viewMode, setPersistedPosition]);
 
-  // Tab-aware keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
@@ -203,7 +153,6 @@ export default function FloatingWidget() {
         e.preventDefault();
         setViewMode((prev) => {
           if (prev === "minimized") return "expanded";
-          // Don't allow full mode when tasks tab is active
           if (prev === "expanded" && activeTab === "notes") return "full";
           return "minimized";
         });
@@ -219,7 +168,7 @@ export default function FloatingWidget() {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [activeTab]); // Add activeTab dependency
+  }, [activeTab]);
 
   useEffect(() => {
     if (viewMode !== "full") return;
@@ -229,13 +178,13 @@ export default function FloatingWidget() {
 
     document.body.style.overflow = "hidden";
 
-    setTimeout(() => {
+    const frame = requestAnimationFrame(() => {
       widgetRef.current
         ?.querySelector<HTMLElement>(
           "button:not(:disabled), input, [tabindex]:not([tabindex='-1'])"
         )
         ?.focus();
-    }, 100);
+    });
 
     const trapFocus = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
@@ -264,6 +213,7 @@ export default function FloatingWidget() {
     document.addEventListener("keydown", trapFocus);
 
     return () => {
+      cancelAnimationFrame(frame);
       document.body.style.overflow = originalOverflow;
       document.removeEventListener("keydown", trapFocus);
       previouslyFocused?.focus();
@@ -271,6 +221,8 @@ export default function FloatingWidget() {
   }, [viewMode]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return;
+
     setIsDragging(true);
     hasDraggedRef.current = false;
     startPosRef.current = { x: e.clientX, y: e.clientY };
@@ -380,30 +332,37 @@ export default function FloatingWidget() {
   if (!mounted) return null;
 
   const pendingCount = tasks.filter((t) => !t.completed).length;
+  const fabLabel =
+    pendingCount > 0
+      ? `Open widget, ${pendingCount} pending task${pendingCount === 1 ? "" : "s"}`
+      : "Open widget";
 
   const renderWidgetContent = () => {
     if (activeTab === "tasks") {
       return (
         <WidgetTasks
           tasks={tasks}
-          setTasks={setTasks}
+          addTask={addTask}
+          toggleTask={toggleTask}
+          removeTask={removeTask}
+          clearCompleted={clearCompleted}
           draft={tasksDraft}
           setDraft={setTasksDraft}
-          // No onExpand prop - tasks are always compact
-        />
-      );
-    } else {
-      return (
-        <WidgetNotes
-          variant={viewMode === "full" ? "full" : "compact"}
-          notes={notes}
-          setNotes={setNotes}
-          draft={notesDraft}
-          setDraft={setNotesDraft}
-          onExpand={() => setViewMode("full")}
         />
       );
     }
+    return (
+      <WidgetNotes
+        variant={viewMode === "full" ? "full" : "compact"}
+        notes={notes}
+        saveNote={saveNote}
+        deleteNote={deleteNote}
+        restoreNote={restoreNote}
+        togglePin={togglePin}
+        draft={notesDraft}
+        setDraft={setNotesDraft}
+      />
+    );
   };
 
   if (viewMode === "full") {
@@ -491,7 +450,6 @@ export default function FloatingWidget() {
             flex-shrink: 0;
             gap: 12px;
           }
-          
           .fw-tab-track {
             display: flex;
             align-items: center;
@@ -514,25 +472,16 @@ export default function FloatingWidget() {
             font-weight: 500;
             font-family: var(--font-sans);
             cursor: pointer;
-            transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+            transition: background 0.15s ease, color 0.15s ease;
           }
-          .fw-tab:hover {
-            color: var(--text-secondary);
-          }
-          .fw-tab svg {
-            opacity: 0.8;
-            transition: opacity 0.15s ease, color 0.15s ease;
-          }
+          .fw-tab:hover { color: var(--text-secondary); }
+          .fw-tab svg { opacity: 0.8; transition: opacity 0.15s ease; }
           .fw-tab.active {
             background: var(--bg-card);
             color: var(--text);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
           }
-          .fw-tab.active svg {
-            opacity: 1;
-            color: #4CAF82;
-          }
-
+          .fw-tab.active svg { opacity: 1; color: var(--brand); }
           .fw-full-header-actions {
             display: flex;
             align-items: center;
@@ -540,8 +489,8 @@ export default function FloatingWidget() {
             flex-shrink: 0;
           }
           .fw-icon-btn {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: none;
             background: none;
@@ -553,69 +502,44 @@ export default function FloatingWidget() {
             cursor: pointer;
           }
           .fw-icon-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(128, 128, 128, 0.14);
             color: var(--text);
           }
-          .fw-icon-btn:active {
-            transform: scale(0.94);
-          }
+          .fw-icon-btn:active { transform: scale(0.94); }
           .fw-icon-btn-close:hover {
             background: rgba(224, 82, 82, 0.15);
             color: #E05252;
           }
-
+          .fw-icon-btn:focus-visible,
+          .fw-tab:focus-visible {
+            outline: 2px solid var(--brand);
+            outline-offset: 2px;
+          }
           .fw-full-content {
             flex: 1;
             overflow: hidden;
             display: flex;
             flex-direction: column;
           }
-
           @keyframes fwFadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
           }
           @keyframes fwSlideUp {
-            from {
-              opacity: 0;
-              transform: translateY(20px) scale(0.96);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
           }
-
           @media (max-width: 768px) {
-            .fw-overlay {
-              padding: 16px;
-            }
+            .fw-overlay { padding: 0; }
             .fw-full-panel {
               max-width: 100%;
               max-height: 100%;
-              border-radius: 12px;
+              height: 100dvh;
+              border-radius: 0;
             }
-            .fw-full-header {
-              padding: 12px 14px;
-            }
-            .fw-tab {
-              padding: 6px 11px;
-              font-size: 12px;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .fw-overlay {
-              padding: 12px;
-            }
-            .fw-tab {
-              padding: 6px 9px;
-              gap: 4px;
-              font-size: 11.5px;
-            }
-            .fw-tab-track {
-              padding: 2px;
-            }
+            .fw-full-header { padding: 14px 16px; padding-top: max(14px, env(safe-area-inset-top)); }
+            .fw-tab { padding: 8px 12px; font-size: 12.5px; }
+            .fw-icon-btn { width: 36px; height: 36px; }
           }
         `}</style>
       </div>,
@@ -644,11 +568,13 @@ export default function FloatingWidget() {
               setViewMode("expanded");
             }
           }}
-          aria-label="Open widget"
+          aria-label={fabLabel}
         >
           {activeTab === "tasks" ? <TasksTabIcon size={20} /> : <NotesTabIcon size={20} />}
           {pendingCount > 0 && (
-            <span className="fw-badge">{pendingCount > 9 ? "9+" : pendingCount}</span>
+            <span className="fw-badge" aria-hidden="true">
+              {pendingCount > 9 ? "9+" : pendingCount}
+            </span>
           )}
         </button>
       )}
@@ -662,8 +588,7 @@ export default function FloatingWidget() {
               onTouchStart={handleTouchStart}
               onKeyDown={handleDragKeyDown}
               tabIndex={0}
-              role="button"
-              aria-label="Drag to move (use arrow keys)"
+              aria-label="Drag to move, use arrow keys"
             >
               <DragHandleIcon />
             </button>
@@ -682,7 +607,7 @@ export default function FloatingWidget() {
               </button>
             </div>
             <div className="fw-header-actions">
-              {activeTab === "notes" && ( // Only show expand for notes
+              {activeTab === "notes" && (
                 <button
                   className="fw-icon-btn"
                   onClick={() => setViewMode("full")}
@@ -708,15 +633,9 @@ export default function FloatingWidget() {
       )}
 
       <style>{`
-        .fw-root {
-          font-family: var(--font-sans);
-        }
-        .fw-root.dragging {
-          cursor: grabbing;
-        }
-        .fw-root.dragging * {
-          cursor: grabbing !important;
-        }
+        .fw-root { font-family: var(--font-sans); }
+        .fw-root.dragging { cursor: grabbing; user-select: none; }
+        .fw-root.dragging * { cursor: grabbing !important; user-select: none; }
 
         .fw-fab {
           position: relative;
@@ -731,7 +650,7 @@ export default function FloatingWidget() {
           justify-content: center;
           color: var(--text);
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2);
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, background 0.2s ease;
           touch-action: none;
         }
         .fw-fab:hover {
@@ -739,9 +658,8 @@ export default function FloatingWidget() {
           transform: scale(1.05);
           box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 3px 8px rgba(0, 0, 0, 0.25);
         }
-        .fw-fab:active {
-          transform: scale(0.98);
-        }
+        .fw-fab:active { transform: scale(0.98); }
+        .fw-fab:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
         .fw-badge {
           position: absolute;
           top: -2px;
@@ -763,43 +681,9 @@ export default function FloatingWidget() {
         }
 
         @media (max-width: 768px) {
-          .fw-fab {
-            width: 48px;
-            height: 48px;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3), 0 2px 5px rgba(0, 0, 0, 0.2);
-          }
-          .fw-fab:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.25);
-          }
-          .fw-fab svg {
-            width: 18px;
-            height: 18px;
-          }
-          .fw-badge {
-            top: -1px;
-            right: -1px;
-            min-width: 18px;
-            height: 18px;
-            font-size: 10px;
-            border-width: 1.5px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .fw-fab {
-            width: 44px;
-            height: 44px;
-          }
-          .fw-fab svg {
-            width: 17px;
-            height: 17px;
-          }
-          .fw-badge {
-            min-width: 16px;
-            height: 16px;
-            font-size: 9px;
-          }
+          .fw-fab { width: 52px; height: 52px; }
+          .fw-fab svg { width: 19px; height: 19px; }
+          .fw-badge { min-width: 19px; height: 19px; font-size: 10.5px; }
         }
 
         .fw-panel {
@@ -814,16 +698,9 @@ export default function FloatingWidget() {
           flex-direction: column;
           animation: fwPanelIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
         @keyframes fwPanelIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px) scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
+          from { opacity: 0; transform: translateY(10px) scale(0.95); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .fw-header {
@@ -835,17 +712,16 @@ export default function FloatingWidget() {
           background: var(--bg-surface);
           gap: 8px;
         }
-
         .fw-drag-handle {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           cursor: grab;
           color: var(--text-tertiary);
           border-radius: 50%;
-          transition: all 0.15s ease;
+          transition: background 0.15s ease, color 0.15s ease;
           flex-shrink: 0;
           touch-action: none;
           border: none;
@@ -853,22 +729,13 @@ export default function FloatingWidget() {
           padding: 0;
         }
         .fw-drag-handle:hover {
-          background: rgba(255, 255, 255, 0.08);
+          background: rgba(128, 128, 128, 0.14);
           color: var(--text);
         }
-        .fw-drag-handle:focus {
-          outline: 2px solid var(--brand);
-          outline-offset: 2px;
-        }
-        .fw-drag-handle:active {
-          cursor: grabbing;
-        }
+        .fw-drag-handle:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+        .fw-drag-handle:active { cursor: grabbing; }
 
-        .fw-header-actions {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-        }
+        .fw-header-actions { display: flex; align-items: center; gap: 4px; }
 
         .fw-tab-track {
           display: flex;
@@ -883,7 +750,7 @@ export default function FloatingWidget() {
           display: flex;
           align-items: center;
           gap: 5px;
-          padding: 6px 10px;
+          padding: 7px 11px;
           border-radius: 6px;
           border: none;
           background: none;
@@ -892,28 +759,21 @@ export default function FloatingWidget() {
           font-weight: 500;
           font-family: var(--font-sans);
           cursor: pointer;
-          transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+          transition: background 0.15s ease, color 0.15s ease;
         }
-        .fw-tab:hover {
-          color: var(--text-secondary);
-        }
-        .fw-tab svg {
-          opacity: 0.8;
-          transition: opacity 0.15s ease, color 0.15s ease;
-        }
+        .fw-tab:hover { color: var(--text-secondary); }
+        .fw-tab svg { opacity: 0.8; transition: opacity 0.15s ease; }
         .fw-tab.active {
           background: var(--bg-card);
           color: var(--text);
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
-        .fw-tab.active svg {
-          opacity: 1;
-          color: #4CAF82;
-        }
+        .fw-tab.active svg { opacity: 1; color: var(--brand); }
+        .fw-tab:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 
         .fw-icon-btn {
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           border-radius: 50%;
           border: none;
           background: none;
@@ -926,12 +786,11 @@ export default function FloatingWidget() {
           flex-shrink: 0;
         }
         .fw-icon-btn:hover {
-          background: rgba(255, 255, 255, 0.08);
+          background: rgba(128, 128, 128, 0.14);
           color: var(--text);
         }
-        .fw-icon-btn:active {
-          transform: scale(0.94);
-        }
+        .fw-icon-btn:active { transform: scale(0.94); }
+        .fw-icon-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
         .fw-icon-btn-close:hover {
           background: rgba(224, 82, 82, 0.15);
           color: #E05252;
@@ -945,36 +804,17 @@ export default function FloatingWidget() {
         }
 
         @media (max-width: 768px) {
-          .fw-panel {
-            width: calc(100vw - 32px);
-            max-width: 380px;
-          }
+          .fw-panel { width: calc(100vw - 24px); max-width: 380px; }
         }
-
         @media (max-width: 480px) {
           .fw-panel {
-            width: calc(100vw - 24px);
-            max-height: calc(100dvh - 120px);
+            width: calc(100vw - 16px);
+            max-height: calc(100dvh - 100px);
           }
-          .fw-header {
-            padding: 9px 10px;
-          }
-          .fw-tab {
-            padding: 6px 8px;
-            gap: 4px;
-            font-size: 11.5px;
-          }
-          .fw-tab-track {
-            padding: 2px;
-          }
-          .fw-icon-btn {
-            width: 26px;
-            height: 26px;
-          }
-          .fw-drag-handle {
-            width: 24px;
-            height: 24px;
-          }
+          .fw-header { padding: 10px; }
+          .fw-tab { padding: 7px 10px; gap: 4px; font-size: 11.5px; }
+          .fw-icon-btn { width: 34px; height: 34px; }
+          .fw-drag-handle { width: 28px; height: 28px; }
         }
       `}</style>
     </div>
@@ -985,16 +825,7 @@ export default function FloatingWidget() {
 
 function TasksTabIcon({ size = 14 }: { size?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 11l3 3L22 4" />
       <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
     </svg>
@@ -1003,16 +834,7 @@ function TasksTabIcon({ size = 14 }: { size?: number }) {
 
 function NotesTabIcon({ size = 14 }: { size?: number }) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
       <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
     </svg>
@@ -1021,16 +843,7 @@ function NotesTabIcon({ size = 14 }: { size?: number }) {
 
 function CloseIcon() {
   return (
-    <svg
-      width="15"
-      height="15"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="18" y1="6" x2="6" y2="18" />
       <line x1="6" y1="6" x2="18" y2="18" />
     </svg>
@@ -1039,16 +852,7 @@ function CloseIcon() {
 
 function ExpandIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="15 3 21 3 21 9" />
       <polyline points="9 21 3 21 3 15" />
       <line x1="21" y1="3" x2="14" y2="10" />
@@ -1059,16 +863,7 @@ function ExpandIcon() {
 
 function ShrinkIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="4 14 10 14 10 20" />
       <polyline points="20 10 14 10 14 4" />
       <line x1="14" y1="10" x2="21" y2="3" />
@@ -1079,16 +874,7 @@ function ShrinkIcon() {
 
 function DragHandleIcon() {
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="9" cy="5" r="1" fill="currentColor" stroke="none" />
       <circle cx="9" cy="12" r="1" fill="currentColor" stroke="none" />
       <circle cx="9" cy="19" r="1" fill="currentColor" stroke="none" />

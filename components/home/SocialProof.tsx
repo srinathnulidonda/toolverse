@@ -11,9 +11,9 @@ const stats = [
 export default function SocialProof() {
   return (
     <>
-      <div className="proof-card-row" aria-label="Toolverse benefits">
+      <div className="proof-card-row" role="list" aria-label="Toolverse benefits">
         {stats.map((s) => (
-          <div key={s.title} className="proof-card">
+          <div key={s.title} className="proof-card" role="listitem">
             <span className="proof-icon">
               <i className={`ti ${s.icon}`} aria-hidden="true" />
             </span>
@@ -47,6 +47,12 @@ export default function SocialProof() {
           align-items: center;
           gap: 5px;
           min-width: 0;
+          transition: border-color 0.15s, transform 0.15s;
+        }
+
+        .proof-card:hover {
+          border-color: var(--border-faint);
+          transform: translateY(-1px);
         }
 
         .proof-icon {
@@ -85,7 +91,6 @@ export default function SocialProof() {
           line-height: 1.3;
         }
 
-        /* Mobile design */
         @media (max-width: 560px) {
           .proof-card-row {
             display: grid;

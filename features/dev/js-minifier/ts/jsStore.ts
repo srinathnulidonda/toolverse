@@ -1,217 +1,215 @@
 // features/dev/js-minifier/ts/jsStore.ts
-import { useState, useMemo } from "react";
-import { useHistoryStore } from "@/lib/useHistoryStore";
-import type { MinifyResult, MinifyOptions } from "./jsEngine";
+"use client";
 
-export interface JSHistoryEntry {
+import { useState, useEffect, useCallback, useRef } from "react";
+import type { MinifyOptions, MinifyResult } from "./jsEngine";
+
+export interface HistoryEntry {
   id: string;
+  title: string;
+  input: string;
+  result: MinifyResult;
+  options: MinifyOptions;
   timestamp: number;
+  isFavorite: boolean;
+  tags: string[];
+}
+
+export interface JSSettings {
+  autoSave: boolean;
+  maxHistory: number;
+  defaultMode: string;
+}
+
+interface AddHistoryPayload {
   title: string;
   input: string;
   result: MinifyResult;
   options: MinifyOptions;
   isFavorite: boolean;
   tags: string[];
-  note?: string;
 }
 
-export interface JSSettings {
-  defaultOptions: MinifyOptions;
-  autoSave: boolean;
-  showAnalysis: boolean;
-  showLinting: boolean;
-  fontSize: "sm" | "md" | "lg";
-  wordWrap: boolean;
-  maxHistoryItems: number;
+interface JSStoreState {
+  history: HistoryEntry[];
+  settings: JSSettings;
+  addToHistory: (entry: AddHistoryPayload) => void;
+  removeFromHistory: (id: string) => void;
+  clearHistory: () => void;
+  toggleFavorite: (id: string) => void;
+  updateSettings: (settings: Partial<JSSettings>) => void;
 }
+
+const STORAGE_KEY = "js-minifier-store";
 
 const DEFAULT_SETTINGS: JSSettings = {
-  defaultOptions: {
-    mode: "minify",
-    removeComments: true,
-    removeConsole: false,
-    removeDebugger: true,
-    collapseWhitespace: true,
-    semicolons: true,
-    quoteStyle: "auto",
-    mangle: false,
-    deadCodeElimination: false,
-    inlineShortFunctions: false,
-  },
   autoSave: true,
-  showAnalysis: true,
-  showLinting: true,
-  fontSize: "md",
-  wordWrap: true,
-  maxHistoryItems: 50,
+  maxHistory: 50,
+  defaultMode: "minify",
 };
 
-export function useJSStore() {
-  const [settings, setSettings] = useState<JSSettings>(DEFAULT_SETTINGS);
+const DEFAULT_STATE = {
+  history: [] as HistoryEntry[],
+  settings: DEFAULT_SETTINGS,
+};
 
-  const historyStore = useHistoryStore<JSHistoryEntry>({
-    key: "js-minifier-history",
-    maxItems: settings.maxHistoryItems,
-    validateItem: (raw) => {
-      if (
-        raw &&
-        typeof raw === "object" &&
-        typeof (raw as any).id === "string" &&
-        typeof (raw as any).timestamp === "number" &&
-        typeof (raw as any).title === "string" &&
-        typeof (raw as any).input === "string" &&
-        (raw as any).result &&
-        typeof (raw as any).result === "object" &&
-        (raw as any).options &&
-        typeof (raw as any).options === "object" &&
-        Array.isArray((raw as any).tags) &&
-        typeof (raw as any).isFavorite === "boolean"
-      ) {
-        return raw as JSHistoryEntry;
-      }
-      return null;
-    },
-    isDuplicate: (newItem: JSHistoryEntry, recentItems: JSHistoryEntry[]) => {
-      return recentItems.some((item) => item.input === newItem.input);
-    },
-    serialize: (item) => item,
-    deserialize: (raw) => raw,
-  });
+function generateId(): string {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
 
-  const {
-    history,
-    addToHistory: historyAddToHistory,
-    clearHistory: historyClearHistory,
-  } = historyStore;
-
-  const addToHistory = (entry: Omit<JSHistoryEntry, "id" | "timestamp">) => {
-    if (!settings.autoSave) return;
-
-    const newEntry: JSHistoryEntry = {
-      ...entry,
-      id: `js_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: Date.now(),
-    };
-
-    historyAddToHistory(newEntry);
-  };
-
-  const clearHistory = () => {
-    historyClearHistory();
-  };
-
-  // Helper to replace the entire history list
-  const replaceHistory = (newHistory: JSHistoryEntry[]) => {
-    historyClearHistory();
-    newHistory.forEach((entry) => {
-      historyAddToHistory(entry);
-    });
-  };
-
-  const removeFromHistory = (id: string) => {
-    const updated = history.filter((entry) => entry.id !== id);
-    replaceHistory(updated);
-  };
-
-  const toggleFavorite = (id: string) => {
-    const updated = history.map((entry) =>
-      entry.id === id ? { ...entry, isFavorite: !entry.isFavorite } : entry
-    );
-    replaceHistory(updated);
-  };
-
-  const updateEntry = (id: string, updates: Partial<JSHistoryEntry>) => {
-    const updated = history.map((entry) => (entry.id === id ? { ...entry, ...updates } : entry));
-    replaceHistory(updated);
-  };
-
-  const searchHistory = (query: string): JSHistoryEntry[] => {
-    if (!query.trim()) return history;
-
-    const lowerQuery = query.toLowerCase();
-    return history.filter(
-      (entry) =>
-        entry.title.toLowerCase().includes(lowerQuery) ||
-        entry.input.toLowerCase().includes(lowerQuery) ||
-        (entry.note?.toLowerCase().includes(lowerQuery) ?? false) ||
-        entry.tags.some((tag) => tag.toLowerCase().includes(lowerQuery))
-    );
-  };
-
-  const getFavorites = (): JSHistoryEntry[] => {
-    return history.filter((entry) => entry.isFavorite);
-  };
-
-  const getStatistics = () => {
-    const totalEntries = history.length;
-    const favoriteCount = getFavorites().length;
-    const totalSavings = history.reduce(
-      (acc, entry) => acc + (entry.result.stats?.savings ?? 0),
-      0
-    );
-    const averageSavings = totalEntries > 0 ? totalSavings / totalEntries : 0;
-
-    const modeUsage = history.reduce(
-      (acc, entry) => {
-        const mode = entry.options.mode;
-        acc[mode] = (acc[mode] || 0) + 1;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-
+function loadFromStorage(): typeof DEFAULT_STATE {
+  if (typeof window === "undefined") return DEFAULT_STATE;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return DEFAULT_STATE;
+    const parsed = JSON.parse(raw);
     return {
-      totalEntries,
-      favoriteCount,
-      totalSavings,
-      averageSavings,
-      modeUsage,
-      mostUsedMode: Object.entries(modeUsage).sort(([, a], [, b]) => b - a)[0]?.[0] || null,
+      history: Array.isArray(parsed.history) ? parsed.history : [],
+      settings: {
+        ...DEFAULT_SETTINGS,
+        ...(parsed.settings ?? {}),
+      },
     };
-  };
+  } catch {
+    return DEFAULT_STATE;
+  }
+}
 
-  const updateSettings = (newSettings: Partial<JSSettings>) => {
-    setSettings((prev) => ({ ...(prev ?? {}), ...newSettings }));
-  };
+function saveToStorage(state: typeof DEFAULT_STATE): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    /* storage full or unavailable */
+  }
+}
 
-  const resetSettings = () => {
-    setSettings(DEFAULT_SETTINGS);
-  };
+type Listener = () => void;
 
-  const exportHistory = (format: "json" | "csv") => {
-    if (format === "json") {
-      return JSON.stringify(history, null, 2);
-    } else {
-      const headers = ["Timestamp", "Title", "Mode", "Original", "Minified", "Savings", "Favorite"];
-      const rows = history.map((entry) => [
-        new Date(entry.timestamp).toISOString(),
-        entry.title,
-        entry.options.mode,
-        `${entry.result.stats?.original ?? 0} bytes`,
-        `${entry.result.stats?.minified ?? 0} bytes`,
-        `${entry.result.stats?.savings ?? 0}%`,
-        entry.isFavorite ? "Yes" : "No",
-      ]);
+let storeHistory: HistoryEntry[] = DEFAULT_STATE.history;
+let storeSettings: JSSettings = DEFAULT_STATE.settings;
+let initialized = false;
+const listeners = new Set<Listener>();
 
-      return [headers, ...rows]
-        .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(","))
-        .join("\n");
-    }
-  };
+function initStore(): void {
+  if (initialized || typeof window === "undefined") return;
+  initialized = true;
+  const saved = loadFromStorage();
+  storeHistory = saved.history;
+  storeSettings = saved.settings;
+}
+
+function notify(): void {
+  listeners.forEach((l) => l());
+}
+
+function persist(): void {
+  saveToStorage({ history: storeHistory, settings: storeSettings });
+}
+
+const storeActions = {
+  addToHistory(payload: AddHistoryPayload): void {
+    const entry: HistoryEntry = {
+      id: generateId(),
+      title: payload.title,
+      input: payload.input,
+      result: payload.result,
+      options: payload.options,
+      timestamp: Date.now(),
+      isFavorite: payload.isFavorite,
+      tags: payload.tags,
+    };
+
+    const deduped = storeHistory.filter(
+      (h) =>
+        h.input !== payload.input ||
+        h.options.mode !== payload.options.mode
+    );
+
+    storeHistory = [entry, ...deduped].slice(0, storeSettings.maxHistory);
+    persist();
+    notify();
+  },
+
+  removeFromHistory(id: string): void {
+    storeHistory = storeHistory.filter((h) => h.id !== id);
+    persist();
+    notify();
+  },
+
+  clearHistory(): void {
+    storeHistory = [];
+    persist();
+    notify();
+  },
+
+  toggleFavorite(id: string): void {
+    storeHistory = storeHistory.map((h) =>
+      h.id === id ? { ...h, isFavorite: !h.isFavorite } : h
+    );
+    persist();
+    notify();
+  },
+
+  updateSettings(newSettings: Partial<JSSettings>): void {
+    storeSettings = { ...storeSettings, ...newSettings };
+    persist();
+    notify();
+  },
+};
+
+export function useJSStore(): JSStoreState {
+  initStore();
+
+  const [, rerender] = useState(0);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    const listener: Listener = () => {
+      if (mountedRef.current) {
+        rerender((n) => n + 1);
+      }
+    };
+
+    listeners.add(listener);
+
+    return () => {
+      mountedRef.current = false;
+      listeners.delete(listener);
+    };
+  }, []);
+
+  const addToHistory = useCallback(
+    (payload: AddHistoryPayload) => storeActions.addToHistory(payload),
+    []
+  );
+
+  const removeFromHistory = useCallback(
+    (id: string) => storeActions.removeFromHistory(id),
+    []
+  );
+
+  const clearHistory = useCallback(() => storeActions.clearHistory(), []);
+
+  const toggleFavorite = useCallback(
+    (id: string) => storeActions.toggleFavorite(id),
+    []
+  );
+
+  const updateSettings = useCallback(
+    (s: Partial<JSSettings>) => storeActions.updateSettings(s),
+    []
+  );
 
   return {
-    history,
-    settings,
+    history: storeHistory,
+    settings: storeSettings,
     addToHistory,
     removeFromHistory,
     clearHistory,
     toggleFavorite,
-    updateEntry,
-    searchHistory,
-    getFavorites,
-    getStatistics,
     updateSettings,
-    resetSettings,
-    exportHistory,
   };
 }

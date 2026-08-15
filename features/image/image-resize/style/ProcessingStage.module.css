@@ -1,0 +1,137 @@
+/* features/image/image-resize/style/ProcessingStage.module.css */
+.processContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(14px, 3.5vw, 20px);
+    padding: clamp(32px, 8vw, 56px) clamp(16px, 4vw, 24px);
+    text-align: center;
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.spinnerWrap {
+    position: relative;
+    width: clamp(56px, 14vw, 76px);
+    height: clamp(56px, 14vw, 76px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.spinner {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid var(--border-faint);
+    border-top-color: var(--brand);
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinnerIcon {
+    position: relative;
+    font-size: clamp(18px, 4.5vw, 24px);
+    color: var(--brand);
+}
+
+.stageInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+}
+
+.stageTitle {
+    font-size: clamp(14px, 3.5vw, 16px);
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    font-family: var(--font-sans);
+}
+
+.stageDetail {
+    font-size: clamp(10.5px, 2.6vw, 11.5px);
+    color: var(--text-secondary);
+    margin: 0;
+    font-family: var(--font-mono);
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.progressTrack {
+    width: 100%;
+    max-width: 280px;
+    height: 6px;
+    background: var(--border-faint);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand), var(--brand-hover));
+    border-radius: 999px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progressPercent {
+    font-size: clamp(12px, 3vw, 13px);
+    font-weight: 700;
+    color: var(--brand-text);
+    font-family: var(--font-mono);
+    margin-top: -8px;
+}
+
+.hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: clamp(10px, 2.4vw, 11px);
+    color: var(--text-tertiary);
+    margin: 4px 0 0 0;
+    font-family: var(--font-sans);
+    text-align: center;
+}
+
+.hint i {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .processContainer {
+        animation: none;
+    }
+    .spinner {
+        animation: none;
+    }
+    .progressFill {
+        transition: none;
+    }
+}

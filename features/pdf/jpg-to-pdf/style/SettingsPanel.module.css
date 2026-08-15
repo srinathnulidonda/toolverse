@@ -1,0 +1,305 @@
+/* features/pdf/jpg-to-pdf/style/SettingsPanel.module.css */
+.settingsPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 18px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.settingsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settingsHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    font-family: var(--font-sans);
+}
+
+.settingsHeading i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.optionCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.optionCard:hover:not(:disabled) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+    transform: translateY(-2px);
+}
+
+.optionCard:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.optionCard:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.optionCardSelected {
+    border-color: var(--brand);
+    background: var(--brand-light);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.optionIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.optionCardSelected .optionIcon {
+    background: var(--brand);
+    color: white;
+}
+
+.optionLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.optionCardSelected .optionLabel {
+    color: var(--brand-text);
+}
+
+.optionDesc {
+    font-size: 10.5px;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    line-height: 1.4;
+}
+
+.optionCardSelected .optionDesc {
+    color: var(--brand-text);
+}
+
+.optionCheck {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.optionCardSelected .optionCheck {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.settingsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.listGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.listItem {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.12s;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.listItem:hover:not(:disabled) {
+    background: var(--bg-surface);
+    border-color: var(--brand-border);
+}
+
+.listItem:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.listItem:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.listItemSelected {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.listIcon {
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.listItemSelected .listIcon {
+    background: var(--brand);
+    color: white;
+}
+
+.listText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    flex: 1;
+    min-width: 0;
+}
+
+.listText strong {
+    color: var(--text);
+}
+
+.listItemSelected .listText strong {
+    color: var(--brand-text);
+}
+
+.listText span {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.listCheck {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--brand);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    flex-shrink: 0;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.listItemSelected .listCheck {
+    opacity: 1;
+    transform: scale(1);
+}
+
+@media (max-width: 768px) {
+    .settingsPanel {
+        padding: 14px;
+        gap: 16px;
+    }
+    .cardGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .settingsGrid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
+
+@media (max-width: 380px) {
+    .settingsPanel {
+        padding: 12px;
+        gap: 14px;
+    }
+    .optionCard {
+        padding: 10px;
+    }
+    .optionLabel {
+        font-size: 12px;
+    }
+    .optionDesc {
+        font-size: 10px;
+    }
+    .listItem {
+        padding: 9px 10px;
+        gap: 8px;
+    }
+    .listIcon {
+        width: 26px;
+        height: 26px;
+        font-size: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .optionCard,
+    .optionIcon,
+    .optionCheck,
+    .listItem,
+    .listCheck {
+        transition: none;
+    }
+    .optionCard:hover {
+        transform: none;
+    }
+}

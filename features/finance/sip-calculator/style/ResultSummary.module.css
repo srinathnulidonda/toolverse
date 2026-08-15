@@ -5,6 +5,10 @@
     flex-direction: column;
     gap: 18px;
     font-family: var(--font-sans);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .sipStatusBanner {
@@ -15,6 +19,7 @@
     border: 1px solid;
     border-radius: var(--radius-lg);
     transition: all 0.12s;
+    min-width: 0;
 }
 
 .sipStatusIcon {
@@ -39,6 +44,7 @@
     display: flex;
     flex-direction: column;
     gap: 3px;
+    min-width: 0;
 }
 
 .sipStatusLabel {
@@ -52,6 +58,7 @@
 .sipStatusValue {
     font-size: 15px;
     font-weight: 700;
+    overflow-wrap: break-word;
 }
 
 .sipResultCards {
@@ -69,6 +76,7 @@
     align-items: center;
     gap: 12px;
     transition: all 0.12s;
+    min-width: 0;
 }
 
 .sipResultCard:hover {
@@ -155,7 +163,88 @@
     font-size: 20px;
     font-weight: 700;
     font-family: var(--font-mono);
-    line-height: 1;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.sipExplanation,
+.sipWarnings,
+.sipRecommendations {
+    padding: 16px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    min-width: 0;
+}
+
+.sipExplanationHeading,
+.sipWarningsHeading,
+.sipRecommendationsHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 12px 0;
+}
+
+.sipExplanationHeading i {
+    color: var(--brand);
+}
+
+.sipWarningsHeading i {
+    color: #D97706;
+}
+
+.sipRecommendationsHeading i {
+    color: var(--brand);
+}
+
+.sipExplanationText {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    overflow-wrap: break-word;
+}
+
+.sipWarningsList,
+.sipRecommendationsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sipWarningItem,
+.sipRecommendationItem {
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    min-width: 0;
+}
+
+.sipWarningItem i {
+    color: #D97706;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.sipRecommendationItem i {
+    color: var(--brand);
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.sipWarningItem span,
+.sipRecommendationItem span {
+    color: var(--text-secondary);
+    overflow-wrap: break-word;
+    min-width: 0;
 }
 
 .sipInflationSection {
@@ -163,6 +252,7 @@
     border-radius: var(--radius-lg);
     padding: 16px;
     border: 0.5px solid var(--border);
+    min-width: 0;
 }
 
 .sipInflationHeading {
@@ -191,6 +281,7 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
 }
 
 .sipInflationLabel {
@@ -204,6 +295,8 @@
     font-weight: 600;
     color: var(--text);
     font-family: var(--font-mono);
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .sipBreakdownSection {
@@ -244,6 +337,7 @@
     padding: 11px 14px;
     background: var(--bg-card);
     gap: 12px;
+    min-width: 0;
 }
 
 .sipBreakdownLabel {
@@ -253,6 +347,7 @@
     font-size: 12.5px;
     color: var(--text-secondary);
     flex: 1;
+    min-width: 0;
 }
 
 .sipBreakdownLabel i {
@@ -267,6 +362,7 @@
     color: var(--text);
     font-family: var(--font-mono);
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .sipBreakdownDivider {
@@ -314,6 +410,7 @@
     transition: all 0.12s;
     text-align: center;
     white-space: nowrap;
+    box-sizing: border-box;
 }
 
 .sipActionBtn i {
@@ -419,6 +516,51 @@
         flex: 1;
         padding: 0 10px;
         white-space: nowrap;
+    }
+}
+
+@media (max-width: 380px) {
+    .sipResultSummary {
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .sipStatusBanner {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .sipStatusIcon {
+        width: 34px;
+        height: 34px;
+        font-size: 17px;
+    }
+
+    .sipExplanation,
+    .sipWarnings,
+    .sipRecommendations,
+    .sipInflationSection {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .sipCardValue {
+        font-size: 16px;
+    }
+
+    .sipCardIcon {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+
+    .sipStatusValue {
+        font-size: 14px;
+    }
+
+    .sipBreakdownItem {
+        padding: 10px 12px;
     }
 }
 

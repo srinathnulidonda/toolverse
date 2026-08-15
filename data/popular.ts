@@ -1,19 +1,29 @@
 // data/popular.ts
-export const POPULAR_TOOLS = [
+export const POPULAR_TOOLS: string[] = [
   "compress-pdf",
   "merge-pdf",
   "image-compress",
+  "qr-generator",
   "json-formatter",
   "gst-calculator",
-  "resume-builder",
-  "qr-generator",
-];
-
-export const TRENDING_TOOLS = [
+  "password-generator",
   "remove-bg",
-  "regex-tester",
-  "meta-tag-generator",
-  "hashtag-generator",
 ];
 
-export const FEATURED_TOOLS = ["pdf-to-word", "image-convert", "url-encoder", "salary-calculator"];
+export const TRENDING_TOOLS: string[] = [
+  "hash-generator",
+  "jwt-decoder",
+  "regex-tester",
+  "invoice-generator",
+  "tweet-generator",
+  "uuid-generator",
+  "diff-checker",
+  "base64",
+];
+
+export const FEATURED_TOOLS: string[] = [
+  "compress-pdf",
+  "remove-bg",
+  "invoice-generator",
+  "json-formatter",
+];
