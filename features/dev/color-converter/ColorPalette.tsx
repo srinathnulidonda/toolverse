@@ -88,6 +88,8 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
     }
   }, []);
 
+  const swatchStylesMap = useMemo(() => new Map(palette.map(color => [color, { background: color }])), [palette]);
+
   const handleCopyAll = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(palette.map((c) => c.toUpperCase()).join("\n"));
@@ -178,7 +180,7 @@ export default function ColorPalette({ baseColor, onColorSelect }: ColorPaletteP
               <div key={idx} className={styles.cpalColorCard}>
                 <div
                   className={styles.cpalColorSwatch}
-                  style={{ background: color }}
+                  style={swatchStylesMap.get(color)}
                   onClick={() => onColorSelect(color)}
                   onKeyDown={(e) => handleSwatchKeyDown(e, color)}
                   role="button"
