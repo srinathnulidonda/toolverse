@@ -53,6 +53,8 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
     }
   }, [baseColor, selectedType, count]);
 
+  const swatchStylesMap = useMemo(() => new Map(colors.map(color => [color, { background: color }])), [colors]);
+
   const handleCopyColor = useCallback(async (color: string) => {
     try {
       await navigator.clipboard.writeText(color.toUpperCase());
@@ -171,7 +173,7 @@ export default function ColorShades({ baseColor, onColorSelect }: ColorShadesPro
                 <div key={idx} className={styles.csColorItem}>
                   <div
                     className={styles.csColorSwatch}
-                    style={{ background: color }}
+                    style={swatchStylesMap.get(color)}
                     onClick={() => onColorSelect(color)}
                     onKeyDown={(e) => handleSwatchKeyDown(e, color)}
                     role="button"
