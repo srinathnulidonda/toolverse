@@ -67,6 +67,9 @@ export default function WidgetNotes({
 
   const titleRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+const modalTransformStyle: React.CSSProperties = useMemo(() => ({
+  transform: `translate(${modalPosition.x}px, ${modalPosition.y}px)`
+}), [modalPosition.x, modalPosition.y]);
 
   const activeNoteData = useMemo(
     () => (activeNote ? notes.find((n) => n.id === activeNote) : null),
@@ -470,7 +473,7 @@ export default function WidgetNotes({
           <div
             ref={modalRef}
             className="wn-editor-modal"
-            style={{ transform: `translate(${modalPosition.x}px, ${modalPosition.y}px)` }}
+            style={modalTransformStyle}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -1444,6 +1447,11 @@ function NoteIcon() {
 }
 
 function ChevronIcon({ open }: { open: boolean }) {
+  const chevronIconStyle: React.CSSProperties = useMemo(() => ({
+    transform: open ? "rotate(0deg)" : "rotate(-90deg)",
+    transition: "transform 0.18s ease"
+  }), [open]);
+
   return (
     <svg
       width="12"
@@ -1454,7 +1462,7 @@ function ChevronIcon({ open }: { open: boolean }) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ transform: open ? "rotate(0deg)" : "rotate(-90deg)", transition: "transform 0.18s ease" }}
+      style={chevronIconStyle}
     >
       <polyline points="6 9 12 15 18 9" />
     </svg>
