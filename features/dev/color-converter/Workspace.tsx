@@ -35,6 +35,8 @@ const PRESET_COLORS: PresetColor[] = [
   { id: "teal", name: "Teal", hex: "#14B8A6" },
 ];
 
+const PRESET_DOT_STYLES = PRESET_COLORS.map(preset => ({ background: preset.hex }));
+
 const VIEW_TABS: { id: ViewTab; label: string; icon: string }[] = [
   { id: "convert", label: "Convert", icon: "ti-palette" },
   { id: "palette", label: "Palette", icon: "ti-color-swatch" },
@@ -53,6 +55,8 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
   const [showSettings, setShowSettings] = useState(false);
   const [copiedHex, setCopiedHex] = useState(false);
   const pickerRef = useRef<HTMLInputElement>(null);
+
+  const currentColorDotStyle: React.CSSProperties = useMemo(() => ({ background: currentColor }), [currentColor]);
 
   const { history, addToHistory, clearHistory } = useHistoryStore<HistoryEntry>({
     key: "color-converter-history",
@@ -158,7 +162,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
               onChange={(e) => handlePickerChrome(e.target.value)}
               aria-label="Pick current color"
             />
-            <span className={styles.ccCurrentColor} style={{ background: currentColor }} />
+            <span className={styles.ccCurrentColor} style={currentColorDotStyle} />
           </label>
         </div>
 
@@ -186,7 +190,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
             <div className={styles.ccSettingGroup}>
               <span className={styles.ccSettingLabel}>Preset Colors</span>
               <div className={styles.ccPresetGrid}>
-                {PRESET_COLORS.map((preset) => (
+                {PRESET_COLORS.map((preset, index) => (
                   <button
                     key={preset.id}
                     type="button"
@@ -194,7 +198,7 @@ export default function ColorConverterWorkspace({ tool }: { tool: Tool }) {
                     onClick={() => loadPreset(preset)}
                     title={preset.hex}
                   >
-                    <span className={styles.ccPresetDot} style={{ background: preset.hex }} />
+                    <span className={styles.ccPresetDot} style={PRESET_DOT_STYLES[index]} />
                     <span className={styles.ccPresetName}>{preset.name}</span>
                   </button>
                 ))}
