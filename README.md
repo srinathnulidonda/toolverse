@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/logo-light.png" alt="Toolverse Logo" width="380" />
   <h1>Toolverse</h1>
-  <p><strong>A free, privacy-first utility hub — 50+ browser-based tools for PDF, image, developer, finance, resume, and social tasks. No sign-up. No uploads. No limits.</strong></p>
+  <p><strong>A free, privacy-first utility hub — 35 browser-based tools for PDF, image, developer, finance, and social tasks. No sign-up. No uploads. No limits.</strong></p>
 
   <div>
     <a href="https://toolverses.vercel.app" target="_blank">
@@ -43,7 +43,7 @@
 
 Toolverse is a free utility platform for people who want things done fast without giving up their data. Every tool — from PDF compression to JSON formatting — runs entirely in your browser using modern JavaScript and WebAssembly. No file ever touches a server, no account is required, and there are no artificial usage limits.
 
-Whether you're a developer, designer, student, or business professional, Toolverse gives you instant access to 50+ production-grade tools in one place.
+Whether you're a developer, designer, student, or business professional, Toolverse gives you instant access to 35 production-grade tools in one place.
 
 ## Features
 
@@ -59,16 +59,16 @@ Whether you're a developer, designer, student, or business professional, Toolver
 
 ## Tool Categories
 
-Toolverse organizes 50+ tools into six focused categories:
+Toolverse organizes 35 tools into six focused categories:
 
 | Category | Tools | Description |
 |---|---|---|
-| PDF | 9 tools | Compress, merge, split, convert, and rotate PDFs |
-| Image | 8 tools | Compress, resize, convert, crop, and remove backgrounds |
-| Developer | 24 tools | JSON utilities, formatters, validators, generators, converters |
-| Finance | 10 tools | GST, EMI, SIP, tax calculators, currency converter |
-| Resume | 5 tools | Resume builder, checker, cover letter, LinkedIn summary |
-| Social | 4 tools | QR codes, meta tags, hashtag generator, tweet cards |
+| PDF | 3 tools | Compress, merge, and convert PDFs |
+| Image | 3 tools | Compress, resize, and remove backgrounds |
+| Developer | 19 tools | JSON utilities, formatters, validators, generators, converters |
+| Finance | 5 tools | GST, EMI, SIP, tax calculators, and invoice generator |
+| Resume | 0 tools | Coming soon |
+| Social | 5 tools | QR codes, meta tags, OG preview, tweet generator, and hashtag generator |
 
 Browse the full list at [`/tools`](https://toolverses.vercel.app/tools) or explore by category.
 
@@ -147,7 +147,6 @@ Every page on Toolverse includes a floating widget so you never have to leave yo
   # Run the built app
   pnpm start
   ```
-
 </details>
 
 <details>
@@ -166,18 +165,17 @@ Every page on Toolverse includes a floating widget so you never have to leave yo
 
   ```bash
   # Calculate GST         → /tools/gst-calculator
-  # Generate invoices     → /tools/gst-invoice-generator
+  # Generate invoices     → /tools/invoice-generator
   # Calculate EMI         → /tools/emi-calculator
   ```
 
   ### PDF Tools
 
   ```bash
-  # Merge PDFs            → /tools/pdf-merger
-  # Compress PDFs         → /tools/pdf-compressor
-  # Split PDFs            → /tools/pdf-splitter
+  # Merge PDFs            → /tools/merge-pdf
+  # Compress PDFs         → /tools/compress-pdf
+  # Convert JPG to PDF    → /tools/jpg-to-pdf
   ```
-
 </details>
 
 <details>
