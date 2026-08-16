@@ -1,0 +1,1231 @@
+/* features/dev/html-formatter/style/Workspace.module.css */
+.hfRoot {
+    --hf-radius-sm: 6px;
+    --hf-radius-md: 8px;
+    --hf-radius-lg: 12px;
+    --hf-radius-xl: 16px;
+
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-xl);
+    display: flex;
+    flex-direction: column;
+    min-height: 700px;
+    overflow: hidden;
+}
+
+/* Chrome */
+.hfChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.hfChromeLeft,
+.hfChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hfTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.hfTitle i {
+    font-size: 16px;
+    color: #e44d26;
+}
+
+.hfChromeBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: var(--hf-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfChromeBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.hfChromeBtn i {
+    font-size: 13px;
+}
+
+/* Settings */
+.hfSettings {
+    padding: 14px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.hfSettingsRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.hfSettingGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hfSettingLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hfPillGroup {
+    display: inline-flex;
+    gap: 2px;
+    padding: 2px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+}
+
+.hfPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.hfPill:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.hfPill.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.hfPill i {
+    font-size: 12px;
+}
+
+.hfSelect {
+    height: 32px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.hfSettingCheckbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.hfSettingCheckbox input {
+    cursor: pointer;
+}
+
+.hfSettingCheckbox span {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Tabs */
+.hfTabsBar {
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.hfTabs {
+    display: flex;
+    padding: 0 16px;
+    overflow-x: auto;
+}
+
+.hfTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.hfTab:hover {
+    color: var(--text);
+}
+
+.hfTab.active {
+    color: var(--text);
+}
+
+.hfTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.hfTab i {
+    font-size: 14px;
+}
+
+.hfTabBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.hfTabIndicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ef4444;
+}
+
+/* ── Tab Content ── */
+.hfTabContent {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ── Preview Host — this is the key ── */
+.hfPreviewHost {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Single View */
+.hfSingleView {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Command Bar */
+.hfCommandBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.hfCommandLeft,
+.hfCommandRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.hfSamples {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.hfSamplesLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-disabled);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hfSampleBtn {
+    height: 26px;
+    padding: 0 8px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.hfSampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.hfExportChips {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.hfExportLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-disabled);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hfExportChip {
+    height: 24px;
+    padding: 0 7px;
+    border: 0.5px solid var(--border);
+    border-radius: 99px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: var(--font-mono);
+}
+
+.hfExportChip:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+/* Mobile Switcher */
+.hfMobileSwitcher {
+    display: none;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.hfSwitcherTab {
+    flex: 1;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.hfSwitcherTab.active {
+    color: var(--text);
+}
+
+.hfSwitcherTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--brand);
+}
+
+.hfSwitcherDivider {
+    width: 0.5px;
+    background: var(--border);
+    align-self: stretch;
+    margin: 10px 0;
+}
+
+.hfReadyIndicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+}
+
+/* Body */
+.hfBody {
+    display: grid;
+    grid-template-columns: 1fr 44px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.hfPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.hfPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    height: 40px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.hfPanelTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hfPanelTitle i {
+    font-size: 13px;
+}
+
+.hfPanelActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hfCharCount {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-disabled);
+}
+
+.hfPanelBtn {
+    width: 28px;
+    height: 28px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfPanelBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.hfPanelBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.hfCopyBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfCopyBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.hfCopyBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.hfCopyBtn i {
+    font-size: 12px;
+}
+
+.hfTextarea {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    min-height: 0;
+}
+
+.hfTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.hfMobileCta {
+    display: none;
+    padding: 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.hfViewResultBtn {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    border-radius: var(--hf-radius-lg);
+    background: var(--brand);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfViewResultBtn:hover {
+    background: var(--brand-hover);
+}
+
+.hfViewResultBtn i {
+    font-size: 16px;
+}
+
+/* Gutter */
+.hfGutter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface);
+    border-left: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+}
+
+.hfGutterLine {
+    flex: 1;
+    width: 0.5px;
+    background: var(--border);
+}
+
+.hfGutterIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-disabled);
+    font-size: 14px;
+}
+
+/* Empty State */
+.hfEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--bg-card);
+}
+
+.hfEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.hfEmptyTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.hfEmptyDescription {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.hfEmptySamples {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hfEmptySampleBtn {
+    height: 32px;
+    padding: 0 14px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfEmptySampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.hfGoInputBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfGoInputBtn:hover {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.hfGoInputBtn i {
+    font-size: 14px;
+}
+
+/* Output */
+.hfOutput {
+    flex: 1;
+    margin: 0;
+    padding: 16px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    min-height: 0;
+}
+
+/* Stats Bar */
+.hfStatsBar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    overflow-x: auto;
+    flex-shrink: 0;
+}
+
+.hfStat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.hfStatLabel {
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.hfStatValue {
+    color: var(--text);
+    font-weight: 600;
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.hfStatValue.success {
+    color: #16a34a;
+}
+
+.hfStatValue.warning {
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hfStatValue.success {
+        color: #4ade80;
+    }
+
+    .hfStatValue.warning {
+        color: #fbbf24;
+    }
+}
+
+.hfStatPercent {
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+.hfDownloadBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+    background: var(--brand);
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    margin-left: auto;
+}
+
+.hfDownloadBtn:hover {
+    background: var(--brand-hover);
+}
+
+.hfDownloadBtn i {
+    font-size: 12px;
+}
+
+/* Mobile Actions */
+.hfMobileActions {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.hfMobileActionBtn {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-lg);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfMobileActionBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.hfMobileActionBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.hfMobileActionBtn i {
+    font-size: 16px;
+}
+
+/* Tab Empty States */
+.hfTabEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px 24px;
+    text-align: center;
+    background: var(--bg-surface);
+}
+
+.hfTabEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.hfTabEmptyTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.hfTabEmptyDescription {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.hfTabEmptyBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 20px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-lg);
+    background: var(--brand);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfTabEmptyBtn:hover {
+    background: var(--brand-hover);
+}
+
+/* History */
+.hfHistoryView {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-surface);
+    overflow: hidden;
+    min-height: 0;
+}
+
+.hfHistoryHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.hfHistoryTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.hfHistoryTitle i {
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+.hfHistoryCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.hfActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hfActionBtn:hover {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.hfActionBtn i {
+    font-size: 13px;
+}
+
+.hfHistoryList {
+    flex: 1;
+    overflow: auto;
+    padding: 8px;
+    min-height: 0;
+}
+
+.hfHistoryItem {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--hf-radius-lg);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    transition: all 0.12s;
+}
+
+.hfHistoryItem:hover {
+    border-color: var(--brand-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.hfHistoryItemHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.hfHistoryItemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.hfHistoryItemTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hfHistoryItemTime {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.hfHistoryItemMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.hfHistoryModeBadge {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hfHistorySavings {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+}
+
+.hfHistorySavings.positive {
+    color: #16a34a;
+}
+
+.hfHistorySavings.negative {
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hfHistorySavings.positive {
+        color: #4ade80;
+    }
+
+    .hfHistorySavings.negative {
+        color: #fbbf24;
+    }
+}
+
+/* Footer */
+.hfFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.hfFooterInfo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-tertiary);
+}
+
+.hfFooterInfo i {
+    font-size: 13px;
+    color: var(--brand);
+}
+
+.hfFooterStats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .hfRoot {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100dvh;
+    }
+
+    .hfChromeBtn span,
+    .hfSamplesLabel,
+    .hfExportLabel {
+        display: none;
+    }
+
+    .hfSettingsRow {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hfSettingGroup {
+        width: 100%;
+    }
+
+    .hfTab span {
+        display: none;
+    }
+
+    .hfTab {
+        padding: 0 12px;
+    }
+
+    .hfCommandBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .hfCommandLeft,
+    .hfCommandRight {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .hfMobileSwitcher {
+        display: flex;
+    }
+
+    .hfBody {
+        grid-template-columns: 1fr;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hfGutter {
+        display: none;
+    }
+
+    .hfPanel {
+        grid-column: 1;
+        grid-row: 1;
+        position: absolute;
+        inset: 0;
+    }
+
+    .hfPanel.mobileVisible {
+        z-index: 1;
+        visibility: visible;
+    }
+
+    .hfPanel.mobileHidden {
+        z-index: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .hfMobileCta {
+        display: block;
+    }
+
+    .hfStatsBar {
+        flex-wrap: wrap;
+    }
+
+    .hfDownloadBtn {
+        display: none;
+    }
+
+    .hfMobileActions {
+        display: flex;
+    }
+
+    .hfFooter {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Preview host on mobile must fill available space */
+    .hfPreviewHost {
+        position: relative;
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .hfChromeBtn,
+    .hfPill,
+    .hfTab,
+    .hfSampleBtn,
+    .hfExportChip,
+    .hfSwitcherTab,
+    .hfPanelBtn,
+    .hfCopyBtn,
+    .hfViewResultBtn,
+    .hfEmptySampleBtn,
+    .hfGoInputBtn,
+    .hfDownloadBtn,
+    .hfMobileActionBtn,
+    .hfTabEmptyBtn,
+    .hfActionBtn,
+    .hfHistoryItem {
+        transition: none;
+    }
+}

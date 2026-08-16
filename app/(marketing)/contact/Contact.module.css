@@ -1,0 +1,636 @@
+/* app/(marketing)/contact/Contact.module.css */
+.contactPage {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 80px);
+}
+
+/* ---------- Hero ---------- */
+.contactHero {
+  padding: clamp(56px, 9vw, 100px) 0 clamp(40px, 6vw, 72px);
+  background: var(--bg);
+}
+
+.contactHeroContent {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contactHeroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 99px;
+  border: 0.5px solid var(--border);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.contactHeroBadge i {
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.contactHeroTitle {
+  font-size: clamp(30px, 5.5vw, 52px);
+  font-weight: 700;
+  letter-spacing: -2px;
+  line-height: 1.12;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+
+.contactHeroDescription {
+  font-size: clamp(14.5px, 1.6vw, 17px);
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0 auto;
+  max-width: 560px;
+}
+
+/* ---------- Main — Material Design Grid Layout (Sidebar + Content) ---------- */
+.contactMain {
+  padding: 0 0 clamp(48px, 8vw, 88px);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: minmax(320px, 400px) 1fr;
+  gap: clamp(32px, 4vw, 56px);
+  align-items: start;
+}
+
+/* ---------- Methods Column ---------- */
+.methodsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sectionHeader {
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: clamp(20px, 2.6vw, 26px);
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  color: var(--text);
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+
+.sectionSubtitle {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.contactMethodsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Simplified compact card */
+.contactMethodCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.contactMethodCard:hover {
+  transform: translateY(-2px);
+  border-color: var(--text-disabled);
+  text-decoration: none;
+}
+
+.methodIconSmall {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.methodIconSmall i {
+  font-size: 19px;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.contactMethodCard:hover .methodIconSmall {
+  background: var(--brand);
+}
+
+.contactMethodCard:hover .methodIconSmall i {
+  color: white;
+}
+
+.methodInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.methodTitleSmall {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 2px;
+  letter-spacing: -0.2px;
+}
+
+.methodMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.methodValueSmall {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--brand-text);
+}
+
+.methodAvailabilitySmall {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.methodAvailabilitySmall i {
+  font-size: 12px;
+}
+
+.methodArrow {
+  font-size: 15px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.contactMethodCard:hover .methodArrow {
+  color: var(--brand-text);
+  transform: translateX(3px);
+}
+
+/* ---------- Form Column ---------- */
+.formColumn {
+  width: 100%;
+}
+
+.contactFormSection {
+  width: 100%;
+}
+
+.formSectionWrapper {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 20px;
+  padding: clamp(28px, 4vw, 40px);
+}
+
+.formHeader {
+  margin-bottom: clamp(24px, 3vw, 32px);
+  text-align: center;
+}
+
+.formTitle {
+  font-size: clamp(20px, 2.6vw, 24px);
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+
+.formSubtitle {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.formField {
+  position: relative;
+}
+
+.formLabel {
+  position: absolute;
+  left: 44px;
+  top: 16px;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg-card);
+  padding: 0 4px;
+  z-index: 1;
+}
+
+.formLabel.active {
+  top: -8px;
+  left: 40px;
+  font-size: 11.5px;
+  color: var(--brand-text);
+  font-weight: 600;
+}
+
+.formInputWrapper {
+  position: relative;
+}
+
+.formInputWrapper i {
+  position: absolute;
+  left: 16px;
+  top: 15px;
+  font-size: 17px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.formInput:focus~i {
+  color: var(--brand);
+}
+
+.formInput,
+.formTextarea,
+.formSelect {
+  width: 100%;
+  padding: 14px 16px 14px 46px;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.formInput::placeholder,
+.formTextarea::placeholder {
+  color: transparent;
+}
+
+.formInput:focus,
+.formTextarea:focus,
+.formSelect:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 130px;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+.formSelect {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236B6A62' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.formFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.formSubmit {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: var(--brand);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  letter-spacing: -0.2px;
+}
+
+.formSubmit:hover:not(:disabled) {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+}
+
+.formSubmit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.formSubmit.success {
+  background: #4caf82;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.successMessage {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  background: var(--brand-light);
+  border: 0.5px solid var(--brand-border);
+  border-radius: 12px;
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.successIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.successIcon i {
+  font-size: 18px;
+  color: white;
+}
+
+.successContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.successContent strong {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--brand-text);
+}
+
+.successContent span {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ---------- Help Section (Same as About page) ---------- */
+.helpSection {
+  padding: 0 0 clamp(56px, 8vw, 100px);
+  background: var(--bg);
+}
+
+.helpCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 860px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 28px;
+}
+
+.helpIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.helpIcon i {
+  font-size: 22px;
+  color: var(--text-secondary);
+}
+
+.helpContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.helpTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+  letter-spacing: -0.3px;
+}
+
+.helpText {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.helpActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.helpLinkSecondary {
+  padding: 9px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.helpLinkSecondary:hover {
+  background: var(--bg-surface);
+  border-color: var(--text-disabled);
+  text-decoration: none;
+}
+
+.helpLinkPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: var(--brand);
+  color: white;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.helpLinkPrimary:hover {
+  background: var(--brand-hover);
+  text-decoration: none;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .contactGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .methodsColumn {
+    order: 2;
+  }
+
+  .formColumn {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 clamp(16px, 5vw, 40px);
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formSectionWrapper {
+    padding: 24px 20px;
+  }
+
+  .helpCard {
+    flex-direction: column;
+    text-align: center;
+    padding: 22px 18px;
+  }
+
+  .helpActions {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .contactMethodCard {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .methodIconSmall {
+    width: 38px;
+    height: 38px;
+  }
+
+  .methodIconSmall i {
+    font-size: 17px;
+  }
+
+  .methodTitleSmall {
+    font-size: 13.5px;
+  }
+
+  .methodValueSmall {
+    font-size: 12px;
+  }
+
+  .methodAvailabilitySmall {
+    font-size: 10px;
+  }
+
+  .formSectionWrapper {
+    padding: 20px 16px;
+  }
+
+  .helpLinkSecondary,
+  .helpLinkPrimary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .helpActions {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .contactMethodCard,
+  .formSubmit,
+  .helpLinkPrimary,
+  .helpLinkSecondary {
+    transition: none;
+  }
+}

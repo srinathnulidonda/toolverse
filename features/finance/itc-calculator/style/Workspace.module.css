@@ -1,0 +1,520 @@
+/* features/finance/itc-calculator/style/Workspace.module.css */
+.itcWorkspace {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 680px;
+    font-family: var(--font-sans);
+}
+
+.itcChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border-faint);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.itcChromeLeft,
+.itcChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.itcBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: var(--radius-md);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+    border: none;
+    outline: none;
+}
+
+.itcBtn i {
+    font-size: 13px;
+}
+
+.itcBtn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.itcBtnIcon,
+.itcBtnGhost {
+    background: transparent;
+    border: 0.5px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.itcBtnIcon:hover:not(:disabled),
+.itcBtnGhost:hover:not(:disabled) {
+    background: var(--border-faint);
+    color: var(--text);
+}
+
+.itcBtnIcon.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.itcBtnPrimary {
+    background: var(--brand);
+    color: white;
+    border: none;
+}
+
+.itcBtnPrimary:hover:not(:disabled) {
+    background: var(--brand-hover);
+}
+
+.itcSampleDropdown {
+    position: relative;
+}
+
+.itcSampleMenu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 280px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+@media (prefers-color-scheme: dark) {
+    .itcSampleMenu {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+}
+
+.itcSampleMenuHeader {
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.itcSampleMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.12s;
+    text-align: left;
+}
+
+.itcSampleMenuItem:hover {
+    background: var(--bg-surface);
+}
+
+.itcSampleMenuItem i {
+    font-size: 16px;
+    color: var(--brand);
+    flex-shrink: 0;
+}
+
+.itcSampleItemContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.itcSampleItemContent strong {
+    font-size: 12.5px;
+    color: var(--text);
+}
+
+.itcSampleItemContent span {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.itcMobileTabs {
+    display: none;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.itcMobileTab {
+    flex: 1;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.itcMobileTab.active {
+    color: var(--text);
+}
+
+.itcMobileTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.itcMobileBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 9px;
+}
+
+.itcMobileBadge.valid {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.itcMobileBadge.error {
+    background: rgba(220, 38, 38, 0.1);
+    color: #b91c1c;
+}
+
+@media (prefers-color-scheme: dark) {
+    .itcMobileBadge.error {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+    }
+}
+
+.itcMobileDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+}
+
+.itcBody {
+    display: grid;
+    grid-template-columns: 1fr 0.5px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.itcDivider {
+    background: var(--border);
+    width: 0.5px;
+}
+
+.itcPanel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.itcPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0 14px;
+    border-bottom: 0.5px solid var(--border-faint);
+    background: var(--bg-surface);
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.itcPanelTitle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+}
+
+.itcPanelTitle i {
+    font-size: 12px;
+}
+
+.itcStatusPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.itcStatusPill i {
+    font-size: 9px;
+}
+
+.itcStatusPill.valid {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.itcViewTabs {
+    display: flex;
+    gap: 0;
+    height: 100%;
+}
+
+.itcViewTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    padding: 0 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.itcViewTab i {
+    font-size: 11px;
+}
+
+.itcViewTab:hover {
+    color: var(--text);
+}
+
+.itcViewTab.active {
+    color: var(--text);
+}
+
+.itcViewTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 6px;
+    right: 6px;
+    height: 1.5px;
+    background: var(--brand);
+    border-radius: 1.5px 1.5px 0 0;
+}
+
+.itcPanelContent {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.itcEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    text-align: center;
+    gap: 14px;
+}
+
+.itcEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.itcEmptyTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.itcEmptyText {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.5;
+}
+
+.itcEmptyHint {
+    font-size: 11.5px;
+    color: var(--text-tertiary);
+    margin: 0;
+    font-style: italic;
+}
+
+.itcSpin {
+    animation: itcSpinRotate 0.8s linear infinite;
+}
+
+@keyframes itcSpinRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .itcWorkspace {
+        min-height: auto;
+        border-radius: var(--radius-lg);
+    }
+
+    .itcChrome {
+        padding: 8px 12px;
+    }
+
+    .itcBtn span {
+        display: none;
+    }
+
+    .itcBtn {
+        padding: 0 10px;
+    }
+
+    .itcMobileTabs {
+        display: flex;
+    }
+
+    .itcBody {
+        display: block;
+        position: relative;
+    }
+
+    .itcDivider {
+        display: none;
+    }
+
+    .itcPanel {
+        min-height: 420px;
+    }
+
+    .mobileHidden {
+        display: none;
+    }
+
+    .mobileVisible {
+        display: flex;
+    }
+
+    .itcPanelHeader {
+        padding: 0 10px;
+        gap: 6px;
+    }
+
+    .itcPanelTitle {
+        font-size: 9.5px;
+        letter-spacing: 0.02em;
+        gap: 5px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .itcPanelTitle i {
+        font-size: 12px;
+    }
+
+    .itcViewTabs {
+        flex-shrink: 0;
+    }
+
+    .itcViewTab {
+        padding: 0 7px;
+        font-size: 10px;
+        gap: 3px;
+    }
+
+    .itcViewTab i {
+        font-size: 10px;
+    }
+
+    .itcSampleMenu {
+        position: fixed;
+        top: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90vw;
+        max-width: 90vw;
+        margin-top: 10px;
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 480px) {
+    .itcWorkspace {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}
+
+.itcBtn:focus-visible,
+.itcMobileTab:focus-visible,
+.itcViewTab:focus-visible,
+.itcSampleMenuItem:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .itcWorkspace * {
+        transition: none !important;
+    }
+
+    .itcSpin {
+        animation: none;
+    }
+}

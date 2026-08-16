@@ -1,0 +1,667 @@
+/* features/dev/regex-tester/style/RegexLibrary.module.css */
+.rxlRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+}
+
+.rxlHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.rxlSearchWrap {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    height: 40px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: border-color 0.12s;
+}
+
+.rxlSearchWrap:focus-within {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.rxlSearchWrap i {
+    font-size: 16px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.rxlSearchInput {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    min-width: 0;
+}
+
+.rxlSearchInput::placeholder {
+    color: var(--text-disabled);
+}
+
+.rxlClearSearch {
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.rxlClearSearch:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxlHeaderActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rxlViewToggle {
+    display: flex;
+    gap: 2px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 2px;
+}
+
+.rxlViewBtn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: calc(var(--radius-md) - 2px);
+    background: transparent;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.rxlViewBtn i {
+    font-size: 16px;
+}
+
+.rxlViewBtn:hover {
+    color: var(--text);
+}
+
+.rxlViewBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.rxlActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.rxlActionBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxlActionBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.rxlActionBtn i {
+    font-size: 15px;
+}
+
+.rxlCategories {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.rxlCategoryBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.rxlCategoryBtn i {
+    font-size: 14px;
+}
+
+.rxlCategoryBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxlCategoryBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.rxlCategoryCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 10px;
+    font-weight: 700;
+    border: 0.5px solid var(--border);
+}
+
+.rxlCategoryBtn.active .rxlCategoryCount {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+}
+
+.rxlPatterns {
+    display: grid;
+    gap: 14px;
+}
+
+.rxlPatterns.gridView {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.rxlPatterns.listView {
+    grid-template-columns: 1fr;
+}
+
+.rxlPatternCard {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: all 0.12s;
+}
+
+.rxlPatternCard:hover {
+    border-color: var(--brand-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.rxlCardHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rxlCardTitleRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.rxlCardTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.rxlCardActions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.rxlIconBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.rxlIconBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxlFavoriteBtn.active {
+    color: #f59e0b;
+    background: #fef3c7;
+    border-color: #fde68a;
+}
+
+@media (prefers-color-scheme: dark) {
+    .rxlFavoriteBtn.active {
+        background: #1f1a08;
+        border-color: #78350f;
+    }
+}
+
+.rxlDeleteBtn:hover {
+    color: #dc2626;
+    background: var(--error-bg);
+    border-color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .rxlDeleteBtn:hover {
+        color: #f87171;
+        border-color: #7f1d1d;
+    }
+}
+
+.rxlCardDesc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.rxlCardBody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rxlPatternDisplay {
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+}
+
+.rxlPatternCode {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--brand);
+    font-weight: 600;
+    word-break: break-all;
+}
+
+.rxlTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.rxlTag {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 4px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.rxlCardFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 0.5px solid var(--border-faint);
+}
+
+.rxlCategoryLabel {
+    font-size: 11px;
+    color: var(--text-disabled);
+    font-weight: 500;
+}
+
+.rxlLoadBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--brand-border);
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.rxlLoadBtn:hover {
+    background: var(--brand);
+    color: white;
+}
+
+.rxlLoadBtn i {
+    font-size: 13px;
+}
+
+.rxlEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 80px 24px;
+    text-align: center;
+}
+
+.rxlEmptyIcon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: var(--text-disabled);
+    margin-bottom: 8px;
+}
+
+.rxlEmptyTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.rxlEmptyDesc {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 380px;
+    line-height: 1.6;
+}
+
+.rxlDialogOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.rxlDialog {
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100dvh - 40px);
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.rxlDialogHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.rxlDialogTitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.rxlDialogTitle i {
+    font-size: 20px;
+}
+
+.rxlDialogClose {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.rxlDialogClose:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxlDialogClose i {
+    font-size: 18px;
+}
+
+.rxlDialogBody {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+}
+
+.rxlDialogDesc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.rxlImportTextarea {
+    width: 100%;
+    padding: 14px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--text);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.12s;
+}
+
+.rxlImportTextarea:focus {
+    border-color: var(--brand);
+}
+
+.rxlImportTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.rxlImportError {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--error-bg);
+    border: 0.5px solid #fecaca;
+    border-radius: var(--radius-md);
+    color: #dc2626;
+    font-size: 12.5px;
+}
+
+.rxlImportError i {
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .rxlImportError {
+        border-color: #7f1d1d;
+        color: #f87171;
+    }
+}
+
+.rxlDialogFooter {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 20px;
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.rxlDialogBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 18px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.rxlCancelBtn {
+    border-color: var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.rxlCancelBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxlImportBtn {
+    border-color: var(--brand-border);
+    background: var(--brand);
+    color: white;
+}
+
+.rxlImportBtn:hover:not(:disabled) {
+    background: var(--brand-hover);
+}
+
+.rxlImportBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .rxlRoot {
+        padding: 12px;
+    }
+
+    .rxlHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rxlSearchWrap {
+        min-width: 0;
+    }
+
+    .rxlHeaderActions {
+        justify-content: space-between;
+    }
+
+    .rxlPatterns.gridView {
+        grid-template-columns: 1fr;
+    }
+
+    .rxlDialogBody {
+        padding: 16px;
+    }
+
+    .rxlDialogHeader,
+    .rxlDialogFooter {
+        padding: 14px 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .rxlSearchWrap,
+    .rxlViewBtn,
+    .rxlActionBtn,
+    .rxlCategoryBtn,
+    .rxlPatternCard,
+    .rxlIconBtn,
+    .rxlLoadBtn,
+    .rxlDialogClose,
+    .rxlDialogBtn {
+        transition: none;
+    }
+}

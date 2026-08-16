@@ -1,0 +1,332 @@
+/* features/social/hashtag-generator/style/GeneratedHashtags.module.css */
+
+.ghEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-disabled);
+}
+
+.ghEmpty i {
+    font-size: 32px;
+}
+
+.ghEmpty p {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.ghEmpty span {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    max-width: 200px;
+    line-height: 1.4;
+}
+
+.ghRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ghHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ghTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.ghTitle i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.ghCount {
+    padding: 2px 6px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.ghReachInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+}
+
+.ghReach {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.ghCompetition {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.ghCompetitionLow {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.ghCompetitionMedium {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.ghCompetitionHigh {
+    background: #FECACA;
+    color: #B91C1C;
+}
+
+.ghCompetitionVeryHigh {
+    background: #FECACA;
+    color: #991B1B;
+}
+
+.ghFilters {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ghSizeFilters {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.ghFilterBtn {
+    padding: 4px 10px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    text-transform: capitalize;
+}
+
+.ghFilterBtn:hover {
+    background: var(--border-faint);
+}
+
+.ghFilterBtn.active {
+    background: var(--filter-color, var(--brand-light));
+    border-color: var(--filter-color, var(--brand-border));
+    color: var(--filter-color, var(--brand-text));
+}
+
+.ghRiskyToggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+}
+
+.ghRiskyToggle input {
+    accent-color: var(--brand);
+}
+
+.ghGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.ghTag {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+}
+
+.ghTag:hover {
+    background: var(--border-faint);
+    border-color: var(--size-color);
+}
+
+.ghTag.selected {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.ghTag.risky {
+    background: #FEF2F2;
+    border-color: #FECACA;
+}
+
+.ghTagContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.ghTagText {
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ghTag.selected .ghTagText {
+    color: var(--brand-text);
+}
+
+.ghTag.risky .ghTagText {
+    color: #991B1B;
+}
+
+.ghRiskyIcon {
+    font-size: 12px;
+    color: #F59E0B;
+    flex-shrink: 0;
+}
+
+.ghTagMeta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.ghTagSize {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ghTagReach {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.ghNoResults {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 32px 20px;
+    text-align: center;
+}
+
+.ghNoResults i {
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.ghNoResults p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.ghClearFilters {
+    padding: 6px 12px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: 6px;
+    color: var(--brand-text);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.ghSelectionSummary {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: 8px;
+}
+
+.ghSummaryHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--brand-text);
+}
+
+.ghSummaryHeader i {
+    font-size: 14px;
+}
+
+.ghSummaryReach {
+    font-size: 11px;
+    color: var(--brand-text);
+    opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+    .ghGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .ghFilters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .ghTag.risky {
+        background: #450A0A;
+        border-color: #7F1D1D;
+    }
+
+    .ghTag.risky .ghTagText {
+        color: #F87171;
+    }
+
+    .ghCompetitionMedium {
+        background: #451A03;
+        color: #FCD34D;
+    }
+
+    .ghCompetitionHigh,
+    .ghCompetitionVeryHigh {
+        background: #450A0A;
+        color: #F87171;
+    }
+}

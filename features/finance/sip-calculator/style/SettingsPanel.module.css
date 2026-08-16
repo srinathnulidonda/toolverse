@@ -1,0 +1,242 @@
+/* features/finance/sip-calculator/style/SettingsPanel.module.css */
+.sipSettings {
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sipSettingsInner {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.sipSettingsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.sipSettingsHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    font-family: var(--font-sans);
+}
+
+.sipSettingsHeading i {
+    font-size: 16px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.sipSettingsDesc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: -4px 0 0 0;
+    line-height: 1.5;
+    font-family: var(--font-sans);
+}
+
+.sipRangeGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+}
+
+.sipRangeCard {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.sipRangeIcon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-md);
+    background: var(--brand-light);
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.sipRangeText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: var(--font-sans);
+    min-width: 0;
+}
+
+.sipRangeText strong {
+    font-size: 12px;
+    color: var(--text);
+}
+
+.sipRangeText span {
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    overflow-wrap: break-word;
+}
+
+.sipConceptGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.sipConceptCard {
+    padding: 14px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.12s;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.sipConceptCard:hover {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.sipConceptHeader {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.sipConceptHeader i {
+    font-size: 15px;
+    color: var(--brand);
+    flex-shrink: 0;
+}
+
+.sipConceptText {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-family: var(--font-sans);
+    overflow-wrap: break-word;
+}
+
+.sipConceptTag {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sipNotice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    line-height: 1.5;
+    font-family: var(--font-sans);
+    background: rgba(217, 119, 6, 0.08);
+    color: #92400e;
+    border: 0.5px solid rgba(217, 119, 6, 0.2);
+    min-width: 0;
+}
+
+.sipNotice i {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .sipNotice {
+        background: rgba(251, 191, 36, 0.1);
+        color: #fbbf24;
+    }
+}
+
+@media (max-width: 768px) {
+    .sipSettingsInner {
+        padding: 16px;
+    }
+
+    .sipRangeGrid,
+    .sipConceptGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 380px) {
+    .sipSettingsInner {
+        padding: 14px;
+        gap: 22px;
+    }
+
+    .sipRangeCard {
+        padding: 10px;
+    }
+
+    .sipConceptCard {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .sipSettingsInner {
+        padding: 12px;
+        gap: 18px;
+    }
+
+    .sipRangeCard {
+        gap: 8px;
+    }
+
+    .sipConceptCard {
+        padding: 10px;
+        gap: 6px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sipConceptCard {
+        transition: none;
+    }
+}

@@ -1,0 +1,477 @@
+/* features/dev/css-minifier/style/CSSPreview.module.css */
+
+.cpRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cpOptions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.cpOptionsLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.cpToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cpToggle input {
+    position: absolute;
+    opacity: 0;
+}
+
+.cpToggleTrack {
+    width: 32px;
+    height: 18px;
+    background: var(--border);
+    border-radius: 99px;
+    position: relative;
+    transition: background 0.15s;
+}
+
+.cpToggle input:checked+.cpToggleTrack {
+    background: var(--brand);
+}
+
+.cpToggle input:disabled+.cpToggleTrack {
+    opacity: 0.5;
+}
+
+.cpToggle input:focus-visible+.cpToggleTrack {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.cpToggleThumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.15s;
+}
+
+.cpToggle input:checked+.cpToggleTrack .cpToggleThumb {
+    transform: translateX(14px);
+}
+
+.cpToggleLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.cpSampleBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: var(--cm-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    margin-left: auto;
+}
+
+.cpSampleBtn i {
+    font-size: 12px;
+}
+
+.cpSampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.cpSampleBtn:focus-visible,
+.cpClearBtn:focus-visible,
+.cpCopyBtn:focus-visible,
+.cpDownloadBtn:focus-visible,
+.cpMobileTab:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.cpMobileTabs {
+    display: none;
+}
+
+.cpPanels {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cpPanel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.cpPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    height: 40px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.cpPanelLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.cpPanelLabel i {
+    font-size: 12px;
+}
+
+.cpPanelActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cpClearBtn {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    border: none;
+    background: transparent;
+    color: var(--text-disabled);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.cpClearBtn:hover {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.cpCopyBtn,
+.cpDownloadBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 9px;
+    border-radius: var(--cm-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.cpCopyBtn i,
+.cpDownloadBtn i {
+    font-size: 11px;
+}
+
+.cpCopyBtn:hover,
+.cpDownloadBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.cpCopyBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.cpWarning {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--error-bg);
+    color: #b91c1c;
+    font-size: 11px;
+    font-weight: 500;
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.cpWarning i {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .cpWarning {
+        color: #f87171;
+    }
+}
+
+.cpTextarea {
+    flex: 1;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    resize: none;
+    overflow: auto;
+}
+
+.cpTextarea:focus {
+    background: var(--bg-surface);
+}
+
+.cpTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.cpDivider {
+    width: 1px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cpDividerIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.cpOutput {
+    flex: 1;
+    margin: 0;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.cpStats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-wrap: wrap;
+}
+
+.cpStat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+}
+
+.cpStatLabel {
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.cpStatValue {
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.cpStatSuccess .cpStatValue {
+    color: #166534;
+}
+
+@media (prefers-color-scheme: dark) {
+    .cpStatSuccess .cpStatValue {
+        color: #4ade80;
+    }
+}
+
+.cpEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    gap: 8px;
+    text-align: center;
+}
+
+.cpEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.cpEmptyTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.cpEmptyDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .cpMobileTabs {
+        display: flex;
+        background: var(--bg-surface);
+        border-bottom: 0.5px solid var(--border);
+    }
+
+    .cpMobileTab {
+        flex: 1;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border: none;
+        background: transparent;
+        color: var(--text-tertiary);
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .cpMobileTab.active {
+        color: var(--text);
+    }
+
+    .cpMobileTab.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        background: var(--brand);
+    }
+
+    .cpMobileDot {
+        position: absolute;
+        top: 10px;
+        right: calc(50% - 35px);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--brand);
+    }
+
+    .cpPanels {
+        display: block;
+    }
+
+    .cpDivider {
+        display: none;
+    }
+
+    .cpPanel {
+        min-height: 360px;
+    }
+
+    .cpPanel.mobileHidden {
+        display: none;
+    }
+
+    .cpPanel.mobileVisible {
+        display: flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .cpOptions {
+        gap: 10px;
+        padding: 10px 12px;
+    }
+
+    .cpSampleBtn {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .cpToggleLabel {
+        font-size: 11px;
+    }
+
+    .cpPanel {
+        min-height: 300px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cpToggleTrack,
+    .cpToggleThumb {
+        transition: none;
+    }
+}

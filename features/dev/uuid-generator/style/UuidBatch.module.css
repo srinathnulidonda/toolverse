@@ -1,0 +1,532 @@
+/* features/dev/uuid-generator/style/UuidBatch.module.css */
+.ubRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    overflow: auto;
+    position: relative;
+    min-height: 0;
+}
+
+.ubControls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    flex-wrap: wrap;
+}
+
+.ubControlsLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.ubCountGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ubCountLabel {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.ubCountStepper {
+    display: flex;
+    align-items: center;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--bg-card);
+}
+
+.ubCountBtn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s;
+    flex-shrink: 0;
+}
+
+.ubCountBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ubCountBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ubCountInput {
+    width: 80px;
+    height: 32px;
+    border: none;
+    border-left: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    text-align: center;
+    outline: none;
+}
+
+.ubCountInput::-webkit-outer-spin-button,
+.ubCountInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.ubQuickBtns {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+.ubQuickBtn {
+    height: 28px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ubQuickBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ubQuickBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.ubQuickBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ubControlsRight {
+    display: flex;
+    gap: 6px;
+}
+
+.ubGenerateBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--brand-border);
+    background: var(--brand);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.ubGenerateBtn:hover:not(:disabled) {
+    background: var(--brand-hover);
+}
+
+.ubGenerateBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.ubGenerateBtn i {
+    font-size: 14px;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.ubSpinning {
+    animation: spin 1s linear infinite;
+}
+
+.ubStats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+}
+
+.ubStat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    min-width: 0;
+}
+
+.ubStat i {
+    font-size: 16px;
+    color: var(--brand);
+    flex-shrink: 0;
+}
+
+.ubStatValue {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ubStatLabel {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.ubExport {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    flex-wrap: wrap;
+}
+
+.ubExportLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ubExportLabel {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.ubExportSelect {
+    height: 28px;
+    padding: 0 10px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.ubExportActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ubActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ubActionBtn i {
+    font-size: 12px;
+}
+
+.ubActionBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ubActionBtn.success {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.ubClearBtn:hover {
+    color: #b91c1c;
+    border-color: currentColor;
+    background: var(--error-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+    .ubClearBtn:hover {
+        color: #f87171;
+    }
+}
+
+.ubResults {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    overflow: hidden;
+}
+
+.ubEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 48px 24px;
+    text-align: center;
+    background: var(--bg-surface);
+    border: 0.5px dashed var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.ubEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.ubEmptyTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.ubEmptyDesc {
+    font-size: 12.5px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 380px;
+    line-height: 1.6;
+}
+
+.ubListWrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    min-height: 0;
+}
+
+.ubListHeader {
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+}
+
+.ubListHeaderLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ubList {
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+}
+
+.ubListItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 14px;
+    height: 34px;
+    border-bottom: 0.5px solid var(--border-faint);
+    transition: background 0.1s;
+}
+
+.ubListItem:hover {
+    background: var(--bg-surface);
+}
+
+.ubListNum {
+    width: 48px;
+    font-size: 10.5px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.ubListUuid {
+    flex: 1;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text);
+    letter-spacing: 0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ubListMore {
+    padding: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.ubProgressOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 16px;
+}
+
+.ubProgressCard {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 32px;
+    width: min(300px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.ubProgressLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+}
+
+.ubProgressBar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.ubProgressFill {
+    height: 100%;
+    background: var(--brand);
+    border-radius: 99px;
+    transition: width 0.2s ease;
+}
+
+.ubProgressText {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--brand);
+    text-align: center;
+    font-family: var(--font-mono);
+}
+
+@media (max-width: 768px) {
+    .ubRoot {
+        padding: 12px;
+    }
+
+    .ubControls {
+        padding: 10px 12px;
+    }
+
+    .ubControlsLeft {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .ubControlsRight {
+        width: 100%;
+    }
+
+    .ubGenerateBtn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .ubListNum {
+        display: none;
+    }
+
+    .ubListUuid {
+        font-size: 11px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ubCountBtn,
+    .ubQuickBtn,
+    .ubGenerateBtn,
+    .ubActionBtn,
+    .ubListItem,
+    .ubProgressFill {
+        transition: none;
+    }
+
+    .ubSpinning {
+        animation: none;
+    }
+}

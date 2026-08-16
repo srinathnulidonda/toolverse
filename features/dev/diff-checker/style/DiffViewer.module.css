@@ -1,0 +1,372 @@
+/* features/dev/diff-checker/style/DiffViewer.module.css */
+.dvSplit {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: var(--bg-card);
+    width: 100%;
+}
+
+.dvSplitPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+}
+
+.dvSplitHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+}
+
+.dvSplitHeader i {
+    font-size: 13px;
+}
+
+.dvSplitStats {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.dvSplitContent {
+    flex: 1;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    min-height: 0;
+}
+
+.dvSplitDivider {
+    width: 1px;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+.dvUnified {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    background: var(--bg-card);
+    min-height: 0;
+    width: 100%;
+}
+
+.dvUnifiedHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.dvUnifiedTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dvUnifiedTitle i {
+    font-size: 13px;
+}
+
+.dvUnifiedStats {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.dvUnifiedContent {
+    flex: 1;
+    overflow: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    min-height: 0;
+}
+
+.dvLine {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    padding: 1px 0;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.08s;
+    min-width: 0;
+}
+
+.dvLine:hover {
+    background: var(--bg-surface);
+}
+
+.dvLine:hover .dvLineActions {
+    opacity: 1;
+}
+
+.dvLineSelected {
+    background: var(--brand-light) !important;
+    outline: 0.5px solid var(--brand-border);
+}
+
+.dvLineAdd {
+    background: rgba(5, 150, 105, 0.06);
+    border-left: 2px solid #059669;
+}
+
+.dvLineRemove {
+    background: rgba(220, 38, 38, 0.06);
+    border-left: 2px solid #dc2626;
+}
+
+.dvLineModified {
+    background: rgba(217, 119, 6, 0.06);
+    border-left: 2px solid #d97706;
+}
+
+.dvLineUnchanged {
+    border-left: 2px solid transparent;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvLineAdd {
+        background: rgba(52, 211, 153, 0.08);
+        border-left-color: #34d399;
+    }
+
+    .dvLineRemove {
+        background: rgba(248, 113, 113, 0.08);
+        border-left-color: #f87171;
+    }
+
+    .dvLineModified {
+        background: rgba(251, 191, 36, 0.08);
+        border-left-color: #fbbf24;
+    }
+}
+
+.dvLineIndicator {
+    width: 18px;
+    flex-shrink: 0;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    padding: 0 2px;
+    user-select: none;
+    align-self: flex-start;
+    padding-top: 1px;
+}
+
+.dvLineAdd .dvLineIndicator {
+    color: #059669;
+}
+
+.dvLineRemove .dvLineIndicator {
+    color: #dc2626;
+}
+
+.dvLineModified .dvLineIndicator {
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvLineAdd .dvLineIndicator {
+        color: #34d399;
+    }
+
+    .dvLineRemove .dvLineIndicator {
+        color: #f87171;
+    }
+
+    .dvLineModified .dvLineIndicator {
+        color: #fbbf24;
+    }
+}
+
+.dvLineNums {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.dvLineNum {
+    width: 42px;
+    flex-shrink: 0;
+    color: var(--text-disabled);
+    font-size: 11px;
+    text-align: right;
+    user-select: none;
+    padding: 0 8px;
+    border-right: 0.5px solid var(--border);
+    line-height: inherit;
+}
+
+.dvLineNum:last-child {
+    border-right: 0.5px solid var(--border);
+    margin-right: 6px;
+}
+
+.dvLineContent {
+    flex: 1;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding-right: 36px;
+    min-width: 0;
+}
+
+.dvLineActions {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.1s, background 0.1s;
+    flex-shrink: 0;
+}
+
+.dvLineActions:hover {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.dvStat {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-family: var(--font-mono);
+    white-space: nowrap;
+}
+
+.dvStatAdd {
+    background: rgba(5, 150, 105, 0.1);
+    color: #059669;
+    border: 0.5px solid rgba(5, 150, 105, 0.2);
+}
+
+.dvStatRemove {
+    background: rgba(220, 38, 38, 0.1);
+    color: #dc2626;
+    border: 0.5px solid rgba(220, 38, 38, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvStatAdd {
+        background: rgba(52, 211, 153, 0.1);
+        color: #34d399;
+        border-color: rgba(52, 211, 153, 0.2);
+    }
+
+    .dvStatRemove {
+        background: rgba(248, 113, 113, 0.1);
+        color: #f87171;
+        border-color: rgba(248, 113, 113, 0.2);
+    }
+}
+
+.dvHighlight {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvHighlight {
+        background: rgba(217, 119, 6, 0.25);
+        color: #fbbf24;
+    }
+}
+
+.dvWordDiffAdd {
+    background: rgba(5, 150, 105, 0.18);
+    color: #059669;
+    border-radius: 2px;
+    padding: 0 1px;
+}
+
+.dvWordDiffRemove {
+    background: rgba(220, 38, 38, 0.18);
+    color: #dc2626;
+    text-decoration: line-through;
+    border-radius: 2px;
+    padding: 0 1px;
+}
+
+.dvWordDiffUnchanged {
+    color: inherit;
+}
+
+@media (prefers-color-scheme: dark) {
+    .dvWordDiffAdd {
+        background: rgba(52, 211, 153, 0.2);
+        color: #34d399;
+    }
+
+    .dvWordDiffRemove {
+        background: rgba(248, 113, 113, 0.2);
+        color: #f87171;
+    }
+}
+
+@media (max-width: 768px) {
+    .dvSplit {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
+
+    .dvSplitDivider {
+        width: 100%;
+        height: 1px;
+    }
+
+    .dvLineNum {
+        width: 28px;
+        padding: 0 4px;
+        font-size: 10px;
+    }
+
+    .dvLineContent {
+        font-size: 12px;
+    }
+
+    .dvLineIndicator {
+        width: 14px;
+        font-size: 11px;
+    }
+}

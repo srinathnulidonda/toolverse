@@ -1,0 +1,403 @@
+/* features/dev/timestamp-converter/style/TimestampBatch.module.css */
+.tbRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+    background: var(--bg-surface);
+}
+
+.tbSection {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--tc-radius-lg);
+    overflow: hidden;
+}
+
+.tbSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.tbSectionLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.tbSectionLabel i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.tbResultsBadge {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 7px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.tbErrorBadge {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 7px;
+    border-radius: 99px;
+    background: #fef2f2;
+    color: #dc2626;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tbErrorBadge {
+        background: #1f1517;
+        color: #f87171;
+    }
+}
+
+.tbSectionActions {
+    display: flex;
+    gap: 6px;
+}
+
+.tbBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: var(--tc-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.tbBtn i {
+    font-size: 13px;
+}
+
+.tbBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.tbBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tbBtnPrimary {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+}
+
+.tbBtnPrimary:hover:not(:disabled) {
+    background: var(--brand-hover);
+    color: white;
+}
+
+.tbTextarea {
+    width: 100%;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    background: var(--bg-card);
+    border: none;
+    outline: none;
+    color: var(--text);
+    resize: vertical;
+    min-height: 150px;
+}
+
+.tbTextarea:disabled {
+    opacity: 0.6;
+}
+
+.tbTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.tbInputFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    gap: 12px;
+}
+
+.tbInputCount {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.tbResults {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.tbResultItem {
+    background: var(--bg-card);
+}
+
+.tbResultHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.tbResultIndex {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.tbStatusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    margin-left: auto;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tbStatusBadge i {
+    font-size: 11px;
+}
+
+.tbStatusPending {
+    background: var(--bg-card);
+    color: var(--text-disabled);
+    border: 0.5px solid var(--border);
+}
+
+.tbStatusProcessing {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 0.5px solid #bfdbfe;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tbStatusProcessing {
+        background: #0a1628;
+        color: #93c5fd;
+        border-color: #1e3a5f;
+    }
+}
+
+.tbStatusDone {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.tbStatusError {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 0.5px solid #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tbStatusError {
+        background: #1f1517;
+        color: #f87171;
+        border-color: #3c1518;
+    }
+}
+
+.tbSpin {
+    animation: tbSpin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes tbSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tbResultContent {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tbResultInput,
+.tbResultOutput {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+}
+
+.tbResultLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    min-width: 40px;
+    flex-shrink: 0;
+}
+
+.tbResultContent code {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--bg-surface);
+    padding: 4px 8px;
+    border-radius: 4px;
+    word-break: break-all;
+}
+
+.tbResultRelative {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--brand);
+    font-weight: 500;
+}
+
+.tbResultRelative i {
+    font-size: 12px;
+}
+
+.tbResultError {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: #fef2f2;
+    border-radius: 5px;
+    color: #dc2626;
+    font-size: 11px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .tbResultError {
+        background: #1f1517;
+        color: #f87171;
+    }
+}
+
+.tbEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.tbEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-disabled);
+}
+
+.tbEmptyTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.tbEmptyDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 340px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .tbRoot {
+        padding: 12px;
+    }
+
+    .tbLabelText {
+        display: none;
+    }
+
+    .tbBtnText {
+        display: none;
+    }
+
+    .tbSectionHeader {
+        padding: 10px 12px;
+    }
+
+    .tbTextarea {
+        padding: 10px 12px;
+        min-height: 120px;
+    }
+
+    .tbResultHeader {
+        padding: 8px 12px;
+    }
+
+    .tbResultContent {
+        padding: 8px 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tbBtn {
+        transition: none;
+    }
+
+    .tbSpin {
+        animation: none;
+    }
+}

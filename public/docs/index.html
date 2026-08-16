@@ -1,1564 +1,1564 @@
-<!DOCTYPE html>
+<!-- public/docs/index.html -->
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Toolverse — Project README</title>
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
+      :root {
+        --bg: #ffffff;
+        --bg2: #f6f5f1;
+        --bg3: #eeecea;
+        --text: #1a1a18;
+        --text2: #5a5a56;
+        --text3: #8a8a84;
+        --border: rgba(0, 0, 0, 0.1);
+        --border2: rgba(0, 0, 0, 0.18);
+        --teal50: #e1f5ee;
+        --teal600: #0f6e56;
+        --teal800: #085041;
+        --purple50: #eeedfe;
+        --purple600: #534ab7;
+        --purple800: #3c3489;
+        --amber50: #faeeda;
+        --amber600: #854f0b;
+        --amber800: #633806;
+        --coral50: #faece7;
+        --coral600: #993c1d;
+        --coral800: #712b13;
+        --green50: #eaf3de;
+        --green600: #3b6d11;
+        --green800: #27500a;
+        --blue50: #e6f1fb;
+        --blue600: #185fa5;
+        --blue800: #0c447c;
+        --gray50: #f1efe8;
+        --gray600: #5f5e5a;
+        --gray800: #444441;
+        --radius: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
+        --navbar-height: 64px;
+        --sidebar-width: 280px;
+      }
+
+      @media (prefers-color-scheme: dark) {
         :root {
-            --bg: #ffffff;
-            --bg2: #f6f5f1;
-            --bg3: #eeecea;
-            --text: #1a1a18;
-            --text2: #5a5a56;
-            --text3: #8a8a84;
-            --border: rgba(0, 0, 0, 0.1);
-            --border2: rgba(0, 0, 0, 0.18);
-            --teal50: #e1f5ee;
-            --teal600: #0f6e56;
-            --teal800: #085041;
-            --purple50: #eeedfe;
-            --purple600: #534ab7;
-            --purple800: #3c3489;
-            --amber50: #faeeda;
-            --amber600: #854f0b;
-            --amber800: #633806;
-            --coral50: #faece7;
-            --coral600: #993c1d;
-            --coral800: #712b13;
-            --green50: #eaf3de;
-            --green600: #3b6d11;
-            --green800: #27500a;
-            --blue50: #e6f1fb;
-            --blue600: #185fa5;
-            --blue800: #0c447c;
-            --gray50: #f1efe8;
-            --gray600: #5f5e5a;
-            --gray800: #444441;
-            --radius: 8px;
-            --radius-lg: 12px;
-            --radius-xl: 16px;
-            --navbar-height: 64px;
-            --sidebar-width: 280px;
+          --bg: #1c1c1a;
+          --bg2: #242422;
+          --bg3: #2c2c2a;
+          --text: #e8e6de;
+          --text2: #a8a69e;
+          --text3: #6a6a64;
+          --border: rgba(255, 255, 255, 0.1);
+          --border2: rgba(255, 255, 255, 0.18);
+          --teal50: #04342c;
+          --teal600: #5dcaa5;
+          --teal800: #9fe1cb;
+          --purple50: #26215c;
+          --purple600: #afa9ec;
+          --purple800: #cecbf6;
+          --amber50: #412402;
+          --amber600: #ef9f27;
+          --amber800: #fac775;
+          --coral50: #4a1b0c;
+          --coral600: #f0997b;
+          --coral800: #f5c4b3;
+          --green50: #173404;
+          --green600: #97c459;
+          --green800: #c0dd97;
+          --blue50: #042c53;
+          --blue600: #85b7eb;
+          --blue800: #b5d4f4;
+          --gray50: #2c2c2a;
+          --gray600: #b4b2a9;
+          --gray800: #d3d1c7;
         }
+      }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #1c1c1a;
-                --bg2: #242422;
-                --bg3: #2c2c2a;
-                --text: #e8e6de;
-                --text2: #a8a69e;
-                --text3: #6a6a64;
-                --border: rgba(255, 255, 255, 0.1);
-                --border2: rgba(255, 255, 255, 0.18);
-                --teal50: #04342c;
-                --teal600: #5dcaa5;
-                --teal800: #9fe1cb;
-                --purple50: #26215c;
-                --purple600: #afa9ec;
-                --purple800: #cecbf6;
-                --amber50: #412402;
-                --amber600: #ef9f27;
-                --amber800: #fac775;
-                --coral50: #4a1b0c;
-                --coral600: #f0997b;
-                --coral800: #f5c4b3;
-                --green50: #173404;
-                --green600: #97c459;
-                --green800: #c0dd97;
-                --blue50: #042c53;
-                --blue600: #85b7eb;
-                --blue800: #b5d4f4;
-                --gray50: #2c2c2a;
-                --gray600: #b4b2a9;
-                --gray800: #d3d1c7;
-            }
-        }
+      html {
+        scroll-behavior: smooth;
+      }
 
-        html {
-            scroll-behavior: smooth;
-        }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        background: var(--bg2);
+        color: var(--text);
+        line-height: 1.6;
+        font-size: 15px;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg2);
-            color: var(--text);
-            line-height: 1.6;
-            font-size: 15px;
-        }
-
-        /* ══════════════════════════════════════════
+      /* ══════════════════════════════════════════
            NAVBAR
         ══════════════════════════════════════════ */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--navbar-height);
-            background: var(--bg);
-            border-bottom: 0.5px solid var(--border);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--navbar-height);
+        background: var(--bg);
+        border-bottom: 0.5px solid var(--border);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+      }
+
+      .navbar-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      .navbar-logo {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text);
+        text-decoration: none;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .navbar-menu {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+      }
+
+      .navbar-links {
+        display: flex;
+        gap: 28px;
+      }
+
+      .navbar-link {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text2);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .navbar-link:hover {
+        color: var(--text);
+      }
+
+      .navbar-actions {
+        display: flex;
+        gap: 12px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-secondary {
+        background: var(--bg2);
+        border: 0.5px solid var(--border2);
+        color: var(--text);
+      }
+
+      .btn-secondary:hover {
+        background: var(--bg3);
+      }
+
+      .btn-primary {
+        background: var(--teal600);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--teal800);
+      }
+
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+      }
+
+      .hamburger span {
+        width: 22px;
+        height: 2px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: all 0.3s;
+      }
+
+      .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+      }
+
+      /* ══════════════════════════════════════════
+           SIDEBAR
+        ══════════════════════════════════════════ */
+      .sidebar {
+        position: fixed;
+        top: var(--navbar-height);
+        left: 0;
+        width: var(--sidebar-width);
+        height: calc(100vh - var(--navbar-height));
+        background: var(--bg);
+        border-right: 0.5px solid var(--border);
+        overflow-y: auto;
+        padding: 24px 0;
+        z-index: 900;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar-section {
+        margin-bottom: 24px;
+        padding: 0 20px;
+      }
+
+      .sidebar-title {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 12px;
+      }
+
+      .sidebar-links {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .sidebar-link {
+        padding: 8px 12px;
+        font-size: 14px;
+        color: var(--text2);
+        text-decoration: none;
+        border-radius: var(--radius);
+        transition: all 0.2s;
+        display: block;
+      }
+
+      .sidebar-link:hover {
+        background: var(--bg2);
+        color: var(--text);
+      }
+
+      .sidebar-link.active {
+        background: var(--teal50);
+        color: var(--teal800);
+        font-weight: 500;
+      }
+
+      .sidebar-progress {
+        margin: 20px 20px 0;
+        padding: 16px;
+        background: var(--bg2);
+        border-radius: var(--radius-lg);
+        border: 0.5px solid var(--border);
+      }
+
+      .progress-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: var(--bg3);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--teal600), var(--green600));
+        border-radius: 3px;
+        transition: width 0.3s;
+      }
+
+      .progress-text {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 6px;
+      }
+
+      /* ══════════════════════════════════════════
+           MAIN CONTENT
+        ══════════════════════════════════════════ */
+      .page-wrapper {
+        margin-top: var(--navbar-height);
+        margin-left: var(--sidebar-width);
+        transition: margin-left 0.3s ease;
+      }
+
+      .page {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 32px 80px;
+      }
+
+      /* Header */
+      .readme-header {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 32px 36px;
+        margin-bottom: 32px;
+      }
+
+      .readme-header h1 {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+
+      .readme-header .tagline {
+        font-size: 14px;
+        color: var(--text2);
+        margin-bottom: 18px;
+        line-height: 1.6;
+      }
+
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 20px;
+        border: 0.5px solid var(--border2);
+        background: var(--bg2);
+        color: var(--text2);
+        text-decoration: none;
+      }
+
+      .badge .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      /* Sections */
+      .section {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 28px 32px;
+        margin-bottom: 24px;
+        scroll-margin-top: calc(var(--navbar-height) + 20px);
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text3);
+        margin-bottom: 6px;
+      }
+
+      .section h2 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 16px;
+        letter-spacing: -0.3px;
+      }
+
+      .section h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text);
+        margin: 24px 0 12px;
+      }
+
+      .section p {
+        color: var(--text2);
+        margin-bottom: 12px;
+        line-height: 1.7;
+      }
+
+      .section p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Principle table */
+      .principle-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .principle-card {
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+
+      .principle-card .label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+
+      .principle-card .desc {
+        font-size: 12px;
+        color: var(--text2);
+        line-height: 1.5;
+      }
+
+      /* Tables - responsive wrapper */
+      .table-wrapper {
+        overflow-x: auto;
+        margin-top: 12px;
+        border-radius: var(--radius);
+      }
+
+      /* Name table */
+      .name-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 500px;
+      }
+
+      .name-table th {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 0.5px solid var(--border);
+      }
+
+      .name-table td {
+        font-size: 13px;
+        color: var(--text);
+        padding: 10px 12px;
+        border-bottom: 0.5px solid var(--border);
+        vertical-align: middle;
+      }
+
+      .name-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .name-table .vibe {
+        color: var(--text2);
+      }
+
+      .star-badge {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 600;
+        background: var(--green50);
+        color: var(--green600);
+        border-radius: 20px;
+        padding: 3px 10px;
+        margin-left: 8px;
+      }
+
+      /* Diagram container */
+      .diagram-wrap {
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 20px;
+        margin-top: 16px;
+        overflow-x: auto;
+      }
+
+      .diagram-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text3);
+        margin-bottom: 14px;
+      }
+
+      .diagram-wrap svg {
+        min-width: 600px;
+      }
+
+      /* SVG color system */
+      .c-teal rect,
+      .c-teal circle,
+      .c-teal ellipse {
+        fill: var(--teal50);
+        stroke: var(--teal600);
+      }
+
+      .c-teal .th,
+      .c-teal .t {
+        fill: var(--teal800);
+      }
+
+      .c-teal .ts {
+        fill: var(--teal600);
+      }
+
+      .c-purple rect,
+      .c-purple circle {
+        fill: var(--purple50);
+        stroke: var(--purple600);
+      }
+
+      .c-purple .th,
+      .c-purple .t {
+        fill: var(--purple800);
+      }
+
+      .c-purple .ts {
+        fill: var(--purple600);
+      }
+
+      .c-amber rect,
+      .c-amber circle {
+        fill: var(--amber50);
+        stroke: var(--amber600);
+      }
+
+      .c-amber .th,
+      .c-amber .t {
+        fill: var(--amber800);
+      }
+
+      .c-amber .ts {
+        fill: var(--amber600);
+      }
+
+      .c-coral rect,
+      .c-coral circle {
+        fill: var(--coral50);
+        stroke: var(--coral600);
+      }
+
+      .c-coral .th,
+      .c-coral .t {
+        fill: var(--coral800);
+      }
+
+      .c-coral .ts {
+        fill: var(--coral600);
+      }
+
+      .c-green rect,
+      .c-green circle {
+        fill: var(--green50);
+        stroke: var(--green600);
+      }
+
+      .c-green .th,
+      .c-green .t {
+        fill: var(--green800);
+      }
+
+      .c-green .ts {
+        fill: var(--green600);
+      }
+
+      .c-blue rect,
+      .c-blue circle {
+        fill: var(--blue50);
+        stroke: var(--blue600);
+      }
+
+      .c-blue .th,
+      .c-blue .t {
+        fill: var(--blue800);
+      }
+
+      .c-blue .ts {
+        fill: var(--blue600);
+      }
+
+      .c-gray rect,
+      .c-gray circle {
+        fill: var(--gray50);
+        stroke: var(--gray600);
+      }
+
+      .c-gray .th,
+      .c-gray .t {
+        fill: var(--gray800);
+      }
+
+      .c-gray .ts {
+        fill: var(--gray600);
+      }
+
+      .box rect {
+        fill: var(--bg3);
+        stroke: var(--border2);
+      }
+
+      .box .th,
+      .box .t {
+        fill: var(--text);
+      }
+
+      .box .ts {
+        fill: var(--text2);
+      }
+
+      .arr {
+        stroke: var(--text3);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      .leader {
+        stroke: var(--text3);
+        stroke-width: 0.5;
+        stroke-dasharray: 3 3;
+        fill: none;
+      }
+
+      .th {
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        fill: var(--text);
+      }
+
+      .t {
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 400;
+        fill: var(--text);
+      }
+
+      .ts {
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 400;
+        fill: var(--text2);
+      }
+
+      .section-title {
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        fill: var(--text3);
+      }
+
+      /* Generic tables */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        min-width: 500px;
+      }
+
+      .data-table th {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 0.5px solid var(--border);
+      }
+
+      .data-table td {
+        padding: 9px 12px;
+        border-bottom: 0.5px solid var(--border);
+        color: var(--text2);
+        vertical-align: top;
+      }
+
+      .data-table td:first-child {
+        color: var(--text);
+        font-weight: 500;
+      }
+
+      .data-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .data-table .highlight td {
+        background: var(--green50);
+      }
+
+      .data-table .highlight td:first-child {
+        color: var(--green800);
+      }
+
+      /* Code blocks */
+      pre {
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        font-size: 12.5px;
+        font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+        color: var(--text2);
+        overflow-x: auto;
+        margin-top: 12px;
+        line-height: 1.6;
+        white-space: pre;
+      }
+
+      code {
+        font-family: "SF Mono", "Fira Code", monospace;
+        font-size: 12.5px;
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: 4px;
+        padding: 2px 6px;
+        color: var(--purple600);
+      }
+
+      /* Tool list */
+      .tool-cols {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+        margin-top: 12px;
+      }
+
+      .tool-group {
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+
+      .tool-group .group-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .tool-group .group-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      .tool-item {
+        font-size: 12px;
+        color: var(--text2);
+        padding: 3px 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .tool-item .star {
+        color: var(--amber600);
+        font-size: 10px;
+      }
+
+      .tool-item .tag {
+        font-size: 10px;
+        color: var(--coral600);
+        background: var(--coral50);
+        border-radius: 4px;
+        padding: 2px 6px;
+        margin-left: auto;
+      }
+
+      /* Links section */
+      .link-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .link-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+
+      .link-source {
+        font-weight: 600;
+        color: var(--text);
+        min-width: 140px;
+      }
+
+      .link-arrow {
+        color: var(--text3);
+      }
+
+      .link-targets {
+        color: var(--text2);
+      }
+
+      /* Homepage mockup */
+      .mockup-frame {
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 16px;
+        margin-top: 16px;
+      }
+
+      .mockup-nav {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .mockup-nav .logo {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.3px;
+      }
+
+      .mockup-nav .nav-links {
+        display: flex;
+        gap: 14px;
+        font-size: 12px;
+        color: var(--text2);
+      }
+
+      .mockup-hero {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px 18px 22px;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+
+      .mockup-hero h2 {
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+
+      .mockup-hero p {
+        font-size: 12px;
+        color: var(--text2);
+        margin-bottom: 14px;
+      }
+
+      .mockup-search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg2);
+        border: 0.5px solid var(--border2);
+        border-radius: var(--radius);
+        padding: 9px 14px;
+        max-width: 400px;
+        margin: 0 auto;
+        font-size: 12px;
+        color: var(--text3);
+      }
+
+      .mockup-widgets {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .widget-card {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+      }
+
+      .widget-card .widget-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text2);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .quick-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--text);
+        padding: 3px 0;
+      }
+
+      .quick-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--border2);
+      }
+
+      .weather-temp {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+
+      .weather-desc {
+        font-size: 11px;
+        color: var(--text2);
+        margin-bottom: 10px;
+      }
+
+      .weather-days {
+        display: flex;
+        gap: 5px;
+      }
+
+      .weather-day {
+        flex: 1;
+        background: var(--bg2);
+        border-radius: 5px;
+        padding: 5px;
+        text-align: center;
+        font-size: 10px;
+        color: var(--text2);
+      }
+
+      .weather-day span {
+        display: block;
+        font-weight: 600;
+        color: var(--text);
+        font-size: 11px;
+        margin-top: 2px;
+      }
+
+      .todo-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--text);
+        padding: 3px 0;
+      }
+
+      .todo-item.done {
+        color: var(--text3);
+        text-decoration: line-through;
+      }
+
+      .todo-check {
+        width: 13px;
+        height: 13px;
+        border: 0.5px solid var(--border2);
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+
+      .todo-check.checked {
+        background: var(--green600);
+        border-color: var(--green600);
+      }
+
+      .mockup-tool-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .tool-card {
+        background: var(--bg);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+      }
+
+      .tool-card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+      }
+
+      .tool-card-icon {
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+
+      .tool-card-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .tool-card-desc {
+        font-size: 11px;
+        color: var(--text3);
+      }
+
+      .mockup-ad {
+        background: var(--bg);
+        border: 0.5px dashed var(--border2);
+        border-radius: var(--radius);
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--text3);
+      }
+
+      .ad-pill {
+        font-size: 10px;
+        border: 0.5px dashed var(--border2);
+        border-radius: 4px;
+        padding: 3px 8px;
+        color: var(--text3);
+      }
+
+      /* Tool page layout */
+      .tool-page-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .tool-page-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 14px;
+      }
+
+      .tp-num {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .tp-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        min-width: 180px;
+      }
+
+      .tp-desc {
+        font-size: 12px;
+        color: var(--text2);
+      }
+
+      .tp-ad {
+        background: var(--amber50);
+        border-color: var(--amber600);
+      }
+
+      .tp-ad .tp-num {
+        background: var(--amber600);
+        color: var(--amber50);
+      }
+
+      .tp-ad .tp-name {
+        color: var(--amber800);
+      }
+
+      /* Stack table */
+      .stack-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        min-width: 600px;
+      }
+
+      .stack-table th {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 0.5px solid var(--border);
+      }
+
+      .stack-table td {
+        padding: 9px 12px;
+        border-bottom: 0.5px solid var(--border);
+      }
+
+      .stack-table td:first-child {
+        color: var(--text2);
+        width: 120px;
+      }
+
+      .stack-table td:nth-child(2) {
+        color: var(--text);
+        font-weight: 500;
+        width: 200px;
+      }
+
+      .stack-table td:last-child {
+        color: var(--text2);
+        font-size: 12px;
+      }
+
+      .stack-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* SEO keywords */
+      .kw-tier {
+        margin-top: 16px;
+      }
+
+      .kw-tier-label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text3);
+        margin-bottom: 8px;
+      }
+
+      .kw-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+
+      .kw-pill {
+        font-size: 12px;
+        padding: 5px 11px;
+        border-radius: 20px;
+        border: 0.5px solid var(--border2);
+        background: var(--bg2);
+        color: var(--text2);
+      }
+
+      .kw-pill.tier1 {
+        background: var(--green50);
+        border-color: var(--green600);
+        color: var(--green800);
+      }
+
+      .kw-pill.tier2 {
+        background: var(--blue50);
+        border-color: var(--blue600);
+        color: var(--blue800);
+      }
+
+      .kw-pill.tier3 {
+        background: var(--purple50);
+        border-color: var(--purple600);
+        color: var(--purple800);
+      }
+
+      /* Perf + privacy */
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .metric-card {
+        background: var(--bg2);
+        border: 0.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+
+      .metric-card .mval {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .metric-card .mlabel {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 3px;
+      }
+
+      /* Footer */
+      .readme-footer {
+        text-align: center;
+        font-size: 13px;
+        color: var(--text3);
+        margin-top: 40px;
+        padding-top: 24px;
+        border-top: 0.5px solid var(--border);
+      }
+
+      /* ══════════════════════════════════════════
+           MOBILE RESPONSIVE
+        ══════════════════════════════════════════ */
+      @media (max-width: 1024px) {
+        .sidebar {
+          transform: translateX(-100%);
         }
 
-        .navbar-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 1600px;
-            margin: 0 auto;
+        .sidebar.open {
+          transform: translateX(0);
         }
 
-        .navbar-logo {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text);
-            text-decoration: none;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 32px;
+        .page-wrapper {
+          margin-left: 0;
         }
 
         .navbar-links {
-            display: flex;
-            gap: 28px;
-        }
-
-        .navbar-link {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text2);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .navbar-link:hover {
-            color: var(--text);
-        }
-
-        .navbar-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            padding: 8px 16px;
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 500;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-secondary {
-            background: var(--bg2);
-            border: 0.5px solid var(--border2);
-            color: var(--text);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg3);
-        }
-
-        .btn-primary {
-            background: var(--teal600);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--teal800);
+          display: none;
         }
 
         .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
+          display: flex;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          padding: 0 16px;
         }
 
-        .hamburger span {
-            width: 22px;
-            height: 2px;
-            background: var(--text);
-            border-radius: 2px;
-            transition: all 0.3s;
+        .navbar-logo {
+          font-size: 18px;
         }
 
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
+        .navbar-actions {
+          display: none;
         }
 
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
-        }
-
-        /* ══════════════════════════════════════════
-           SIDEBAR
-        ══════════════════════════════════════════ */
         .sidebar {
-            position: fixed;
-            top: var(--navbar-height);
-            left: 0;
-            width: var(--sidebar-width);
-            height: calc(100vh - var(--navbar-height));
-            background: var(--bg);
-            border-right: 0.5px solid var(--border);
-            overflow-y: auto;
-            padding: 24px 0;
-            z-index: 900;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-section {
-            margin-bottom: 24px;
-            padding: 0 20px;
-        }
-
-        .sidebar-title {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text3);
-            margin-bottom: 12px;
-        }
-
-        .sidebar-links {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .sidebar-link {
-            padding: 8px 12px;
-            font-size: 14px;
-            color: var(--text2);
-            text-decoration: none;
-            border-radius: var(--radius);
-            transition: all 0.2s;
-            display: block;
-        }
-
-        .sidebar-link:hover {
-            background: var(--bg2);
-            color: var(--text);
-        }
-
-        .sidebar-link.active {
-            background: var(--teal50);
-            color: var(--teal800);
-            font-weight: 500;
-        }
-
-        .sidebar-progress {
-            margin: 20px 20px 0;
-            padding: 16px;
-            background: var(--bg2);
-            border-radius: var(--radius-lg);
-            border: 0.5px solid var(--border);
-        }
-
-        .progress-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: var(--bg3);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--teal600), var(--green600));
-            border-radius: 3px;
-            transition: width 0.3s;
-        }
-
-        .progress-text {
-            font-size: 11px;
-            color: var(--text3);
-            margin-top: 6px;
-        }
-
-        /* ══════════════════════════════════════════
-           MAIN CONTENT
-        ══════════════════════════════════════════ */
-        .page-wrapper {
-            margin-top: var(--navbar-height);
-            margin-left: var(--sidebar-width);
-            transition: margin-left 0.3s ease;
+          width: 100%;
+          max-width: 320px;
         }
 
         .page {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 32px 80px;
+          padding: 24px 16px 60px;
         }
 
-        /* Header */
         .readme-header {
-            background: var(--bg);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 32px 36px;
-            margin-bottom: 32px;
+          padding: 24px 20px;
         }
 
         .readme-header h1 {
-            font-size: 28px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            color: var(--text);
-            margin-bottom: 8px;
+          font-size: 22px;
         }
 
-        .readme-header .tagline {
-            font-size: 14px;
-            color: var(--text2);
-            margin-bottom: 18px;
-            line-height: 1.6;
-        }
-
-        .badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 4px 10px;
-            border-radius: 20px;
-            border: 0.5px solid var(--border2);
-            background: var(--bg2);
-            color: var(--text2);
-            text-decoration: none;
-        }
-
-        .badge .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        /* Sections */
         .section {
-            background: var(--bg);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 28px 32px;
-            margin-bottom: 24px;
-            scroll-margin-top: calc(var(--navbar-height) + 20px);
-        }
-
-        .section-label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text3);
-            margin-bottom: 6px;
+          padding: 20px 18px;
         }
 
         .section h2 {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 16px;
-            letter-spacing: -0.3px;
+          font-size: 18px;
         }
 
-        .section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text);
-            margin: 24px 0 12px;
-        }
-
-        .section p {
-            color: var(--text2);
-            margin-bottom: 12px;
-            line-height: 1.7;
-        }
-
-        .section p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Principle table */
         .principle-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 10px;
-            margin-top: 14px;
+          grid-template-columns: 1fr;
         }
 
-        .principle-card {
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 16px;
-        }
-
-        .principle-card .label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-
-        .principle-card .desc {
-            font-size: 12px;
-            color: var(--text2);
-            line-height: 1.5;
-        }
-
-        /* Tables - responsive wrapper */
-        .table-wrapper {
-            overflow-x: auto;
-            margin-top: 12px;
-            border-radius: var(--radius);
-        }
-
-        /* Name table */
-        .name-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 500px;
-        }
-
-        .name-table th {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text3);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            text-align: left;
-            padding: 8px 12px;
-            border-bottom: 0.5px solid var(--border);
-        }
-
-        .name-table td {
-            font-size: 13px;
-            color: var(--text);
-            padding: 10px 12px;
-            border-bottom: 0.5px solid var(--border);
-            vertical-align: middle;
-        }
-
-        .name-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .name-table .vibe {
-            color: var(--text2);
-        }
-
-        .star-badge {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 600;
-            background: var(--green50);
-            color: var(--green600);
-            border-radius: 20px;
-            padding: 3px 10px;
-            margin-left: 8px;
-        }
-
-        /* Diagram container */
-        .diagram-wrap {
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-top: 16px;
-            overflow-x: auto;
-        }
-
-        .diagram-label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text3);
-            margin-bottom: 14px;
-        }
-
-        .diagram-wrap svg {
-            min-width: 600px;
-        }
-
-        /* SVG color system */
-        .c-teal rect,
-        .c-teal circle,
-        .c-teal ellipse {
-            fill: var(--teal50);
-            stroke: var(--teal600);
-        }
-
-        .c-teal .th,
-        .c-teal .t {
-            fill: var(--teal800);
-        }
-
-        .c-teal .ts {
-            fill: var(--teal600);
-        }
-
-        .c-purple rect,
-        .c-purple circle {
-            fill: var(--purple50);
-            stroke: var(--purple600);
-        }
-
-        .c-purple .th,
-        .c-purple .t {
-            fill: var(--purple800);
-        }
-
-        .c-purple .ts {
-            fill: var(--purple600);
-        }
-
-        .c-amber rect,
-        .c-amber circle {
-            fill: var(--amber50);
-            stroke: var(--amber600);
-        }
-
-        .c-amber .th,
-        .c-amber .t {
-            fill: var(--amber800);
-        }
-
-        .c-amber .ts {
-            fill: var(--amber600);
-        }
-
-        .c-coral rect,
-        .c-coral circle {
-            fill: var(--coral50);
-            stroke: var(--coral600);
-        }
-
-        .c-coral .th,
-        .c-coral .t {
-            fill: var(--coral800);
-        }
-
-        .c-coral .ts {
-            fill: var(--coral600);
-        }
-
-        .c-green rect,
-        .c-green circle {
-            fill: var(--green50);
-            stroke: var(--green600);
-        }
-
-        .c-green .th,
-        .c-green .t {
-            fill: var(--green800);
-        }
-
-        .c-green .ts {
-            fill: var(--green600);
-        }
-
-        .c-blue rect,
-        .c-blue circle {
-            fill: var(--blue50);
-            stroke: var(--blue600);
-        }
-
-        .c-blue .th,
-        .c-blue .t {
-            fill: var(--blue800);
-        }
-
-        .c-blue .ts {
-            fill: var(--blue600);
-        }
-
-        .c-gray rect,
-        .c-gray circle {
-            fill: var(--gray50);
-            stroke: var(--gray600);
-        }
-
-        .c-gray .th,
-        .c-gray .t {
-            fill: var(--gray800);
-        }
-
-        .c-gray .ts {
-            fill: var(--gray600);
-        }
-
-        .box rect {
-            fill: var(--bg3);
-            stroke: var(--border2);
-        }
-
-        .box .th,
-        .box .t {
-            fill: var(--text);
-        }
-
-        .box .ts {
-            fill: var(--text2);
-        }
-
-        .arr {
-            stroke: var(--text3);
-            stroke-width: 1.5;
-            fill: none;
-        }
-
-        .leader {
-            stroke: var(--text3);
-            stroke-width: 0.5;
-            stroke-dasharray: 3 3;
-            fill: none;
-        }
-
-        .th {
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 600;
-            fill: var(--text);
-        }
-
-        .t {
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 400;
-            fill: var(--text);
-        }
-
-        .ts {
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 400;
-            fill: var(--text2);
-        }
-
-        .section-title {
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 600;
-            fill: var(--text3);
-        }
-
-        /* Generic tables */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            min-width: 500px;
-        }
-
-        .data-table th {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text3);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            text-align: left;
-            padding: 8px 12px;
-            border-bottom: 0.5px solid var(--border);
-        }
-
-        .data-table td {
-            padding: 9px 12px;
-            border-bottom: 0.5px solid var(--border);
-            color: var(--text2);
-            vertical-align: top;
-        }
-
-        .data-table td:first-child {
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        .data-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .data-table .highlight td {
-            background: var(--green50);
-        }
-
-        .data-table .highlight td:first-child {
-            color: var(--green800);
-        }
-
-        /* Code blocks */
-        pre {
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 18px;
-            font-size: 12.5px;
-            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-            color: var(--text2);
-            overflow-x: auto;
-            margin-top: 12px;
-            line-height: 1.6;
-            white-space: pre;
-        }
-
-        code {
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 12.5px;
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: 4px;
-            padding: 2px 6px;
-            color: var(--purple600);
-        }
-
-        /* Tool list */
         .tool-cols {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-            margin-top: 12px;
-        }
-
-        .tool-group {
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 16px;
-        }
-
-        .tool-group .group-name {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .tool-group .group-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .tool-item {
-            font-size: 12px;
-            color: var(--text2);
-            padding: 3px 0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .tool-item .star {
-            color: var(--amber600);
-            font-size: 10px;
-        }
-
-        .tool-item .tag {
-            font-size: 10px;
-            color: var(--coral600);
-            background: var(--coral50);
-            border-radius: 4px;
-            padding: 2px 6px;
-            margin-left: auto;
-        }
-
-        /* Links section */
-        .link-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .link-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 10px 14px;
-            font-size: 13px;
-        }
-
-        .link-source {
-            font-weight: 600;
-            color: var(--text);
-            min-width: 140px;
-        }
-
-        .link-arrow {
-            color: var(--text3);
-        }
-
-        .link-targets {
-            color: var(--text2);
-        }
-
-        /* Homepage mockup */
-        .mockup-frame {
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 16px;
-            margin-top: 16px;
-        }
-
-        .mockup-nav {
-            background: var(--bg);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .mockup-nav .logo {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: -0.3px;
-        }
-
-        .mockup-nav .nav-links {
-            display: flex;
-            gap: 14px;
-            font-size: 12px;
-            color: var(--text2);
-        }
-
-        .mockup-hero {
-            background: var(--bg);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px 18px 22px;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .mockup-hero h2 {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-
-        .mockup-hero p {
-            font-size: 12px;
-            color: var(--text2);
-            margin-bottom: 14px;
-        }
-
-        .mockup-search {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg2);
-            border: 0.5px solid var(--border2);
-            border-radius: var(--radius);
-            padding: 9px 14px;
-            max-width: 400px;
-            margin: 0 auto;
-            font-size: 12px;
-            color: var(--text3);
+          grid-template-columns: 1fr;
         }
 
         .mockup-widgets {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .widget-card {
-            background: var(--bg);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 12px 14px;
-        }
-
-        .widget-card .widget-title {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text2);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-
-        .quick-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--text);
-            padding: 3px 0;
-        }
-
-        .quick-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--border2);
-        }
-
-        .weather-temp {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--text);
-            line-height: 1;
-            margin-bottom: 4px;
-        }
-
-        .weather-desc {
-            font-size: 11px;
-            color: var(--text2);
-            margin-bottom: 10px;
-        }
-
-        .weather-days {
-            display: flex;
-            gap: 5px;
-        }
-
-        .weather-day {
-            flex: 1;
-            background: var(--bg2);
-            border-radius: 5px;
-            padding: 5px;
-            text-align: center;
-            font-size: 10px;
-            color: var(--text2);
-        }
-
-        .weather-day span {
-            display: block;
-            font-weight: 600;
-            color: var(--text);
-            font-size: 11px;
-            margin-top: 2px;
-        }
-
-        .todo-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--text);
-            padding: 3px 0;
-        }
-
-        .todo-item.done {
-            color: var(--text3);
-            text-decoration: line-through;
-        }
-
-        .todo-check {
-            width: 13px;
-            height: 13px;
-            border: 0.5px solid var(--border2);
-            border-radius: 3px;
-            flex-shrink: 0;
-        }
-
-        .todo-check.checked {
-            background: var(--green600);
-            border-color: var(--green600);
+          grid-template-columns: 1fr;
         }
 
         .mockup-tool-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 10px;
-            margin-bottom: 12px;
+          grid-template-columns: repeat(2, 1fr);
         }
 
-        .tool-card {
-            background: var(--bg);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 12px 14px;
+        .mockup-nav .nav-links {
+          display: none;
         }
 
-        .tool-card-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 5px;
+        .metric-grid {
+          grid-template-columns: repeat(2, 1fr);
         }
 
-        .tool-card-icon {
-            width: 18px;
-            height: 18px;
-            border-radius: 4px;
-            flex-shrink: 0;
+        .link-source {
+          min-width: 100px;
+          font-size: 12px;
         }
 
-        .tool-card-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .tool-card-desc {
-            font-size: 11px;
-            color: var(--text3);
-        }
-
-        .mockup-ad {
-            background: var(--bg);
-            border: 0.5px dashed var(--border2);
-            border-radius: var(--radius);
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text3);
-        }
-
-        .ad-pill {
-            font-size: 10px;
-            border: 0.5px dashed var(--border2);
-            border-radius: 4px;
-            padding: 3px 8px;
-            color: var(--text3);
-        }
-
-        /* Tool page layout */
-        .tool-page-layout {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .tool-page-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 10px 14px;
-        }
-
-        .tp-num {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            flex-shrink: 0;
+        .link-targets {
+          font-size: 12px;
         }
 
         .tp-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            min-width: 180px;
+          min-width: auto;
+        }
+
+        .tool-page-row {
+          flex-wrap: wrap;
         }
 
         .tp-desc {
-            font-size: 12px;
-            color: var(--text2);
+          flex-basis: 100%;
+          margin-left: 36px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .readme-header h1 {
+          font-size: 20px;
         }
 
-        .tp-ad {
-            background: var(--amber50);
-            border-color: var(--amber600);
+        .mockup-tool-grid {
+          grid-template-columns: 1fr;
         }
 
-        .tp-ad .tp-num {
-            background: var(--amber600);
-            color: var(--amber50);
+        .weather-days {
+          flex-direction: column;
+          gap: 4px;
         }
 
-        .tp-ad .tp-name {
-            color: var(--amber800);
-        }
-
-        /* Stack table */
-        .stack-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            min-width: 600px;
-        }
-
-        .stack-table th {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text3);
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            text-align: left;
-            padding: 8px 12px;
-            border-bottom: 0.5px solid var(--border);
-        }
-
-        .stack-table td {
-            padding: 9px 12px;
-            border-bottom: 0.5px solid var(--border);
-        }
-
-        .stack-table td:first-child {
-            color: var(--text2);
-            width: 120px;
-        }
-
-        .stack-table td:nth-child(2) {
-            color: var(--text);
-            font-weight: 500;
-            width: 200px;
-        }
-
-        .stack-table td:last-child {
-            color: var(--text2);
-            font-size: 12px;
-        }
-
-        .stack-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* SEO keywords */
-        .kw-tier {
-            margin-top: 16px;
-        }
-
-        .kw-tier-label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            color: var(--text3);
-            margin-bottom: 8px;
-        }
-
-        .kw-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 16px;
-        }
-
-        .kw-pill {
-            font-size: 12px;
-            padding: 5px 11px;
-            border-radius: 20px;
-            border: 0.5px solid var(--border2);
-            background: var(--bg2);
-            color: var(--text2);
-        }
-
-        .kw-pill.tier1 {
-            background: var(--green50);
-            border-color: var(--green600);
-            color: var(--green800);
-        }
-
-        .kw-pill.tier2 {
-            background: var(--blue50);
-            border-color: var(--blue600);
-            color: var(--blue800);
-        }
-
-        .kw-pill.tier3 {
-            background: var(--purple50);
-            border-color: var(--purple600);
-            color: var(--purple800);
-        }
-
-        /* Perf + privacy */
         .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            margin-top: 12px;
+          grid-template-columns: 1fr;
         }
 
-        .metric-card {
-            background: var(--bg2);
-            border: 0.5px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 16px;
+        .badges {
+          gap: 6px;
         }
 
-        .metric-card .mval {
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--text);
+        .badge {
+          font-size: 11px;
+          padding: 3px 8px;
         }
+      }
 
-        .metric-card .mlabel {
-            font-size: 11px;
-            color: var(--text3);
-            margin-top: 3px;
-        }
+      /* Mobile overlay */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: var(--navbar-height);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 850;
+      }
 
-        /* Footer */
-        .readme-footer {
-            text-align: center;
-            font-size: 13px;
-            color: var(--text3);
-            margin-top: 40px;
-            padding-top: 24px;
-            border-top: 0.5px solid var(--border);
-        }
+      .sidebar-overlay.active {
+        display: block;
+      }
 
-        /* ══════════════════════════════════════════
-           MOBILE RESPONSIVE
-        ══════════════════════════════════════════ */
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .page-wrapper {
-                margin-left: 0;
-            }
-
-            .navbar-links {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 0 16px;
-            }
-
-            .navbar-logo {
-                font-size: 18px;
-            }
-
-            .navbar-actions {
-                display: none;
-            }
-
-            .sidebar {
-                width: 100%;
-                max-width: 320px;
-            }
-
-            .page {
-                padding: 24px 16px 60px;
-            }
-
-            .readme-header {
-                padding: 24px 20px;
-            }
-
-            .readme-header h1 {
-                font-size: 22px;
-            }
-
-            .section {
-                padding: 20px 18px;
-            }
-
-            .section h2 {
-                font-size: 18px;
-            }
-
-            .principle-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .tool-cols {
-                grid-template-columns: 1fr;
-            }
-
-            .mockup-widgets {
-                grid-template-columns: 1fr;
-            }
-
-            .mockup-tool-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .mockup-nav .nav-links {
-                display: none;
-            }
-
-            .metric-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .link-source {
-                min-width: 100px;
-                font-size: 12px;
-            }
-
-            .link-targets {
-                font-size: 12px;
-            }
-
-            .tp-name {
-                min-width: auto;
-            }
-
-            .tool-page-row {
-                flex-wrap: wrap;
-            }
-
-            .tp-desc {
-                flex-basis: 100%;
-                margin-left: 36px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .readme-header h1 {
-                font-size: 20px;
-            }
-
-            .mockup-tool-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .weather-days {
-                flex-direction: column;
-                gap: 4px;
-            }
-
-            .metric-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .badges {
-                gap: 6px;
-            }
-
-            .badge {
-                font-size: 11px;
-                padding: 3px 8px;
-            }
-        }
-
-        /* Mobile overlay */
+      @media (min-width: 1025px) {
         .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: var(--navbar-height);
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 850;
+          display: none !important;
         }
+      }
 
-        .sidebar-overlay.active {
-            display: block;
-        }
+      /* Scroll to top button */
+      .scroll-top {
+        position: fixed;
+        bottom: 32px;
+        right: 32px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--teal600);
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s;
+        z-index: 800;
+      }
 
-        @media (min-width: 1025px) {
-            .sidebar-overlay {
-                display: none !important;
-            }
-        }
+      .scroll-top:hover {
+        background: var(--teal800);
+        transform: translateY(-2px);
+      }
 
-        /* Scroll to top button */
+      .scroll-top.visible {
+        display: flex;
+      }
+
+      @media (max-width: 768px) {
         .scroll-top {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--teal600);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s;
-            z-index: 800;
+          bottom: 20px;
+          right: 20px;
+          width: 44px;
+          height: 44px;
         }
-
-        .scroll-top:hover {
-            background: var(--teal800);
-            transform: translateY(-2px);
-        }
-
-        .scroll-top.visible {
-            display: flex;
-        }
-
-        @media (max-width: 768px) {
-            .scroll-top {
-                bottom: 20px;
-                right: 20px;
-                width: 44px;
-                height: 44px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <!-- ══════════════════════════════════════════
          NAVBAR
     ══════════════════════════════════════════ -->
     <nav class="navbar">
-        <div class="navbar-container">
-            <a href="#" class="navbar-logo">
-                <span>⚡</span>
-                <span>Toolverse</span>
+      <div class="navbar-container">
+        <a href="#" class="navbar-logo">
+          <span>⚡</span>
+          <span>Toolverse</span>
+        </a>
+
+        <div class="navbar-menu">
+          <div class="navbar-links">
+            <a href="#overview" class="navbar-link">Overview</a>
+            <a href="#architecture" class="navbar-link">Architecture</a>
+            <a href="#tools" class="navbar-link">Tools</a>
+            <a href="#tech" class="navbar-link">Tech Stack</a>
+          </div>
+
+          <div class="navbar-actions">
+            <a href="https://github.com/srinathnulidonda/toolverse" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"
+                />
+              </svg>
+              GitHub
             </a>
+            <a href="https://toolverse.vercel.app" class="btn btn-primary">Live Demo</a>
+          </div>
 
-            <div class="navbar-menu">
-                <div class="navbar-links">
-                    <a href="#overview" class="navbar-link">Overview</a>
-                    <a href="#architecture" class="navbar-link">Architecture</a>
-                    <a href="#tools" class="navbar-link">Tools</a>
-                    <a href="#tech" class="navbar-link">Tech Stack</a>
-                </div>
-
-                <div class="navbar-actions">
-                    <a href="https://github.com/srinathnulidonda/toolverse" class="btn btn-secondary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                        </svg>
-                        GitHub
-                    </a>
-                    <a href="https://toolverse.vercel.app" class="btn btn-primary">Live Demo</a>
-                </div>
-
-                <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
+          <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
         </div>
+      </div>
     </nav>
 
     <!-- ══════════════════════════════════════════
          SIDEBAR
     ══════════════════════════════════════════ -->
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-section">
-            <div class="sidebar-title">Navigation</div>
-            <div class="sidebar-links">
-                <a href="#header" class="sidebar-link">Introduction</a>
-                <a href="#overview" class="sidebar-link">What is Toolverse?</a>
-                <a href="#names" class="sidebar-link">Name Options</a>
-                <a href="#file-processing" class="sidebar-link">File Processing</a>
-                <a href="#architecture" class="sidebar-link">System Architecture</a>
-                <a href="#homepage" class="sidebar-link">Homepage Layout</a>
-                <a href="#roadmap" class="sidebar-link">Build Roadmap</a>
-            </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Navigation</div>
+        <div class="sidebar-links">
+          <a href="#header" class="sidebar-link">Introduction</a>
+          <a href="#overview" class="sidebar-link">What is Toolverse?</a>
+          <a href="#names" class="sidebar-link">Name Options</a>
+          <a href="#file-processing" class="sidebar-link">File Processing</a>
+          <a href="#architecture" class="sidebar-link">System Architecture</a>
+          <a href="#homepage" class="sidebar-link">Homepage Layout</a>
+          <a href="#roadmap" class="sidebar-link">Build Roadmap</a>
         </div>
+      </div>
 
-        <div class="sidebar-section">
-            <div class="sidebar-title">Features</div>
-            <div class="sidebar-links">
-                <a href="#tools" class="sidebar-link">Tool Categories</a>
-                <a href="#linking" class="sidebar-link">Tool Linking</a>
-                <a href="#tech" class="sidebar-link">Tech Stack</a>
-                <a href="#database" class="sidebar-link">Database Schema</a>
-                <a href="#api" class="sidebar-link">API Design</a>
-            </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Features</div>
+        <div class="sidebar-links">
+          <a href="#tools" class="sidebar-link">Tool Categories</a>
+          <a href="#linking" class="sidebar-link">Tool Linking</a>
+          <a href="#tech" class="sidebar-link">Tech Stack</a>
+          <a href="#database" class="sidebar-link">Database Schema</a>
+          <a href="#api" class="sidebar-link">API Design</a>
         </div>
+      </div>
 
-        <div class="sidebar-section">
-            <div class="sidebar-title">Growth</div>
-            <div class="sidebar-links">
-                <a href="#monetization" class="sidebar-link">Monetization</a>
-                <a href="#seo" class="sidebar-link">SEO Strategy</a>
-                <a href="#performance" class="sidebar-link">Performance</a>
-                <a href="#privacy" class="sidebar-link">Privacy</a>
-            </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Growth</div>
+        <div class="sidebar-links">
+          <a href="#monetization" class="sidebar-link">Monetization</a>
+          <a href="#seo" class="sidebar-link">SEO Strategy</a>
+          <a href="#performance" class="sidebar-link">Performance</a>
+          <a href="#privacy" class="sidebar-link">Privacy</a>
         </div>
+      </div>
 
-        <div class="sidebar-section">
-            <div class="sidebar-title">Development</div>
-            <div class="sidebar-links">
-                <a href="#folder" class="sidebar-link">Folder Structure</a>
-                <a href="#env" class="sidebar-link">Environment Setup</a>
-            </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Development</div>
+        <div class="sidebar-links">
+          <a href="#folder" class="sidebar-link">Folder Structure</a>
+          <a href="#env" class="sidebar-link">Environment Setup</a>
         </div>
+      </div>
 
-        <div class="sidebar-progress">
-            <div class="progress-label">Documentation Progress</div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 85%"></div>
-            </div>
-            <div class="progress-text">85% complete · 14 sections</div>
+      <div class="sidebar-progress">
+        <div class="progress-label">Documentation Progress</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 85%"></div>
         </div>
+        <div class="progress-text">85% complete · 14 sections</div>
+      </div>
     </aside>
 
     <!-- Sidebar overlay for mobile -->
@@ -1568,794 +1568,1013 @@
          MAIN CONTENT
     ══════════════════════════════════════════ -->
     <div class="page-wrapper">
-        <div class="page">
+      <div class="page">
+        <!-- ══ HEADER ══ -->
+        <div class="readme-header" id="header">
+          <h1>⚡ Toolverse — Free Utility Hub for Everyone</h1>
+          <p class="tagline">
+            One site. Every tool you need daily.<br />
+            PDF · Images · Finance · Dev · Social · Resume<br />
+            No sign-up · No upload limits · Files stay in your browser · Forever free
+          </p>
+          <div class="badges">
+            <span class="badge"><span class="dot" style="background: #000"></span>Next.js 14</span>
+            <span class="badge"
+              ><span class="dot" style="background: #3178c6"></span>TypeScript 5</span
+            >
+            <span class="badge"
+              ><span class="dot" style="background: #38bdf8"></span>Tailwind CSS</span
+            >
+            <span class="badge"><span class="dot" style="background: #000"></span>Vercel</span>
+            <span class="badge"
+              ><span class="dot" style="background: #22c55e"></span>MIT License</span
+            >
+          </div>
+        </div>
 
-            <!-- ══ HEADER ══ -->
-            <div class="readme-header" id="header">
-                <h1>⚡ Toolverse — Free Utility Hub for Everyone</h1>
-                <p class="tagline">
-                    One site. Every tool you need daily.<br>
-                    PDF · Images · Finance · Dev · Social · Resume<br>
-                    No sign-up · No upload limits · Files stay in your browser · Forever free
-                </p>
-                <div class="badges">
-                    <span class="badge"><span class="dot" style="background:#000"></span>Next.js 14</span>
-                    <span class="badge"><span class="dot" style="background:#3178c6"></span>TypeScript 5</span>
-                    <span class="badge"><span class="dot" style="background:#38bdf8"></span>Tailwind CSS</span>
-                    <span class="badge"><span class="dot" style="background:#000"></span>Vercel</span>
-                    <span class="badge"><span class="dot" style="background:#22c55e"></span>MIT License</span>
-                </div>
+        <!-- ══ WHAT IS TOOLVERSE ══ -->
+        <div class="section" id="overview">
+          <div class="section-label">Overview</div>
+          <h2>What is Toolverse?</h2>
+          <p>
+            A fast, privacy-first utility hub that handles every digital task a user touches daily —
+            compressing a PDF for email, resizing a photo for Instagram, generating a QR code,
+            building a resume, or formatting a JSON blob.
+          </p>
+          <p>
+            Everyone lands on bloated, slow, ad-heavy sites that force sign-ups and impose file
+            limits. Toolverse is faster, cleaner, and free.
+          </p>
+          <div class="principle-grid">
+            <div class="principle-card">
+              <div class="label">Zero friction</div>
+              <div class="desc">No sign-up, no email, no credit card — ever</div>
             </div>
-
-            <!-- ══ WHAT IS TOOLVERSE ══ -->
-            <div class="section" id="overview">
-                <div class="section-label">Overview</div>
-                <h2>What is Toolverse?</h2>
-                <p>A fast, privacy-first utility hub that handles every digital task a user touches daily — compressing
-                    a
-                    PDF for email, resizing a photo for Instagram, generating a QR code, building a resume, or
-                    formatting a
-                    JSON blob.</p>
-                <p>Everyone lands on bloated, slow, ad-heavy sites that force sign-ups and impose file limits. Toolverse
-                    is
-                    faster, cleaner, and free.</p>
-                <div class="principle-grid">
-                    <div class="principle-card">
-                        <div class="label">Zero friction</div>
-                        <div class="desc">No sign-up, no email, no credit card — ever</div>
-                    </div>
-                    <div class="principle-card">
-                        <div class="label">Privacy first</div>
-                        <div class="desc">Files processed in your browser, never uploaded</div>
-                    </div>
-                    <div class="principle-card">
-                        <div class="label">Mobile first</div>
-                        <div class="desc">Every tool works on a phone</div>
-                    </div>
-                    <div class="principle-card">
-                        <div class="label">Global + regional</div>
-                        <div class="desc">GST, VAT, and region-specific tools built in</div>
-                    </div>
-                    <div class="principle-card">
-                        <div class="label">Speed</div>
-                        <div class="desc">Results in under 3 seconds — no server round-trips</div>
-                    </div>
-                    <div class="principle-card">
-                        <div class="label">Ad-only revenue</div>
-                        <div class="desc">One AdSense slot per page, no subscriptions</div>
-                    </div>
-                </div>
+            <div class="principle-card">
+              <div class="label">Privacy first</div>
+              <div class="desc">Files processed in your browser, never uploaded</div>
             </div>
-
-            <!-- ══ NAME OPTIONS ══ -->
-            <div class="section" id="names">
-                <div class="section-label">Branding</div>
-                <h2>Name options</h2>
-                <div class="table-wrapper">
-                    <table class="name-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Vibe</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Toolverse</strong><span class="star-badge">Selected</span></td>
-                                <td class="vibe">Universe of tools — expansive, complete, modern. Great for growth.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Zipbox</strong></td>
-                                <td class="vibe">Fast + file-centric, memorable, strong for PDF tools</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Utilio</strong></td>
-                                <td class="vibe">Professional, utility-forward, easy to spell</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Packly</strong></td>
-                                <td class="vibe">"Pack everything in one place" — good brand story</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Kitely</strong></td>
-                                <td class="vibe">Light, fast, global feel</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="principle-card">
+              <div class="label">Mobile first</div>
+              <div class="desc">Every tool works on a phone</div>
             </div>
-
-            <!-- ══ DIAGRAM 1: FILE PROCESSING ══ -->
-            <div class="section" id="file-processing">
-                <div class="section-label">Diagram 1</div>
-                <h2>How files are processed</h2>
-                <p>90% of tools run entirely in the browser — no server, no cost, no privacy risk. Only Word/Excel
-                    conversions require a server.</p>
-                <div class="diagram-wrap">
-                    <div class="diagram-label">Browser-side vs server-side processing</div>
-                    <svg width="100%" viewBox="0 0 680 340" role="img">
-                        <title>File processing modes</title>
-                        <desc>Browser-side processes 90% of tools in memory with zero server cost. Server-side handles
-                            only
-                            PDF to Word/Excel conversions via LibreOffice on Railway.</desc>
-                        <defs>
-                            <marker id="arr1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
-                                orient="auto-start-reverse">
-                                <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </marker>
-                        </defs>
-                        <g class="c-teal">
-                            <rect x="30" y="20" width="290" height="300" rx="14" stroke-width="0.5" />
-                            <text class="th" x="175" y="48" text-anchor="middle">Browser-side</text>
-                            <text class="ts" x="175" y="65" text-anchor="middle">90% of tools · $0 server cost</text>
-                        </g>
-                        <g class="c-teal">
-                            <rect x="52" y="84" width="246" height="42" rx="8" stroke-width="0.5" />
-                            <text class="th" x="175" y="109" text-anchor="middle" dominant-baseline="central">User
-                                drops
-                                file</text>
-                        </g>
-                        <line x1="175" y1="126" x2="175" y2="146" class="arr" marker-end="url(#arr1)"
-                            stroke="var(--teal600)" />
-                        <g class="c-teal">
-                            <rect x="52" y="146" width="246" height="42" rx="8" stroke-width="0.5" />
-                            <text class="th" x="175" y="171" text-anchor="middle" dominant-baseline="central">JS
-                                processes
-                                in memory</text>
-                        </g>
-                        <line x1="175" y1="188" x2="175" y2="208" class="arr" marker-end="url(#arr1)"
-                            stroke="var(--teal600)" />
-                        <g class="c-teal">
-                            <rect x="52" y="208" width="246" height="42" rx="8" stroke-width="0.5" />
-                            <text class="th" x="175" y="233" text-anchor="middle" dominant-baseline="central">Download
-                                triggered</text>
-                        </g>
-                        <line x1="175" y1="250" x2="175" y2="270" class="arr" marker-end="url(#arr1)"
-                            stroke="var(--teal600)" />
-                        <g class="c-green">
-                            <rect x="52" y="270" width="246" height="34" rx="8" stroke-width="0.5" />
-                            <text class="th" x="175" y="291" text-anchor="middle" dominant-baseline="central">File
-                                never
-                                leaves device</text>
-                        </g>
-                        <g class="c-purple">
-                            <rect x="360" y="20" width="290" height="300" rx="14" stroke-width="0.5" />
-                            <text class="th" x="505" y="48" text-anchor="middle">Server-side</text>
-                            <text class="ts" x="505" y="65" text-anchor="middle">10% · PDF ↔ Word / Excel only</text>
-                        </g>
-                        <g class="c-purple">
-                            <rect x="382" y="84" width="246" height="42" rx="8" stroke-width="0.5" />
-                            <text class="th" x="505" y="109" text-anchor="middle" dominant-baseline="central">User
-                                drops
-                                file</text>
-                        </g>
-                        <line x1="505" y1="126" x2="505" y2="146" class="arr" marker-end="url(#arr1)"
-                            stroke="var(--purple600)" />
-                        <g class="c-purple">
-                            <rect x="382" y="146" width="246" height="42" rx="8" stroke-width="0.5" />
-                            <text class="th" x="505" y="171" text-anchor="middle" dominant-baseline="central">Sent to
-                                Railway (HTTPS)</text>
-                        </g>
-                        <line x1="505" y1="188" x2="505" y2="208" class="arr" marker-end="url(#arr1)"
-                            stroke="var(--purple600)" />
-                        <g class="c-purple">
-                            <rect x="382" y="208" width="246" height="42" rx="8" stroke-width="0.5" />
-                            <text class="th" x="505" y="233" text-anchor="middle" dominant-baseline="central">
-                                LibreOffice
-                                converts</text>
-                        </g>
-                        <line x1="505" y1="250" x2="505" y2="270" class="arr" marker-end="url(#arr1)"
-                            stroke="var(--purple600)" />
-                        <g class="c-amber">
-                            <rect x="382" y="270" width="246" height="34" rx="8" stroke-width="0.5" />
-                            <text class="th" x="505" y="291" text-anchor="middle" dominant-baseline="central">Deleted
-                                from
-                                server &lt;1hr</text>
-                        </g>
-                    </svg>
-                </div>
+            <div class="principle-card">
+              <div class="label">Global + regional</div>
+              <div class="desc">GST, VAT, and region-specific tools built in</div>
             </div>
-
-            <!-- ══ DIAGRAM 2: SYSTEM ARCHITECTURE ══ -->
-            <div class="section" id="architecture">
-                <div class="section-label">Diagram 2</div>
-                <h2>System architecture</h2>
-                <p>Users hit Cloudflare first, which handles DDoS and CDN. Vercel runs the Next.js app and fans out to
-                    four
-                    backing services. The note at the bottom is the most important part.</p>
-                <div class="diagram-wrap">
-                    <div class="diagram-label">Infrastructure overview</div>
-                    <svg width="100%" viewBox="0 0 680 450" role="img">
-                        <title>System architecture</title>
-                        <desc>Users connect through Cloudflare CDN to Vercel running Next.js 14, which connects to
-                            Supabase
-                            for the database, Clerk for auth, Railway for LibreOffice conversions, and Google AdSense
-                            for
-                            revenue.</desc>
-                        <defs>
-                            <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
-                                orient="auto-start-reverse">
-                                <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </marker>
-                        </defs>
-                        <g class="c-gray">
-                            <rect x="240" y="20" width="200" height="42" rx="8" stroke-width="0.5" />
-                            <text class="th" x="340" y="45" text-anchor="middle" dominant-baseline="central">Users
-                                (global)</text>
-                        </g>
-                        <line x1="340" y1="62" x2="340" y2="84" class="arr" marker-end="url(#arr2)" />
-                        <g class="c-gray">
-                            <rect x="180" y="84" width="320" height="50" rx="8" stroke-width="0.5" />
-                            <text class="th" x="340" y="104" text-anchor="middle"
-                                dominant-baseline="central">Cloudflare</text>
-                            <text class="ts" x="340" y="122" text-anchor="middle" dominant-baseline="central">CDN ·
-                                DDoS
-                                protection · SSL · DNS</text>
-                        </g>
-                        <line x1="340" y1="134" x2="340" y2="156" class="arr" marker-end="url(#arr2)" />
-                        <g class="c-purple">
-                            <rect x="90" y="156" width="500" height="88" rx="12" stroke-width="0.5" />
-                            <text class="th" x="340" y="181" text-anchor="middle">Vercel — Next.js 14</text>
-                        </g>
-                        <g class="c-purple">
-                            <rect x="110" y="193" width="144" height="36" rx="6" stroke-width="0.5" />
-                            <text class="ts" x="182" y="215" text-anchor="middle" dominant-baseline="central">App
-                                Router
-                                (SSR)</text>
-                        </g>
-                        <g class="c-purple">
-                            <rect x="268" y="193" width="124" height="36" rx="6" stroke-width="0.5" />
-                            <text class="ts" x="330" y="215" text-anchor="middle" dominant-baseline="central">API
-                                routes</text>
-                        </g>
-                        <g class="c-purple">
-                            <rect x="406" y="193" width="164" height="36" rx="6" stroke-width="0.5" />
-                            <text class="ts" x="488" y="215" text-anchor="middle" dominant-baseline="central">Static
-                                assets
-                                (CDN)</text>
-                        </g>
-                        <line x1="195" y1="244" x2="130" y2="280" class="arr" marker-end="url(#arr2)" />
-                        <line x1="290" y1="244" x2="278" y2="280" class="arr" marker-end="url(#arr2)" />
-                        <line x1="390" y1="244" x2="410" y2="280" class="arr" marker-end="url(#arr2)" />
-                        <line x1="488" y1="244" x2="555" y2="280" class="arr" marker-end="url(#arr2)" />
-                        <g class="c-teal">
-                            <rect x="44" y="280" width="150" height="54" rx="8" stroke-width="0.5" />
-                            <text class="th" x="119" y="302" text-anchor="middle"
-                                dominant-baseline="central">Supabase</text>
-                            <text class="ts" x="119" y="320" text-anchor="middle" dominant-baseline="central">Users ·
-                                analytics</text>
-                        </g>
-                        <g class="c-blue">
-                            <rect x="208" y="280" width="130" height="54" rx="8" stroke-width="0.5" />
-                            <text class="th" x="273" y="302" text-anchor="middle"
-                                dominant-baseline="central">Clerk</text>
-                            <text class="ts" x="273" y="320" text-anchor="middle" dominant-baseline="central">Auth ·
-                                sessions</text>
-                        </g>
-                        <g class="c-coral">
-                            <rect x="352" y="280" width="130" height="54" rx="8" stroke-width="0.5" />
-                            <text class="th" x="417" y="302" text-anchor="middle"
-                                dominant-baseline="central">Railway</text>
-                            <text class="ts" x="417" y="320" text-anchor="middle"
-                                dominant-baseline="central">LibreOffice</text>
-                        </g>
-                        <g class="c-amber">
-                            <rect x="496" y="280" width="140" height="54" rx="8" stroke-width="0.5" />
-                            <text class="th" x="566" y="302" text-anchor="middle" dominant-baseline="central">Google
-                                AdSense</text>
-                            <text class="ts" x="566" y="320" text-anchor="middle" dominant-baseline="central">Ad
-                                revenue</text>
-                        </g>
-                        <rect x="90" y="360" width="500" height="30" rx="6" fill="var(--gray50)" stroke="var(--gray600)"
-                            stroke-width="0.5" />
-                        <text class="ts" x="340" y="379" text-anchor="middle" dominant-baseline="central">90% of tools
-                            bypass all infrastructure — the browser IS the server</text>
-                        <rect x="90" y="398" width="500" height="30" rx="6" fill="var(--bg3)" stroke="var(--border2)"
-                            stroke-width="0.5" />
-                        <text class="ts" x="340" y="417" text-anchor="middle" dominant-baseline="central">pdf-lib ·
-                            Canvas
-                            API · Tesseract.js · pure JS — all client-side</text>
-                    </svg>
-                </div>
+            <div class="principle-card">
+              <div class="label">Speed</div>
+              <div class="desc">Results in under 3 seconds — no server round-trips</div>
             </div>
-
-            <!-- ══ DIAGRAM 3: HOMEPAGE LAYOUT ══ -->
-            <div class="section" id="homepage">
-                <div class="section-label">Diagram 3</div>
-                <h2>Homepage layout</h2>
-                <p>The homepage is designed for daily return visits. The daily widgets row (weather, quick access,
-                    todo)
-                    gives users a reason to open it every morning even when they don't have a file task.</p>
-
-                <div class="mockup-frame">
-                    <div class="mockup-nav">
-                        <span class="logo">⚡ Toolverse</span>
-                        <div class="nav-links"><span>Tools</span><span>Blog</span><span>API</span></div>
-                    </div>
-                    <div class="mockup-hero">
-                        <h2>Every tool you need. Free, forever.</h2>
-                        <p>PDF · Images · Finance · Dev · Resume — no sign-up, no limits</p>
-                        <div class="mockup-search">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                            Search tools… e.g. "compress PDF"
-                        </div>
-                    </div>
-                    <div class="mockup-widgets">
-                        <div class="widget-card">
-                            <div class="widget-title">Quick access</div>
-                            <div class="quick-item"><span class="quick-dot"></span>Compress PDF</div>
-                            <div class="quick-item"><span class="quick-dot"></span>Merge PDF</div>
-                            <div class="quick-item"><span class="quick-dot"></span>Image compress</div>
-                            <div class="quick-item"><span class="quick-dot"></span>QR generator</div>
-                            <div class="quick-item"><span class="quick-dot"></span>JSON formatter</div>
-                            <div class="quick-item"><span class="quick-dot"></span>Resume builder</div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-title">Weather <span
-                                    style="font-weight:400;color:var(--text3)">Hyderabad</span></div>
-                            <div class="weather-temp">32°C</div>
-                            <div class="weather-desc">Partly cloudy · Feels 36°</div>
-                            <div class="weather-days">
-                                <div class="weather-day">Mon<span>34°</span></div>
-                                <div class="weather-day">Tue<span>31°</span></div>
-                                <div class="weather-day">Wed<span>29°</span></div>
-                            </div>
-                        </div>
-                        <div class="widget-card">
-                            <div class="widget-title">Today's tasks</div>
-                            <div class="todo-item done">
-                                <div class="todo-check checked"></div>Send invoice
-                            </div>
-                            <div class="todo-item">
-                                <div class="todo-check"></div>Compress report PDF
-                            </div>
-                            <div class="todo-item">
-                                <div class="todo-check"></div>Update resume
-                            </div>
-                            <div style="margin-top:8px;display:flex;gap:4px">
-                                <input type="text" placeholder="Add task…"
-                                    style="flex:1;font-size:11px;padding:4px 6px;border-radius:4px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text)">
-                                <button
-                                    style="font-size:11px;padding:4px 8px;border-radius:4px;border:0.5px solid var(--border2);background:var(--bg2);color:var(--text);cursor:pointer">Add</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mockup-tool-grid">
-                        <div class="tool-card">
-                            <div class="tool-card-header">
-                                <div class="tool-card-icon" style="background:var(--blue50)"></div>
-                                <div class="tool-card-name">PDF tools</div>
-                            </div>
-                            <div class="tool-card-desc">18 tools · compress, merge, split…</div>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-card-header">
-                                <div class="tool-card-icon" style="background:var(--teal50)"></div>
-                                <div class="tool-card-name">Image tools</div>
-                            </div>
-                            <div class="tool-card-desc">7 tools · compress, resize, crop…</div>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-card-header">
-                                <div class="tool-card-icon" style="background:var(--amber50)"></div>
-                                <div class="tool-card-name">Finance tools</div>
-                            </div>
-                            <div class="tool-card-desc">8 tools · GST, EMI, SIP, tax…</div>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-card-header">
-                                <div class="tool-card-icon" style="background:var(--purple50)"></div>
-                                <div class="tool-card-name">Dev tools</div>
-                            </div>
-                            <div class="tool-card-desc">9 tools · JSON, base64, regex…</div>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-card-header">
-                                <div class="tool-card-icon" style="background:var(--coral50)"></div>
-                                <div class="tool-card-name">Social tools</div>
-                            </div>
-                            <div class="tool-card-desc">5 tools · QR, Instagram, YT…</div>
-                        </div>
-                        <div class="tool-card">
-                            <div class="tool-card-header">
-                                <div class="tool-card-icon" style="background:var(--green50)"></div>
-                                <div class="tool-card-name">Docs &amp; Resume</div>
-                            </div>
-                            <div class="tool-card-desc">4 tools · resume, invoice…</div>
-                        </div>
-                    </div>
-                    <div class="mockup-ad">
-                        <span>Ad slot — shown between result and related tools (free users only)</span>
-                        <span class="ad-pill">Google AdSense</span>
-                    </div>
-                </div>
-
-                <h3>Tool page structure</h3>
-                <p>Every single tool page uses the same layout — consistent, predictable, SEO-friendly.</p>
-                <div class="tool-page-layout">
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--gray50);color:var(--gray600)">1</div>
-                        <div class="tp-name">Nav</div>
-                        <div class="tp-desc">Logo + links, same on every page</div>
-                    </div>
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--blue50);color:var(--blue600)">2</div>
-                        <div class="tp-name">Tool title + description</div>
-                        <div class="tp-desc">H1 + one-line description · SEO optimised</div>
-                    </div>
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--teal50);color:var(--teal600)">3</div>
-                        <div class="tp-name">Upload zone</div>
-                        <div class="tp-desc">Drag & drop or click · shows file preview</div>
-                    </div>
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--teal50);color:var(--teal600)">4</div>
-                        <div class="tp-name">Options panel</div>
-                        <div class="tp-desc">Presets, settings (e.g. WhatsApp / email sizes)</div>
-                    </div>
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--teal50);color:var(--teal600)">5</div>
-                        <div class="tp-name">Processing bar</div>
-                        <div class="tp-desc">Progress indicator while JS runs</div>
-                    </div>
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--green50);color:var(--green600)">6</div>
-                        <div class="tp-name">Result + download</div>
-                        <div class="tp-desc">"8.2MB → 1.1MB (87% saved)" + download button</div>
-                    </div>
-                    <div class="tool-page-row tp-ad">
-                        <div class="tp-num">Ad</div>
-                        <div class="tp-name">AdSense slot</div>
-                        <div class="tp-desc">Between result and related tools — free users only</div>
-                    </div>
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--purple50);color:var(--purple600)">7</div>
-                        <div class="tp-name">Related tools</div>
-                        <div class="tp-desc">4 contextual cards — drives pages/session</div>
-                    </div>
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--gray50);color:var(--gray600)">8</div>
-                        <div class="tp-name">FAQ section</div>
-                        <div class="tp-desc">Accordion with HowTo JSON-LD schema for SEO</div>
-                    </div>
-                    <div class="tool-page-row">
-                        <div class="tp-num" style="background:var(--gray50);color:var(--gray600)">9</div>
-                        <div class="tp-name">Footer</div>
-                        <div class="tp-desc">Legal links, social, sitemap</div>
-                    </div>
-                </div>
+            <div class="principle-card">
+              <div class="label">Ad-only revenue</div>
+              <div class="desc">One AdSense slot per page, no subscriptions</div>
             </div>
+          </div>
+        </div>
 
-            <!-- ══ DIAGRAM 4: BUILD ROADMAP ══ -->
-            <div class="section" id="roadmap">
-                <div class="section-label">Diagram 4</div>
-                <h2>Build roadmap</h2>
-                <p>Five phases from MVP to 100k monthly visits. Ship the primary SEO driver first, then layer in tools,
-                    then
-                    auth, then scale.</p>
-                <div class="diagram-wrap">
-                    <div class="diagram-label">Phase timeline</div>
-                    <svg width="100%" viewBox="0 0 680 450" role="img">
-                        <title>Build roadmap</title>
-                        <desc>Five build phases: weeks 1-4 launch, month 2 global tools, month 3 auth and resume,
-                            months 4-6
-                            scale, and month 6 plus for compound growth.</desc>
-                        <defs>
-                            <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
-                                orient="auto-start-reverse">
-                                <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                            </marker>
-                        </defs>
-                        <line x1="56" y1="50" x2="56" y2="420" stroke="var(--border2)" stroke-width="1"
-                            stroke-dasharray="3 4" />
-                        <circle cx="56" cy="80" r="8" fill="var(--teal50)" stroke="var(--teal600)" stroke-width="1.5" />
-                        <g class="c-teal">
-                            <rect x="80" y="56" width="570" height="52" rx="8" stroke-width="0.5" />
-                            <text class="th" x="100" y="77" dominant-baseline="central">Phase 1 — Weeks 1–4 · Launch
-                                MVP</text>
-                            <text class="ts" x="100" y="97" dominant-baseline="central">compress-pdf ★ · merge-pdf ·
-                                split-pdf · image/compress · image-to-pdf · Deploy to Vercel · GA4</text>
-                        </g>
-                        <circle cx="56" cy="160" r="8" fill="var(--purple50)" stroke="var(--purple600)"
-                            stroke-width="1.5" />
-                        <g class="c-purple">
-                            <rect x="80" y="136" width="570" height="52" rx="8" stroke-width="0.5" />
-                            <text class="th" x="100" y="157" dominant-baseline="central">Phase 2 — Month 2 · Global +
-                                India
-                                tools</text>
-                            <text class="ts" x="100" y="177" dominant-baseline="central">passport-photo ·
-                                gst-calculator ·
-                                qr-generator ★ · json-formatter ★ · pdf-to-word · AdSense apply</text>
-                        </g>
-                        <circle cx="56" cy="240" r="8" fill="var(--amber50)" stroke="var(--amber600)"
-                            stroke-width="1.5" />
-                        <g class="c-amber">
-                            <rect x="80" y="216" width="570" height="52" rx="8" stroke-width="0.5" />
-                            <text class="th" x="100" y="237" dominant-baseline="central">Phase 3 — Month 3 · Auth +
-                                resume</text>
-                            <text class="ts" x="100" y="257" dominant-baseline="central">Clerk auth · resume-builder ★
-                                ·
-                                emi-calculator · income-tax · Supabase RLS · pdf-to-word (Railway)</text>
-                        </g>
-                        <circle cx="56" cy="320" r="8" fill="var(--coral50)" stroke="var(--coral600)"
-                            stroke-width="1.5" />
-                        <g class="c-coral">
-                            <rect x="80" y="296" width="570" height="52" rx="8" stroke-width="0.5" />
-                            <text class="th" x="100" y="317" dominant-baseline="central">Phase 4 — Month 4–6 ·
-                                Scale</text>
-                            <text class="ts" x="100" y="337" dominant-baseline="central">All remaining tools ·
-                                Developer API
-                                · SEO blog weekly · i18n (Hindi, Spanish) · PageSpeed 90+</text>
-                        </g>
-                        <circle cx="56" cy="400" r="8" fill="var(--green50)" stroke="var(--green600)"
-                            stroke-width="1.5" />
-                        <g class="c-green">
-                            <rect x="80" y="382" width="570" height="36" rx="8" stroke-width="0.5" />
-                            <text class="th" x="100" y="404" dominant-baseline="central">Month 6+ · PWA · Regional
-                                finance
-                                modules · WhatsApp bot · Target 100k visits/mo</text>
-                        </g>
-                    </svg>
-                </div>
+        <!-- ══ NAME OPTIONS ══ -->
+        <div class="section" id="names">
+          <div class="section-label">Branding</div>
+          <h2>Name options</h2>
+          <div class="table-wrapper">
+            <table class="name-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Vibe</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Toolverse</strong><span class="star-badge">Selected</span></td>
+                  <td class="vibe">
+                    Universe of tools — expansive, complete, modern. Great for growth.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Zipbox</strong></td>
+                  <td class="vibe">Fast + file-centric, memorable, strong for PDF tools</td>
+                </tr>
+                <tr>
+                  <td><strong>Utilio</strong></td>
+                  <td class="vibe">Professional, utility-forward, easy to spell</td>
+                </tr>
+                <tr>
+                  <td><strong>Packly</strong></td>
+                  <td class="vibe">"Pack everything in one place" — good brand story</td>
+                </tr>
+                <tr>
+                  <td><strong>Kitely</strong></td>
+                  <td class="vibe">Light, fast, global feel</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ══ DIAGRAM 1: FILE PROCESSING ══ -->
+        <div class="section" id="file-processing">
+          <div class="section-label">Diagram 1</div>
+          <h2>How files are processed</h2>
+          <p>
+            90% of tools run entirely in the browser — no server, no cost, no privacy risk. Only
+            Word/Excel conversions require a server.
+          </p>
+          <div class="diagram-wrap">
+            <div class="diagram-label">Browser-side vs server-side processing</div>
+            <svg width="100%" viewBox="0 0 680 340" role="img">
+              <title>File processing modes</title>
+              <desc>
+                Browser-side processes 90% of tools in memory with zero server cost. Server-side
+                handles only PDF to Word/Excel conversions via LibreOffice on Railway.
+              </desc>
+              <defs>
+                <marker
+                  id="arr1"
+                  viewBox="0 0 10 10"
+                  refX="8"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto-start-reverse"
+                >
+                  <path
+                    d="M2 1L8 5L2 9"
+                    fill="none"
+                    stroke="context-stroke"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </marker>
+              </defs>
+              <g class="c-teal">
+                <rect x="30" y="20" width="290" height="300" rx="14" stroke-width="0.5" />
+                <text class="th" x="175" y="48" text-anchor="middle">Browser-side</text>
+                <text class="ts" x="175" y="65" text-anchor="middle">
+                  90% of tools · $0 server cost
+                </text>
+              </g>
+              <g class="c-teal">
+                <rect x="52" y="84" width="246" height="42" rx="8" stroke-width="0.5" />
+                <text class="th" x="175" y="109" text-anchor="middle" dominant-baseline="central">
+                  User drops file
+                </text>
+              </g>
+              <line
+                x1="175"
+                y1="126"
+                x2="175"
+                y2="146"
+                class="arr"
+                marker-end="url(#arr1)"
+                stroke="var(--teal600)"
+              />
+              <g class="c-teal">
+                <rect x="52" y="146" width="246" height="42" rx="8" stroke-width="0.5" />
+                <text class="th" x="175" y="171" text-anchor="middle" dominant-baseline="central">
+                  JS processes in memory
+                </text>
+              </g>
+              <line
+                x1="175"
+                y1="188"
+                x2="175"
+                y2="208"
+                class="arr"
+                marker-end="url(#arr1)"
+                stroke="var(--teal600)"
+              />
+              <g class="c-teal">
+                <rect x="52" y="208" width="246" height="42" rx="8" stroke-width="0.5" />
+                <text class="th" x="175" y="233" text-anchor="middle" dominant-baseline="central">
+                  Download triggered
+                </text>
+              </g>
+              <line
+                x1="175"
+                y1="250"
+                x2="175"
+                y2="270"
+                class="arr"
+                marker-end="url(#arr1)"
+                stroke="var(--teal600)"
+              />
+              <g class="c-green">
+                <rect x="52" y="270" width="246" height="34" rx="8" stroke-width="0.5" />
+                <text class="th" x="175" y="291" text-anchor="middle" dominant-baseline="central">
+                  File never leaves device
+                </text>
+              </g>
+              <g class="c-purple">
+                <rect x="360" y="20" width="290" height="300" rx="14" stroke-width="0.5" />
+                <text class="th" x="505" y="48" text-anchor="middle">Server-side</text>
+                <text class="ts" x="505" y="65" text-anchor="middle">
+                  10% · PDF ↔ Word / Excel only
+                </text>
+              </g>
+              <g class="c-purple">
+                <rect x="382" y="84" width="246" height="42" rx="8" stroke-width="0.5" />
+                <text class="th" x="505" y="109" text-anchor="middle" dominant-baseline="central">
+                  User drops file
+                </text>
+              </g>
+              <line
+                x1="505"
+                y1="126"
+                x2="505"
+                y2="146"
+                class="arr"
+                marker-end="url(#arr1)"
+                stroke="var(--purple600)"
+              />
+              <g class="c-purple">
+                <rect x="382" y="146" width="246" height="42" rx="8" stroke-width="0.5" />
+                <text class="th" x="505" y="171" text-anchor="middle" dominant-baseline="central">
+                  Sent to Railway (HTTPS)
+                </text>
+              </g>
+              <line
+                x1="505"
+                y1="188"
+                x2="505"
+                y2="208"
+                class="arr"
+                marker-end="url(#arr1)"
+                stroke="var(--purple600)"
+              />
+              <g class="c-purple">
+                <rect x="382" y="208" width="246" height="42" rx="8" stroke-width="0.5" />
+                <text class="th" x="505" y="233" text-anchor="middle" dominant-baseline="central">
+                  LibreOffice converts
+                </text>
+              </g>
+              <line
+                x1="505"
+                y1="250"
+                x2="505"
+                y2="270"
+                class="arr"
+                marker-end="url(#arr1)"
+                stroke="var(--purple600)"
+              />
+              <g class="c-amber">
+                <rect x="382" y="270" width="246" height="34" rx="8" stroke-width="0.5" />
+                <text class="th" x="505" y="291" text-anchor="middle" dominant-baseline="central">
+                  Deleted from server &lt;1hr
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ══ DIAGRAM 2: SYSTEM ARCHITECTURE ══ -->
+        <div class="section" id="architecture">
+          <div class="section-label">Diagram 2</div>
+          <h2>System architecture</h2>
+          <p>
+            Users hit Cloudflare first, which handles DDoS and CDN. Vercel runs the Next.js app and
+            fans out to four backing services. The note at the bottom is the most important part.
+          </p>
+          <div class="diagram-wrap">
+            <div class="diagram-label">Infrastructure overview</div>
+            <svg width="100%" viewBox="0 0 680 450" role="img">
+              <title>System architecture</title>
+              <desc>
+                Users connect through Cloudflare CDN to Vercel running Next.js 14, which connects to
+                Supabase for the database, Clerk for auth, Railway for LibreOffice conversions, and
+                Google AdSense for revenue.
+              </desc>
+              <defs>
+                <marker
+                  id="arr2"
+                  viewBox="0 0 10 10"
+                  refX="8"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto-start-reverse"
+                >
+                  <path
+                    d="M2 1L8 5L2 9"
+                    fill="none"
+                    stroke="context-stroke"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </marker>
+              </defs>
+              <g class="c-gray">
+                <rect x="240" y="20" width="200" height="42" rx="8" stroke-width="0.5" />
+                <text class="th" x="340" y="45" text-anchor="middle" dominant-baseline="central">
+                  Users (global)
+                </text>
+              </g>
+              <line x1="340" y1="62" x2="340" y2="84" class="arr" marker-end="url(#arr2)" />
+              <g class="c-gray">
+                <rect x="180" y="84" width="320" height="50" rx="8" stroke-width="0.5" />
+                <text class="th" x="340" y="104" text-anchor="middle" dominant-baseline="central">
+                  Cloudflare
+                </text>
+                <text class="ts" x="340" y="122" text-anchor="middle" dominant-baseline="central">
+                  CDN · DDoS protection · SSL · DNS
+                </text>
+              </g>
+              <line x1="340" y1="134" x2="340" y2="156" class="arr" marker-end="url(#arr2)" />
+              <g class="c-purple">
+                <rect x="90" y="156" width="500" height="88" rx="12" stroke-width="0.5" />
+                <text class="th" x="340" y="181" text-anchor="middle">Vercel — Next.js 14</text>
+              </g>
+              <g class="c-purple">
+                <rect x="110" y="193" width="144" height="36" rx="6" stroke-width="0.5" />
+                <text class="ts" x="182" y="215" text-anchor="middle" dominant-baseline="central">
+                  App Router (SSR)
+                </text>
+              </g>
+              <g class="c-purple">
+                <rect x="268" y="193" width="124" height="36" rx="6" stroke-width="0.5" />
+                <text class="ts" x="330" y="215" text-anchor="middle" dominant-baseline="central">
+                  API routes
+                </text>
+              </g>
+              <g class="c-purple">
+                <rect x="406" y="193" width="164" height="36" rx="6" stroke-width="0.5" />
+                <text class="ts" x="488" y="215" text-anchor="middle" dominant-baseline="central">
+                  Static assets (CDN)
+                </text>
+              </g>
+              <line x1="195" y1="244" x2="130" y2="280" class="arr" marker-end="url(#arr2)" />
+              <line x1="290" y1="244" x2="278" y2="280" class="arr" marker-end="url(#arr2)" />
+              <line x1="390" y1="244" x2="410" y2="280" class="arr" marker-end="url(#arr2)" />
+              <line x1="488" y1="244" x2="555" y2="280" class="arr" marker-end="url(#arr2)" />
+              <g class="c-teal">
+                <rect x="44" y="280" width="150" height="54" rx="8" stroke-width="0.5" />
+                <text class="th" x="119" y="302" text-anchor="middle" dominant-baseline="central">
+                  Supabase
+                </text>
+                <text class="ts" x="119" y="320" text-anchor="middle" dominant-baseline="central">
+                  Users · analytics
+                </text>
+              </g>
+              <g class="c-blue">
+                <rect x="208" y="280" width="130" height="54" rx="8" stroke-width="0.5" />
+                <text class="th" x="273" y="302" text-anchor="middle" dominant-baseline="central">
+                  Clerk
+                </text>
+                <text class="ts" x="273" y="320" text-anchor="middle" dominant-baseline="central">
+                  Auth · sessions
+                </text>
+              </g>
+              <g class="c-coral">
+                <rect x="352" y="280" width="130" height="54" rx="8" stroke-width="0.5" />
+                <text class="th" x="417" y="302" text-anchor="middle" dominant-baseline="central">
+                  Railway
+                </text>
+                <text class="ts" x="417" y="320" text-anchor="middle" dominant-baseline="central">
+                  LibreOffice
+                </text>
+              </g>
+              <g class="c-amber">
+                <rect x="496" y="280" width="140" height="54" rx="8" stroke-width="0.5" />
+                <text class="th" x="566" y="302" text-anchor="middle" dominant-baseline="central">
+                  Google AdSense
+                </text>
+                <text class="ts" x="566" y="320" text-anchor="middle" dominant-baseline="central">
+                  Ad revenue
+                </text>
+              </g>
+              <rect
+                x="90"
+                y="360"
+                width="500"
+                height="30"
+                rx="6"
+                fill="var(--gray50)"
+                stroke="var(--gray600)"
+                stroke-width="0.5"
+              />
+              <text class="ts" x="340" y="379" text-anchor="middle" dominant-baseline="central">
+                90% of tools bypass all infrastructure — the browser IS the server
+              </text>
+              <rect
+                x="90"
+                y="398"
+                width="500"
+                height="30"
+                rx="6"
+                fill="var(--bg3)"
+                stroke="var(--border2)"
+                stroke-width="0.5"
+              />
+              <text class="ts" x="340" y="417" text-anchor="middle" dominant-baseline="central">
+                pdf-lib · Canvas API · Tesseract.js · pure JS — all client-side
+              </text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ══ DIAGRAM 3: HOMEPAGE LAYOUT ══ -->
+        <div class="section" id="homepage">
+          <div class="section-label">Diagram 3</div>
+          <h2>Homepage layout</h2>
+          <p>
+            The homepage is designed for daily return visits. The daily widgets row (weather, quick
+            access, todo) gives users a reason to open it every morning even when they don't have a
+            file task.
+          </p>
+
+          <div class="mockup-frame">
+            <div class="mockup-nav">
+              <span class="logo">⚡ Toolverse</span>
+              <div class="nav-links"><span>Tools</span><span>Blog</span><span>API</span></div>
             </div>
-
-            <!-- ══ TOOL CATEGORIES ══ -->
-            <div class="section" id="tools">
-                <div class="section-label">Tools</div>
-                <h2>Tool categories</h2>
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Count</th>
-                                <th>Processing</th>
-                                <th>Server cost</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>PDF tools</td>
-                                <td>18</td>
-                                <td>Browser (pdf-lib) + Server (Word/Excel)</td>
-                                <td>~$5/mo</td>
-                            </tr>
-                            <tr>
-                                <td>Image tools</td>
-                                <td>7</td>
-                                <td>Browser (Canvas API)</td>
-                                <td>$0</td>
-                            </tr>
-                            <tr>
-                                <td>Finance tools</td>
-                                <td>8</td>
-                                <td>Browser (pure JS math)</td>
-                                <td>$0</td>
-                            </tr>
-                            <tr>
-                                <td>Dev tools</td>
-                                <td>9</td>
-                                <td>Browser (pure JS)</td>
-                                <td>$0</td>
-                            </tr>
-                            <tr>
-                                <td>Social tools</td>
-                                <td>5</td>
-                                <td>Browser (Canvas/JS)</td>
-                                <td>$0</td>
-                            </tr>
-                            <tr>
-                                <td>Docs &amp; Resume</td>
-                                <td>4</td>
-                                <td>Browser (pdf-lib output)</td>
-                                <td>$0</td>
-                            </tr>
-                            <tr class="highlight">
-                                <td>Total</td>
-                                <td><strong>51</strong></td>
-                                <td></td>
-                                <td><strong>~$5/mo</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <h3>Full tool list</h3>
-                <div class="tool-cols">
-                    <div class="tool-group">
-                        <div class="group-name"><span class="group-dot" style="background:var(--blue600)"></span>PDF
-                            tools
-                            (18)</div>
-                        <div class="tool-item"><span class="star">★</span>/compress-pdf</div>
-                        <div class="tool-item">/merge-pdf</div>
-                        <div class="tool-item">/split-pdf · /rotate-pdf</div>
-                        <div class="tool-item">/watermark-pdf · /protect-pdf</div>
-                        <div class="tool-item">/unlock-pdf · /image-to-pdf</div>
-                        <div class="tool-item">/pdf-to-jpg · /sign-pdf</div>
-                        <div class="tool-item">/pdf-to-word<span class="tag">server</span></div>
-                        <div class="tool-item">/word-to-pdf<span class="tag">server</span></div>
-                        <div class="tool-item">/pdf-to-excel<span class="tag">server</span></div>
-                        <div class="tool-item">/fill-pdf · /repair-pdf</div>
-                    </div>
-                    <div class="tool-group">
-                        <div class="group-name"><span class="group-dot" style="background:var(--teal600)"></span>Image
-                            tools
-                            (7)</div>
-                        <div class="tool-item"><span class="star">★</span>/image/compress</div>
-                        <div class="tool-item">/image/resize · /crop</div>
-                        <div class="tool-item">/image/convert · /collage</div>
-                        <div class="tool-item">/image/passport-photo</div>
-                        <div class="tool-item">/image/to-base64</div>
-                        <div class="group-name" style="margin-top:12px"><span class="group-dot"
-                                style="background:var(--purple600)"></span>Dev tools (9)</div>
-                        <div class="tool-item"><span class="star">★</span>/dev/json-formatter</div>
-                        <div class="tool-item">/dev/base64 · /url-encoder</div>
-                        <div class="tool-item">/dev/regex-tester · /jwt-decoder</div>
-                        <div class="tool-item">/dev/diff-checker · /color-picker</div>
-                    </div>
-                    <div class="tool-group">
-                        <div class="group-name"><span class="group-dot"
-                                style="background:var(--amber600)"></span>Finance
-                            tools (8)</div>
-                        <div class="tool-item">/finance/gst-calculator</div>
-                        <div class="tool-item">/finance/gst-invoice</div>
-                        <div class="tool-item">/finance/vat-calculator</div>
-                        <div class="tool-item">/finance/emi-calculator</div>
-                        <div class="tool-item">/finance/sip-calculator</div>
-                        <div class="tool-item">/finance/income-tax</div>
-                        <div class="tool-item">/finance/hra-calculator</div>
-                        <div class="tool-item">/finance/salary-slip</div>
-                    </div>
-                    <div class="tool-group">
-                        <div class="group-name"><span class="group-dot" style="background:var(--coral600)"></span>Social
-                            tools (5)</div>
-                        <div class="tool-item"><span class="star">★</span>/social/qr-generator</div>
-                        <div class="tool-item">/social/instagram-resizer</div>
-                        <div class="tool-item">/social/yt-thumbnail</div>
-                        <div class="tool-item">/social/whatsapp-link</div>
-                        <div class="tool-item">/social/bio-link</div>
-                        <div class="group-name" style="margin-top:12px"><span class="group-dot"
-                                style="background:var(--green600)"></span>Docs &amp; Resume (4)</div>
-                        <div class="tool-item"><span class="star">★</span>/docs/resume-builder</div>
-                        <div class="tool-item">/docs/invoice-generator</div>
-                        <div class="tool-item">/docs/cover-letter</div>
-                        <div class="tool-item">/docs/business-card</div>
-                    </div>
-                </div>
+            <div class="mockup-hero">
+              <h2>Every tool you need. Free, forever.</h2>
+              <p>PDF · Images · Finance · Dev · Resume — no sign-up, no limits</p>
+              <div class="mockup-search">
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                Search tools… e.g. "compress PDF"
+              </div>
             </div>
-
-            <!-- ══ TOOL LINKING ══ -->
-            <div class="section" id="linking">
-                <div class="section-label">UX</div>
-                <h2>Tool linking</h2>
-                <p>Every tool page ends with 4 contextually relevant suggestions. This drives pages per session and
-                    turns
-                    one-time visitors into repeat users.</p>
-                <div class="link-grid">
-                    <div class="link-row">
-                        <div class="link-source">compress-pdf</div>
-                        <div class="link-arrow">→</div>
-                        <div class="link-targets">merge-pdf · image/compress · image-to-pdf · split-pdf</div>
-                    </div>
-                    <div class="link-row">
-                        <div class="link-source">resume-builder</div>
-                        <div class="link-arrow">→</div>
-                        <div class="link-targets">compress-pdf · cover-letter · image/passport-photo</div>
-                    </div>
-                    <div class="link-row">
-                        <div class="link-source">gst-invoice</div>
-                        <div class="link-arrow">→</div>
-                        <div class="link-targets">compress-pdf · qr-generator · gst-calculator</div>
-                    </div>
-                    <div class="link-row">
-                        <div class="link-source">image/compress</div>
-                        <div class="link-arrow">→</div>
-                        <div class="link-targets">compress-pdf · image/resize · image/passport-photo</div>
-                    </div>
-                    <div class="link-row">
-                        <div class="link-source">qr-generator</div>
-                        <div class="link-arrow">→</div>
-                        <div class="link-targets">gst-invoice · image/compress</div>
-                    </div>
+            <div class="mockup-widgets">
+              <div class="widget-card">
+                <div class="widget-title">Quick access</div>
+                <div class="quick-item"><span class="quick-dot"></span>Compress PDF</div>
+                <div class="quick-item"><span class="quick-dot"></span>Merge PDF</div>
+                <div class="quick-item"><span class="quick-dot"></span>Image compress</div>
+                <div class="quick-item"><span class="quick-dot"></span>QR generator</div>
+                <div class="quick-item"><span class="quick-dot"></span>JSON formatter</div>
+                <div class="quick-item"><span class="quick-dot"></span>Resume builder</div>
+              </div>
+              <div class="widget-card">
+                <div class="widget-title">
+                  Weather <span style="font-weight: 400; color: var(--text3)">Hyderabad</span>
                 </div>
-            </div>
-
-            <!-- ══ TECH STACK ══ -->
-            <div class="section" id="tech">
-                <div class="section-label">Tech</div>
-                <h2>Tech stack</h2>
-                <div class="table-wrapper">
-                    <table class="stack-table">
-                        <thead>
-                            <tr>
-                                <th>Layer</th>
-                                <th>Technology</th>
-                                <th>Why</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Framework</td>
-                                <td>Next.js 14 (App Router)</td>
-                                <td>SSR for SEO + API routes in one project</td>
-                            </tr>
-                            <tr>
-                                <td>Language</td>
-                                <td>TypeScript 5</td>
-                                <td>Type safety at scale</td>
-                            </tr>
-                            <tr>
-                                <td>Styling</td>
-                                <td>Tailwind + shadcn/ui</td>
-                                <td>Fast, accessible, zero vendor lock-in</td>
-                            </tr>
-                            <tr>
-                                <td>PDF core</td>
-                                <td>pdf-lib</td>
-                                <td>Pure JS, runs in browser, no server cost</td>
-                            </tr>
-                            <tr>
-                                <td>PDF preview</td>
-                                <td>PDF.js (Mozilla)</td>
-                                <td>Industry-standard renderer</td>
-                            </tr>
-                            <tr>
-                                <td>Images</td>
-                                <td>Canvas API</td>
-                                <td>Native browser, zero deps</td>
-                            </tr>
-                            <tr>
-                                <td>OCR</td>
-                                <td>Tesseract.js</td>
-                                <td>Client-side, no API cost</td>
-                            </tr>
-                            <tr>
-                                <td>Word/Excel</td>
-                                <td>LibreOffice on Railway</td>
-                                <td>Best quality, Docker container</td>
-                            </tr>
-                            <tr>
-                                <td>Auth</td>
-                                <td>Clerk</td>
-                                <td>10k MAU free, global phone/email OTP</td>
-                            </tr>
-                            <tr>
-                                <td>Database</td>
-                                <td>Supabase</td>
-                                <td>Free Postgres, Row Level Security</td>
-                            </tr>
-                            <tr>
-                                <td>Rate limiting</td>
-                                <td>Upstash Redis</td>
-                                <td>Edge-compatible free tier</td>
-                            </tr>
-                            <tr>
-                                <td>Hosting</td>
-                                <td>Vercel</td>
-                                <td>Zero-config Next.js, global CDN</td>
-                            </tr>
-                            <tr>
-                                <td>CDN / DDoS</td>
-                                <td>Cloudflare</td>
-                                <td>Free, faster globally</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="weather-temp">32°C</div>
+                <div class="weather-desc">Partly cloudy · Feels 36°</div>
+                <div class="weather-days">
+                  <div class="weather-day">Mon<span>34°</span></div>
+                  <div class="weather-day">Tue<span>31°</span></div>
+                  <div class="weather-day">Wed<span>29°</span></div>
                 </div>
+              </div>
+              <div class="widget-card">
+                <div class="widget-title">Today's tasks</div>
+                <div class="todo-item done">
+                  <div class="todo-check checked"></div>
+                  Send invoice
+                </div>
+                <div class="todo-item">
+                  <div class="todo-check"></div>
+                  Compress report PDF
+                </div>
+                <div class="todo-item">
+                  <div class="todo-check"></div>
+                  Update resume
+                </div>
+                <div style="margin-top: 8px; display: flex; gap: 4px">
+                  <input
+                    type="text"
+                    placeholder="Add task…"
+                    style="
+                      flex: 1;
+                      font-size: 11px;
+                      padding: 4px 6px;
+                      border-radius: 4px;
+                      border: 0.5px solid var(--border2);
+                      background: var(--bg2);
+                      color: var(--text);
+                    "
+                  />
+                  <button
+                    style="
+                      font-size: 11px;
+                      padding: 4px 8px;
+                      border-radius: 4px;
+                      border: 0.5px solid var(--border2);
+                      background: var(--bg2);
+                      color: var(--text);
+                      cursor: pointer;
+                    "
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
             </div>
+            <div class="mockup-tool-grid">
+              <div class="tool-card">
+                <div class="tool-card-header">
+                  <div class="tool-card-icon" style="background: var(--blue50)"></div>
+                  <div class="tool-card-name">PDF tools</div>
+                </div>
+                <div class="tool-card-desc">18 tools · compress, merge, split…</div>
+              </div>
+              <div class="tool-card">
+                <div class="tool-card-header">
+                  <div class="tool-card-icon" style="background: var(--teal50)"></div>
+                  <div class="tool-card-name">Image tools</div>
+                </div>
+                <div class="tool-card-desc">7 tools · compress, resize, crop…</div>
+              </div>
+              <div class="tool-card">
+                <div class="tool-card-header">
+                  <div class="tool-card-icon" style="background: var(--amber50)"></div>
+                  <div class="tool-card-name">Finance tools</div>
+                </div>
+                <div class="tool-card-desc">8 tools · GST, EMI, SIP, tax…</div>
+              </div>
+              <div class="tool-card">
+                <div class="tool-card-header">
+                  <div class="tool-card-icon" style="background: var(--purple50)"></div>
+                  <div class="tool-card-name">Dev tools</div>
+                </div>
+                <div class="tool-card-desc">9 tools · JSON, base64, regex…</div>
+              </div>
+              <div class="tool-card">
+                <div class="tool-card-header">
+                  <div class="tool-card-icon" style="background: var(--coral50)"></div>
+                  <div class="tool-card-name">Social tools</div>
+                </div>
+                <div class="tool-card-desc">5 tools · QR, Instagram, YT…</div>
+              </div>
+              <div class="tool-card">
+                <div class="tool-card-header">
+                  <div class="tool-card-icon" style="background: var(--green50)"></div>
+                  <div class="tool-card-name">Docs &amp; Resume</div>
+                </div>
+                <div class="tool-card-desc">4 tools · resume, invoice…</div>
+              </div>
+            </div>
+            <div class="mockup-ad">
+              <span>Ad slot — shown between result and related tools (free users only)</span>
+              <span class="ad-pill">Google AdSense</span>
+            </div>
+          </div>
 
-            <!-- ══ DATABASE SCHEMA ══ -->
-            <div class="section" id="database">
-                <div class="section-label">Database</div>
-                <h2>Database schema</h2>
-                <pre>-- Users
+          <h3>Tool page structure</h3>
+          <p>
+            Every single tool page uses the same layout — consistent, predictable, SEO-friendly.
+          </p>
+          <div class="tool-page-layout">
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--gray50); color: var(--gray600)">1</div>
+              <div class="tp-name">Nav</div>
+              <div class="tp-desc">Logo + links, same on every page</div>
+            </div>
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--blue50); color: var(--blue600)">2</div>
+              <div class="tp-name">Tool title + description</div>
+              <div class="tp-desc">H1 + one-line description · SEO optimised</div>
+            </div>
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--teal50); color: var(--teal600)">3</div>
+              <div class="tp-name">Upload zone</div>
+              <div class="tp-desc">Drag & drop or click · shows file preview</div>
+            </div>
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--teal50); color: var(--teal600)">4</div>
+              <div class="tp-name">Options panel</div>
+              <div class="tp-desc">Presets, settings (e.g. WhatsApp / email sizes)</div>
+            </div>
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--teal50); color: var(--teal600)">5</div>
+              <div class="tp-name">Processing bar</div>
+              <div class="tp-desc">Progress indicator while JS runs</div>
+            </div>
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--green50); color: var(--green600)">6</div>
+              <div class="tp-name">Result + download</div>
+              <div class="tp-desc">"8.2MB → 1.1MB (87% saved)" + download button</div>
+            </div>
+            <div class="tool-page-row tp-ad">
+              <div class="tp-num">Ad</div>
+              <div class="tp-name">AdSense slot</div>
+              <div class="tp-desc">Between result and related tools — free users only</div>
+            </div>
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--purple50); color: var(--purple600)">
+                7
+              </div>
+              <div class="tp-name">Related tools</div>
+              <div class="tp-desc">4 contextual cards — drives pages/session</div>
+            </div>
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--gray50); color: var(--gray600)">8</div>
+              <div class="tp-name">FAQ section</div>
+              <div class="tp-desc">Accordion with HowTo JSON-LD schema for SEO</div>
+            </div>
+            <div class="tool-page-row">
+              <div class="tp-num" style="background: var(--gray50); color: var(--gray600)">9</div>
+              <div class="tp-name">Footer</div>
+              <div class="tp-desc">Legal links, social, sitemap</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ DIAGRAM 4: BUILD ROADMAP ══ -->
+        <div class="section" id="roadmap">
+          <div class="section-label">Diagram 4</div>
+          <h2>Build roadmap</h2>
+          <p>
+            Five phases from MVP to 100k monthly visits. Ship the primary SEO driver first, then
+            layer in tools, then auth, then scale.
+          </p>
+          <div class="diagram-wrap">
+            <div class="diagram-label">Phase timeline</div>
+            <svg width="100%" viewBox="0 0 680 450" role="img">
+              <title>Build roadmap</title>
+              <desc>
+                Five build phases: weeks 1-4 launch, month 2 global tools, month 3 auth and resume,
+                months 4-6 scale, and month 6 plus for compound growth.
+              </desc>
+              <defs>
+                <marker
+                  id="arr3"
+                  viewBox="0 0 10 10"
+                  refX="8"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto-start-reverse"
+                >
+                  <path
+                    d="M2 1L8 5L2 9"
+                    fill="none"
+                    stroke="context-stroke"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </marker>
+              </defs>
+              <line
+                x1="56"
+                y1="50"
+                x2="56"
+                y2="420"
+                stroke="var(--border2)"
+                stroke-width="1"
+                stroke-dasharray="3 4"
+              />
+              <circle
+                cx="56"
+                cy="80"
+                r="8"
+                fill="var(--teal50)"
+                stroke="var(--teal600)"
+                stroke-width="1.5"
+              />
+              <g class="c-teal">
+                <rect x="80" y="56" width="570" height="52" rx="8" stroke-width="0.5" />
+                <text class="th" x="100" y="77" dominant-baseline="central">
+                  Phase 1 — Weeks 1–4 · Launch MVP
+                </text>
+                <text class="ts" x="100" y="97" dominant-baseline="central">
+                  compress-pdf ★ · merge-pdf · split-pdf · image/compress · image-to-pdf · Deploy to
+                  Vercel · GA4
+                </text>
+              </g>
+              <circle
+                cx="56"
+                cy="160"
+                r="8"
+                fill="var(--purple50)"
+                stroke="var(--purple600)"
+                stroke-width="1.5"
+              />
+              <g class="c-purple">
+                <rect x="80" y="136" width="570" height="52" rx="8" stroke-width="0.5" />
+                <text class="th" x="100" y="157" dominant-baseline="central">
+                  Phase 2 — Month 2 · Global + India tools
+                </text>
+                <text class="ts" x="100" y="177" dominant-baseline="central">
+                  passport-photo · gst-calculator · qr-generator ★ · json-formatter ★ · pdf-to-word
+                  · AdSense apply
+                </text>
+              </g>
+              <circle
+                cx="56"
+                cy="240"
+                r="8"
+                fill="var(--amber50)"
+                stroke="var(--amber600)"
+                stroke-width="1.5"
+              />
+              <g class="c-amber">
+                <rect x="80" y="216" width="570" height="52" rx="8" stroke-width="0.5" />
+                <text class="th" x="100" y="237" dominant-baseline="central">
+                  Phase 3 — Month 3 · Auth + resume
+                </text>
+                <text class="ts" x="100" y="257" dominant-baseline="central">
+                  Clerk auth · resume-builder ★ · emi-calculator · income-tax · Supabase RLS ·
+                  pdf-to-word (Railway)
+                </text>
+              </g>
+              <circle
+                cx="56"
+                cy="320"
+                r="8"
+                fill="var(--coral50)"
+                stroke="var(--coral600)"
+                stroke-width="1.5"
+              />
+              <g class="c-coral">
+                <rect x="80" y="296" width="570" height="52" rx="8" stroke-width="0.5" />
+                <text class="th" x="100" y="317" dominant-baseline="central">
+                  Phase 4 — Month 4–6 · Scale
+                </text>
+                <text class="ts" x="100" y="337" dominant-baseline="central">
+                  All remaining tools · Developer API · SEO blog weekly · i18n (Hindi, Spanish) ·
+                  PageSpeed 90+
+                </text>
+              </g>
+              <circle
+                cx="56"
+                cy="400"
+                r="8"
+                fill="var(--green50)"
+                stroke="var(--green600)"
+                stroke-width="1.5"
+              />
+              <g class="c-green">
+                <rect x="80" y="382" width="570" height="36" rx="8" stroke-width="0.5" />
+                <text class="th" x="100" y="404" dominant-baseline="central">
+                  Month 6+ · PWA · Regional finance modules · WhatsApp bot · Target 100k visits/mo
+                </text>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ══ TOOL CATEGORIES ══ -->
+        <div class="section" id="tools">
+          <div class="section-label">Tools</div>
+          <h2>Tool categories</h2>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Count</th>
+                  <th>Processing</th>
+                  <th>Server cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PDF tools</td>
+                  <td>18</td>
+                  <td>Browser (pdf-lib) + Server (Word/Excel)</td>
+                  <td>~$5/mo</td>
+                </tr>
+                <tr>
+                  <td>Image tools</td>
+                  <td>7</td>
+                  <td>Browser (Canvas API)</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td>Finance tools</td>
+                  <td>8</td>
+                  <td>Browser (pure JS math)</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td>Dev tools</td>
+                  <td>9</td>
+                  <td>Browser (pure JS)</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td>Social tools</td>
+                  <td>5</td>
+                  <td>Browser (Canvas/JS)</td>
+                  <td>$0</td>
+                </tr>
+                <tr>
+                  <td>Docs &amp; Resume</td>
+                  <td>4</td>
+                  <td>Browser (pdf-lib output)</td>
+                  <td>$0</td>
+                </tr>
+                <tr class="highlight">
+                  <td>Total</td>
+                  <td><strong>51</strong></td>
+                  <td></td>
+                  <td><strong>~$5/mo</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Full tool list</h3>
+          <div class="tool-cols">
+            <div class="tool-group">
+              <div class="group-name">
+                <span class="group-dot" style="background: var(--blue600)"></span>PDF tools (18)
+              </div>
+              <div class="tool-item"><span class="star">★</span>/compress-pdf</div>
+              <div class="tool-item">/merge-pdf</div>
+              <div class="tool-item">/split-pdf · /rotate-pdf</div>
+              <div class="tool-item">/watermark-pdf · /protect-pdf</div>
+              <div class="tool-item">/unlock-pdf · /image-to-pdf</div>
+              <div class="tool-item">/pdf-to-jpg · /sign-pdf</div>
+              <div class="tool-item">/pdf-to-word<span class="tag">server</span></div>
+              <div class="tool-item">/word-to-pdf<span class="tag">server</span></div>
+              <div class="tool-item">/pdf-to-excel<span class="tag">server</span></div>
+              <div class="tool-item">/fill-pdf · /repair-pdf</div>
+            </div>
+            <div class="tool-group">
+              <div class="group-name">
+                <span class="group-dot" style="background: var(--teal600)"></span>Image tools (7)
+              </div>
+              <div class="tool-item"><span class="star">★</span>/image/compress</div>
+              <div class="tool-item">/image/resize · /crop</div>
+              <div class="tool-item">/image/convert · /collage</div>
+              <div class="tool-item">/image/passport-photo</div>
+              <div class="tool-item">/image/to-base64</div>
+              <div class="group-name" style="margin-top: 12px">
+                <span class="group-dot" style="background: var(--purple600)"></span>Dev tools (9)
+              </div>
+              <div class="tool-item"><span class="star">★</span>/dev/json-formatter</div>
+              <div class="tool-item">/dev/base64 · /url-encoder</div>
+              <div class="tool-item">/dev/regex-tester · /jwt-decoder</div>
+              <div class="tool-item">/dev/diff-checker · /color-picker</div>
+            </div>
+            <div class="tool-group">
+              <div class="group-name">
+                <span class="group-dot" style="background: var(--amber600)"></span>Finance tools (8)
+              </div>
+              <div class="tool-item">/finance/gst-calculator</div>
+              <div class="tool-item">/finance/gst-invoice</div>
+              <div class="tool-item">/finance/vat-calculator</div>
+              <div class="tool-item">/finance/emi-calculator</div>
+              <div class="tool-item">/finance/sip-calculator</div>
+              <div class="tool-item">/finance/income-tax</div>
+              <div class="tool-item">/finance/hra-calculator</div>
+              <div class="tool-item">/finance/salary-slip</div>
+            </div>
+            <div class="tool-group">
+              <div class="group-name">
+                <span class="group-dot" style="background: var(--coral600)"></span>Social tools (5)
+              </div>
+              <div class="tool-item"><span class="star">★</span>/social/qr-generator</div>
+              <div class="tool-item">/social/instagram-resizer</div>
+              <div class="tool-item">/social/yt-thumbnail</div>
+              <div class="tool-item">/social/whatsapp-link</div>
+              <div class="tool-item">/social/bio-link</div>
+              <div class="group-name" style="margin-top: 12px">
+                <span class="group-dot" style="background: var(--green600)"></span>Docs &amp; Resume
+                (4)
+              </div>
+              <div class="tool-item"><span class="star">★</span>/docs/resume-builder</div>
+              <div class="tool-item">/docs/invoice-generator</div>
+              <div class="tool-item">/docs/cover-letter</div>
+              <div class="tool-item">/docs/business-card</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ TOOL LINKING ══ -->
+        <div class="section" id="linking">
+          <div class="section-label">UX</div>
+          <h2>Tool linking</h2>
+          <p>
+            Every tool page ends with 4 contextually relevant suggestions. This drives pages per
+            session and turns one-time visitors into repeat users.
+          </p>
+          <div class="link-grid">
+            <div class="link-row">
+              <div class="link-source">compress-pdf</div>
+              <div class="link-arrow">→</div>
+              <div class="link-targets">merge-pdf · image/compress · image-to-pdf · split-pdf</div>
+            </div>
+            <div class="link-row">
+              <div class="link-source">resume-builder</div>
+              <div class="link-arrow">→</div>
+              <div class="link-targets">compress-pdf · cover-letter · image/passport-photo</div>
+            </div>
+            <div class="link-row">
+              <div class="link-source">gst-invoice</div>
+              <div class="link-arrow">→</div>
+              <div class="link-targets">compress-pdf · qr-generator · gst-calculator</div>
+            </div>
+            <div class="link-row">
+              <div class="link-source">image/compress</div>
+              <div class="link-arrow">→</div>
+              <div class="link-targets">compress-pdf · image/resize · image/passport-photo</div>
+            </div>
+            <div class="link-row">
+              <div class="link-source">qr-generator</div>
+              <div class="link-arrow">→</div>
+              <div class="link-targets">gst-invoice · image/compress</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ TECH STACK ══ -->
+        <div class="section" id="tech">
+          <div class="section-label">Tech</div>
+          <h2>Tech stack</h2>
+          <div class="table-wrapper">
+            <table class="stack-table">
+              <thead>
+                <tr>
+                  <th>Layer</th>
+                  <th>Technology</th>
+                  <th>Why</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Framework</td>
+                  <td>Next.js 14 (App Router)</td>
+                  <td>SSR for SEO + API routes in one project</td>
+                </tr>
+                <tr>
+                  <td>Language</td>
+                  <td>TypeScript 5</td>
+                  <td>Type safety at scale</td>
+                </tr>
+                <tr>
+                  <td>Styling</td>
+                  <td>Tailwind + shadcn/ui</td>
+                  <td>Fast, accessible, zero vendor lock-in</td>
+                </tr>
+                <tr>
+                  <td>PDF core</td>
+                  <td>pdf-lib</td>
+                  <td>Pure JS, runs in browser, no server cost</td>
+                </tr>
+                <tr>
+                  <td>PDF preview</td>
+                  <td>PDF.js (Mozilla)</td>
+                  <td>Industry-standard renderer</td>
+                </tr>
+                <tr>
+                  <td>Images</td>
+                  <td>Canvas API</td>
+                  <td>Native browser, zero deps</td>
+                </tr>
+                <tr>
+                  <td>OCR</td>
+                  <td>Tesseract.js</td>
+                  <td>Client-side, no API cost</td>
+                </tr>
+                <tr>
+                  <td>Word/Excel</td>
+                  <td>LibreOffice on Railway</td>
+                  <td>Best quality, Docker container</td>
+                </tr>
+                <tr>
+                  <td>Auth</td>
+                  <td>Clerk</td>
+                  <td>10k MAU free, global phone/email OTP</td>
+                </tr>
+                <tr>
+                  <td>Database</td>
+                  <td>Supabase</td>
+                  <td>Free Postgres, Row Level Security</td>
+                </tr>
+                <tr>
+                  <td>Rate limiting</td>
+                  <td>Upstash Redis</td>
+                  <td>Edge-compatible free tier</td>
+                </tr>
+                <tr>
+                  <td>Hosting</td>
+                  <td>Vercel</td>
+                  <td>Zero-config Next.js, global CDN</td>
+                </tr>
+                <tr>
+                  <td>CDN / DDoS</td>
+                  <td>Cloudflare</td>
+                  <td>Free, faster globally</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ══ DATABASE SCHEMA ══ -->
+        <div class="section" id="database">
+          <div class="section-label">Database</div>
+          <h2>Database schema</h2>
+          <pre>
+-- Users
 CREATE TABLE users (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   clerk_id   TEXT UNIQUE NOT NULL,
@@ -2394,14 +2613,15 @@ CREATE POLICY "Users read own data" ON users FOR SELECT
 ALTER TABLE tool_events ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can insert" ON tool_events
   FOR INSERT WITH CHECK (true);</pre>
-            </div>
+        </div>
 
-            <!-- ══ API ══ -->
-            <div class="section" id="api">
-                <div class="section-label">API</div>
-                <h2>API design</h2>
-                <h3>Internal (Next.js serverless)</h3>
-                <pre>POST  /api/convert
+        <!-- ══ API ══ -->
+        <div class="section" id="api">
+          <div class="section-label">API</div>
+          <h2>API design</h2>
+          <h3>Internal (Next.js serverless)</h3>
+          <pre>
+POST  /api/convert
       Body: { file: base64, from: 'pdf', to: 'docx' }
       Rate: 10 req/hr
       → Proxies to Railway LibreOffice
@@ -2413,8 +2633,9 @@ POST  /api/analytics/event
 GET   /api/user/plan
       Auth: Clerk session
       → { plan, limits }</pre>
-                <h3>External developer API (Month 6+)</h3>
-                <pre>Base: https://api.toolverse.com/v1
+          <h3>External developer API (Month 6+)</h3>
+          <pre>
+Base: https://api.toolverse.com/v1
 Auth: Bearer {API_KEY}
 
 POST /v1/pdf/compress
@@ -2425,83 +2646,88 @@ POST /v1/image/resize
 200: { success: true, file: base64, original_kb, result_kb }
 429: { error: "Rate limit exceeded" }
 402: { error: "Upgrade required" }</pre>
-            </div>
+        </div>
 
-            <!-- ══ MONETIZATION ══ -->
-            <div class="section" id="monetization">
-                <div class="section-label">Revenue</div>
-                <h2>Monetization</h2>
-                <p>Single revenue stream: Google AdSense. One ad slot per tool page, shown between the result and the
-                    related tools section. Never intrusive, scales directly with traffic.</p>
-                <div class="table-wrapper">
-                    <table class="data-table" style="margin-top:14px">
-                        <thead>
-                            <tr>
-                                <th>Monthly visits</th>
-                                <th>Est. revenue</th>
-                                <th>Note</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>10k</td>
-                                <td>$10–30/mo</td>
-                                <td>Early stage</td>
-                            </tr>
-                            <tr>
-                                <td>100k</td>
-                                <td>$100–300/mo</td>
-                                <td>Month 3–4 target</td>
-                            </tr>
-                            <tr>
-                                <td>500k</td>
-                                <td>$500–1,500/mo</td>
-                                <td>Month 6+ target</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- ══ MONETIZATION ══ -->
+        <div class="section" id="monetization">
+          <div class="section-label">Revenue</div>
+          <h2>Monetization</h2>
+          <p>
+            Single revenue stream: Google AdSense. One ad slot per tool page, shown between the
+            result and the related tools section. Never intrusive, scales directly with traffic.
+          </p>
+          <div class="table-wrapper">
+            <table class="data-table" style="margin-top: 14px">
+              <thead>
+                <tr>
+                  <th>Monthly visits</th>
+                  <th>Est. revenue</th>
+                  <th>Note</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10k</td>
+                  <td>$10–30/mo</td>
+                  <td>Early stage</td>
+                </tr>
+                <tr>
+                  <td>100k</td>
+                  <td>$100–300/mo</td>
+                  <td>Month 3–4 target</td>
+                </tr>
+                <tr>
+                  <td>500k</td>
+                  <td>$500–1,500/mo</td>
+                  <td>Month 6+ target</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-            <!-- ══ SEO ══ -->
-            <div class="section" id="seo">
-                <div class="section-label">Growth</div>
-                <h2>SEO strategy</h2>
-                <p>Target: 70% of traffic from organic search by year 1. Every tool page ships with a custom title,
-                    meta
-                    description, Open Graph image, HowTo JSON-LD schema, FAQ accordion, and canonical URL.</p>
-                <div class="kw-tier">
-                    <div class="kw-tier-label">Month 1–3 · Long-tail, low competition</div>
-                    <div class="kw-pills">
-                        <span class="kw-pill tier1">compress pdf for email free</span>
-                        <span class="kw-pill tier1">merge pdf without sign up</span>
-                        <span class="kw-pill tier1">passport photo maker free online</span>
-                        <span class="kw-pill tier1">json formatter online free</span>
-                        <span class="kw-pill tier1">qr code generator free</span>
-                        <span class="kw-pill tier1">gst invoice generator free</span>
-                    </div>
-                    <div class="kw-tier-label">Month 3–6 · Medium competition</div>
-                    <div class="kw-pills">
-                        <span class="kw-pill tier2">compress pdf free online</span>
-                        <span class="kw-pill tier2">pdf to word converter free</span>
-                        <span class="kw-pill tier2">online resume builder free</span>
-                        <span class="kw-pill tier2">image compressor for instagram</span>
-                    </div>
-                    <div class="kw-tier-label">Month 6+ · Broad</div>
-                    <div class="kw-pills">
-                        <span class="kw-pill tier3">compress pdf</span>
-                        <span class="kw-pill tier3">merge pdf</span>
-                        <span class="kw-pill tier3">resume builder</span>
-                        <span class="kw-pill tier3">image compressor</span>
-                    </div>
-                </div>
+        <!-- ══ SEO ══ -->
+        <div class="section" id="seo">
+          <div class="section-label">Growth</div>
+          <h2>SEO strategy</h2>
+          <p>
+            Target: 70% of traffic from organic search by year 1. Every tool page ships with a
+            custom title, meta description, Open Graph image, HowTo JSON-LD schema, FAQ accordion,
+            and canonical URL.
+          </p>
+          <div class="kw-tier">
+            <div class="kw-tier-label">Month 1–3 · Long-tail, low competition</div>
+            <div class="kw-pills">
+              <span class="kw-pill tier1">compress pdf for email free</span>
+              <span class="kw-pill tier1">merge pdf without sign up</span>
+              <span class="kw-pill tier1">passport photo maker free online</span>
+              <span class="kw-pill tier1">json formatter online free</span>
+              <span class="kw-pill tier1">qr code generator free</span>
+              <span class="kw-pill tier1">gst invoice generator free</span>
             </div>
+            <div class="kw-tier-label">Month 3–6 · Medium competition</div>
+            <div class="kw-pills">
+              <span class="kw-pill tier2">compress pdf free online</span>
+              <span class="kw-pill tier2">pdf to word converter free</span>
+              <span class="kw-pill tier2">online resume builder free</span>
+              <span class="kw-pill tier2">image compressor for instagram</span>
+            </div>
+            <div class="kw-tier-label">Month 6+ · Broad</div>
+            <div class="kw-pills">
+              <span class="kw-pill tier3">compress pdf</span>
+              <span class="kw-pill tier3">merge pdf</span>
+              <span class="kw-pill tier3">resume builder</span>
+              <span class="kw-pill tier3">image compressor</span>
+            </div>
+          </div>
+        </div>
 
-            <!-- ══ FOLDER STRUCTURE ══ -->
-            <div class="section" id="folder">
-                <div class="section-label">Codebase</div>
-                <h2>Folder structure</h2>
-                <pre>toolverse/
+        <!-- ══ FOLDER STRUCTURE ══ -->
+        <div class="section" id="folder">
+          <div class="section-label">Codebase</div>
+          <h2>Folder structure</h2>
+          <pre>
+toolverse/
 ├── app/
 │   ├── (marketing)/         Homepage · Blog · API docs
 │   ├── (tools)/             All 51 tool pages (SSR for SEO)
@@ -2536,13 +2762,14 @@ POST /v1/image/resize
 │   └── tools.ts             Master tool list (name, url, category, related, keywords)
 │
 └── public/og/               OG images — 1200×630, one per tool</pre>
-            </div>
+        </div>
 
-            <!-- ══ ENV VARS ══ -->
-            <div class="section" id="env">
-                <div class="section-label">Config</div>
-                <h2>Environment variables</h2>
-                <pre># Supabase
+        <!-- ══ ENV VARS ══ -->
+        <div class="section" id="env">
+          <div class="section-label">Config</div>
+          <h2>Environment variables</h2>
+          <pre>
+# Supabase
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
@@ -2562,224 +2789,239 @@ UPSTASH_REDIS_REST_TOKEN=
 # App
 NEXT_PUBLIC_APP_URL=https://toolverse.com
 NEXT_PUBLIC_APP_NAME=Toolverse</pre>
-            </div>
+        </div>
 
-            <!-- ══ LOCAL SETUP ══ -->
-            <div class="section">
-                <div class="section-label">Dev</div>
-                <h2>Local setup</h2>
-                <pre>git clone https://github.com/yourusername/toolverse.git
+        <!-- ══ LOCAL SETUP ══ -->
+        <div class="section">
+          <div class="section-label">Dev</div>
+          <h2>Local setup</h2>
+          <pre>
+git clone https://github.com/yourusername/toolverse.git
 cd toolverse
 npm install
 cp .env.example .env.local
 # Fill in all values
 npm run dev
 # Open http://localhost:3000</pre>
-            </div>
-
-            <!-- ══ PERFORMANCE ══ -->
-            <div class="section" id="performance">
-                <div class="section-label">Targets</div>
-                <h2>Performance targets</h2>
-                <div class="metric-grid">
-                    <div class="metric-card">
-                        <div class="mval">&lt;2.5s</div>
-                        <div class="mlabel">LCP (Core Web Vital)</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="mval">&lt;100ms</div>
-                        <div class="mlabel">FID (interaction delay)</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="mval">&lt;0.1</div>
-                        <div class="mlabel">CLS (layout shift)</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="mval">&lt;3s</div>
-                        <div class="mlabel">PDF compress (1MB)</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="mval">&lt;5s</div>
-                        <div class="mlabel">PDF merge (3 files)</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="mval">85+</div>
-                        <div class="mlabel">Mobile PageSpeed</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ══ PRIVACY ══ -->
-            <div class="section" id="privacy">
-                <div class="section-label">Privacy</div>
-                <h2>Privacy summary</h2>
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Data</th>
-                                <th>Collected?</th>
-                                <th>Stored?</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Files — browser-side tools</td>
-                                <td>No</td>
-                                <td>Never</td>
-                            </tr>
-                            <tr>
-                                <td>Files — server-side tools</td>
-                                <td>Temporary</td>
-                                <td>Deleted &lt;1hr</td>
-                            </tr>
-                            <tr>
-                                <td>Email (signed-in users)</td>
-                                <td>Yes</td>
-                                <td>Billing only</td>
-                            </tr>
-                            <tr>
-                                <td>IP address</td>
-                                <td>Hashed only</td>
-                                <td>Rate limiting</td>
-                            </tr>
-                            <tr>
-                                <td>Tool usage</td>
-                                <td>Yes (no PII)</td>
-                                <td>Analytics only</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p
-                    style="margin-top:16px;font-size:13px;background:var(--green50);color:var(--green800);border:0.5px solid var(--green600);border-radius:var(--radius);padding:12px 16px;">
-                    🔒 Your file never leaves your browser. We process everything locally.
-                </p>
-            </div>
-
-            <div class="readme-footer">
-                MIT © 2025 Toolverse &nbsp;·&nbsp; Fast. Private. Free. Built for everyone.
-            </div>
-
         </div>
+
+        <!-- ══ PERFORMANCE ══ -->
+        <div class="section" id="performance">
+          <div class="section-label">Targets</div>
+          <h2>Performance targets</h2>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <div class="mval">&lt;2.5s</div>
+              <div class="mlabel">LCP (Core Web Vital)</div>
+            </div>
+            <div class="metric-card">
+              <div class="mval">&lt;100ms</div>
+              <div class="mlabel">FID (interaction delay)</div>
+            </div>
+            <div class="metric-card">
+              <div class="mval">&lt;0.1</div>
+              <div class="mlabel">CLS (layout shift)</div>
+            </div>
+            <div class="metric-card">
+              <div class="mval">&lt;3s</div>
+              <div class="mlabel">PDF compress (1MB)</div>
+            </div>
+            <div class="metric-card">
+              <div class="mval">&lt;5s</div>
+              <div class="mlabel">PDF merge (3 files)</div>
+            </div>
+            <div class="metric-card">
+              <div class="mval">85+</div>
+              <div class="mlabel">Mobile PageSpeed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ PRIVACY ══ -->
+        <div class="section" id="privacy">
+          <div class="section-label">Privacy</div>
+          <h2>Privacy summary</h2>
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Collected?</th>
+                  <th>Stored?</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Files — browser-side tools</td>
+                  <td>No</td>
+                  <td>Never</td>
+                </tr>
+                <tr>
+                  <td>Files — server-side tools</td>
+                  <td>Temporary</td>
+                  <td>Deleted &lt;1hr</td>
+                </tr>
+                <tr>
+                  <td>Email (signed-in users)</td>
+                  <td>Yes</td>
+                  <td>Billing only</td>
+                </tr>
+                <tr>
+                  <td>IP address</td>
+                  <td>Hashed only</td>
+                  <td>Rate limiting</td>
+                </tr>
+                <tr>
+                  <td>Tool usage</td>
+                  <td>Yes (no PII)</td>
+                  <td>Analytics only</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p
+            style="
+              margin-top: 16px;
+              font-size: 13px;
+              background: var(--green50);
+              color: var(--green800);
+              border: 0.5px solid var(--green600);
+              border-radius: var(--radius);
+              padding: 12px 16px;
+            "
+          >
+            🔒 Your file never leaves your browser. We process everything locally.
+          </p>
+        </div>
+
+        <div class="readme-footer">
+          MIT © 2025 Toolverse &nbsp;·&nbsp; Fast. Private. Free. Built for everyone.
+        </div>
+      </div>
     </div>
 
     <!-- Scroll to top button -->
     <button class="scroll-top" id="scrollTop" aria-label="Scroll to top">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="18 15 12 9 6 15"></polyline>
-        </svg>
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
     </button>
 
     <script>
-        // Hamburger menu toggle
-        const hamburger = document.getElementById('hamburger');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
+      // Hamburger menu toggle
+      const hamburger = document.getElementById("hamburger");
+      const sidebar = document.getElementById("sidebar");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
 
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            sidebar.classList.toggle('open');
-            sidebarOverlay.classList.toggle('active');
-        });
+      hamburger.addEventListener("click", () => {
+        hamburger.classList.toggle("active");
+        sidebar.classList.toggle("open");
+        sidebarOverlay.classList.toggle("active");
+      });
 
-        sidebarOverlay.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.remove('active');
-        });
+      sidebarOverlay.addEventListener("click", () => {
+        hamburger.classList.remove("active");
+        sidebar.classList.remove("open");
+        sidebarOverlay.classList.remove("active");
+      });
 
-        // Active section highlighting in sidebar
-        const sections = document.querySelectorAll('.section[id]');
-        const navLinks = document.querySelectorAll('.sidebar-link');
+      // Active section highlighting in sidebar
+      const sections = document.querySelectorAll(".section[id]");
+      const navLinks = document.querySelectorAll(".sidebar-link");
 
-        const observerOptions = {
-            root: null,
-            rootMargin: '-20% 0px -70% 0px',
-            threshold: 0
-        };
+      const observerOptions = {
+        root: null,
+        rootMargin: "-20% 0px -70% 0px",
+        threshold: 0,
+      };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.getAttribute('id');
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${id}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("id");
+            navLinks.forEach((link) => {
+              link.classList.remove("active");
+              if (link.getAttribute("href") === `#${id}`) {
+                link.classList.add("active");
+              }
             });
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach((section) => observer.observe(section));
+
+      // Also highlight on header
+      const header = document.getElementById("header");
+      if (header) {
+        const headerObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              navLinks.forEach((link) => {
+                link.classList.remove("active");
+                if (link.getAttribute("href") === "#header") {
+                  link.classList.add("active");
+                }
+              });
+            }
+          });
         }, observerOptions);
+        headerObserver.observe(header);
+      }
 
-        sections.forEach(section => observer.observe(section));
+      // Scroll to top button
+      const scrollTopBtn = document.getElementById("scrollTop");
 
-        // Also highlight on header
-        const header = document.getElementById('header');
-        if (header) {
-            const headerObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        navLinks.forEach(link => {
-                            link.classList.remove('active');
-                            if (link.getAttribute('href') === '#header') {
-                                link.classList.add('active');
-                            }
-                        });
-                    }
-                });
-            }, observerOptions);
-            headerObserver.observe(header);
+      window.addEventListener("scroll", () => {
+        if (window.pageYOffset > 400) {
+          scrollTopBtn.classList.add("visible");
+        } else {
+          scrollTopBtn.classList.remove("visible");
         }
+      });
 
-        // Scroll to top button
-        const scrollTopBtn = document.getElementById('scrollTop');
-
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 400) {
-                scrollTopBtn.classList.add('visible');
-            } else {
-                scrollTopBtn.classList.remove('visible');
-            }
+      scrollTopBtn.addEventListener("click", () => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
         });
+      });
 
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+      // Close sidebar on link click (mobile)
+      navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 1024) {
+            hamburger.classList.remove("active");
+            sidebar.classList.remove("open");
+            sidebarOverlay.classList.remove("active");
+          }
         });
+      });
 
-        // Close sidebar on link click (mobile)
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 1024) {
-                    hamburger.classList.remove('active');
-                    sidebar.classList.remove('open');
-                    sidebarOverlay.classList.remove('active');
-                }
-            });
-        });
+      // Update progress bar based on scroll
+      const updateProgress = () => {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight - windowHeight;
+        const scrolled = window.pageYOffset;
+        const progress = (scrolled / documentHeight) * 100;
 
-        // Update progress bar based on scroll
-        const updateProgress = () => {
-            const windowHeight = window.innerHeight;
-            const documentHeight = document.documentElement.scrollHeight - windowHeight;
-            const scrolled = window.pageYOffset;
-            const progress = (scrolled / documentHeight) * 100;
+        const progressFill = document.querySelector(".progress-fill");
+        if (progressFill) {
+          progressFill.style.width = `${Math.min(progress, 100)}%`;
+        }
+      };
 
-            const progressFill = document.querySelector('.progress-fill');
-            if (progressFill) {
-                progressFill.style.width = `${Math.min(progress, 100)}%`;
-            }
-        };
-
-        window.addEventListener('scroll', updateProgress);
-        updateProgress();
+      window.addEventListener("scroll", updateProgress);
+      updateProgress();
     </script>
-
-</body>
-
+  </body>
 </html>

@@ -1,0 +1,322 @@
+/* features/dev/url-encoder/style/UrlBreakdown.module.css */
+.ubRoot {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/*  Empty State  */
+.ubEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.ubEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.ubEmptyTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.ubEmptyDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
+/*  Section  */
+.ubSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ubSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+}
+
+.ubCountBadge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    color: var(--text-tertiary);
+}
+
+/*  List  */
+.ubList {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ubRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius-md);
+    transition: background 0.1s;
+}
+
+.ubRow:hover {
+    background: var(--bg-surface);
+}
+
+.ubIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    color: var(--text-tertiary);
+}
+
+.ubIcon.proto {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand);
+}
+
+.ubIcon.host {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ubIcon.host {
+        background: #0a1628;
+        border-color: #1e3a5f;
+        color: #93c5fd;
+    }
+}
+
+.ubIcon.path {
+    background: var(--bg-surface);
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+.ubKey {
+    width: 70px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.ubValue {
+    flex: 1;
+    font-size: 12.5px;
+    color: var(--brand);
+    font-family: var(--font-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ubCopyBtn {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    border: none;
+    background: transparent;
+    color: var(--text-disabled);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition:
+        opacity 0.1s,
+        color 0.1s;
+    flex-shrink: 0;
+}
+
+.ubRow:hover .ubCopyBtn,
+.ubTable tbody tr:hover .ubCopyBtn {
+    opacity: 1;
+}
+
+.ubCopyBtn:hover {
+    color: var(--brand);
+}
+
+.ubCopyBtn.copied {
+    opacity: 1;
+    color: var(--brand);
+}
+
+/*  Table  */
+.ubTableWrap {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.ubTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+}
+
+.ubTable thead th {
+    text-align: left;
+    padding: 8px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-disabled);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.ubTable thead th:first-child {
+    width: 40px;
+    text-align: center;
+}
+
+.ubTable thead th:last-child {
+    width: 40px;
+}
+
+.ubTable tbody tr {
+    transition: background 0.1s;
+}
+
+.ubTable tbody tr:hover {
+    background: var(--bg-surface);
+}
+
+.ubTable td {
+    padding: 10px;
+    border-bottom: 0.5px solid var(--border);
+    vertical-align: middle;
+}
+
+.ubTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.ubTableNum {
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-align: center;
+}
+
+.ubTableKey {
+    color: var(--brand);
+    font-weight: 600;
+    font-family: var(--font-mono);
+}
+
+.ubTableValue {
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    word-break: break-all;
+}
+
+.ubTableEmpty {
+    color: var(--text-disabled);
+    font-style: normal;
+    font-size: 11px;
+}
+
+/*  Export  */
+.ubExportRow {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding-top: 6px;
+}
+
+.ubExportBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 99px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ubExportBtn i {
+    font-size: 12px;
+}
+
+.ubExportBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .ubRoot {
+        padding: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ubRow,
+    .ubTable tbody tr,
+    .ubCopyBtn,
+    .ubExportBtn {
+        transition: none;
+    }
+}

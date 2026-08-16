@@ -1,204 +1,233 @@
-# ⚡ Toolverse
+<div align="center">
+  <img src="public/logo-light.png" alt="Toolverse Logo" width="380" />
+  <h1>Toolverse</h1>
+  <p><strong>A free, privacy-first utility hub — 50+ browser-based tools for PDF, image, developer, finance, resume, and social tasks. No sign-up. No uploads. No limits.</strong></p>
 
-> Free, privacy-first utility hub. PDF · Images · Finance · Dev · Social · Resume  
-> No sign-up · No uploads · Files stay in your browser · Forever free
+  <div>
+    <a href="https://toolverses.vercel.app" target="_blank">
+      <img src="https://img.shields.io/badge/Live_Demo-Visit_Site-brightgreen?style=for-the-badge&logo=vercel" alt="Live Demo" />
+    </a>
+    <a href="#readme" target="_blank">
+      <img src="https://img.shields.io/badge/Documentation-Read_Docs-blue?style=for-the-badge&logo=readthedocs" alt="Documentation" />
+    </a>
+    <a href="https://github.com/srinathnulidonda/toolverse/issues" target="_blank">
+      <img src="https://img.shields.io/badge/Report_Bug-Open_Issue-red?style=for-the-badge&logo=github" alt="Report Bug" />
+    </a>
+    <a href="https://github.com/srinathnulidonda/toolverse/issues" target="_blank">
+      <img src="https://img.shields.io/badge/Request_Feature-Open_Issue-yellow?style=for-the-badge&logo=github" alt="Request Feature" />
+    </a>
+  </div>
+</div>
 
-**Live:** `toolsversee.vercel.app` → [Link](https://toolsversee.vercel.app/)  
-**Docs:** `toolsversee.vercel.app/docs` or separate — see below  
-**Status:** Phase 1 in progress — Compress PDF live, 5 more tools shipping soon
+<br />
 
----
+<details>
+  <summary><h3>Table of Contents</h3></summary>
 
-## What's in this repo
+  - [About](#about)
+  - [Features](#features)
+  - [Tool Categories](#tool-categories)
+  - [Built-In Productivity Widget](#built-in-productivity-widget)
+  - [Tech Stack](#tech-stack)
+  - [Screenshots](#screenshots)
+  - [Quick Start](#quick-start)
+  - [Usage Examples](#usage-examples)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Contact & Support](#contact--support)
+  - [Acknowledgments](#acknowledgments)
 
-A Next.js 14 app that runs ~90% of its processing entirely in the browser — no server round-trips, no file uploads, no cost. The other 10% (PDF ↔ Word/Excel) proxies to a LibreOffice container on Railway.
+</details>
 
-Full architecture, tool list, database schema, API design, SEO strategy, monetization model, folder structure, and build roadmap are documented in **`/public/docs/index.html`** — open it in a browser.
+## About
 
----
+Toolverse is a free utility platform for people who want things done fast without giving up their data. Every tool — from PDF compression to JSON formatting — runs entirely in your browser using modern JavaScript and WebAssembly. No file ever touches a server, no account is required, and there are no artificial usage limits.
 
-## Stack
+Whether you're a developer, designer, student, or business professional, Toolverse gives you instant access to 50+ production-grade tools in one place.
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS + shadcn/ui |
-| PDF core | pdf-lib (browser) |
-| PDF preview | PDF.js |
-| Images | Canvas API |
-| OCR | Tesseract.js |
-| Word/Excel | LibreOffice on Railway |
-| Auth | Clerk |
-| Database | Supabase (Postgres + RLS) |
-| Rate limiting | Upstash Redis |
-| Hosting | Vercel |
-| CDN / DDoS | Cloudflare |
+## Features
 
----
+- **Privacy-first** — 100% client-side processing; files never leave your device
+- **Instant and fast** — built on the Next.js App Router with optimized, on-demand rendering
+- **No sign-up, no limits** — every tool is free forever, with zero registration walls
+- **Built-in task and notes widget** — a floating, draggable productivity widget available on every page
+- **Installable as a PWA** — works offline once loaded, with a full app manifest
+- **Light and dark mode** — automatic theme detection based on system preference
+- **Accessible by design** — skip-to-content links, semantic HTML, keyboard-friendly navigation
+- **Structured for search** — JSON-LD metadata, dynamic sitemap, and canonical URLs
+- **Open source** — fully transparent codebase, open for review and contribution
 
-## Quick start
+## Tool Categories
 
-```bash
-git clone <repo-url>
-cd toolverse
-npm install
-cp .env.example .env.local
-# fill in all values (see Environment below)
-npm run dev
-# → http://localhost:3000
-```
+Toolverse organizes 50+ tools into six focused categories:
 
----
-
-## Environment variables
-
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-
-# Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-
-# Railway (LibreOffice)
-RAILWAY_CONVERT_URL=
-RAILWAY_API_SECRET=
-
-# Upstash Redis
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-
-# App
-NEXT_PUBLIC_APP_URL=https://toolverse.vercel.app
-NEXT_PUBLIC_APP_NAME=Toolverse
-```
-
----
-
-## Project structure
-
-```
-toolverse/
-├── app/
-│   ├── (marketing)/         # Homepage, blog, API docs
-│   ├── (tools)/             # 51 tool pages (SSR for SEO)
-│   │   ├── compress-pdf/
-│   │   ├── merge-pdf/
-│   │   ├── image/
-│   │   ├── finance/
-│   │   ├── dev/
-│   │   ├── social/
-│   │   └── docs/
-│   ├── (dashboard)/         # Auth-required user dashboard
-│   └── api/
-│       ├── convert/         # LibreOffice proxy
-│       ├── analytics/       # Tool event tracking
-│       └── user/            # Plan status
-│
-├── components/
-│   ├── tools/               # UploadZone, ProcessingBar, DownloadButton
-│   │                        # FileSummary, RelatedTools, FAQSection
-│   ├── layout/              # Header, Footer, Breadcrumb
-│   ├── home/                # HeroSearch, ToolGrid, WeatherWidget, Todo
-│   └── ui/                  # shadcn/ui components
-│
-├── lib/
-│   ├── pdf/                 # compress · merge · split · rotate · protect
-│   ├── image/               # compress · resize · convert · passport
-│   ├── finance/             # gst · emi · sip · tax · vat
-│   ├── db/                  # Supabase client
-│   └── utils/               # file validation · rate limiting · analytics
-│
-├── config/
-│   └── tools.ts             # Master list: name, url, category, related, keywords
-│
-└── public/
-    ├── og/                  # OG images — 1200×630, one per tool
-    └── docs/
-        └── index.html       # Full project documentation (open in browser)
-```
-
----
-
-## Tools — current status
-
-| Tool | Route | Status |
+| Category | Tools | Description |
 |---|---|---|
-| Compress PDF | `/compress-pdf` | ✅ Live |
-| Merge PDF | `/merge-pdf` | 🔜 Soon |
-| Split PDF | `/split-pdf` | 🔜 Soon |
-| PDF → Word | `/pdf-to-word` | 🔜 Soon |
-| Image → PDF | `/jpg-to-pdf` | 🔜 Soon |
-| AI Summarise | `/summarize-pdf` | 🤖 AI |
+| PDF | 9 tools | Compress, merge, split, convert, and rotate PDFs |
+| Image | 8 tools | Compress, resize, convert, crop, and remove backgrounds |
+| Developer | 24 tools | JSON utilities, formatters, validators, generators, converters |
+| Finance | 10 tools | GST, EMI, SIP, tax calculators, currency converter |
+| Resume | 5 tools | Resume builder, checker, cover letter, LinkedIn summary |
+| Social | 4 tools | QR codes, meta tags, hashtag generator, tweet cards |
 
-**51 tools planned across 6 categories** — full list in `/public/docs/index.html`.
+Browse the full list at [`/tools`](https://toolverses.vercel.app/tools) or explore by category.
 
----
+## Built-In Productivity Widget
 
-## Build phases
+Every page on Toolverse includes a floating widget so you never have to leave your workflow to jot something down:
 
-```
-Phase 1  Weeks 1–4   Launch MVP — compress, merge, split, image tools
-Phase 2  Month 2     Global + India tools — GST, QR, JSON formatter, AdSense
-Phase 3  Month 3     Auth + resume builder — Clerk, Supabase RLS, Railway
-Phase 4  Month 4–6   Scale — all tools, developer API, SEO blog, i18n
-Phase 5  Month 6+    PWA, regional finance modules, 100k visits/mo target
-```
+- Tasks with priority levels and quick search
+- Notes and checklists with autosave
+- Draggable — position it anywhere on screen
+- Keyboard shortcut — press `Cmd+K` / `Ctrl+K` to open instantly
+- Stored locally — nothing is ever synced to a server
 
----
+## Tech Stack
 
-## 🌐 Domain names
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Language:** TypeScript
+- **Styling:** CSS Modules
+- **Icons:** [Tabler Icons](https://tabler.io/icons)
+- **Deployment:** [Vercel](https://vercel.com/)
 
-Currently on `toolverse.vercel.app`. Recommended production domains:
+## Screenshots
 
-### Product (main app)
-| Option | Notes |
-|---|---|
-| `toolverse.com` | Best — clean, brandable, memorable |
-| `toolverse.app` | Modern `.app` TLD, good for tools |
-| `toolverse.io` | Dev-friendly but slightly less consumer |
-| `usetoolverse.com` | Fallback if `.com` is taken |
+<div align="center">
+  <img src=".github/assets/screenshots/home.png" alt="Toolverse Home Page" width="800" />
+  <p><em>Toolverse Home Page</em></p>
+</div>
 
-### Docs site (`/public/docs/index.html`)
-| Option | Notes |
-|---|---|
-| `docs.toolverse.com` | Standard — subdomain of main domain |
-| `toolverse.com/docs` | Preferred if keeping it in-app (no extra domain) |
-| `toolverse.dev` | Doubles as a docs/developer portal brand |
+<div align="center">
+  <img src=".github/assets/screenshots/qr-generator.png" alt="QR Code Generator Tool" width="400" />
+  <img src=".github/assets/screenshots/html-formatter.png" alt="HTML Formatter Tool" width="400" />
+  <p><em>QR Code Generator (left) and HTML Formatter (right)</em></p>
+</div>
 
-### Internal / email
-| Purpose | Recommended |
-|---|---|
-| Transactional email | `hello@toolverse.com` or `noreply@toolverse.com` |
-| Support | `support@toolverse.com` |
-| Email provider | Resend or Postmark — both work with Vercel easily |
+<div align="center">
+  <img src=".github/assets/screenshots/gst-calculator.png" alt="GST Calculator Tool" width="400" />
+  <p><em>GST Calculator in action</em></p>
+</div>
 
-> **Recommendation:** buy `toolverse.com` first. Use `toolverse.com/docs` (in-app route) to avoid managing a second domain while in early stages. Add `docs.toolverse.com` later when the docs site warrants it.
+<details>
+  <summary><h3>Quick Start</h3></summary>
 
----
+  ### Prerequisites
 
-## Key files
+  - Node.js ≥ 18
+  - pnpm (recommended) or npm/yarn
 
-| File | Purpose |
-|---|---|
-| `app/compress-pdf/page.tsx` | Compress tool UI — drop zone, presets, result screen |
-| `app/page.tsx` | Homepage — hero, tool grid, stats, CTA |
-| `app/layout.tsx` | Root layout — fonts, metadata |
-| `lib/compress.ts` | Core compression logic — pdf-lib, level/preset helpers |
-| `config/tools.ts` | Master tool registry |
-| `public/docs/index.html` | Full project documentation |
+  ### Installation
 
----
+  ```bash
+  # Clone the repository
+  git clone https://github.com/srinathnulidonda/toolverse.git
+  cd toolverse
 
-## Docs
+  # Install dependencies
+  pnpm install          # or npm install / yarn
 
-Everything not in this file — architecture diagrams, full tool list, database schema, API design, SEO keyword strategy, monetization model, performance targets, privacy summary — is in:
+  # Start the development server
+  pnpm dev              # http://localhost:3000
+  ```
 
-```
-public/docs/index.html
-```
+  ### Environment Variables
 
-Open it directly in a browser. No build step needed.
+  Create a `.env.local` file in the project root:
+
+  ```bash
+  NEXT_PUBLIC_APP_URL=https://toolverses.vercel.app
+  ```
+
+  ### Production Build
+
+  ```bash
+  # Build for production
+  pnpm build
+
+  # Run the built app
+  pnpm start
+  ```
+
+</details>
+
+<details>
+  <summary><h3>Usage Examples</h3></summary>
+
+  ### Developer Tools
+
+  ```bash
+  pnpm dev
+  # Format JSON          → /tools/json-formatter
+  # Generate passwords   → /tools/password-generator
+  # Convert timestamps   → /tools/timestamp-converter
+  ```
+
+  ### Finance Tools
+
+  ```bash
+  # Calculate GST         → /tools/gst-calculator
+  # Generate invoices     → /tools/gst-invoice-generator
+  # Calculate EMI         → /tools/emi-calculator
+  ```
+
+  ### PDF Tools
+
+  ```bash
+  # Merge PDFs            → /tools/pdf-merger
+  # Compress PDFs         → /tools/pdf-compressor
+  # Split PDFs            → /tools/pdf-splitter
+  ```
+
+</details>
+
+<details>
+  <summary><h3>Contributing</h3></summary>
+
+  Contributions are welcome. To get started:
+
+  1. **Fork** the repository
+  2. **Create** your feature branch — `git checkout -b feature/amazing-feature`
+  3. **Make** your changes
+  4. **Lint and format** — `pnpm lint && pnpm format`
+  5. **Test** — `pnpm test`
+  6. **Commit** — `git commit -m "Add amazing feature"`
+  7. **Push** — `git push origin feature/amazing-feature`
+  8. **Open a Pull Request**
+
+  ### Development Guidelines
+
+  - Follow existing code style (ESLint + Prettier)
+  - Use TypeScript strictly — avoid `any`
+  - Keep components small and focused
+  - Ensure accessibility compliance (WCAG 2.1)
+  - Optimize for performance — minimize unnecessary re-renders
+
+  ### Reporting Issues
+
+  Use [GitHub Issues](https://github.com/srinathnulidonda/toolverse/issues) and include:
+
+  - A clear description of the issue
+  - Steps to reproduce
+  - Expected vs. actual behavior
+  - Screenshots, if applicable
+  - Browser and OS details
+
+</details>
+
+
+## Contact & Support
+
+- **Questions or bugs?** Open an [issue](https://github.com/srinathnulidonda/toolverse/issues) or email srinathnulidonda@gmail.com
+- **Tool help?** Each tool page includes its own usage instructions
+- **FAQ:** Visit [`/faq`](https://toolverses.vercel.app/faq) for common questions
+
+## Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- Icons by [Tabler Icons](https://tabler.io/icons)
+- Inspired by the open-source developer tools community
+- Thanks to all contributors and users
+
+<div align="center">
+  <sub>Built with care by <a href="https://github.com/srinathnulidonda">Srinath Nulidonda</a></sub>
+</div>

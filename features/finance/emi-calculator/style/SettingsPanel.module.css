@@ -1,0 +1,153 @@
+/* features/finance/emi-calculator/style/SettingsPanel.module.css */
+.emiSettingsPanel {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.emiSettingsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.emiSettingsTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    font-family: var(--font-sans);
+}
+
+.emiSettingsTitle i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.emiSettingsDesc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.emiSettingsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.emiSettingItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border-faint);
+}
+
+.emiSettingLabel {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.emiSettingValue {
+    font-size: 12px;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-weight: 500;
+}
+
+.emiSettingsGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.emiSettingsLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--text);
+    cursor: pointer;
+}
+
+.emiSettingsInput {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.emiSettingsCheckboxBox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.12s;
+}
+
+.emiSettingsCheckboxBox i {
+    font-size: 11px;
+    color: white;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all 0.12s;
+}
+
+.emiSettingsInput:checked+.emiSettingsCheckboxBox {
+    background: var(--brand);
+    border-color: var(--brand);
+}
+
+.emiSettingsInput:checked+.emiSettingsCheckboxBox i {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.emiSettingsLabelText {
+    font-size: 12.5px;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+@media (max-width: 768px) {
+    .emiSettingsPanel {
+        padding: 16px;
+    }
+
+    .emiSettingsTitle {
+        font-size: 12px;
+    }
+
+    .emiSettingsDesc {
+        font-size: 11px;
+    }
+
+    .emiSettingLabel,
+    .emiSettingValue {
+        font-size: 11px;
+    }
+
+    .emiSettingsLabel {
+        font-size: 11.5px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .emiSettingsCheckboxBox,
+    .emiSettingsCheckboxBox i,
+    .emiSettingsInput:checked+.emiSettingsCheckboxBox i {
+        transition: none;
+    }
+}

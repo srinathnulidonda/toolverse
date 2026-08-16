@@ -1,0 +1,296 @@
+/* features/dev/timestamp-converter/style/TimestampHistory.module.css */
+.thRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg-surface);
+}
+
+.thHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.thHeaderLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.thHeaderLabel i {
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+.thCountBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.thClearBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 11px;
+    border-radius: var(--tc-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.thClearBtn i {
+    font-size: 13px;
+}
+
+.thClearBtn:hover {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .thClearBtn:hover {
+        background: #1f1517;
+        color: #f87171;
+        border-color: #3c1518;
+    }
+}
+
+.thList {
+    flex: 1;
+    overflow: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.thItem {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--tc-radius-lg);
+    overflow: hidden;
+    transition: border-color 0.12s;
+}
+
+.thItem:hover {
+    border-color: var(--brand-border);
+}
+
+.thItemHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.thItemIcon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--brand-light);
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.thItemTime {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    flex: 1;
+    min-width: 0;
+}
+
+.thItemTime i {
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.thRestoreBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 9px;
+    border-radius: var(--tc-radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 10.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.thRestoreBtn i {
+    font-size: 11px;
+}
+
+.thRestoreBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.thItemContent {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.thItemRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+}
+
+.thItemLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    min-width: 45px;
+    flex-shrink: 0;
+}
+
+.thItemContent code {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--bg-surface);
+    padding: 4px 8px;
+    border-radius: 4px;
+    word-break: break-all;
+}
+
+.thItemFooter {
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border-faint);
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.thOptionTag {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: 99px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.thEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.thEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-disabled);
+}
+
+.thEmptyTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.thEmptyDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 340px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .thLabelText {
+        display: none;
+    }
+
+    .thBtnText {
+        display: none;
+    }
+
+    .thList {
+        padding: 10px;
+    }
+
+    .thItemHeader {
+        padding: 8px 12px;
+    }
+
+    .thItemContent {
+        padding: 10px 12px;
+    }
+
+    .thItemFooter {
+        padding: 8px 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .thClearBtn,
+    .thRestoreBtn,
+    .thItem {
+        transition: none;
+    }
+}

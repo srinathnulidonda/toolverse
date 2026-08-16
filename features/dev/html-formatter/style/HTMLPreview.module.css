@@ -1,0 +1,282 @@
+/* features/dev/html-formatter/style/HTMLPreview.module.css */
+.hpRoot {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-surface);
+    overflow: hidden;
+}
+
+/*  Toolbar  */
+.hpToolbar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+    padding: 0 16px;
+    background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    z-index: 10;
+}
+
+.hpToolbarLeft {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.hpToolbarLeft i {
+    font-size: 15px;
+}
+
+.hpModeGroup {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+}
+
+.hpModeBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.hpModeBtn i {
+    font-size: 15px;
+}
+
+.hpModeBtn:hover {
+    color: var(--text);
+    background: var(--bg-card);
+}
+
+.hpModeBtn.active {
+    background: var(--bg-card);
+    color: var(--text);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/*  Canvas  */
+.hpCanvas {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    background-color: #e8eaed;
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    overflow: auto;
+    padding: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hpCanvas {
+        background-color: #1a1b1e;
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    }
+}
+
+/* Overlay */
+.hpOverlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    z-index: 20;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.hpSpinner i {
+    font-size: 28px;
+    display: block;
+    animation: spin 0.9s linear infinite;
+}
+
+/*  Shell  */
+.hpShell {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.12),
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.15);
+    background: white;
+    align-self: stretch;
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Browser bar */
+.hpBrowserBar {
+    flex-shrink: 0;
+    height: 38px;
+    background: #ececec;
+    border-bottom: 1px solid #d8d8d8;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 10px;
+    user-select: none;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hpBrowserBar {
+        background: #28292c;
+        border-color: #3a3a3a;
+    }
+}
+
+.hpBrowserDots {
+    display: flex;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+.dot {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.15);
+}
+
+.dot.red {
+    background: #ff5f57;
+}
+
+.dot.amber {
+    background: #febc2e;
+}
+
+.dot.green {
+    background: #28c840;
+}
+
+.hpBrowserUrl {
+    flex: 1;
+    max-width: 340px;
+    height: 24px;
+    margin: 0 auto;
+    background: white;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+    font-size: 11px;
+    color: #777;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hpBrowserUrl {
+        background: #1e1e1e;
+        border-color: #444;
+        color: #888;
+    }
+}
+
+.hpBrowserUrl i {
+    font-size: 11px;
+    color: #28c840;
+    flex-shrink: 0;
+}
+
+.hpBrowserSpacer {
+    width: 46px;
+    flex-shrink: 0;
+}
+
+/*  Iframe  */
+.hpIframe {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    border: none;
+    display: block;
+    background: white;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/*  Mobile  */
+@media (max-width: 768px) {
+    .hpCanvas {
+        padding: 0;
+        overflow: hidden;
+        align-items: stretch;
+        background-image: none;
+    }
+
+    .hpShell {
+        border-radius: 0;
+        box-shadow: none;
+        max-width: 100% !important;
+        align-self: stretch;
+    }
+
+    .hpBrowserBar {
+        height: 44px;
+        padding: 0 12px;
+    }
+
+    .hpModeLabel {
+        display: none;
+    }
+
+    .hpIframe {
+        /* fill remaining height after browser bar */
+        flex: 1;
+        min-height: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hpShell {
+        transition: none;
+    }
+
+    .hpSpinner i {
+        animation: none;
+    }
+}

@@ -1,0 +1,168 @@
+/* features/dev/css-minifier/style/Workspace.module.css */
+
+.cmRoot {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--cm-radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+}
+
+.cmChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.cmChromeLeft,
+.cmChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.cmTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.cmTitle i {
+    font-size: 16px;
+}
+
+.cmTabsBar {
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.cmTabs {
+    display: flex;
+    padding: 0 14px;
+    overflow-x: auto;
+}
+
+.cmTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 38px;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+    white-space: nowrap;
+}
+
+.cmTab i {
+    font-size: 13px;
+}
+
+.cmTab:hover {
+    color: var(--text);
+}
+
+.cmTab:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: -2px;
+}
+
+.cmTab.active {
+    color: var(--text);
+}
+
+.cmTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.cmBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.cmTabContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cmPane {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cmPane.active {
+    display: flex;
+}
+
+.cmFooter {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    font-size: 11px;
+    color: var(--text-disabled);
+}
+
+.cmFooter i {
+    font-size: 13px;
+}
+
+@media (max-width: 768px) {
+    .cmRoot {
+        min-height: 520px;
+    }
+
+    .cmChrome {
+        padding: 8px 10px;
+    }
+
+    .cmTabs {
+        padding: 0 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cmTab {
+        transition: none;
+    }
+}

@@ -1,0 +1,888 @@
+/* features/image/image-resize/style/SettingsPanel.module.css */
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, 3.5vw, 20px);
+    padding: clamp(12px, 3vw, 16px);
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.section + .section {
+    padding-top: clamp(14px, 3vw, 18px);
+    border-top: 0.5px solid var(--border-faint);
+}
+
+.sectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.sectionTitle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+}
+
+.sectionTitle i {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.sectionHint {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.segmented {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 3px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.segmentBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    border: none;
+    border-radius: calc(var(--radius-md) - 2px);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-sans);
+}
+
+.segmentBtn:hover:not(:disabled):not(.segmentBtnActive) {
+    color: var(--text);
+}
+
+.segmentBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.segmentBtn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.segmentBtnActive {
+    background: var(--brand);
+    color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.presetCategory {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.presetCategoryLabel {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+}
+
+.presetGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
+}
+
+.presetChip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 9px 6px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: var(--font-sans);
+    min-width: 0;
+}
+
+.presetChip:hover:not(:disabled):not(.presetChipActive) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.presetChip:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.presetChip:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.presetChip:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.presetChipActive {
+    border-color: var(--brand);
+    background: var(--brand);
+}
+
+.presetChipLabel {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.presetChipActive .presetChipLabel {
+    color: white;
+}
+
+.presetChipDims {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.presetChipActive .presetChipDims {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.customGrid {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.dimensionField {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.dimensionLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+}
+
+.inputWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.dimensionInput {
+    width: 100%;
+    height: 40px;
+    padding: 0 34px 0 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 13.5px;
+    font-family: var(--font-mono);
+    background: var(--bg-card);
+    color: var(--text);
+    transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.dimensionInput:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.dimensionInput:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.dimensionUnit {
+    position: absolute;
+    right: 12px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    pointer-events: none;
+}
+
+.dimensionSeparator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    flex-shrink: 0;
+    padding-bottom: 0;
+}
+
+.aspectLockBtn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.aspectLockBtn:hover:not(:disabled) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.aspectLockBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.aspectLockBtn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.aspectLockBtnActive {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: white;
+}
+
+.fieldError {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #b91c1c;
+    font-family: var(--font-sans);
+}
+
+.fieldError i {
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .fieldError {
+        color: #f87171;
+    }
+}
+
+.percentageGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.percentageSliderRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.percentageSlider {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--border-faint);
+    outline: none;
+    cursor: pointer;
+}
+
+.percentageSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--brand);
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.percentageSlider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--brand);
+    border: 2px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.percentageSlider:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.percentageSlider:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.percentageInputWrap {
+    flex-shrink: 0;
+    position: relative;
+    width: 76px;
+}
+
+.percentageInput {
+    width: 100%;
+    height: 36px;
+    padding: 0 22px 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    background: var(--bg-card);
+    color: var(--text);
+    text-align: right;
+}
+
+.percentageInput:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.percentageSuffix {
+    position: absolute;
+    right: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    pointer-events: none;
+}
+
+.percentagePresets {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.percentageChip {
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: var(--font-mono);
+}
+
+.percentageChip:hover:not(:disabled) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.percentageChip:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.percentageChipActive {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: white;
+}
+
+.fitGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.fitOption {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 6px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    min-width: 0;
+}
+
+.fitOption:hover:not(:disabled):not(.fitOptionActive) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.fitOption:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.fitOption:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.fitOptionActive {
+    border-color: var(--brand);
+    background: var(--brand-light);
+}
+
+.fitIconWrap {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+.fitOptionActive .fitIconWrap {
+    background: var(--brand);
+    color: white;
+}
+
+.fitLabel {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.fitOptionActive .fitLabel {
+    color: var(--brand-text);
+}
+
+.fitDesc {
+    font-size: 9.5px;
+    color: var(--text-tertiary);
+    line-height: 1.3;
+    font-family: var(--font-sans);
+}
+
+.formatRow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.formatBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 56px;
+    padding: 6px 4px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 0;
+}
+
+.formatBtn i {
+    font-size: 16px;
+}
+
+.formatBtn span {
+    font-size: 10.5px;
+    font-weight: 700;
+    font-family: var(--font-sans);
+    white-space: nowrap;
+}
+
+.formatBtn:hover:not(:disabled):not(.formatBtnActive) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+    color: var(--text);
+}
+
+.formatBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.formatBtn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.formatBtnActive {
+    border-color: var(--brand);
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.qualityRow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    transition: opacity 0.15s ease;
+}
+
+.rowDisabled {
+    opacity: 0.5;
+}
+
+.qualityBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 50px;
+    padding: 6px 4px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 0;
+}
+
+.qualityBtn:hover:not(:disabled):not(.qualityBtnActive) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.qualityBtn:disabled {
+    cursor: not-allowed;
+}
+
+.qualityBtn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.qualityBtnActive {
+    border-color: var(--brand);
+    background: var(--brand);
+}
+
+.qualityLabel {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.qualityBtnActive .qualityLabel {
+    color: white;
+}
+
+.qualityPercent {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.qualityBtnActive .qualityPercent {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.colorGrid {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.colorSwatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.colorSwatch:hover:not(:disabled) {
+    transform: scale(1.08);
+}
+
+.colorSwatch:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.colorSwatch:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.colorSwatchActive {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.colorSwatchTransparent {
+    background-image: conic-gradient(var(--border) 90deg, transparent 90deg 180deg, var(--border) 180deg 270deg, transparent 270deg);
+    background-size: 8px 8px;
+    background-color: var(--bg-card);
+}
+
+.colorCustomTrigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: var(--font-sans);
+}
+
+.colorCustomTrigger:hover:not(:disabled) {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+.colorCustomTrigger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.colorHexRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.colorInput {
+    width: 36px;
+    height: 32px;
+    padding: 0;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    background: none;
+    flex-shrink: 0;
+}
+
+.colorHexInput {
+    flex: 1;
+    height: 32px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    background: var(--bg-card);
+    color: var(--text);
+    min-width: 0;
+    text-transform: uppercase;
+}
+
+.colorHexInput:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.toggleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.toggleInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.toggleTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.toggleDesc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    line-height: 1.4;
+}
+
+.switch {
+    position: relative;
+    flex-shrink: 0;
+    width: 44px;
+    height: 26px;
+}
+
+.switchInput {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.switchInput:disabled {
+    cursor: not-allowed;
+}
+
+.switchTrack {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+}
+
+.switchThumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.switchInput:checked ~ .switchTrack {
+    background: var(--brand);
+}
+
+.switchInput:checked ~ .switchThumb {
+    transform: translateX(18px);
+}
+
+.switchInput:focus-visible ~ .switchTrack {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.switchInput:disabled ~ .switchTrack {
+    opacity: 0.5;
+}
+
+.infoNote {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    font-family: var(--font-sans);
+}
+
+.infoNote i {
+    font-size: 14px;
+    color: var(--brand);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+@media (max-width: 480px) {
+    .fitGrid {
+        grid-template-columns: 1fr;
+    }
+    .formatRow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .presetGrid {
+        grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    }
+    .customGrid {
+        flex-wrap: wrap;
+    }
+    .dimensionField {
+        min-width: 100px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .segmentBtn,
+    .presetChip,
+    .fitOption,
+    .formatBtn,
+    .qualityBtn,
+    .colorSwatch,
+    .colorCustomTrigger,
+    .aspectLockBtn,
+    .switchTrack,
+    .switchThumb {
+        transition: none;
+    }
+    .presetChip:active,
+    .colorSwatch:hover {
+        transform: none;
+    }
+}

@@ -1,0 +1,691 @@
+/* features/dev/random-string-generator/style/GeneratorPanel.css */
+.gpRoot {
+    display: flex;
+    flex-direction: column;
+    min-height: 600px;
+    overflow: hidden;
+}
+
+/*  Mobile Tab Switcher  */
+.gpMobileTabs {
+    display: none;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-shrink: 0;
+}
+
+.gpMobileTab {
+    flex: 1;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.gpMobileTab i {
+    font-size: 15px;
+}
+
+.gpMobileTab.active {
+    color: var(--text);
+}
+
+.gpMobileTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.gpMobileBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+/*  Panels Container  */
+.gpPanels {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 1px;
+    background: var(--border);
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*  Options Panel  */
+.gpOptions {
+    background: var(--bg-surface);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.gpSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gpSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gpLabel {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+}
+
+.gpLengthDisplay {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.gpLengthInput {
+    width: 70px;
+    height: 26px;
+    padding: 0 8px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--brand);
+    font-family: var(--font-mono);
+    text-align: center;
+}
+
+.gpLengthInput:focus {
+    outline: none;
+    border-color: var(--brand-border);
+}
+
+.gpLengthUnit {
+    font-size: 11px;
+    color: var(--text-disabled);
+}
+
+.gpSlider {
+    width: 100%;
+    height: 6px;
+    border-radius: 99px;
+    background: var(--border);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.gpSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--brand);
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.gpSlider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--brand);
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.gpSliderMarks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    margin-top: -4px;
+}
+
+.gpCheckboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.gpCheckbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.gpCheckbox:hover:not(:has(input:disabled)) {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.gpCheckbox:has(input:checked) {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.gpCheckbox:has(input:disabled) {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.gpCheckbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--brand);
+    flex-shrink: 0;
+}
+
+.gpCheckbox input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+}
+
+.gpCheckboxContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.gpCheckboxLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.gpCheckboxHint {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.gpInputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.gpInputRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.gpInputLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.gpInput {
+    width: 100%;
+    height: 34px;
+    padding: 0 10px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.gpInput:focus {
+    outline: none;
+    border-color: var(--brand-border);
+}
+
+.gpInput::placeholder {
+    color: var(--text-disabled);
+}
+
+/*  Strength Meter  */
+.gpStrength {
+    padding: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gpStrengthHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gpStrengthLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.gpStrengthLabel i {
+    font-size: 14px;
+}
+
+.gpStrengthBadge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 99px;
+}
+
+.gpStrengthBar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.gpStrengthFill {
+    height: 100%;
+    border-radius: 99px;
+    transition:
+        width 0.3s,
+        background 0.3s;
+}
+
+.gpStrengthStats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.gpStat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.gpStatValue {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.gpStatLabel {
+    font-size: 10px;
+    color: var(--text-tertiary);
+}
+
+/*  Mobile Generate Button (hidden on desktop)  */
+.gpGenerateBtnMobile {
+    display: none;
+    width: 100%;
+}
+
+/*  Results Panel  */
+.gpResultsPanel {
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.gpControls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.gpControlsLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.gpCountLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.gpCountInput {
+    width: 50px;
+    height: 26px;
+    padding: 0 8px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+}
+
+.gpAutoToggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.gpAutoToggle input {
+    cursor: pointer;
+    accent-color: var(--brand);
+}
+
+.gpGenerateBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 34px;
+    padding: 0 18px;
+    border-radius: 8px;
+    border: 0.5px solid var(--brand-border);
+    background: var(--brand);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.gpGenerateBtn:hover {
+    background: var(--brand-hover);
+}
+
+.gpGenerateBtn i {
+    font-size: 15px;
+}
+
+.gpEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    gap: 10px;
+    text-align: center;
+}
+
+.gpEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-disabled);
+    margin-bottom: 8px;
+}
+
+.gpEmptyTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.gpEmptyDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 380px;
+    line-height: 1.6;
+}
+
+.gpEmptyCta {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 18px;
+    border-radius: 8px;
+    border: 0.5px solid var(--brand-border);
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.12s;
+}
+
+.gpEmptyCta:hover {
+    background: var(--brand);
+    color: white;
+}
+
+.gpResults {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gpResultCard {
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.gpResultHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.gpResultIndex {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.gpResultMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gpResultLength {
+    font-size: 10px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+}
+
+.gpResultWarn {
+    color: #f59e0b;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+}
+
+.gpResultValue {
+    padding: 14px 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+    word-break: break-all;
+    line-height: 1.7;
+}
+
+.gpResultActions {
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border-top: 0.5px solid var(--border-faint);
+    display: flex;
+    gap: 6px;
+}
+
+.gpResultBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: 6px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.gpResultBtn:hover {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.gpResultBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.gpResultBtn i {
+    font-size: 12px;
+}
+
+/*  Responsive - Mobile Breakpoint  */
+@media (max-width: 900px) {
+    .gpMobileTabs {
+        display: flex;
+    }
+
+    .gpPanels {
+        display: block;
+        overflow: visible;
+    }
+
+    .gpOptions,
+    .gpResultsPanel {
+        min-height: 400px;
+        max-height: none;
+    }
+
+    .gpOptions.mobileHidden,
+    .gpResultsPanel.mobileHidden {
+        display: none;
+    }
+
+    .gpOptions.mobileVisible {
+        display: flex;
+    }
+
+    .gpResultsPanel.mobileVisible {
+        display: flex;
+    }
+
+    .gpGenerateBtnMobile {
+        display: flex;
+    }
+
+    .gpControlsLeft {
+        flex: 1;
+    }
+
+    .gpEmptyCta {
+        display: inline-flex;
+    }
+}
+
+@media (max-width: 480px) {
+    .gpControls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .gpControlsLeft {
+        justify-content: space-between;
+    }
+
+    .gpGenerateBtn {
+        width: 100%;
+    }
+
+    .gpInputRow {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .gpCheckbox,
+    .gpGenerateBtn,
+    .gpResultBtn,
+    .gpStrengthFill,
+    .gpMobileTab,
+    .gpEmptyCta {
+        transition: none;
+    }
+}

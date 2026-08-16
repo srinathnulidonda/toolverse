@@ -1,0 +1,302 @@
+/* features/social/hashtag-generator/style/SelectedHashtags.module.css */
+
+.shRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.shHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.shTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.shTitle i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.shActions {
+    display: flex;
+    gap: 6px;
+}
+
+.shCopyBtn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: 6px;
+    color: var(--brand-text);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.shCopyBtn:hover {
+    background: var(--brand);
+    color: white;
+}
+
+.shCopyBtn i {
+    font-size: 13px;
+}
+
+.shClearBtn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.shClearBtn:hover {
+    background: var(--error-bg);
+    border-color: #FECACA;
+    color: #B91C1C;
+}
+
+.shStats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.shStat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 8px;
+    background: var(--bg-surface);
+    border-radius: 6px;
+}
+
+.shStatValue {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.shStatLabel {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-align: center;
+}
+
+.shWarnings {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.shWarning {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 0.5px solid;
+}
+
+.shWarning i {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+
+.shWarningText {
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.shWarningTags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-left: 20px;
+}
+
+.shWarningTag {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 2px 6px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.shWarningError {
+    background: var(--error-bg);
+    border-color: #FECACA;
+    color: #B91C1C;
+}
+
+.shWarningWarning {
+    background: var(--warning-bg);
+    border-color: #FDE68A;
+    color: #D97706;
+}
+
+.shWarningInfo {
+    background: var(--bg-surface);
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+.shEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 32px 20px;
+    text-align: center;
+}
+
+.shEmpty i {
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.shEmpty p {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.shEmpty span {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    max-width: 200px;
+    line-height: 1.4;
+}
+
+.shTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.shTag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px 6px 10px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: 6px;
+}
+
+.shTagText {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--brand-text);
+}
+
+.shTagRemove {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    color: var(--brand-text);
+    font-size: 10px;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.shTagRemove:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.shPreview {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    background: var(--bg-surface);
+    border-radius: 6px;
+}
+
+.shPreviewLabel {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.shPreviewText {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+.shPreviewMore {
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .shStats {
+        grid-template-columns: 1fr;
+    }
+
+    .shStat {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .shStatValue,
+    .shStatLabel {
+        font-size: 13px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .shClearBtn:hover {
+        color: #F87171;
+    }
+
+    .shWarningError {
+        color: #F87171;
+        border-color: #7F1D1D;
+    }
+
+    .shWarningWarning {
+        color: #FCD34D;
+        border-color: #78350F;
+    }
+}

@@ -1,0 +1,671 @@
+/* features/dev/regex-tester/style/RegexExplainer.module.css */
+.rxeRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px;
+    overflow: auto;
+}
+
+.rxeSectionSwitcher {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 4px;
+    width: fit-content;
+}
+
+.rxeSwitchBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: calc(var(--radius-lg) - 4px);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.rxeSwitchBtn i {
+    font-size: 15px;
+}
+
+.rxeSwitchBtn:hover {
+    color: var(--text);
+}
+
+.rxeSwitchBtn.active {
+    background: var(--bg-card);
+    color: var(--brand-text);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.rxeSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rxeSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.rxeSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+}
+
+.rxeSectionTitle i {
+    font-size: 14px;
+}
+
+.rxeMetaText {
+    font-size: 11px;
+    color: var(--text-disabled);
+    font-style: italic;
+}
+
+.rxeExamplesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 14px;
+}
+
+.rxeExampleCard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: all 0.15s;
+}
+
+.rxeExampleCard:hover {
+    border-color: var(--brand-border);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.rxeExampleHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rxeExampleIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rxeExampleIcon i {
+    font-size: 17px;
+    color: var(--brand);
+}
+
+.rxeExampleTitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.rxeExampleDesc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.rxeExamplePattern {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: var(--radius-md);
+}
+
+.rxeExamplePattern code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--brand-text);
+    font-weight: 600;
+    background: none;
+    border: none;
+    padding: 0;
+    word-break: break-all;
+    flex: 1;
+}
+
+.rxeMiniCopy {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.12s;
+}
+
+.rxeMiniCopy:hover {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+.rxeMiniCopy.copied {
+    color: var(--brand);
+}
+
+.rxeExampleTest {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.rxeTestLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.rxeTestText {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text);
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.rxeTryBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--brand-border);
+    background: var(--brand);
+    color: white;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    margin-top: 2px;
+}
+
+.rxeTryBtn:hover {
+    background: var(--brand-hover);
+}
+
+.rxeTryBtn i {
+    font-size: 14px;
+}
+
+.rxeCopyBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.rxeCopyBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxeCopyBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.rxeLanguageSelector {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.rxeLangBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.rxeLangBtn i {
+    font-size: 14px;
+}
+
+.rxeLangBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.rxeLangBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.rxeCodeBlock {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.rxeCode {
+    margin: 0;
+    padding: 16px 18px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    overflow-x: auto;
+}
+
+.rxeCode code {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.rxeEmptyCode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 48px 24px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text-disabled);
+    text-align: center;
+}
+
+.rxeEmptyCode i {
+    font-size: 28px;
+}
+
+.rxeEmptyCode p {
+    font-size: 13px;
+    margin: 0;
+    max-width: 320px;
+}
+
+.rxeBreakdownList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rxeBreakdownItem {
+    padding: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rxeBreakdownHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.rxeBreakdownSyntax {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brand);
+    background: var(--brand-light);
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: 0.5px solid var(--brand-border);
+    word-break: break-all;
+}
+
+.rxeBreakdownType {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+.rxeBreakdownType.anchor {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.rxeBreakdownType.charclass {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.rxeBreakdownType.quantifier {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.rxeBreakdownType.group {
+    background: #e9d5ff;
+    color: #6b21a8;
+}
+
+.rxeBreakdownType.special {
+    background: #fce7f3;
+    color: #9f1239;
+}
+
+@media (prefers-color-scheme: dark) {
+    .rxeBreakdownType.anchor {
+        background: #0a1628;
+        color: #93c5fd;
+    }
+
+    .rxeBreakdownType.charclass {
+        background: #022c22;
+        color: #6ee7b7;
+    }
+
+    .rxeBreakdownType.quantifier {
+        background: #1f1a08;
+        color: #fcd34d;
+    }
+
+    .rxeBreakdownType.group {
+        background: #1f0a2e;
+        color: #d8b4fe;
+    }
+
+    .rxeBreakdownType.special {
+        background: #2d0a1f;
+        color: #fbcfe8;
+    }
+}
+
+.rxeBreakdownDesc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.rxeReferenceGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.rxeRefCategory {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.rxeRefCategoryTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+}
+
+.rxeRefCategoryTitle i {
+    font-size: 14px;
+    color: var(--brand);
+}
+
+.rxeRefItems {
+    display: flex;
+    flex-direction: column;
+}
+
+.rxeRefItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: none;
+    border-bottom: 0.5px solid var(--border-faint);
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.rxeRefItem:last-child {
+    border-bottom: none;
+}
+
+.rxeRefItem:hover {
+    background: var(--brand-light);
+}
+
+.rxeRefItem:hover .rxeRefPlay {
+    opacity: 1;
+}
+
+.rxeRefSyntax {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--brand);
+    min-width: 60px;
+    flex-shrink: 0;
+}
+
+.rxeRefDesc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    flex: 1;
+}
+
+.rxeRefPlay {
+    font-size: 13px;
+    color: var(--brand);
+    opacity: 0;
+    transition: opacity 0.12s;
+    flex-shrink: 0;
+}
+
+.rxeFlagsList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
+}
+
+.rxeNoFlags {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 40px 24px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text-disabled);
+    text-align: center;
+}
+
+.rxeNoFlags i {
+    font-size: 24px;
+}
+
+.rxeNoFlags p {
+    font-size: 13px;
+    margin: 0;
+    max-width: 280px;
+}
+
+.rxeFlagCard {
+    padding: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rxeFlagHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rxeFlagHeader>i {
+    font-size: 20px;
+    color: var(--brand);
+    flex-shrink: 0;
+}
+
+.rxeFlagInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rxeFlagCode {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brand);
+    background: var(--brand-light);
+    padding: 3px 7px;
+    border-radius: 4px;
+    border: 0.5px solid var(--brand-border);
+}
+
+.rxeFlagLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.rxeFlagDesc {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .rxeRoot {
+        padding: 12px;
+        gap: 16px;
+    }
+
+    .rxeSectionSwitcher {
+        width: 100%;
+    }
+
+    .rxeSwitchBtn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .rxeExamplesGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .rxeReferenceGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .rxeFlagsList {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .rxeSwitchBtn,
+    .rxeCopyBtn,
+    .rxeLangBtn,
+    .rxeRefItem,
+    .rxeTryBtn,
+    .rxeMiniCopy,
+    .rxeExampleCard {
+        transition: none;
+    }
+}

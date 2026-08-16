@@ -1,0 +1,988 @@
+/* features/dev/json-formatter/style/Workspace.module.css */
+/*  Root  */
+.jfRoot {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 580px;
+}
+
+/*  Top Chrome  */
+.jfChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    flex-wrap: wrap;
+}
+
+.jfChromeLeft,
+.jfChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* Pill group (Mode / Indent) */
+.jfPillGroup {
+    display: flex;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.jfPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    padding: 0 10px;
+    border: none;
+    border-right: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    white-space: nowrap;
+}
+
+.jfPill:last-child {
+    border-right: none;
+}
+
+.jfPill:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.jfPill.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+/* Icon buttons */
+.jfIconBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+.jfIconBtn i {
+    font-size: 13px;
+}
+
+.jfIconBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jfIconBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jfIconBtn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.jfIconBtnLabel {
+    font-size: 11.5px;
+}
+
+.jfClearBtn {
+    color: var(--text-tertiary);
+}
+
+.jfClearBtn:hover {
+    color: #B91C1C;
+    border-color: currentColor;
+    background: var(--error-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+    .jfClearBtn:hover {
+        color: #F87171;
+    }
+}
+
+/* Export chips */
+.jfExportRow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.jfExportLabel {
+    font-size: 10.5px;
+    color: var(--text-disabled);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-right: 2px;
+}
+
+.jfChip {
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 99px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.jfChip:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+/* Action buttons */
+.jfActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 12px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.1s;
+    white-space: nowrap;
+}
+
+.jfActionBtn i {
+    font-size: 12px;
+}
+
+.jfActionBtn:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.jfActionBtn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.jfActionBtn.success {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jfActionLabel {
+    display: inline;
+}
+
+/*  Mobile panel switcher  */
+.jfMobileTabs {
+    display: none;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg-surface);
+}
+
+.jfMobileTab {
+    flex: 1;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.1s;
+}
+
+.jfMobileTab.active {
+    color: var(--text);
+}
+
+.jfMobileTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.jfMobileBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 99px;
+    font-size: 9px;
+}
+
+.jfMobileBadge.valid {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.jfMobileBadge.error {
+    background: var(--error-bg);
+    color: #B91C1C;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jfMobileBadge.error {
+        color: #F87171;
+    }
+}
+
+.jfMobileSavings {
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    padding: 1px 6px;
+    border-radius: 99px;
+}
+
+/*  Hint bars  */
+.jfHint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    font-size: 11.5px;
+    color: var(--brand-text);
+    background: var(--brand-light);
+    border-bottom: 0.5px solid var(--brand-border);
+    font-family: var(--font-sans);
+}
+
+.jfHint i {
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.jfHintPath {
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    border-color: var(--border-faint);
+}
+
+.jfHintPath code {
+    font-size: 11px;
+    padding: 1px 5px;
+    background: var(--border);
+    border: none;
+    border-radius: 3px;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+/*  Body (panels)  */
+.jfBody {
+    display: grid;
+    grid-template-columns: 1fr 0.5px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.jfDivider {
+    background: var(--border);
+    width: 0.5px;
+}
+
+.jfPanel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*  Panel headers  */
+.jfPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    height: 36px;
+    border-bottom: 0.5px solid var(--border-faint);
+    background: var(--bg-surface);
+    flex-shrink: 0;
+    gap: 8px;
+}
+
+.jfPanelLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-family: var(--font-sans);
+}
+
+.jfPanelLabel i {
+    font-size: 11px;
+}
+
+.jfPanelMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jfMetaText {
+    font-size: 10px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+}
+
+.jfStatusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-family: var(--font-sans);
+}
+
+.jfStatusBadge i {
+    font-size: 9px;
+}
+
+.jfStatusBadge.valid {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.jfStatusBadge.error {
+    background: var(--error-bg);
+    color: #B91C1C;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jfStatusBadge.error {
+        color: #F87171;
+    }
+}
+
+/* View tabs */
+.jfTabs {
+    display: flex;
+    gap: 0;
+    height: 100%;
+}
+
+.jfTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    padding: 0 11px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.1s;
+    white-space: nowrap;
+}
+
+.jfTab i {
+    font-size: 11px;
+}
+
+.jfTab:hover {
+    color: var(--text);
+}
+
+.jfTab.active {
+    color: var(--text);
+}
+
+.jfTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 8px;
+    right: 8px;
+    height: 1.5px;
+    background: var(--brand);
+    border-radius: 1.5px 1.5px 0 0;
+}
+
+.jfSavingsPill {
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-family: var(--font-sans);
+}
+
+/*  Tab content area  */
+.jfTabContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*  Textarea  */
+.jfTextareaWrap {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.jfTextarea {
+    flex: 1;
+    margin: 0;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    resize: none;
+    overflow: auto;
+    tab-size: 2;
+    white-space: pre;
+}
+
+.jfTextarea::placeholder {
+    color: transparent;
+}
+
+.jfPlaceholderHints {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text-disabled);
+}
+
+.jfPlaceholderHints::before {
+    content: "Paste JSON, a JS object, key=value pairs, YAML, or CSV…";
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    margin-bottom: 10px;
+}
+
+.jfHintKw {
+    color: var(--text-secondary);
+}
+
+/*  Output pre  */
+.jfOutput {
+    flex: 1;
+    margin: 0;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text);
+    background: transparent;
+    border: none;
+    overflow: auto;
+    white-space: pre;
+    tab-size: 2;
+}
+
+.jfKey {
+    color: var(--brand);
+}
+
+.jfString {
+    color: #0A7D65;
+}
+
+.jfNumber {
+    color: #1D5FBF;
+}
+
+.jfBoolean {
+    color: #A0501A;
+}
+
+.jfNull {
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jfString {
+        color: #5EEAD4;
+    }
+
+    .jfNumber {
+        color: #93C5FD;
+    }
+
+    .jfBoolean {
+        color: #FDBA74;
+    }
+}
+
+/*  Error bar  */
+.jfErrorBar {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 12px 16px;
+    background: var(--error-bg);
+    border-top: 0.5px solid var(--border-faint);
+    font-family: var(--font-sans);
+    flex-shrink: 0;
+}
+
+.jfErrorBar>i {
+    font-size: 15px;
+    color: #B91C1C;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jfErrorBar>i {
+        color: #F87171;
+    }
+}
+
+.jfErrorBar>div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.jfErrorBar strong {
+    font-size: 12px;
+    font-weight: 600;
+    color: #B91C1C;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jfErrorBar strong {
+        color: #F87171;
+    }
+}
+
+.jfErrorBar span {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    line-height: 1.5;
+}
+
+.jfErrorTip {
+    font-family: var(--font-sans) !important;
+    font-size: 11px !important;
+    color: var(--text-tertiary) !important;
+    line-height: 1.6 !important;
+    margin-top: 2px;
+}
+
+/*  Empty state  */
+.jfEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-disabled);
+    font-family: var(--font-sans);
+    padding: 32px;
+}
+
+.jfEmpty i {
+    font-size: 20px;
+}
+
+.jfEmpty p {
+    font-size: 12.5px;
+    margin: 0;
+    text-align: center;
+}
+
+/*  Diff view  */
+.jfDiffWrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.jfDiffInputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 0.5px solid var(--border);
+    height: 180px;
+    flex-shrink: 0;
+}
+
+.jfDiffSlot {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.jfDiffSlot+.jfDiffSlot {
+    border-left: 0.5px solid var(--border);
+}
+
+.jfDiffLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 14px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-family: var(--font-sans);
+    border-bottom: 0.5px solid var(--border-faint);
+    background: var(--bg-surface);
+    cursor: default;
+}
+
+.jfDiffLabel i {
+    font-size: 10px;
+}
+
+.jfDiffTa {
+    font-size: 11.5px !important;
+}
+
+.jfDiffResult {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/*  Mobile bottom actions  */
+.jfMobileActions {
+    display: none;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    padding: 8px 12px;
+    gap: 6px;
+    align-items: center;
+    position: relative;
+}
+
+.jfMobAction {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.jfMobAction i {
+    font-size: 14px;
+}
+
+.jfMobAction:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.jfMobAction:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.jfMobAction.success {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jfMobMore {
+    flex: 1;
+    position: relative;
+}
+
+.jfMobMore .jfMobAction {
+    width: 100%;
+}
+
+.jfMobMenu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    left: 0;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.jfMobMenuLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    padding: 8px 12px 4px;
+    font-family: var(--font-sans);
+}
+
+.jfMobMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: background 0.1s;
+    text-align: left;
+}
+
+.jfMobMenuItem i {
+    font-size: 14px;
+    color: var(--text-tertiary);
+}
+
+.jfMobMenuItem:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jfMobMenuItem.checked {
+    color: var(--brand);
+}
+
+.jfMobMenuItem.danger {
+    color: #B91C1C;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jfMobMenuItem.danger {
+        color: #F87171;
+    }
+}
+
+.jfMobMenuItem:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.jfMobMenuDivider {
+    height: 0.5px;
+    background: var(--border-faint);
+    margin: 4px 0;
+}
+
+/* Mobile classes that weren't in original but are referenced */
+.jfPanelInput {
+    /* Base panel styles already applied */
+}
+
+.jfPanelOutput {
+    /* Base panel styles already applied */
+}
+
+.mobileVisible {
+    /* Visibility styles applied in media queries */
+}
+
+.mobileHidden {
+    /* Visibility styles applied in media queries */
+}
+
+.jfIndentGroup {
+    /* Additional styling if needed */
+}
+
+/*  Responsive breakpoints  */
+@media (max-width: 900px) {
+
+    .jfIndentGroup,
+    .jfExportRow {
+        display: none;
+    }
+
+    .jfActionLabel {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .jfRoot {
+        min-height: auto;
+        border-radius: var(--radius-lg);
+    }
+
+    .jfChrome {
+        padding: 8px 10px;
+    }
+
+    .jfMobileTabs {
+        display: flex;
+    }
+
+    .jfBody {
+        display: block;
+        overflow: visible;
+    }
+
+    .jfDivider {
+        display: none;
+    }
+
+    .jfPanel {
+        min-height: 360px;
+    }
+
+    .jfPanel.mobileHidden {
+        display: none;
+    }
+
+    .jfPanel.mobileVisible {
+        display: flex;
+    }
+
+    .jfMobileActions {
+        display: flex;
+    }
+
+    .jfDiffInputs {
+        grid-template-columns: 1fr;
+        height: 280px;
+    }
+
+    .jfDiffSlot+.jfDiffSlot {
+        border-left: none;
+        border-top: 0.5px solid var(--border);
+    }
+
+    .jfChromeRight .jfExportRow {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .jfChrome {
+        gap: 6px;
+    }
+
+    .jfIconBtnLabel {
+        display: none;
+    }
+
+    .jfTabs .jfTab span:not(.jfTab i) {
+        display: none;
+    }
+}
+
+/*  Focus rings (accessibility)  */
+.jfPill:focus-visible,
+.jfIconBtn:focus-visible,
+.jfActionBtn:focus-visible,
+.jfChip:focus-visible,
+.jfTab:focus-visible,
+.jfMobileTab:focus-visible,
+.jfMobAction:focus-visible,
+.jfMobMenuItem:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .jfPill,
+    .jfIconBtn,
+    .jfActionBtn,
+    .jfChip,
+    .jfTab,
+    .jfMobAction,
+    .jfMobMenuItem {
+        transition: none;
+    }
+}

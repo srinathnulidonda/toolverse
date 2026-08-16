@@ -1,0 +1,435 @@
+/* features/dev/url-encoder/style/UrlBatch.module.css */
+.ubtRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+}
+
+/*  Section  */
+.ubtSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.ubtSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ubtSectionLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ubtSectionLabel i {
+    font-size: 12px;
+}
+
+.ubtResultsBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    padding: 0 7px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.ubtErrorBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 20px;
+    padding: 0 7px;
+    border-radius: 99px;
+    background: var(--error-bg);
+    color: #b91c1c;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ubtErrorBadge {
+        color: #f87171;
+    }
+}
+
+.ubtSectionActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ubtSeparatorGroup {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ubtSeparatorLabel {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.ubtSelect {
+    height: 28px;
+    padding: 0 10px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.ubtSelect:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ubtBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ubtBtn i {
+    font-size: 12px;
+}
+
+.ubtBtn:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ubtBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.ubtBtnPrimary {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.ubtBtnPrimary:hover:not(:disabled) {
+    background: var(--brand);
+    color: white;
+}
+
+/*  Textarea  */
+.ubtTextarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.7;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    resize: vertical;
+    min-height: 120px;
+}
+
+.ubtTextarea:disabled {
+    opacity: 0.6;
+}
+
+.ubtTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.ubtInputFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    gap: 12px;
+}
+
+.ubtInputCount {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+/*  Results  */
+.ubtResults {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border-faint);
+}
+
+.ubtResultItem {
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.ubtResultHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+}
+
+.ubtResultIndex {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    min-width: 32px;
+}
+
+.ubtResultStatus {
+    flex: 1;
+}
+
+.ubtStatusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+}
+
+.ubtStatusBadge i {
+    font-size: 11px;
+}
+
+.ubtStatusBadge.pending {
+    background: var(--bg-card);
+    color: var(--text-disabled);
+    border: 0.5px solid var(--border);
+}
+
+.ubtStatusBadge.processing {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 0.5px solid #bfdbfe;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ubtStatusBadge.processing {
+        background: #0a1628;
+        color: #93c5fd;
+        border-color: #1e3a5f;
+    }
+}
+
+.ubtStatusBadge.done {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.ubtStatusBadge.error {
+    background: var(--error-bg);
+    color: #b91c1c;
+    border: 0.5px solid #f3d2d2;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ubtStatusBadge.error {
+        color: #f87171;
+        border-color: #5a2a2a;
+    }
+}
+
+.ubtResultSizes {
+    font-size: 10px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+}
+
+.ubtIconBtn {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.ubtIconBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.ubtResultContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+}
+
+.ubtResultInput,
+.ubtResultOutput {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ubtResultLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ubtResultCode {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--bg-surface);
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 0.5px solid var(--border-faint);
+    word-break: break-all;
+}
+
+.ubtResultError {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--error-bg);
+    border-radius: 5px;
+    color: #b91c1c;
+    font-size: 11px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .ubtResultError {
+        color: #f87171;
+    }
+}
+
+.ubtResultError i {
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/*  Empty State  */
+.ubtEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.ubtEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.ubtEmptyTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.ubtEmptyDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .ubtRoot {
+        padding: 12px;
+    }
+
+    .ubtSectionHeader {
+        padding: 8px 12px;
+    }
+
+    .ubtTextarea {
+        padding: 10px 12px;
+    }
+
+    .ubtResultHeader {
+        padding: 8px 12px;
+    }
+
+    .ubtResultContent {
+        padding: 10px 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .ubtBtn,
+    .ubtIconBtn {
+        transition: none;
+    }
+}

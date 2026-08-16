@@ -1,0 +1,745 @@
+/* app/(legal)/cookies/Cookies.module.css */
+.cookiesPage {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.cookiesHero {
+  padding: 60px 0 40px;
+  background: var(--bg);
+}
+
+.cookiesHeroContainer {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+.cookiesHeroContent {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cookiesHeroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 99px;
+  border: 0.5px solid var(--border);
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cookiesHeroBadge i {
+  font-size: 15px;
+}
+
+.cookiesHeroTitle {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -1.8px;
+  line-height: 1.1;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+
+.cookiesHeroMeta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.metaItem i {
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+
+.metaItem strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.cookiesHeroDescription {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.cookiesContent {
+  padding: 60px 0 120px;
+}
+
+.cookiesContentContainer {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+.cookiesLayout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 80px;
+  align-items: start;
+  position: relative;
+}
+
+.cookiesToc {
+  align-self: stretch;
+}
+
+.cookiesTocFloating {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;
+}
+
+.cookiesTocFloating::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cookiesTocFloating::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.cookiesTocFloating::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.cookiesTocFloating::-webkit-scrollbar-thumb:hover {
+  background: var(--text-disabled);
+}
+
+.cookiesTocTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 16px;
+}
+
+.cookiesTocNav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cookiesTocLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.cookiesTocLink i {
+  font-size: 15px;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.cookiesTocLink:hover,
+.cookiesTocLink.active {
+  color: var(--text);
+  background: var(--bg-surface);
+}
+
+.cookiesTocLink:hover i,
+.cookiesTocLink.active i {
+  color: var(--brand);
+}
+
+.cookiesTocDivider {
+  height: 0.5px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+.cookiesTocOther {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s;
+  background: var(--bg-surface);
+  border: 0.5px solid var(--border);
+}
+
+.cookiesTocOther i:first-child {
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.cookiesTocOther span {
+  flex: 1;
+}
+
+.tocArrow {
+  font-size: 15px;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.cookiesTocOther:hover {
+  background: var(--bg-card);
+  color: var(--brand);
+  border-color: var(--brand-border);
+}
+
+.cookiesTocOther:hover .tocArrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.cookiesTocOtherList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.cookiesArticle {
+  max-width: 800px;
+  width: 100%;
+}
+
+.cookiesSummaryCard {
+  display: flex;
+  gap: 14px;
+  padding: 28px;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 56px;
+}
+
+.summaryIcon {
+  font-size: 18px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.summaryContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.summaryTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 14px;
+  letter-spacing: -0.3px;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.summaryList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.summaryList i {
+  font-size: 15px;
+  color: var(--brand);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cookiesSection {
+  margin-bottom: 56px;
+  scroll-margin-top: 100px;
+}
+
+.cookiesSectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.sectionIcon {
+  font-size: 18px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.cookiesSectionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  color: var(--text);
+  margin: 0;
+  line-height: 1.3;
+  flex: 1;
+}
+
+.cookiesSectionContent {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  padding-left: 32px;
+}
+
+.cookiesSectionContent p {
+  margin: 0 0 18px;
+}
+
+.cookiesSectionContent p:last-child {
+  margin-bottom: 0;
+}
+
+.cookiesSectionContent strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.cookiesSectionContent a {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.cookiesSectionContent a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.cookiesFooterCta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 80px;
+  padding: 28px;
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+}
+
+.footerCtaIcon {
+  font-size: 18px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.footerCtaContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.footerCtaTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
+}
+
+.footerCtaText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.footerCtaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: var(--brand);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.footerCtaButton:hover {
+  background: var(--brand-hover);
+  transform: translateY(-1px);
+}
+
+.footerCtaButton i {
+  font-size: 15px;
+}
+
+@media (max-width: 1400px) {
+  .cookiesHeroContainer,
+  .cookiesContentContainer {
+    padding: 0 60px;
+  }
+
+  .cookiesLayout {
+    gap: 60px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .cookiesLayout {
+    gap: 40px;
+    grid-template-columns: 240px 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cookiesLayout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .cookiesToc {
+    display: none;
+  }
+
+  .cookiesTocFloating {
+    display: none;
+  }
+
+  .cookiesSectionContent {
+    padding-left: 0;
+  }
+
+  .cookiesHeroContainer,
+  .cookiesContentContainer {
+    padding: 0 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .cookiesHero {
+    padding: 40px 0 32px;
+  }
+
+  .cookiesHeroContainer,
+  .cookiesContentContainer {
+    padding: 0 24px;
+  }
+
+  .cookiesHeroBadge {
+    font-size: 11px;
+    padding: 6px 14px;
+    margin-bottom: 20px;
+  }
+
+  .cookiesHeroBadge i {
+    font-size: 15px;
+  }
+
+  .cookiesHeroTitle {
+    font-size: 36px;
+    letter-spacing: -1.2px;
+    margin-bottom: 16px;
+  }
+
+  .cookiesHeroMeta {
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+
+  .metaItem {
+    font-size: 13px;
+  }
+
+  .metaItem i {
+    font-size: 15px;
+  }
+
+  .cookiesHeroDescription {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .cookiesContent {
+    padding: 40px 0 80px;
+  }
+
+  .cookiesSection {
+    margin-bottom: 44px;
+  }
+
+  .cookiesSectionHeader {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .sectionIcon {
+    font-size: 16px;
+  }
+
+  .cookiesSectionTitle {
+    font-size: 21px;
+    letter-spacing: -0.5px;
+  }
+
+  .cookiesSectionContent {
+    font-size: 14px;
+    line-height: 1.7;
+    padding-left: 0;
+  }
+
+  .cookiesSectionContent p {
+    margin-bottom: 16px;
+  }
+
+  .cookiesSummaryCard {
+    flex-direction: row;
+    padding: 24px;
+    gap: 12px;
+    margin-bottom: 44px;
+  }
+
+  .summaryIcon {
+    font-size: 16px;
+  }
+
+  .summaryTitle {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .summaryList {
+    gap: 10px;
+  }
+
+  .summaryList li {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .summaryList i {
+    font-size: 15px;
+  }
+
+  .cookiesFooterCta {
+    flex-direction: row;
+    align-items: center;
+    padding: 24px;
+    margin-top: 60px;
+    gap: 12px;
+  }
+
+  .footerCtaIcon {
+    font-size: 16px;
+  }
+
+  .footerCtaContent {
+    text-align: left;
+  }
+
+  .footerCtaTitle {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .footerCtaText {
+    font-size: 13px;
+  }
+
+  .footerCtaButton {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  .footerCtaButton i {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cookiesHero {
+    padding: 32px 0 24px;
+  }
+
+  .cookiesHeroContainer,
+  .cookiesContentContainer {
+    padding: 0 16px;
+  }
+
+  .cookiesHeroBadge {
+    font-size: 10px;
+    padding: 5px 12px;
+  }
+
+  .cookiesHeroBadge i {
+    font-size: 15px;
+  }
+
+  .cookiesHeroTitle {
+    font-size: 28px;
+    letter-spacing: -0.8px;
+  }
+
+  .cookiesHeroMeta {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .metaItem {
+    font-size: 12px;
+  }
+
+  .metaItem i {
+    font-size: 15px;
+  }
+
+  .cookiesHeroDescription {
+    font-size: 14px;
+  }
+
+  .cookiesContent {
+    padding: 32px 0 60px;
+  }
+
+  .cookiesSection {
+    margin-bottom: 36px;
+  }
+
+  .cookiesSectionHeader {
+    gap: 10px;
+  }
+
+  .sectionIcon {
+    font-size: 15px;
+  }
+
+  .cookiesSectionTitle {
+    font-size: 18px;
+    letter-spacing: -0.3px;
+  }
+
+  .cookiesSectionContent {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .cookiesSectionContent p {
+    margin-bottom: 14px;
+  }
+
+  .cookiesSummaryCard {
+    padding: 20px;
+    gap: 10px;
+  }
+
+  .summaryIcon {
+    font-size: 15px;
+  }
+
+  .summaryTitle {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .summaryList {
+    gap: 8px;
+  }
+
+  .summaryList li {
+    font-size: 12px;
+  }
+
+  .summaryList i {
+    font-size: 15px;
+  }
+
+  .cookiesFooterCta {
+    padding: 20px;
+    gap: 10px;
+    margin-top: 48px;
+  }
+
+  .footerCtaIcon {
+    font-size: 15px;
+  }
+
+  .footerCtaTitle {
+    font-size: 14px;
+  }
+
+  .footerCtaText {
+    font-size: 12px;
+  }
+
+  .footerCtaButton {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .footerCtaButton i {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 360px) {
+  .cookiesHeroContainer,
+  .cookiesContentContainer {
+    padding: 0 14px;
+  }
+
+  .cookiesHeroTitle {
+    font-size: 24px;
+  }
+
+  .cookiesSectionTitle {
+    font-size: 17px;
+  }
+}

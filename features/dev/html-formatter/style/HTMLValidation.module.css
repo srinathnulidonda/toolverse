@@ -1,0 +1,316 @@
+/* features/dev/html-formatter/style/HTMLValidation.module.css */
+.hvRoot {
+    flex: 1;
+    padding: 16px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--bg-surface);
+}
+
+.hvSummary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.hvSummaryCard {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hvSummaryIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.hvGrade {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-sans);
+}
+
+.hvSummaryContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.hvSummaryLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+}
+
+.hvSummaryValue {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hvGradeLabel {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+}
+
+.hvSection {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.hvSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hvSectionHeader i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.hvMetadataGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--border);
+}
+
+.hvMetadataItem {
+    background: var(--bg-card);
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hvMetadataLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.hvMetadataValue {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.hvIssues {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+}
+
+.hvIssue {
+    background: var(--bg-card);
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.hvIssueIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.hvIssueError .hvIssueIcon {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.hvIssueWarning .hvIssueIcon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hvIssueError .hvIssueIcon {
+        background: #1f1517;
+        color: #f87171;
+    }
+
+    .hvIssueWarning .hvIssueIcon {
+        background: #451a03;
+        color: #fbbf24;
+    }
+}
+
+.hvIssueContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.hvIssueMessage {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+.hvIssueMeta {
+    font-size: 11px;
+    color: var(--text-tertiary);
+}
+
+.hvIssueMeta code {
+    font-size: 10px;
+    padding: 1px 4px;
+}
+
+.hvIssueType,
+.hvIssueSeverity {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+}
+
+.hvIssueHigh .hvIssueSeverity {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.hvIssueMedium .hvIssueSeverity {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hvIssueHigh .hvIssueSeverity {
+        background: #1f1517;
+        color: #f87171;
+    }
+
+    .hvIssueMedium .hvIssueSeverity {
+        background: #451a03;
+        color: #fbbf24;
+    }
+}
+
+.hvSuggestions {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hvSuggestion {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.hvSuggestion i {
+    font-size: 14px;
+    color: var(--brand);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.hvAllGood {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+}
+
+.hvAllGoodIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hvAllGoodIcon {
+        background: #022c22;
+        color: #4ade80;
+    }
+}
+
+.hvAllGoodTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.hvAllGoodDesc {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .hvRoot {
+        padding: 12px;
+    }
+
+    .hvSummary {
+        grid-template-columns: 1fr;
+    }
+
+    .hvMetadataGrid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,206 @@
+/* features/image/image-compress/style/CompressionSettings.module.css */
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 3vw, 18px);
+    padding: clamp(12px, 3vw, 16px);
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.controlGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.controlLabel {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+}
+
+.qualityRow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(6px, 1.5vw, 8px);
+    transition: opacity 0.15s ease;
+}
+
+.rowDisabled {
+    opacity: 0.5;
+}
+
+.qualityBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: clamp(46px, 10vw, 54px);
+    padding: 6px 4px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 0;
+}
+
+.qualityBtn:hover:not(:disabled):not(.qualityBtnActive) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.qualityBtn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.qualityBtn:disabled {
+    cursor: not-allowed;
+}
+
+.qualityBtn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.qualityBtnActive {
+    border-color: var(--brand);
+    background: var(--brand);
+}
+
+.qualityLabel {
+    font-size: clamp(11.5px, 2.6vw, 13px);
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.qualityBtnActive .qualityLabel {
+    color: white;
+}
+
+.qualityPercent {
+    font-size: clamp(9px, 2vw, 10.5px);
+    font-weight: 600;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.qualityBtnActive .qualityPercent {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.formatRow {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(6px, 1.5vw, 8px);
+}
+
+.formatBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: clamp(52px, 11vw, 60px);
+    padding: 6px 4px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 0;
+}
+
+.formatBtn i {
+    font-size: clamp(15px, 3.4vw, 18px);
+}
+
+.formatBtn span {
+    font-size: clamp(9.5px, 2.2vw, 11px);
+    font-weight: 700;
+    font-family: var(--font-sans);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.formatBtn:hover:not(:disabled):not(.formatBtnActive) {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+    color: var(--text);
+}
+
+.formatBtn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.formatBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.formatBtn:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.formatBtnActive {
+    border-color: var(--brand);
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.infoNote {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: clamp(10.5px, 2.4vw, 11.5px);
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    font-family: var(--font-sans);
+}
+
+.infoNote i {
+    font-size: 14px;
+    color: var(--brand);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+@media (max-width: 360px) {
+    .formatRow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .qualityBtn,
+    .formatBtn {
+        transition: none;
+    }
+    .qualityBtn:active,
+    .formatBtn:active {
+        transform: none;
+    }
+}

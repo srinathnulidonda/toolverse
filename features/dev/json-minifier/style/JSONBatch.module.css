@@ -1,0 +1,508 @@
+/* features/dev/json-minifier/style/JSONBatch.module.css */
+.jbRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+    background: var(--bg-surface);
+}
+
+.jbSection {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.jbSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.jbSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jbSectionTitle i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.jbHeaderRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jbActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    border: 0.5px solid var(--border);
+}
+
+.jbActionBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.jbActionBtn i {
+    font-size: 13px;
+}
+
+.jbActionBtnPrimary {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+}
+
+.jbActionBtnPrimary:hover:not(:disabled) {
+    background: var(--brand-hover);
+}
+
+.jbActionBtnGhost {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+
+.jbActionBtnGhost:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jbUploadArea {
+    padding: 16px;
+}
+
+.jbFileInput {
+    display: none;
+}
+
+.jbDropZone {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg-surface);
+}
+
+.jbDropZone:hover {
+    border-color: var(--brand);
+    background: var(--brand-light);
+}
+
+.jbDropIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.jbDropTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 4px;
+}
+
+.jbDropSub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+}
+
+.jbSummaryBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.jbSummaryStats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.jbSummaryStat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.jbSummaryStat i {
+    font-size: 12px;
+}
+
+.jbProgressWrap {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.jbProgressTop {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.jbProgressLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.jbProgressSub {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.jbProgressTrack {
+    height: 8px;
+    background: var(--bg-surface);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.jbProgressFill {
+    height: 100%;
+    background: var(--brand);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+}
+
+.jbBadge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    text-transform: uppercase;
+}
+
+.jbBadgeSuccess {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.jbBadgeError {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 0.5px solid #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbBadgeError {
+        background: #1f1517;
+        color: #f87171;
+        border-color: #3c1518;
+    }
+}
+
+.jbSavingsBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #166534;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbSavingsBadge {
+        color: #4ade80;
+    }
+}
+
+.jbResults {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+}
+
+.jbResultRow {
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+}
+
+.jbResultInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+}
+
+.jbResultInfo>i {
+    font-size: 16px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.jbResultNameWrap {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jbResultName {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.jbResultSize {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+}
+
+.jbResultSavings {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+}
+
+.jbResultSavings.positive {
+    color: #16a34a;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbResultSavings.positive {
+        color: #4ade80;
+    }
+}
+
+.jbResultActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 16px 12px;
+    flex-wrap: wrap;
+}
+
+.jbStatus {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.jbStatus i {
+    font-size: 11px;
+}
+
+.jbStatusPending {
+    background: var(--bg-surface);
+    color: var(--text-disabled);
+    border: 0.5px solid var(--border);
+}
+
+.jbStatusProcessing {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 0.5px solid #bfdbfe;
+}
+
+.jbStatusCompleted {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.jbStatusError {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 0.5px solid #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbStatusProcessing {
+        background: #0a1628;
+        color: #93c5fd;
+        border-color: #1e3a5f;
+    }
+
+    .jbStatusError {
+        background: #1f1517;
+        color: #f87171;
+        border-color: #3c1518;
+    }
+}
+
+.jbIconBtn,
+.jbRemoveBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jbIconBtn:hover,
+.jbRemoveBtn:hover:not(:disabled) {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.jbIconBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jbRemoveBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.jbErrorRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #fef2f2;
+    color: #dc2626;
+    font-size: 12px;
+    border-top: 0.5px solid var(--border);
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbErrorRow {
+        background: #1f1517;
+        color: #f87171;
+    }
+}
+
+.jbErrorRow i {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.jbEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.jbEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-disabled);
+}
+
+.jbEmptyTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.jbEmptyDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 380px;
+    line-height: 1.6;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.jbSpin {
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .jbRoot {
+        padding: 12px;
+    }
+
+    .jbDropZone {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .jbSummaryBar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

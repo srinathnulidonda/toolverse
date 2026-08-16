@@ -1,0 +1,230 @@
+/* features/social/meta-tag-generator/style/HistoryPanel.module.css */
+.hpEmpty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.hpEmpty i {
+    font-size: 36px;
+    color: var(--text-disabled);
+}
+
+.hpEmpty p {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.hpEmpty span {
+    font-size: 12.5px;
+    color: var(--text-tertiary);
+    max-width: 220px;
+    line-height: 1.5;
+}
+
+.hpRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.hpHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 4px;
+}
+
+.hpCount {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.hpCount i {
+    font-size: 15px;
+}
+
+.hpClearBtn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: transparent;
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-tertiary);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.hpClearBtn i {
+    font-size: 13px;
+}
+
+.hpClearBtn:hover {
+    background: var(--error-bg);
+    border-color: #FECACA;
+    color: #B91C1C;
+}
+
+.hpGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.hpCard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    transition: all 0.15s;
+}
+
+.hpCard:hover {
+    border-color: var(--text-disabled);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.hpCardHeader {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.hpCardTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.hpCardTime {
+    font-size: 10.5px;
+    color: var(--text-disabled);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.hpCardDescription {
+    font-size: 11.5px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.hpCardMeta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.hpMetaTag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: var(--bg-surface);
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    text-transform: capitalize;
+}
+
+.hpMetaTag i {
+    font-size: 11px;
+}
+
+.hpMetaSchema {
+    background: var(--brand-light);
+    color: var(--brand-text);
+}
+
+.hpCardActions {
+    display: flex;
+    gap: 6px;
+    margin-top: auto;
+}
+
+.hpBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.hpBtn i {
+    font-size: 13px;
+}
+
+.hpRestoreBtn {
+    flex: 1;
+    color: var(--brand-text);
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.hpRestoreBtn:hover {
+    background: var(--brand);
+    color: white;
+}
+
+.hpDeleteBtn {
+    color: var(--text-tertiary);
+    width: 32px;
+}
+
+.hpDeleteBtn:hover {
+    background: var(--error-bg);
+    border-color: #FECACA;
+    color: #B91C1C;
+}
+
+@media (max-width: 600px) {
+    .hpGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .hpClearBtn:hover {
+        color: #F87171;
+    }
+
+    .hpDeleteBtn:hover {
+        color: #F87171;
+        border-color: #7F1D1D;
+    }
+}

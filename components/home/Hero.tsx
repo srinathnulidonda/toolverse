@@ -1,0 +1,149 @@
+// components/home/Hero.tsx
+import React, { useMemo } from "react";
+import SearchBar from "./SearchBar";
+import SocialProof from "./SocialProof";
+
+const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
+
+export default function Hero() {
+  const sectionStyle: React.CSSProperties = useMemo(() => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "var(--bg)",
+    padding: "28px 40px 44px",
+    minHeight: "260px",
+  }), []);
+
+  const contentStyle: React.CSSProperties = useMemo(() => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    maxWidth: "640px",
+    width: "100%",
+  }), []);
+
+  const eyebrowStyle: React.CSSProperties = useMemo(() => ({
+    fontSize: "12px",
+    color: "var(--text-disabled)",
+    marginBottom: "14px",
+    fontFamily: font,
+    letterSpacing: "0.4px",
+    textTransform: "uppercase",
+    fontWeight: 500,
+  }), [font]);
+
+  const titleStyle: React.CSSProperties = useMemo(() => ({
+    fontSize: "clamp(28px, 4.5vw, 48px)",
+    fontWeight: 700,
+    letterSpacing: "-1.2px",
+    lineHeight: 1.15,
+    color: "var(--text)",
+    marginBottom: "16px",
+    fontFamily: font,
+  }), [font]);
+
+  const brandStyle: React.CSSProperties = useMemo(() => ({
+    color: "var(--brand)"
+  }), []);
+
+  const bodyStyle: React.CSSProperties = useMemo(() => ({
+    fontSize: "clamp(14px, 1.6vw, 15px)",
+    color: "var(--text-secondary)",
+    lineHeight: 1.7,
+    marginBottom: "28px",
+    maxWidth: "400px",
+    fontFamily: font,
+    fontWeight: 400,
+  }), [font]);
+
+  return (
+    <section
+      className="hero-section"
+      style={sectionStyle}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          maxWidth: "640px",
+          width: "100%",
+        }}
+      >
+        <p
+          className="hero-eyebrow"
+          style={{
+            fontSize: "12px",
+            color: "var(--text-disabled)",
+            marginBottom: "14px",
+            fontFamily: font,
+            letterSpacing: "0.4px",
+            textTransform: "uppercase",
+            fontWeight: 500,
+          }}
+        >
+          PDF · Images · Finance · Dev · Resume
+        </p>
+
+        <h1
+          className="hero-title"
+          style={{
+            fontSize: "clamp(28px, 4.5vw, 48px)",
+            fontWeight: 700,
+            letterSpacing: "-1.2px",
+            lineHeight: 1.15,
+            color: "var(--text)",
+            marginBottom: "16px",
+            fontFamily: font,
+          }}
+        >
+          All your tools.{" "}
+          <span style={{ color: "var(--brand)" }}>One place.</span>
+        </h1>
+
+        <p
+          className="hero-body"
+          style={{
+            fontSize: "clamp(14px, 1.6vw, 15px)",
+            color: "var(--text-secondary)",
+            lineHeight: 1.7,
+            marginBottom: "28px",
+            maxWidth: "400px",
+            fontFamily: font,
+            fontWeight: 400,
+          }}
+        >
+          Built for speed — zero setup, zero friction.
+        </p>
+
+        <SearchBar />
+
+        <SocialProof />
+      </div>
+
+      <style>{`
+        @media (max-width: 480px) {
+          .hero-section { padding: 16px 20px 36px !important; }
+          .hero-eyebrow { font-size: 10px !important; letter-spacing: 0.2px !important; margin-bottom: 10px !important; }
+          .hero-title {
+            font-size: 26px !important;
+            letter-spacing: -0.5px !important;
+            line-height: 1.28 !important;
+            margin-bottom: 8px !important;
+            white-space: normal !important;
+            max-width: 300px;
+          }
+          .hero-body { font-size: 12px !important; line-height: 1.5 !important; margin-bottom: 18px !important; }
+        }
+
+        @media (max-width: 340px) {
+          .hero-title { font-size: 23px !important; letter-spacing: -0.4px !important; margin-bottom: 6px !important; max-width: 260px; }
+          .hero-body { font-size: 11px !important; }
+        }
+      `}</style>
+    </section>
+  );
+}

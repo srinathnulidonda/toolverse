@@ -1,0 +1,352 @@
+/* features/finance/gst-calculator/style/ResultDetails.module.css */
+.gstResultDetails {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    font-family: var(--font-sans);
+}
+
+.gstDetailSection {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.gstDetailHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.gstDetailHeading i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.gstDetailGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.gstDetailItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.gstDetailLabel {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+}
+
+.gstDetailValue {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.gstMono {
+    font-family: var(--font-mono);
+}
+
+.gstTaxBars {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.gstTaxBarItem {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.gstTaxBarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.gstTaxBarLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+}
+
+.gstTaxBarLabel i {
+    font-size: 14px;
+}
+
+.gstTaxBarAmount {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.gstTaxBarTrack {
+    height: 8px;
+    background: var(--border-faint);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.gstTaxBarFill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gstBarCgst {
+    background: linear-gradient(90deg, #2563EB, #3B82F6);
+}
+
+.gstBarSgst {
+    background: linear-gradient(90deg, #7C3AED, #8B5CF6);
+}
+
+.gstBarIgst {
+    background: linear-gradient(90deg, var(--brand), var(--brand-hover));
+}
+
+.gstBarCess {
+    background: linear-gradient(90deg, #D97706, #F59E0B);
+}
+
+.gstTaxBarRate {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.gstCalcSteps {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.gstCalcStep {
+    display: flex;
+    gap: 12px;
+}
+
+.gstStepNum {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12.5px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.gstStepFinal .gstStepNum {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: white;
+}
+
+.gstStepContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.gstStepTitle {
+    font-size: 13px;
+    color: var(--text);
+}
+
+.gstStepFormula {
+    padding: 8px 10px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border);
+}
+
+.gstStepFormula code {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    word-break: break-word;
+}
+
+.gstStepResult {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--brand-light);
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--brand-border);
+}
+
+.gstStepResult i {
+    font-size: 14px;
+    color: var(--brand);
+}
+
+.gstStepResult strong {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--brand-text);
+    font-family: var(--font-mono);
+}
+
+.gstStepSummary {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.gstSummaryItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border);
+    font-size: 12.5px;
+}
+
+.gstSummaryItem span {
+    color: var(--text-secondary);
+}
+
+.gstSummaryItem strong {
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.gstSummaryTotal {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+}
+
+.gstSummaryTotal strong {
+    color: var(--brand-text);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .gstResultDetails {
+        padding: 16px;
+        gap: 20px;
+    }
+
+    .gstDetailGrid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .gstDetailHeading {
+        font-size: 12px;
+        padding: 10px 14px;
+    }
+
+    .gstDetailHeading i {
+        font-size: 14px;
+    }
+
+    .gstDetailLabel {
+        font-size: 10.5px;
+    }
+
+    .gstDetailValue {
+        font-size: 12px;
+    }
+
+    .gstTaxBars {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .gstTaxBarLabel {
+        font-size: 11.5px;
+    }
+
+    .gstTaxBarLabel i {
+        font-size: 12px;
+    }
+
+    .gstTaxBarAmount {
+        font-size: 12px;
+    }
+
+    .gstTaxBarRate {
+        font-size: 10px;
+    }
+
+    .gstStepNum {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+    }
+
+    .gstStepTitle {
+        font-size: 12px;
+    }
+
+    .gstStepFormula code {
+        font-size: 11px;
+    }
+
+    .gstStepResult {
+        padding: 5px 8px;
+        gap: 4px;
+    }
+
+    .gstStepResult i {
+        font-size: 12px;
+    }
+
+    .gstStepResult strong {
+        font-size: 12px;
+    }
+
+    .gstSummaryItem {
+        padding: 6px 10px;
+        gap: 6px;
+        font-size: 11.5px;
+    }
+
+    .gstSummaryItem span {
+        font-size: 10.5px;
+    }
+
+    .gstSummaryItem strong {
+        font-size: 11.5px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gstTaxBarFill {
+        transition: none;
+    }
+}

@@ -1,0 +1,576 @@
+/* features/dev/js-minifier/style/JSBatch.module.css */
+.jbRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg-surface);
+    min-height: 0;
+}
+
+.jbSection {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.jbSectionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.jbSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jbSectionTitle i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.jbHeaderRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.jbActionBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    border: 0.5px solid var(--border);
+    white-space: nowrap;
+}
+
+.jbActionBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.jbActionBtn i {
+    font-size: 13px;
+}
+
+.jbActionBtnPrimary {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+}
+
+.jbActionBtnPrimary:hover:not(:disabled) {
+    background: var(--brand-hover);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.jbActionBtnGhost {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+
+.jbActionBtnGhost:hover:not(:disabled) {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jbUploadArea {
+    padding: 16px;
+}
+
+.jbFileInput {
+    display: none;
+}
+
+.jbDropZone {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 28px 24px;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg-surface);
+}
+
+.jbDropZone:hover,
+.jbDropZone:focus-within {
+    border-color: var(--brand);
+    background: var(--brand-light);
+}
+
+.jbDropIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.jbDropZone:hover .jbDropIcon {
+    color: var(--brand);
+    border-color: var(--brand-border);
+}
+
+.jbDropTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 4px;
+}
+
+.jbDropSub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+}
+
+.jbSummaryBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.jbSummaryStats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.jbSummaryStat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.jbSummaryStat i {
+    font-size: 13px;
+    color: var(--text-tertiary);
+}
+
+.jbProgressWrap {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    flex-shrink: 0;
+}
+
+.jbProgressTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.jbProgressLabel {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.jbProgressSub {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.jbProgressTrack {
+    height: 8px;
+    background: var(--bg-surface);
+    border-radius: 99px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+}
+
+.jbProgressFill {
+    height: 100%;
+    background: var(--brand);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+}
+
+.jbBadge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.jbBadgeSuccess {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.jbBadgeError {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 0.5px solid #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbBadgeError {
+        background: rgba(220, 38, 38, 0.15);
+        color: #f87171;
+        border-color: rgba(220, 38, 38, 0.3);
+    }
+}
+
+.jbSavingsBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #166534;
+    white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbSavingsBadge {
+        color: #4ade80;
+    }
+}
+
+.jbResults {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+}
+
+.jbResultRow {
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    transition: background 0.12s;
+}
+
+.jbResultRow:hover {
+    background: var(--bg-surface);
+}
+
+.jbResultInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    flex-wrap: wrap;
+}
+
+.jbResultInfo > i {
+    font-size: 16px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.jbResultNameWrap {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.jbResultName {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.jbResultSize {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+}
+
+.jbResultSavings {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.jbResultSavings.positive {
+    color: #16a34a;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbResultSavings.positive {
+        color: #4ade80;
+    }
+}
+
+.jbResultActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 16px 12px;
+    flex-wrap: wrap;
+}
+
+.jbStatus {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.jbStatus i {
+    font-size: 11px;
+}
+
+.jbStatusPending {
+    background: var(--bg-surface);
+    color: var(--text-disabled);
+    border: 0.5px solid var(--border);
+}
+
+.jbStatusProcessing {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 0.5px solid #bfdbfe;
+}
+
+.jbStatusCompleted {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border: 0.5px solid var(--brand-border);
+}
+
+.jbStatusError {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 0.5px solid #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbStatusProcessing {
+        background: rgba(29, 78, 216, 0.15);
+        color: #93c5fd;
+        border-color: rgba(29, 78, 216, 0.3);
+    }
+
+    .jbStatusError {
+        background: rgba(220, 38, 38, 0.15);
+        color: #f87171;
+        border-color: rgba(220, 38, 38, 0.3);
+    }
+}
+
+.jbIconBtn,
+.jbRemoveBtn {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+}
+
+.jbIconBtn:hover,
+.jbRemoveBtn:hover:not(:disabled) {
+    background: var(--bg-card);
+    color: var(--text);
+    border-color: var(--text-tertiary);
+}
+
+.jbIconBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jbRemoveBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.jbErrorRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #fef2f2;
+    color: #dc2626;
+    font-size: 12px;
+    border-top: 0.5px solid #fecaca;
+    line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jbErrorRow {
+        background: rgba(220, 38, 38, 0.1);
+        color: #f87171;
+        border-color: rgba(220, 38, 38, 0.2);
+    }
+}
+
+.jbErrorRow i {
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.jbEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 60px 24px;
+    text-align: center;
+    min-height: 300px;
+}
+
+.jbEmptyIcon {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.jbEmptyTitle {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.jbEmptyDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 380px;
+    line-height: 1.6;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.jbSpin {
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+    .jbRoot {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .jbDropZone {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px 16px;
+        gap: 12px;
+    }
+
+    .jbSummaryBar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .jbSummaryStats {
+        justify-content: space-around;
+    }
+
+    .jbHeaderRight {
+        flex-wrap: wrap;
+    }
+
+    .jbResultInfo {
+        gap: 8px;
+    }
+
+    .jbResultNameWrap {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .jbSectionHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .jbSummaryStats {
+        gap: 10px;
+    }
+}

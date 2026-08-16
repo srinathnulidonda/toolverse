@@ -1,0 +1,516 @@
+/* features/dev/case-converter/style/CasePreview.module.css */
+.cpRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cpMobileSwitcher {
+    display: none;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.cpSwTab {
+    flex: 1;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.cpSwTab.active {
+    color: var(--text);
+}
+
+.cpSwTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--brand);
+}
+
+.cpSwDivider {
+    width: 0.5px;
+    background: var(--border);
+    align-self: stretch;
+    margin: 10px 0;
+}
+
+.cpSwDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+}
+
+.cpBody {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.cpPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    background: var(--bg-card);
+}
+
+.mobVisible {
+    visibility: visible;
+    z-index: 1;
+}
+
+.mobHidden {
+    visibility: visible;
+    z-index: 0;
+}
+
+.cpPanelBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    padding: 0 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.cpPanelLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+}
+
+.cpPanelLabel i {
+    font-size: 12px;
+}
+
+.cpPanelActions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cpCharCount {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-disabled);
+}
+
+.cpCountBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.cpIconBtn {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: 0.5px solid transparent;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.cpIconBtn:hover:not(:disabled) {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.cpIconBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.cpTextarea {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    line-height: 1.7;
+    resize: none;
+    outline: none;
+    min-height: 0;
+}
+
+.cpTextarea::placeholder {
+    color: var(--text-disabled);
+    font-family: var(--font-sans);
+}
+
+.cpMobCta {
+    display: none;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.cpCtaBtn {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: none;
+    border-radius: 10px;
+    background: var(--brand);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.cpCtaBtn:hover {
+    background: var(--brand-hover);
+}
+
+.cpCtaBtn i:last-child {
+    margin-left: auto;
+    opacity: 0.7;
+}
+
+.cpGutter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-surface);
+    border-left: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+}
+
+.cpGutterLine {
+    flex: 1;
+    width: 0.5px;
+    background: var(--border);
+}
+
+.cpGutterNode {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--brand);
+}
+
+.cpOutputBody {
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cpAutoNote {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: var(--ccRadiusMd);
+    font-size: 11px;
+    color: var(--brand-text);
+    flex-shrink: 0;
+}
+
+.cpAutoNote i {
+    font-size: 13px;
+}
+
+.cpResultCard {
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--ccRadiusLg);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.12s;
+}
+
+.cpResultCard:hover {
+    border-color: var(--brand-border);
+}
+
+.cpResultHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.cpResultInfo {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.cpResultInfo>i {
+    font-size: 17px;
+    color: var(--brand);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.cpResultText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.cpResultLabel {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.cpResultDesc {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+}
+
+.cpCopyBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 27px;
+    padding: 0 9px;
+    border-radius: var(--ccRadiusMd);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.cpCopyBtn i {
+    font-size: 12px;
+}
+
+.cpCopyBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.cpCopyBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.cpResultValue {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border-radius: var(--ccRadiusMd);
+    border: 0.5px solid var(--border-faint);
+    word-break: break-all;
+}
+
+.cpResultExample {
+    font-size: 10.5px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+}
+
+.cpEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--bg-card);
+}
+
+.cpEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+}
+
+.cpEmptyTitle {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.cpEmptyDesc {
+    font-size: 12.5px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.6;
+}
+
+.cpMobActions {
+    display: none;
+    gap: 8px;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.cpMobBtn {
+    flex: 1;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.cpMobBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.cpMobBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.cpMobBtn i {
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+    .cpMobileSwitcher {
+        display: flex;
+    }
+
+    .cpBody {
+        grid-template-columns: 1fr;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cpGutter {
+        display: none;
+    }
+
+    .cpPanel {
+        grid-column: 1;
+        grid-row: 1;
+        position: absolute;
+        inset: 0;
+    }
+
+    .mobVisible {
+        z-index: 1;
+        visibility: visible;
+    }
+
+    .mobHidden {
+        z-index: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .cpMobCta {
+        display: block;
+    }
+
+    .cpMobActions {
+        display: flex;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .cpIconBtn,
+    .cpCopyBtn,
+    .cpCtaBtn,
+    .cpMobBtn,
+    .cpResultCard,
+    .cpSwTab {
+        transition: none;
+    }
+}

@@ -1,0 +1,149 @@
+/* features/social/meta-tag-generator/style/Templates.module.css */
+.tplRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.tplIntro {
+    display: flex;
+    gap: 14px;
+    padding: 18px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: 12px;
+}
+
+.tplIntroIcon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border-radius: 10px;
+    font-size: 20px;
+    color: var(--brand);
+    flex-shrink: 0;
+}
+
+.tplIntroText h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--brand-text);
+    margin: 0 0 4px;
+}
+
+.tplIntroText p {
+    font-size: 12.5px;
+    color: var(--brand-text);
+    opacity: 0.85;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.tplGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+}
+
+.tplCard {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+}
+
+.tplCard:hover {
+    border-color: var(--brand);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.tplCardTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tplIcon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 17px;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+}
+
+.tplCard:hover .tplIcon {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+.tplCategory {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-tertiary);
+    padding: 3px 8px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+}
+
+.tplName {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.tplDesc {
+    font-size: 11.5px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    flex: 1;
+}
+
+.tplUseBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--brand);
+    margin-top: auto;
+}
+
+.tplUseBtn i {
+    font-size: 13px;
+    transition: transform 0.15s;
+}
+
+.tplCard:hover .tplUseBtn i {
+    transform: translateX(3px);
+}
+
+@media (max-width: 600px) {
+    .tplGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .tplIntro {
+        flex-direction: column;
+        text-align: center;
+    }
+}

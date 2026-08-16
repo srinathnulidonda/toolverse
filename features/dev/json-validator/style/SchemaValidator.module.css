@@ -1,0 +1,448 @@
+/* features/dev/json-validator/style/SchemaValidator.module.css */
+.svRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-surface);
+    overflow: hidden;
+    min-height: 0;
+}
+
+.svHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.svHeaderLeft {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.svHeaderLeft i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.svHeaderRight {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.svSampleBtn {
+    height: 28px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.svSampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.svBody {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    overflow: auto;
+    min-height: 0;
+}
+
+.svPanel {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.svPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+}
+
+.svPanelTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.svPanelTitle i {
+    font-size: 13px;
+}
+
+.svPanelActions {
+    display: flex;
+    gap: 4px;
+}
+
+.svCopyBtn,
+.svClearBtn {
+    width: 28px;
+    height: 28px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.svCopyBtn:hover,
+.svClearBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.svCopyBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.svTextarea {
+    min-height: 200px;
+    padding: 14px 16px;
+    border: none;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+}
+
+.svTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.svGenerated {
+    background: var(--bg-card);
+    border: 0.5px solid var(--brand-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.svGeneratedHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--brand-light);
+    border-bottom: 0.5px solid var(--brand-border);
+}
+
+.svGeneratedTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--brand-text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.svGeneratedTitle i {
+    font-size: 13px;
+}
+
+.svUseBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0.5px solid var(--brand-border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    color: var(--brand-text);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.svUseBtn:hover {
+    background: var(--brand);
+    color: white;
+}
+
+.svUseBtn i {
+    font-size: 12px;
+}
+
+.svSchemaPreview {
+    margin: 0;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    line-height: 1.6;
+    overflow-x: auto;
+    max-height: 300px;
+}
+
+.svResults {
+    flex-shrink: 0;
+}
+
+.svResultError {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    background: #fef2f2;
+    border: 0.5px solid #fecaca;
+    border-radius: var(--radius-lg);
+    color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+    .svResultError {
+        background: #1f1517;
+        border-color: #7f1d1d;
+        color: #f87171;
+    }
+}
+
+.svResultError i {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.svResultError strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.svResultError span {
+    font-size: 12px;
+    font-family: var(--font-mono);
+}
+
+.svResult {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    gap: 16px;
+}
+
+.svResultValid {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.svResultInvalid {
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+@media (prefers-color-scheme: dark) {
+    .svResultValid {
+        background: #052e16;
+        border-color: #166534;
+    }
+
+    .svResultInvalid {
+        background: #1f1517;
+        border-color: #7f1d1d;
+    }
+}
+
+.svResultIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.svResultValid .svResultIcon {
+    background: #16a34a;
+    color: white;
+}
+
+.svResultInvalid .svResultIcon {
+    background: #dc2626;
+    color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+    .svResultValid .svResultIcon {
+        background: #4ade80;
+        color: #052e16;
+    }
+
+    .svResultInvalid .svResultIcon {
+        background: #f87171;
+        color: #1f1517;
+    }
+}
+
+.svResultContent {
+    flex: 1;
+}
+
+.svResultTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+}
+
+.svResultValid .svResultTitle {
+    color: #16a34a;
+}
+
+.svResultInvalid .svResultTitle {
+    color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+    .svResultValid .svResultTitle {
+        color: #4ade80;
+    }
+
+    .svResultInvalid .svResultTitle {
+        color: #f87171;
+    }
+}
+
+.svResultDesc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0 0 16px;
+    line-height: 1.5;
+}
+
+.svSchemaErrors {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.svSchemaError {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text);
+}
+
+.svSchemaError i {
+    font-size: 8px;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.svSchemaError code {
+    margin-left: 8px;
+    font-size: 11px;
+}
+
+.svEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.svEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.svEmptyTitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.svEmptyDesc {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .svHeader {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .svHeaderRight {
+        justify-content: flex-start;
+    }
+
+    .svBody {
+        padding: 12px;
+    }
+
+    .svResult {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}

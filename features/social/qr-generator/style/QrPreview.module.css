@@ -1,0 +1,290 @@
+/* features/social/qr-generator/style/QrPreview.module.css */
+.qpRoot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 20px 24px;
+    flex: 1;
+}
+
+.qpCanvasRegion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.qpCanvasWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 240px;
+    aspect-ratio: 1;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.qpCanvasWrap.qpEmptyState {
+    background: var(--bg-surface) !important;
+    box-shadow: none;
+}
+
+.qpPlaceholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.qpPlaceholderIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--text-disabled);
+}
+
+.qpPlaceholderText {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 130px;
+    font-family: var(--font-sans);
+}
+
+.qpCanvas {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto !important;
+    height: auto !important;
+    display: block;
+}
+
+.qpError {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 12px;
+    background: var(--error-bg);
+    border-radius: 8px;
+    font-size: 11.5px;
+    color: #B91C1C;
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    width: 100%;
+    max-width: 240px;
+    margin: 0;
+}
+
+.qpError i {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .qpError {
+        color: #F87171;
+    }
+}
+
+.qpDataPill {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+    max-width: 240px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+}
+
+.qpDataPill i {
+    font-size: 12px;
+    color: var(--text-disabled);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.qpDataText {
+    font-size: 10.5px;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+    word-break: break-all;
+    line-height: 1.45;
+}
+
+.qpPrimaryActions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    max-width: 240px;
+}
+
+.qpActionBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 38px;
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.qpActionBtn i {
+    font-size: 14px;
+}
+
+.qpActionBtn:hover:not(:disabled) {
+    background: var(--border);
+    color: var(--text);
+}
+
+.qpActionBtn:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.qpActionBtn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.qpSaveBtn.qpSaved {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+.qpExportSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 240px;
+}
+
+.qpExportLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--font-sans);
+}
+
+.qpExportLabel i {
+    font-size: 12px;
+}
+
+.qpExportBtns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.qpExportBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 36px;
+    border-radius: 7px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s, transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.qpExportBtn i {
+    font-size: 13px;
+}
+
+.qpExportBtn:hover:not(:disabled) {
+    background: var(--border);
+    color: var(--text);
+}
+
+.qpExportBtn:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.qpExportBtn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.qpExportPrimary {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+.qpExportPrimary:hover:not(:disabled) {
+    background: var(--brand-border);
+}
+
+@keyframes qpSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.qpSpin {
+    animation: qpSpin 0.75s linear infinite;
+}
+
+@media (max-width: 768px) {
+    .qpRoot {
+        padding: 16px 20px 32px;
+    }
+
+    .qpCanvasWrap {
+        max-width: min(300px, 75vw);
+    }
+
+    .qpDataPill,
+    .qpPrimaryActions,
+    .qpExportSection {
+        max-width: min(300px, 75vw);
+    }
+
+    .qpActionBtn {
+        height: 44px;
+        font-size: 13px;
+    }
+
+    .qpExportBtn {
+        height: 40px;
+        font-size: 12.5px;
+    }
+}

@@ -1,0 +1,1629 @@
+/* features/dev/json-minifier/style/Workspace.module.css */
+.jwRoot {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    min-height: 680px;
+    overflow: hidden;
+}
+
+.jwChrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.jwChromeLeft,
+.jwChromeRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.jwTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.jwTitleIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.jwTitleBadge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: var(--bg-card);
+    color: var(--text-tertiary);
+    border: 0.5px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.jwModePills {
+    display: flex;
+    gap: 3px;
+    padding: 3px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 9px;
+}
+
+.jwModePill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 9px;
+    border: 0.5px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.jwModePill i {
+    font-size: 12px;
+}
+
+.jwModePill:hover {
+    color: var(--text);
+    background: var(--bg-surface);
+}
+
+.jwModeLabel {
+    display: inline;
+}
+
+.jwSettingsBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jwSettingsBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jwSettingsBtn.active {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jwSettingsBtn i {
+    font-size: 13px;
+}
+
+.jwSettings {
+    padding: 14px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwSettingsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+}
+
+.jwSettingGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.jwSettingLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jwSelect {
+    height: 30px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.jwToggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.jwToggle input {
+    display: none;
+}
+
+.jwToggleTrack {
+    width: 34px;
+    height: 18px;
+    border-radius: 99px;
+    background: var(--border);
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.jwToggle input:checked~.jwToggleTrack {
+    background: var(--brand);
+}
+
+.jwToggleThumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: white;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.jwToggle input:checked~.jwToggleTrack .jwToggleThumb {
+    transform: translateX(16px);
+}
+
+.jwToggle span {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.jwTabsBar {
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwTabs {
+    display: flex;
+    padding: 0 14px;
+    overflow-x: auto;
+}
+
+.jwTab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 40px;
+    padding: 0 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.jwTab i {
+    font-size: 14px;
+}
+
+.jwTab:hover {
+    color: var(--text-secondary);
+}
+
+.jwTab.active {
+    color: var(--text);
+}
+
+.jwTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 2px;
+    background: var(--brand);
+    border-radius: 2px 2px 0 0;
+}
+
+.jwTabBadge {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.jwTabDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f59e0b;
+}
+
+.jwContent {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.jwProcessView {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.jwToolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.jwToolbarLeft,
+.jwToolbarRight {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.jwToolbarLabel {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-disabled);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jwSampleBtn {
+    height: 26px;
+    padding: 0 9px;
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+}
+
+.jwSampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jwExportChips {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.jwExportLabel {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-disabled);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jwExportChip {
+    height: 24px;
+    padding: 0 8px;
+    border: 0.5px solid var(--border);
+    border-radius: 99px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-family: var(--font-mono);
+}
+
+.jwExportChip:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jwMobileSwitcher {
+    display: none;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwSwTab {
+    flex: 1;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.12s;
+}
+
+.jwSwTab.active {
+    color: var(--text);
+}
+
+.jwSwTab.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: var(--brand);
+}
+
+.jwSwDivider {
+    width: 0.5px;
+    background: var(--border);
+    align-self: stretch;
+    margin: 10px 0;
+}
+
+.jwSwDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand);
+}
+
+.jwBody {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.jwPanel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.mobVisible {
+    visibility: visible;
+    z-index: 1;
+}
+
+.mobHidden {
+    visibility: visible;
+    z-index: 0;
+}
+
+.jwPanelBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+    padding: 0 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.jwPanelLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+}
+
+.jwPanelLabel i {
+    font-size: 12px;
+}
+
+.jwPanelActions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.jwCharCount {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    color: var(--text-disabled);
+}
+
+.jwErrorBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #dc2626;
+    background: #fef2f2;
+    padding: 2px 7px;
+    border-radius: 99px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwErrorBadge {
+        background: #1f1517;
+        color: #f87171;
+    }
+}
+
+.jwValidBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #16a34a;
+    background: #dcfce7;
+    padding: 2px 7px;
+    border-radius: 99px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwValidBadge {
+        background: #022c22;
+        color: #4ade80;
+    }
+}
+
+.jwIconBtn {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: 0.5px solid transparent;
+    background: transparent;
+    color: var(--text-tertiary);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jwIconBtn:hover:not(:disabled) {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.jwIconBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.jwCopyBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 9px;
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jwCopyBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jwCopyBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jwCopyBtn i {
+    font-size: 11px;
+}
+
+.jwTextarea {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    border-left: 2px solid transparent;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    line-height: 1.7;
+    resize: none;
+    outline: none;
+    min-height: 0;
+    transition: border-color 0.15s;
+}
+
+.jwTextareaError {
+    border-left-color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwTextareaError {
+        border-left-color: #f87171;
+    }
+}
+
+.jwTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.jwErrorBanner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #fef2f2;
+    color: #dc2626;
+    font-size: 12px;
+    border-top: 0.5px solid #fecaca;
+    flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwErrorBanner {
+        background: #1f1517;
+        color: #f87171;
+        border-color: #3c1518;
+    }
+}
+
+.jwErrorBanner i {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.jwMobCta {
+    display: none;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwCtaBtn {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: none;
+    border-radius: 10px;
+    background: var(--brand);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.jwCtaBtn:hover {
+    background: var(--brand-hover);
+}
+
+.jwCtaBtn i {
+    font-size: 15px;
+}
+
+.jwCtaBtn i:last-child {
+    margin-left: auto;
+    opacity: 0.7;
+}
+
+.jwGutter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-surface);
+    border-left: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+}
+
+.jwGutterLine {
+    flex: 1;
+    width: 0.5px;
+    background: var(--border);
+}
+
+.jwGutterNode {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.jwEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 40px 24px;
+    text-align: center;
+    background: var(--bg-card);
+}
+
+.jwEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-disabled);
+}
+
+.jwEmptyIconError {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwEmptyIconError {
+        background: #1f1517;
+        border-color: #3c1518;
+        color: #f87171;
+    }
+}
+
+.jwEmptyTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.jwEmptyDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.6;
+}
+
+.jwEmptySamples {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.jwEmptySampleBtn {
+    height: 32px;
+    padding: 0 14px;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jwEmptySampleBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jwOutput {
+    flex: 1;
+    margin: 0;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    line-height: 1.7;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    min-height: 0;
+}
+
+.jwStatsBar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+    overflow-x: auto;
+}
+
+.jwStat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.jwStat i {
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+.jwStatLabel {
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.jwStatValue {
+    color: var(--text);
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.jwStatValue.good {
+    color: #16a34a;
+}
+
+.jwStatValue.warn {
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwStatValue.good {
+        color: #4ade80;
+    }
+
+    .jwStatValue.warn {
+        color: #fbbf24;
+    }
+}
+
+.jwStatHighlight {
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.jwStatHighlight.good {
+    background: #dcfce7;
+}
+
+.jwStatHighlight.warn {
+    background: #fef3c7;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwStatHighlight.good {
+        background: #022c22;
+    }
+
+    .jwStatHighlight.warn {
+        background: #451a03;
+    }
+}
+
+.jwDownloadBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--brand);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.jwDownloadBtn:hover {
+    background: var(--brand-hover);
+}
+
+.jwDownloadBtn i {
+    font-size: 12px;
+}
+
+.jwMobActions {
+    display: none;
+    gap: 8px;
+    padding: 12px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwMobBtn {
+    flex: 1;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jwMobBtn:hover {
+    background: var(--bg-surface);
+    color: var(--text);
+}
+
+.jwMobBtn.copied {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.jwMobBtn i {
+    font-size: 15px;
+}
+
+.jwTabEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 60px 24px;
+    text-align: center;
+    background: var(--bg-surface);
+}
+
+.jwTabEmptyIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-disabled);
+}
+
+.jwTabEmpty h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.jwTabEmpty p {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 380px;
+    line-height: 1.6;
+}
+
+.jwTabEmptyBtn {
+    height: 40px;
+    padding: 0 20px;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--brand);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.jwTabEmptyBtn:hover {
+    background: var(--brand-hover);
+}
+
+.jwTransformView {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    background: var(--bg-surface);
+    min-height: 0;
+}
+
+.jwTransformHeader {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwTransformTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.jwTransformTitle i {
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+.jwTransformSection {
+    padding: 16px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.jwTransformSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+}
+
+.jwTransformSectionTitle i {
+    font-size: 13px;
+}
+
+.jwJsonpathRow {
+    display: flex;
+    gap: 8px;
+}
+
+.jwJsonpathInput {
+    flex: 1;
+    height: 38px;
+    padding: 0 12px;
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: border-color 0.12s;
+}
+
+.jwJsonpathInput:focus {
+    border-color: var(--brand);
+}
+
+.jwJsonpathInput::placeholder {
+    color: var(--text-disabled);
+}
+
+.jwJsonpathBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    padding: 0 14px;
+    border: 0.5px solid var(--brand);
+    border-radius: 8px;
+    background: var(--brand);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s;
+    flex-shrink: 0;
+}
+
+.jwJsonpathBtn:hover:not(:disabled) {
+    background: var(--brand-hover);
+}
+
+.jwJsonpathBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.jwJsonpathBtn i {
+    font-size: 13px;
+}
+
+.jwJsonpathResult {
+    margin-top: 12px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.jwJsonpathResultHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.jwJsonpathPre {
+    margin: 0;
+    padding: 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text);
+    overflow: auto;
+    max-height: 200px;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.jwConvertGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.jwConvertCard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.12s;
+    text-align: left;
+}
+
+.jwConvertCard:hover:not(:disabled) {
+    border-color: var(--brand-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.jwConvertCard:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.jwConvertCardIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.jwConvertCardLabel {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.jwConvertCardDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+}
+
+.jwConvertCardAction {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand);
+    margin-top: 4px;
+}
+
+.jwConvertCardAction i {
+    font-size: 12px;
+}
+
+.jwTransformEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 14px;
+}
+
+.jwTransformEmpty i {
+    font-size: 40px;
+    color: var(--text-disabled);
+}
+
+.jwTransformEmpty p {
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
+.jwHistory {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    background: var(--bg-surface);
+}
+
+.jwHistoryHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+}
+
+.jwHistoryTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.jwHistoryTitle i {
+    font-size: 15px;
+    color: var(--text-secondary);
+}
+
+.jwHistoryCount {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.jwGhostBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 10px;
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.jwGhostBtn:hover {
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.jwGhostBtn i {
+    font-size: 13px;
+}
+
+.jwHistoryList {
+    flex: 1;
+    overflow: auto;
+    padding: 8px;
+    min-height: 0;
+}
+
+.jwHistoryItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 6px;
+    transition: all 0.12s;
+}
+
+.jwHistoryItem:hover {
+    border-color: var(--brand-border);
+}
+
+.jwHistoryItemLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.jwHistoryItemIcon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.jwHistoryItemTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 2px;
+}
+
+.jwHistoryItemMeta {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.jwHistoryItemRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.jwHistoryMode {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    background: var(--bg-surface);
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.jwHistorySavings {
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.jwHistorySavings.good {
+    color: #16a34a;
+}
+
+.jwHistorySavings.warn {
+    color: #d97706;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwHistorySavings.good {
+        color: #4ade80;
+    }
+
+    .jwHistorySavings.warn {
+        color: #fbbf24;
+    }
+}
+
+.jwFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 16px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border);
+    font-size: 11px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.jwFooterLeft {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-tertiary);
+}
+
+.jwFooterLeft i {
+    font-size: 13px;
+    color: var(--brand);
+}
+
+.jwFooterRight {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-disabled);
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+}
+
+.jwValid {
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.jwInvalid {
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jwValid {
+        color: #4ade80;
+    }
+
+    .jwInvalid {
+        color: #f87171;
+    }
+}
+
+@media (max-width: 768px) {
+    .jwRoot {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100dvh;
+    }
+
+    .jwChrome {
+        gap: 8px;
+    }
+
+    .jwSettingsBtn span {
+        display: none;
+    }
+
+    .jwModePills {
+        gap: 2px;
+    }
+
+    .jwModePill {
+        padding: 0 6px;
+    }
+
+    .jwModeLabel {
+        display: none;
+    }
+
+    .jwSettingsGrid {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .jwTabs {
+        padding: 0 8px;
+    }
+
+    .jwTab span {
+        display: none;
+    }
+
+    .jwTab {
+        padding: 0 10px;
+    }
+
+    .jwToolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .jwToolbarLeft {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    .jwMobileSwitcher {
+        display: flex;
+    }
+
+    .jwBody {
+        grid-template-columns: 1fr;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .jwGutter {
+        display: none;
+    }
+
+    .jwPanel {
+        grid-column: 1;
+        grid-row: 1;
+        position: absolute;
+        inset: 0;
+    }
+
+    .mobVisible {
+        z-index: 1;
+        visibility: visible;
+    }
+
+    .mobHidden {
+        z-index: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .jwMobCta {
+        display: block;
+    }
+
+    .jwMobActions {
+        display: flex;
+    }
+
+    .jwDownloadBtn {
+        display: none;
+    }
+
+    .jwStatsBar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .jwConvertGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .jwFooter {
+        flex-direction: column;
+        text-align: center;
+        gap: 6px;
+    }
+
+    .jwFooterRight {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .jwConvertGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .jwModePill,
+    .jwSettingsBtn,
+    .jwTab,
+    .jwSampleBtn,
+    .jwSwTab,
+    .jwIconBtn,
+    .jwCopyBtn,
+    .jwCtaBtn,
+    .jwMobBtn,
+    .jwDownloadBtn,
+    .jwHistoryItem,
+    .jwConvertCard,
+    .jwToggleTrack,
+    .jwToggleThumb,
+    .jwTitleIcon,
+    .jwTextarea {
+        transition: none;
+    }
+}

@@ -1,0 +1,516 @@
+/* features/dev/js-minifier/style/JSAnalysis.module.css */
+.jaRoot {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--bg-surface);
+    min-height: 0;
+}
+
+.jaCards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.jaCard {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.jaCard:hover {
+    border-color: var(--brand-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.jaCardIcon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    flex-shrink: 0;
+}
+
+.jaCardBody {
+    min-width: 0;
+    flex: 1;
+}
+
+.jaCardLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+    white-space: nowrap;
+}
+
+.jaCardValue {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+}
+
+.jaSection {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.jaSectionHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.jaSectionHeader i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.jaIssueCounts {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+
+.jaSizeChart {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-bottom: 0.5px solid var(--border);
+}
+
+.jaSizeRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.jaSizeLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    width: 62px;
+    flex-shrink: 0;
+}
+
+.jaSizeBarWrap {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-surface);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.jaSizeBar {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.jaSizeBarOriginal {
+    background: var(--border);
+}
+
+.jaSizeBarMinified {
+    background: #3b82f6;
+}
+
+.jaSizeBarSaved {
+    background: #22c55e;
+}
+
+.jaSizeValue {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    width: 100px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.jaSizeValueGood {
+    color: #16a34a;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jaSizeValueGood {
+        color: #4ade80;
+    }
+}
+
+.jaMetaGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+}
+
+.jaMetaItem {
+    background: var(--bg-card);
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.jaMetaLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.jaMetaValue {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.jaFeatures {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+}
+
+.jaFeature {
+    background: var(--bg-card);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background 0.12s;
+}
+
+.jaFeature:hover {
+    background: var(--bg-surface);
+}
+
+.jaFeature i:first-child {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.jaFeature span {
+    flex: 1;
+    min-width: 0;
+}
+
+.jaFeatureOn {
+    color: var(--text);
+}
+
+.jaFeatureOff {
+    color: var(--text-disabled);
+}
+
+.jaFeatureOn i:first-child {
+    color: var(--brand);
+}
+
+.jaFeatureOff i:first-child {
+    color: var(--text-disabled);
+}
+
+.jaFeatureCheck {
+    color: #22c55e !important;
+    font-size: 13px !important;
+    flex-shrink: 0;
+}
+
+.jaFeatureOffIcon {
+    color: var(--border) !important;
+    font-size: 13px !important;
+    flex-shrink: 0;
+}
+
+.jaIssueBadge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 99px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.jaIssueBadgeError {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.jaIssueBadgeWarning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.jaIssueBadgeInfo {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jaIssueBadgeError {
+        background: rgba(220, 38, 38, 0.15);
+        color: #f87171;
+    }
+
+    .jaIssueBadgeWarning {
+        background: rgba(217, 119, 6, 0.15);
+        color: #fbbf24;
+    }
+
+    .jaIssueBadgeInfo {
+        background: rgba(37, 99, 235, 0.15);
+        color: #93c5fd;
+    }
+}
+
+.jaIssues {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+}
+
+.jaIssue {
+    background: var(--bg-card);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    transition: background 0.12s;
+}
+
+.jaIssue:hover {
+    background: var(--bg-surface);
+}
+
+.jaIssueIcon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.jaIssueError .jaIssueIcon {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.jaIssueWarning .jaIssueIcon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.jaIssueInfo .jaIssueIcon {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jaIssueError .jaIssueIcon {
+        background: rgba(220, 38, 38, 0.15);
+        color: #f87171;
+    }
+
+    .jaIssueWarning .jaIssueIcon {
+        background: rgba(217, 119, 6, 0.15);
+        color: #fbbf24;
+    }
+
+    .jaIssueInfo .jaIssueIcon {
+        background: rgba(37, 99, 235, 0.15);
+        color: #93c5fd;
+    }
+}
+
+.jaIssueBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.jaIssueMsg {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 4px;
+}
+
+.jaIssueMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    flex-wrap: wrap;
+}
+
+.jaIssueMeta code {
+    font-size: 10px;
+    padding: 1px 5px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+    border: 0.5px solid var(--border);
+    font-family: var(--font-mono);
+}
+
+.jaClean {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.jaCleanIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .jaCleanIcon {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+    }
+}
+
+.jaCleanTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.jaCleanDesc {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0;
+}
+
+@media (max-width: 1024px) {
+    .jaCards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaFeatures {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaMetaGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .jaRoot {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .jaCards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .jaCard {
+        padding: 12px;
+    }
+
+    .jaCardIcon {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .jaCardValue {
+        font-size: 16px;
+    }
+
+    .jaFeatures {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaMetaGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaSizeValue {
+        width: 80px;
+        font-size: 10px;
+    }
+
+    .jaIssueCounts {
+        gap: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .jaCards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaFeatures {
+        grid-template-columns: 1fr;
+    }
+
+    .jaMetaGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .jaSizeLabel {
+        width: 52px;
+        font-size: 10px;
+    }
+}

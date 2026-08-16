@@ -1,0 +1,320 @@
+/* features/dev/url-encoder/style/UrlHistory.module.css */
+.uhRoot {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/*  Header  */
+.uhHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.uhHeaderLabel {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.uhHeaderLabel i {
+    font-size: 12px;
+}
+
+.uhCountBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--brand-light);
+    color: var(--brand-text);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.uhClearBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 11px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.uhClearBtn i {
+    font-size: 12px;
+}
+
+.uhClearBtn:hover {
+    background: var(--error-bg);
+    color: #b91c1c;
+    border-color: #f3d2d2;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uhClearBtn:hover {
+        color: #f87171;
+        border-color: #5a2a2a;
+    }
+}
+
+/*  List  */
+.uhList {
+    flex: 1;
+    overflow: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.uhItem {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.12s;
+}
+
+.uhItem:hover {
+    border-color: var(--brand-border);
+}
+
+.uhItemHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+    gap: 12px;
+}
+
+.uhItemMode {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.uhItemMode i {
+    font-size: 13px;
+    color: var(--brand);
+}
+
+.uhItemMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.uhItemTime {
+    font-size: 11px;
+    color: var(--text-tertiary);
+}
+
+.uhRestoreBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.uhRestoreBtn i {
+    font-size: 11px;
+}
+
+.uhRestoreBtn:hover {
+    background: var(--brand-light);
+    color: var(--brand-text);
+    border-color: var(--brand-border);
+}
+
+.uhRemoveBtn {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-disabled);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.12s;
+    font-size: 12px;
+}
+
+.uhRemoveBtn:hover {
+    background: var(--error-bg);
+    color: #b91c1c;
+    border-color: #f3d2d2;
+}
+
+@media (prefers-color-scheme: dark) {
+    .uhRemoveBtn:hover {
+        color: #f87171;
+        border-color: #5a2a2a;
+    }
+}
+
+.uhItemContent {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.uhItemRow {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.uhItemLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.uhItemCode {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--text);
+    background: var(--bg-surface);
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 0.5px solid var(--border-faint);
+    word-break: break-all;
+    line-height: 1.6;
+}
+
+.uhItemFooter {
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-top: 0.5px solid var(--border-faint);
+}
+
+.uhItemOptions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.uhOptionTag {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 8px;
+    border-radius: 99px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: 10px;
+    font-weight: 500;
+}
+
+/*  Empty State  */
+.uhEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 60px 24px;
+    text-align: center;
+}
+
+.uhEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+    margin-bottom: 6px;
+}
+
+.uhEmptyTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.uhEmptyDesc {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.6;
+}
+
+/*  Responsive  */
+@media (max-width: 768px) {
+    .uhList {
+        padding: 10px;
+    }
+
+    .uhItemHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .uhItemMeta {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .uhClearBtn,
+    .uhRestoreBtn,
+    .uhRemoveBtn,
+    .uhItem {
+        transition: none;
+    }
+}

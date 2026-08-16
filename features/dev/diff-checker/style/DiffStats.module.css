@@ -1,0 +1,203 @@
+/* features/dev/diff-checker/style/DiffStats.module.css */
+.dsRoot {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: var(--bg-surface);
+    min-height: 0;
+}
+
+.dsEmpty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 60px 24px;
+    min-height: 200px;
+}
+
+.dsEmptyIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: 13px;
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--text-disabled);
+}
+
+.dsEmptyText {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin: 0;
+    text-align: center;
+}
+
+.dsGroup {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.dsGroupHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+}
+
+.dsGroupHeader i {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.dsGroupTitle {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dsGroupGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+}
+
+.dsStat {
+    background: var(--bg-card);
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    transition: background 0.12s;
+}
+
+.dsStat:hover {
+    background: var(--bg-surface);
+}
+
+.dsStatValue {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    letter-spacing: -0.5px;
+    line-height: 1;
+    color: var(--text);
+}
+
+.dsStatLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dsStatSubtitle {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+}
+
+.dsStatAdd .dsStatValue {
+    color: #059669;
+}
+
+.dsStatRemove .dsStatValue {
+    color: #dc2626;
+}
+
+.dsStatSuccess .dsStatValue {
+    color: #059669;
+}
+
+.dsStatWarning .dsStatValue {
+    color: #d97706;
+}
+
+.dsStatNeutral .dsStatValue {
+    color: var(--text);
+}
+
+@media (prefers-color-scheme: dark) {
+    .dsStatAdd .dsStatValue {
+        color: #34d399;
+    }
+
+    .dsStatRemove .dsStatValue {
+        color: #f87171;
+    }
+
+    .dsStatSuccess .dsStatValue {
+        color: #34d399;
+    }
+
+    .dsStatWarning .dsStatValue {
+        color: #fbbf24;
+    }
+}
+
+.dsSummary {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    background: var(--brand-light);
+    border: 0.5px solid var(--brand-border);
+    border-radius: 12px;
+    flex-shrink: 0;
+}
+
+.dsSummaryIcon {
+    font-size: 16px;
+    color: var(--brand);
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.dsSummaryText {
+    font-size: 13px;
+    font-weight: 500;
+    flex: 1;
+    color: var(--brand-text);
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .dsRoot {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .dsGroupGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dsStatValue {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dsGroupGrid {
+        grid-template-columns: 1fr;
+    }
+}

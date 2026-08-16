@@ -1,0 +1,411 @@
+/* features/finance/invoice-generator/style/InvoicePreview.module.css */
+.invPreview {
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.invPreviewPaper {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    color: #1f2937;
+    font-family: var(--font-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+    .invPreviewPaper {
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.invPreviewHeader {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    margin-bottom: 32px;
+    align-items: start;
+}
+
+.invPreviewLogo {
+    max-width: 200px;
+    max-height: 80px;
+    object-fit: contain;
+}
+
+.invPreviewWordmark {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.invPreviewPlaceholder {
+    padding: 20px 40px;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    color: #9ca3af;
+    font-size: 14px;
+    text-align: center;
+}
+
+.invPreviewTitleBlock {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.invPreviewTitle {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+    letter-spacing: 0.02em;
+}
+
+.invPreviewMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.invPreviewMetaRow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.invPreviewMetaLabel {
+    color: #6b7280;
+}
+
+.invPreviewMetaValue {
+    color: #1f2937;
+    font-family: var(--font-mono);
+}
+
+.invPreviewStatus {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid;
+    margin-top: 4px;
+}
+
+.invPreviewParties {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.invPreviewParty {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.invPreviewPartyLabel {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.invPreviewPartyName {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.invPreviewPartyText {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.invPreviewItems {
+    margin-bottom: 24px;
+}
+
+.invPreviewTable {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.invPreviewTable thead {
+    background: #145c3c;
+}
+
+.invPreviewTable th {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.invPreviewTable th:nth-child(2),
+.invPreviewTable th:nth-child(3),
+.invPreviewTable th:nth-child(4),
+.invPreviewTable th:nth-child(5) {
+    text-align: right;
+}
+
+.invPreviewTable tbody tr {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.invPreviewTable tbody tr:nth-child(even) {
+    background: #f9fafb;
+}
+
+.invPreviewTable tbody tr:last-child {
+    border-bottom: none;
+}
+
+.invPreviewTable td {
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #1f2937;
+}
+
+.invPreviewTable td:nth-child(2),
+.invPreviewTable td:nth-child(3),
+.invPreviewTable td:nth-child(4),
+.invPreviewTable td:nth-child(5) {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.invPreviewEmpty {
+    text-align: center !important;
+    color: #9ca3af !important;
+    font-style: italic;
+}
+
+.invPreviewTotals {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-left: auto;
+    width: 280px;
+}
+
+.invPreviewTotalsRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13px;
+}
+
+.invPreviewTotalsRow span {
+    color: #6b7280;
+}
+
+.invPreviewTotalsRow strong {
+    color: #1f2937;
+    font-family: var(--font-mono);
+}
+
+.invTotalsDiscount strong {
+    color: #dc2626;
+}
+
+.invPreviewTotalsDivider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 4px 0;
+}
+
+.invTotalsGrand {
+    padding: 10px;
+    background: #dcfce7;
+    border-radius: 6px;
+    margin-top: 4px;
+}
+
+.invTotalsGrand span {
+    font-weight: 700;
+    color: #0d3f29;
+}
+
+.invTotalsGrand strong {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0d3f29;
+}
+
+.invPreviewNotes {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.invPreviewNoteSection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.invPreviewNoteTitle {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.invPreviewNoteText {
+    font-size: 12px;
+    color: #4b5563;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 768px) {
+    .invPreview {
+        padding: 16px;
+        overflow: auto;
+    }
+
+    .invPreviewPaper {
+        padding: 24px;
+        width: 100%;
+        max-width: none;
+    }
+
+    .invPreviewHeader {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .invPreviewTitleBlock {
+        text-align: left;
+    }
+
+    .invPreviewTitle {
+        font-size: 24px;
+    }
+
+    .invPreviewMetaRow {
+        justify-content: flex-start;
+    }
+
+    .invPreviewStatus {
+        align-self: flex-start;
+    }
+
+    .invPreviewParties {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .invPreviewTotals {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .invPreviewTable {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .invPreviewTable th,
+    .invPreviewTable td {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    .invPreviewTable th {
+        font-weight: 700;
+    }
+
+    .invPreviewTable td:nth-child(2),
+    .invPreviewTable td:nth-child(3),
+    .invPreviewTable td:nth-child(4),
+    .invPreviewTable td:nth-child(5) {
+        text-align: right;
+        font-family: var(--font-mono);
+        font-weight: 600;
+    }
+
+    @media (max-width: 320px) {
+        .invPreview {
+            padding: 12px;
+        }
+
+        .invPreviewPaper {
+            padding: 16px;
+        }
+
+        .invPreviewTitle {
+            font-size: 20px;
+        }
+
+        .invPreviewMetaRow {
+            font-size: 11px;
+            gap: 4px;
+        }
+
+        .invPreviewPartyLabel {
+            font-size: 10px;
+        }
+
+        .invPreviewPartyName {
+            font-size: 14px;
+        }
+
+        .invPreviewPartyText {
+            font-size: 11px;
+        }
+
+        .invPreviewTable th,
+        .invPreviewTable td {
+            padding: 6px 8px;
+            font-size: 11px;
+        }
+
+        .invPreviewTotalsRow {
+            font-size: 11px;
+            gap: 8px;
+        }
+
+        .invPreviewNoteTitle {
+            font-size: 10px;
+        }
+
+        .invPreviewNoteText {
+            font-size: 10px;
+        }
+    }
+}

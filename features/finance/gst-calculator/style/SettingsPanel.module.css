@@ -1,0 +1,218 @@
+/* features/finance/gst-calculator/style/SettingsPanel.module.css */
+.gstSettings {
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.gstSettingsInner {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.gstSettingsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gstSettingsHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+    font-family: var(--font-sans);
+}
+
+.gstSettingsHeading i {
+    font-size: 16px;
+    color: var(--text-secondary);
+}
+
+.gstSettingsDesc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: -4px 0 0 0;
+    line-height: 1.5;
+    font-family: var(--font-sans);
+}
+
+.gstRateGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.gstRateCard {
+    padding: 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.12s;
+}
+
+.gstRateCard:hover {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.gstRateBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: var(--brand);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+}
+
+.gstRateDesc {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-family: var(--font-sans);
+}
+
+.gstCessList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gstCessItem {
+    padding: 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.gstCessHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.gstCessHeader strong {
+    font-size: 12.5px;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.gstCessRate {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brand-text);
+    font-family: var(--font-mono);
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: var(--brand-light);
+}
+
+.gstCessNote {
+    margin: 0;
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-family: var(--font-sans);
+}
+
+.gstRulesGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+}
+
+.gstRuleCard {
+    padding: 14px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.12s;
+}
+
+.gstRuleCard:hover {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.gstRuleHeader {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12.5px;
+    color: var(--text);
+    font-family: var(--font-sans);
+}
+
+.gstRuleHeader i {
+    font-size: 15px;
+    color: var(--brand);
+}
+
+.gstRuleText {
+    margin: 0;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-family: var(--font-sans);
+}
+
+.gstRuleFormula {
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+}
+
+.gstRuleFormula code {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text);
+    word-break: break-word;
+}
+
+.gstRuleExample {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .gstSettingsInner {
+        padding: 16px;
+    }
+
+    .gstRateGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .gstRateCard,
+    .gstRuleCard {
+        transition: none;
+    }
+}

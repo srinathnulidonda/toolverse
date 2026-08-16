@@ -1,0 +1,271 @@
+/* features/dev/jwt-decoder/style/TokenVisualizer.module.css */
+.tvRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    flex: 1;
+    background: var(--bg-surface);
+    overflow: auto;
+}
+
+.tvCard {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tvCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 14px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+}
+
+.tvCardHeader i {
+    font-size: 13px;
+}
+
+.tvCardBody {
+    padding: 14px;
+}
+
+.tvVisual {
+    display: flex;
+    align-items: stretch;
+    height: 72px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+}
+
+.tvPart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-width: 50px;
+    position: relative;
+    transition: filter 0.15s;
+    cursor: default;
+}
+
+.tvPart:hover {
+    filter: brightness(1.08);
+}
+
+.tvPartHeader {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.tvPartPayload {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.tvPartSignature {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.tvPartLabel {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tvPartSize {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    font-family: var(--font-mono);
+}
+
+.tvPartPct {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: var(--font-mono);
+}
+
+.tvDot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-disabled);
+    background: var(--bg-surface);
+    flex-shrink: 0;
+}
+
+.tvStats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tvStat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 14px;
+    background: var(--bg-card);
+}
+
+.tvStatLabel {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.tvStatValue {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.tvBreakdown {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.tvBreakdownItem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.tvBreakdownColor {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.tvBreakdownColorHeader {
+    background: #3b82f6;
+}
+
+.tvBreakdownColorPayload {
+    background: #10b981;
+}
+
+.tvBreakdownColorSignature {
+    background: #8b5cf6;
+}
+
+.tvPartDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tvPartDetail {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--bg-card);
+}
+
+.tvPartDetailColor {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.tvPartDetailName {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+}
+
+.tvPartDetailMeta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tvPartDetailSize {
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+.tvPartDetailPct {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-family: var(--font-mono);
+    width: 42px;
+    text-align: right;
+}
+
+.tvPartDetailBar {
+    width: 80px;
+    height: 6px;
+    background: var(--bg-surface);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.tvPartDetailFill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+}
+
+@media (max-width: 768px) {
+    .tvRoot {
+        padding: 12px;
+    }
+
+    .tvStats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tvVisual {
+        height: 60px;
+    }
+
+    .tvPartLabel {
+        font-size: 9px;
+    }
+
+    .tvPartSize {
+        font-size: 11px;
+    }
+
+    .tvPartPct {
+        display: none;
+    }
+
+    .tvPartDetailBar {
+        display: none;
+    }
+}

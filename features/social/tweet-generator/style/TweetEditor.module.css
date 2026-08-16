@@ -1,0 +1,385 @@
+/* features/social/tweet-generator/style/TweetEditor.module.css */
+
+.teRoot {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.teSection {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.teLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-family: var(--font-sans);
+    margin: 0;
+}
+
+.teField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teFieldHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.teFieldLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.teCharCount {
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--text-tertiary);
+    font-weight: 500;
+}
+
+.teCharCount.teOverLimit {
+    color: #DC2626;
+}
+
+.teInput,
+.teTextarea,
+.teSelect {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    color: var(--text);
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%;
+}
+
+.teInput:focus,
+.teTextarea:focus,
+.teSelect:focus {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.teInput.teError,
+.teTextarea.teError {
+    border-color: #DC2626;
+}
+
+.teTextarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+}
+
+.teInput::placeholder,
+.teTextarea::placeholder {
+    color: var(--text-disabled);
+}
+
+.teSelect {
+    cursor: pointer;
+}
+
+.teErrorMsg {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    color: #DC2626;
+    font-family: var(--font-sans);
+}
+
+.teInputGroup {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.teInputPrefix {
+    position: absolute;
+    left: 12px;
+    font-size: 13.5px;
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+    pointer-events: none;
+}
+
+.teInputWithPrefix {
+    padding-left: 24px;
+}
+
+.teInputNumber {
+    font-family: var(--font-mono);
+}
+
+.teAvatarUpload {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.teAvatarPreview {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg-surface);
+}
+
+.teAvatarPreview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.teAvatarPlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-disabled);
+    font-size: 24px;
+}
+
+.teAvatarActions {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+}
+
+.teAvatarBtn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    font-size: 12.5px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.teAvatarBtn i {
+    font-size: 14px;
+}
+
+.teAvatarBtn:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.teAvatarBtnSecondary {
+    background: var(--brand-light);
+    border-color: var(--brand-border);
+    color: var(--brand-text);
+}
+
+.teAvatarBtnSecondary:hover {
+    background: var(--brand-border);
+}
+
+.teFileInput {
+    display: none;
+}
+
+.teToggleRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 13px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+}
+
+.teToggleLabelGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.teToggleLabel {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+}
+
+.teToggleHint {
+    font-size: 10.5px;
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+}
+
+.teToggle {
+    width: 40px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--border);
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.teToggle.on {
+    background: var(--brand);
+}
+
+.teToggleThumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+    display: block;
+}
+
+.teToggle.on .teToggleThumb {
+    transform: translateX(18px);
+}
+
+.teTimestampOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.teRadioLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+}
+
+.teRadioLabel:hover {
+    background: var(--border-faint);
+}
+
+.teRadio {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--brand);
+    cursor: pointer;
+}
+
+.teRadioText {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+}
+
+.teVerifiedType {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.teVerifiedBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 8px;
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+    background: var(--bg-surface);
+    cursor: pointer;
+    transition: all 0.12s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.teVerifiedBtn i {
+    font-size: 20px;
+}
+
+.teVerifiedBtn span {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+}
+
+.teVerifiedBtn:hover {
+    background: var(--border-faint);
+}
+
+.teVerifiedBtn.active {
+    border-color: var(--brand-border);
+    background: var(--brand-light);
+}
+
+.teVerifiedBtn.active span {
+    color: var(--brand-text);
+}
+
+.teMetricsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.teMetricField {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.teMetricLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    font-family: var(--font-sans);
+}
+
+.teMetricLabel i {
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    .teMetricsGrid {
+        grid-template-columns: 1fr;
+    }
+}

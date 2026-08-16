@@ -1,0 +1,376 @@
+/* features/finance/sip-calculator/style/ResultDetails.module.css */
+.sipResultDetails {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    font-family: var(--font-sans);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.sipDetailSection {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    min-width: 0;
+}
+
+.sipDetailHeading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 0.5px solid var(--border-faint);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+
+.sipDetailHeading i {
+    font-size: 16px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.sipDetailGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+}
+
+.sipDetailItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.sipDetailLabel {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+}
+
+.sipDetailValue {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.sipMono {
+    font-family: var(--font-mono);
+}
+
+.sipRatioChart {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sipRatioItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.sipRatioLabel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.sipRatioLabel i {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.sipRatioValue {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+}
+
+.sipRatioBar {
+    height: 8px;
+    background: var(--border-faint);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.sipRatioFill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sipBarInvested {
+    background: linear-gradient(90deg, var(--brand), var(--brand-hover));
+}
+
+.sipBarReturns {
+    background: linear-gradient(90deg, #d97706, #f59e0b);
+}
+
+.sipCalcSteps {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.sipCalcStep {
+    display: flex;
+    gap: 12px;
+}
+
+.sipStepNum {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-surface);
+    border: 0.5px solid var(--border);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12.5px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.sipStepFinal .sipStepNum {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: white;
+}
+
+.sipStepContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.sipStepTitle {
+    font-size: 13px;
+    color: var(--text);
+}
+
+.sipStepDesc {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.sipStepFormula {
+    margin-top: 6px;
+    padding: 10px 12px;
+    background: var(--bg-surface);
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--border);
+    overflow-x: auto;
+}
+
+.sipStepFormula code {
+    font-size: 12.5px;
+    font-family: var(--font-mono);
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.sipStepFormula strong {
+    color: var(--brand);
+}
+
+.sipStepResult {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brand-text);
+    font-family: var(--font-mono);
+}
+
+.sipScheduleNote {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin: 0;
+    padding: 0 16px 12px;
+}
+
+.sipScheduleTable {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sipScheduleTable table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.sipScheduleTable th,
+.sipScheduleTable td {
+    padding: 10px 12px;
+    text-align: left;
+    font-size: 12px;
+    border-bottom: 0.5px solid var(--border-faint);
+    white-space: nowrap;
+}
+
+.sipScheduleTable th {
+    background: var(--bg-surface);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+}
+
+.sipScheduleTable td {
+    color: var(--text);
+}
+
+.sipScheduleTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.sipScheduleTable tbody tr:hover {
+    background: var(--border-faint);
+}
+
+.sipBalance {
+    font-weight: 600;
+    color: var(--brand-text);
+}
+
+.sipRowAlt {
+    background: var(--bg-surface);
+}
+
+.sipGoalAnalysis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    padding: 16px;
+}
+
+.sipGoalItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    min-width: 0;
+}
+
+.sipGoalLabel {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+}
+
+.sipGoalValue {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brand-text);
+    font-family: var(--font-mono);
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+@media (max-width: 768px) {
+    .sipResultDetails {
+        padding: 16px;
+        gap: 20px;
+    }
+
+    .sipDetailGrid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .sipGoalAnalysis {
+        grid-template-columns: 1fr;
+        padding: 12px;
+    }
+
+    .sipScheduleTable th,
+    .sipScheduleTable td {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    .sipScheduleNote {
+        font-size: 10px;
+        padding: 0 12px 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .sipResultDetails {
+        padding: 14px;
+        gap: 18px;
+    }
+
+    .sipDetailHeading {
+        padding: 10px 12px;
+        font-size: 12.5px;
+    }
+
+    .sipDetailGrid {
+        padding: 12px;
+    }
+
+    .sipGoalAnalysis {
+        padding: 10px;
+    }
+
+    .sipRatioChart {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .sipDetailValue {
+        font-size: 12.5px;
+    }
+
+    .sipGoalValue {
+        font-size: 13px;
+    }
+
+    .sipScheduleTable table {
+        min-width: 560px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sipRatioFill {
+        transition: none;
+    }
+}
