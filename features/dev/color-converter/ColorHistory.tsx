@@ -1,7 +1,7 @@
 // features/dev/color-converter/ColorHistory.tsx
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import type { HistoryEntry } from "./ts/colorStore";
 import styles from "./style/ColorHistory.module.css";
 
@@ -26,6 +26,8 @@ export default function ColorHistory({ history, onClear, onRestore }: ColorHisto
     if (minutes > 0) return `${minutes}m ago`;
     return "Just now";
   };
+
+  const swatchStylesMap = useMemo(() => new Map(history.map(entry => [entry.color, { background: entry.color }])), [history]);
 
   const handleCopy = useCallback(async (color: string, id: string) => {
     try {
@@ -69,7 +71,7 @@ export default function ColorHistory({ history, onClear, onRestore }: ColorHisto
               <div key={entry.id} className={styles.chItem}>
                 <div className={styles.chItemHeader}>
                   <div className={styles.chItemLeft}>
-                    <div className={styles.chItemSwatch} style={{ background: entry.color }} />
+                    <div className={styles.chItemSwatch} style={swatchStylesMap.get(entry.color)} />
                     <div className={styles.chItemInfo}>
                       <code className={styles.chItemColor}>{entry.color.toUpperCase()}</code>
                       <span className={styles.chItemMeta}>
