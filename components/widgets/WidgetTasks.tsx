@@ -36,6 +36,11 @@ export default function WidgetTasks({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const pickerRef = useRef<HTMLDivElement>(null);
+  const ringStyle: React.CSSProperties = useMemo(() => ({
+    transition: "stroke-dashoffset 0.5s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s"
+  }), []);
+  const priorityDotStyle: React.CSSProperties = useMemo(() => ({ background: PRIORITY_META[priority].color }), [priority]);
+  const PRIORITY_DOT_STYLES = PRIORITY_ORDER.map(p => ({ background: PRIORITY_META[p].color }));
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -145,7 +150,7 @@ export default function WidgetTasks({
                   strokeDasharray={circumference}
                   strokeDashoffset={circumference * (1 - pct / 100)}
                   transform="rotate(-90 15 15)"
-                  style={{ transition: "stroke-dashoffset 0.5s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.3s" }}
+                  style={ringStyle}
                 />
                 {allDone && (
                   <path
@@ -207,12 +212,12 @@ export default function WidgetTasks({
                 aria-haspopup="listbox"
                 aria-expanded={showPicker}
               >
-                <span className="wt-dot" style={{ background: PRIORITY_META[priority].color }} />
+                <span className="wt-dot" style={priorityDotStyle} />
               </button>
 
               {showPicker && (
                 <div className="wt-picker" role="listbox" aria-label="Select priority">
-                  {PRIORITY_ORDER.map((p) => (
+                  {PRIORITY_ORDER.map((p, index) => (
                     <button
                       key={p}
                       type="button"
@@ -221,16 +226,7 @@ export default function WidgetTasks({
                       className={`wt-picker-opt${priority === p ? " sel" : ""}`}
                       onClick={() => setDraft((d) => ({ ...d, priority: p, showPicker: false }))}
                     >
-                      <span
-                        style={{
-                          width: 6,
-                          height: 6,
-                          borderRadius: "50%",
-                          background: PRIORITY_META[p].color,
-                          flexShrink: 0,
-                          display: "block",
-                        }}
-                      />
+                      <span style={PRIORITY_DOT_STYLES[index]} />
                       {PRIORITY_META[p].label}
                     </button>
                   ))}
@@ -599,6 +595,7 @@ function TaskRow({
   onRemove: (id: string) => void;
 }) {
   const meta = PRIORITY_META[getPriority(task)];
+  const taskDotStyle: React.CSSProperties = useMemo(() => ({ background: meta.color }), [meta.color]);
   const contextLabel = task.context ? formatContext(task.context) : "";
 
   return (
@@ -619,7 +616,7 @@ function TaskRow({
         </button>
 
         {!task.completed && (
-          <span className="wt-row-dot" style={{ background: meta.color }} aria-hidden="true" />
+          <span className="wt-row-dot" style={taskDotStyle} aria-hidden="true" />
         )}
 
         <span
@@ -742,6 +739,11 @@ function TaskRow({
 }
 
 function ChevronIcon({ open }: { open: boolean }) {
+  const chevronIconStyle: React.CSSProperties = useMemo(() => ({
+    transform: open ? "rotate(0deg)" : "rotate(-90deg)",
+    transition: "transform 0.18s ease"
+  }), [open]);
+
   return (
     <svg
       width="12"
@@ -752,7 +754,7 @@ function ChevronIcon({ open }: { open: boolean }) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ transform: open ? "rotate(0deg)" : "rotate(-90deg)", transition: "transform 0.18s ease" }}
+      style={chevronIconStyle}
     >
       <polyline points="6 9 12 15 18 9" />
     </svg>
@@ -785,8 +787,10 @@ function CloseIcon() {
 }
 
 function ChecklistEmptyIcon() {
+  const checklistEmptyIconStyle: React.CSSProperties = useMemo(() => ({ opacity: 0.55 }), []);
+
   return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.55 }}>
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" style={checklistEmptyIconStyle}>
       <rect x="3.5" y="3.5" width="17" height="17" rx="4" />
       <path d="M8.5 12l2.3 2.3L16 9" />
     </svg>
