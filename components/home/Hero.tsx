@@ -1,21 +1,67 @@
 // components/home/Hero.tsx
+import React, { useMemo } from "react";
 import SearchBar from "./SearchBar";
 import SocialProof from "./SocialProof";
 
 const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
 
 export default function Hero() {
+  const sectionStyle: React.CSSProperties = useMemo(() => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "var(--bg)",
+    padding: "28px 40px 44px",
+    minHeight: "260px",
+  }), []);
+
+  const contentStyle: React.CSSProperties = useMemo(() => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    maxWidth: "640px",
+    width: "100%",
+  }), []);
+
+  const eyebrowStyle: React.CSSProperties = useMemo(() => ({
+    fontSize: "12px",
+    color: "var(--text-disabled)",
+    marginBottom: "14px",
+    fontFamily: font,
+    letterSpacing: "0.4px",
+    textTransform: "uppercase",
+    fontWeight: 500,
+  }), [font]);
+
+  const titleStyle: React.CSSProperties = useMemo(() => ({
+    fontSize: "clamp(28px, 4.5vw, 48px)",
+    fontWeight: 700,
+    letterSpacing: "-1.2px",
+    lineHeight: 1.15,
+    color: "var(--text)",
+    marginBottom: "16px",
+    fontFamily: font,
+  }), [font]);
+
+  const brandStyle: React.CSSProperties = useMemo(() => ({
+    color: "var(--brand)"
+  }), []);
+
+  const bodyStyle: React.CSSProperties = useMemo(() => ({
+    fontSize: "clamp(14px, 1.6vw, 15px)",
+    color: "var(--text-secondary)",
+    lineHeight: 1.7,
+    marginBottom: "28px",
+    maxWidth: "400px",
+    fontFamily: font,
+    fontWeight: 400,
+  }), [font]);
+
   return (
     <section
       className="hero-section"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "var(--bg)",
-        padding: "28px 40px 44px",
-        minHeight: "260px",
-      }}
+      style={sectionStyle}
     >
       <div
         style={{

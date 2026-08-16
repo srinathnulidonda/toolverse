@@ -2,7 +2,7 @@
 "use client";
 import { logger } from "@/lib/logger";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import type { RegexPattern, PatternCategory } from "./ts/utils";
 import styles from "./style/RegexLibrary.module.css";
 
@@ -31,6 +31,48 @@ export default function RegexLibrary({
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [importText, setImportText] = useState("");
   const [importError, setImportError] = useState("");
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const handleSetView = useCallback((v: "grid" | "list") => {
+    setView(v);
+  }, []);
+
+  // Focus trap for import dialog
+  useEffect(() => {
+    if (!showImportDialog) return;
+
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusableElements = dialog.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    // Focus the first element when dialog opens
+    firstFocusable?.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey) { // Shift + Tab
+        if (document.activeElement === firstFocusable) {
+          e.preventDefault();
+          lastFocusable?.focus();
+        }
+      } else { // Tab
+        if (document.activeElement === lastFocusable) {
+          e.preventDefault();
+          firstFocusable?.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showImportDialog]);
 
   const categories: Array<{
     id: PatternCategory | "all" | "favorites";

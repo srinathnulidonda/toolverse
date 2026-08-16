@@ -72,11 +72,13 @@ export default function RemoveBgWorkspace({ tool }: Props) {
 
     const hasResult = !!resultBlob;
 
-    const handleFileSelected = useCallback((selected: File) => {
-        setFile(selected);
-        setResultBlob(null);
-        setError("");
-        setMobilePanel("input");
+    const handleFilesAdded = useCallback((files: File[]) => {
+        if (files.length > 0) {
+            setFile(files[0]);
+            setResultBlob(null);
+            setError("");
+            setMobilePanel("input");
+        }
     }, []);
 
     const handleRemoveImage = useCallback(() => {
@@ -220,7 +222,7 @@ export default function RemoveBgWorkspace({ tool }: Props) {
 
                         {!file ? (
                             <div className={styles.uploadWrap}>
-                                <UploadZone onFileSelected={handleFileSelected} isProcessing={isProcessing} />
+                                <UploadZone onFilesAdded={handleFilesAdded} isProcessing={isProcessing} />
                             </div>
                         ) : (
                             <div className={styles.setupStage}>

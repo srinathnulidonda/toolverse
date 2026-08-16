@@ -196,6 +196,7 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -232,12 +233,22 @@ export default function JsonFormatterWorkspace({ tool }: { tool: Tool }) {
 
   const handleCopy = useCallback(async () => {
     if (!output) return;
+    // Clear any existing timeout
+    if (copyTimeoutRef.current !== null) {
+      clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = null;
+    }
+    // Reset copied state for this attempt
+    setCopied(false);
     try {
       await navigator.clipboard.writeText(output);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      copyTimeoutRef.current = setTimeout(() => {
+        setCopied(false);
+        copyTimeoutRef.current = null;
+      }, 1500);
     } catch {
-      /* */
+      setCopied(false);
     }
   }, [output]);
 

@@ -4,14 +4,13 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import FooterConditional from "@/components/layout/FooterConditional";
 import FloatingWidget from "@/components/widgets/FloatingWidget";
+import CookieBanner from "@/components/widgets/CookieBanner";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://toolverses.vercel.app";
 const SITE_NAME = "Toolverse";
 const TABLER_ICONS_CSS =
   "https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css";
 
-// Only include verification tags if actually configured — avoids shipping
-// placeholder junk ("REPLACE_WITH_...") to production <meta> tags.
 const GOOGLE_SITE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 const BING_SITE_VERIFICATION = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
 
@@ -44,7 +43,6 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   icons: {
-
     icon: [{ url: "/favicon.png", sizes: "any", type: "image/png" }],
     apple: [{ url: "/favicon.png", sizes: "180x180", type: "image/png" }],
     shortcut: ["/favicon.png"],
@@ -171,6 +169,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         <FloatingWidget />
+        <CookieBanner />
       </body>
     </html>
   );

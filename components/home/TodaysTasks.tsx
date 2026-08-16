@@ -1,7 +1,7 @@
 // components/home/TodaysTasks.tsx
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { useTasks } from "@/lib/useTasks";
 import {
   Task,
@@ -17,6 +17,7 @@ export default function TodaysTasks() {
 
   const [input, setInput] = useState("");
   const [priority, setPriority] = useState<Priority>("medium");
+  const priorityDotStyle: React.CSSProperties = useMemo(() => ({ background: PRIORITY_META[priority].color }), [priority]);
   const [mounted, setMounted] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
 
@@ -126,7 +127,7 @@ export default function TodaysTasks() {
                   strokeDasharray={circumference}
                   strokeDashoffset={circumference * (1 - pct / 100)}
                   transform="rotate(-90 15 15)"
-                  style={{ transition: "stroke-dashoffset 0.4s ease, stroke 0.3s" }}
+                  className="progress-circle"
                 />
                 {allDone && (
                   <path
@@ -158,7 +159,7 @@ export default function TodaysTasks() {
               aria-haspopup="listbox"
               aria-expanded={showPicker}
             >
-              <span className="td-dot" style={{ background: PRIORITY_META[priority].color }} />
+              <span className="td-dot" style={priorityDotStyle} />
             </button>
 
             {showPicker && (
@@ -544,6 +545,10 @@ export default function TodaysTasks() {
           .td-header { padding: 12px 14px 8px; }
           .td-add-row { padding: 8px 10px; }
           .td-tasks-scroll { max-height: 220px; }
+        }
+
+        .progress-circle {
+          transition: stroke-dashoffset 0.4s ease, stroke 0.3s;
         }
       `}</style>
     </>

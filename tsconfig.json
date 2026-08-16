@@ -23,6 +23,7 @@
       "@/*": ["*"],
       "@/lib/*": ["lib/*"],
       "@/components/*": ["components/*"],
+      "@/components/shared/*": ["components/shared/*"],
       "@/data/*": ["data/*"],
       "@/features/*": ["features/*"],
       "@/utils": ["lib/utils"]

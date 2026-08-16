@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo.png" alt="Toolverse Logo" width="380" />
+  <img src="public/logo-light.png" alt="Toolverse Logo" width="380" />
   <h1>Toolverse</h1>
   <p><strong>A free, privacy-first utility hub — 50+ browser-based tools for PDF, image, developer, finance, resume, and social tasks. No sign-up. No uploads. No limits.</strong></p>
 

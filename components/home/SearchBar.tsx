@@ -1,7 +1,7 @@
 // components/home/SearchBar.tsx
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 const font = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
@@ -10,6 +10,43 @@ export default function SearchBar() {
   const [query, setQuery] = useState("");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const formStyle: React.CSSProperties = useMemo(() => ({
+    width: "100%",
+    maxWidth: "380px",
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    background: "var(--bg-card)",
+    border: "0.5px solid var(--border)",
+    borderRadius: "9999px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)",
+    transition: "all 0.2s ease",
+  }), []);
+
+  const iconStyle: React.CSSProperties = useMemo(() => ({
+    position: "absolute",
+    left: "16px",
+    color: "var(--text-tertiary)",
+    display: "flex",
+    alignItems: "center",
+    pointerEvents: "none",
+  }), []);
+
+  const inputStyle: React.CSSProperties = useMemo(() => ({
+    flex: 1,
+    padding: query ? "12px 36px 12px 42px" : "12px 18px 12px 42px",
+    background: "transparent",
+    border: "none",
+    fontSize: "14px",
+    color: "var(--text)",
+    fontFamily: font,
+    outline: "none",
+    caretColor: "var(--brand)",
+    minWidth: 0,
+    letterSpacing: "-0.1px",
+    borderRadius: "9999px",
+  }), [query, font]);
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -36,29 +73,11 @@ export default function SearchBar() {
       <form
         onSubmit={handleSearch}
         className="hero-search-form"
-        style={{
-          width: "100%",
-          maxWidth: "380px",
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          background: "var(--bg-card)",
-          border: "0.5px solid var(--border)",
-          borderRadius: "9999px",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08)",
-          transition: "all 0.2s ease",
-        }}
+        style={formStyle}
       >
         <span
           className="hero-search-icon"
-          style={{
-            position: "absolute",
-            left: "16px",
-            color: "var(--text-tertiary)",
-            display: "flex",
-            alignItems: "center",
-            pointerEvents: "none",
-          }}
+          style={iconStyle}
         >
           <svg
             width="14"
@@ -88,20 +107,7 @@ export default function SearchBar() {
           placeholder="Search tools..."
           className="hero-search-input"
           autoComplete="off"
-          style={{
-            flex: 1,
-            padding: query ? "12px 36px 12px 42px" : "12px 18px 12px 42px",
-            background: "transparent",
-            border: "none",
-            fontSize: "14px",
-            color: "var(--text)",
-            fontFamily: font,
-            outline: "none",
-            caretColor: "var(--brand)",
-            minWidth: 0,
-            letterSpacing: "-0.1px",
-            borderRadius: "9999px",
-          }}
+          style={inputStyle}
         />
 
         {query && (

@@ -84,9 +84,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.19
         version: 18.3.7(@types/react@18.3.31)
-      '@types/tailwindcss':
-        specifier: ^3.1.0
-        version: 3.1.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.62.1
         version: 8.65.0(@typescript-eslint/parser@8.65.0(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3))(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
@@ -877,10 +874,6 @@ packages:
 
   '@types/react@18.3.31':
     resolution: {integrity: sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==}
-
-  '@types/tailwindcss@3.1.0':
-    resolution: {integrity: sha512-JxPzrm609hzvF4nmOI3StLjbBEP3WWQxDDJESqR1nh94h7gyyy3XSl0hn5RBMJ9mPudlLjtaXs5YEBtLw7CnPA==}
-    deprecated: This is a stub types definition. tailwindcss provides its own type definitions, so you do not need this installed.
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -3664,10 +3657,6 @@ snapshots:
     dependencies:
       '@types/prop-types': 15.7.15
       csstype: 3.2.3
-
-  '@types/tailwindcss@3.1.0':
-    dependencies:
-      tailwindcss: 4.3.3
 
   '@types/trusted-types@2.0.7':
     optional: true

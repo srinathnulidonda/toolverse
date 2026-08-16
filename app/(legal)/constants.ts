@@ -1,6 +1,6 @@
 // Shared constants for legal pages
 export const CONTACT_INFO = {
-  email: 'hello@toolverse.app',
+  email: 'srinathnulidonda.dev@gmail.com',
   github: 'github.com/srinathnulidonda/toolverse/issues',
   twitter: '@toolverse',
   responseTime: '48 hours'

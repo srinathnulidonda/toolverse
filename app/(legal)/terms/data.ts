@@ -125,7 +125,7 @@ Any disputes shall be resolved in the courts of India. By using the Service, you
     summary: "Get in touch with us if you have questions about our Terms of Service.",
     content: `For questions about these Terms, please contact us:
 
-<strong>Email:</strong> hello@toolverse.app<br />
+<strong>Email:</strong> srinathnulidonda.dev@gmail.com<br />
 <strong>GitHub:</strong> github.com/srinathnulidonda/toolverse/issues<br />
 <strong>Twitter:</strong> @toolverse`,
   },

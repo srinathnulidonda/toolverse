@@ -103,7 +103,7 @@ We do <strong>not</strong> use: Analytics cookies, advertising cookies, social m
     summary: "Get in touch with us if you have questions about our cookie policy.",
     content: `If you have questions about our use of cookies or this Cookie Policy, please contact us:
 
-<strong>Email:</strong> hello@toolverse.app<br />
+<strong>Email:</strong> srinathnulidonda.dev@gmail.com<br />
 <strong>GitHub:</strong> github.com/srinathnulidonda/toolverse/issues<br />
 <strong>Twitter:</strong> @toolverse
 

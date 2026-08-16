@@ -95,7 +95,7 @@ Significant changes will be announced on our homepage or via our social media ch
     summary: "Get in touch with us if you have questions about our privacy practices.",
     content: `If you have questions about this Privacy Policy or our data practices, please contact us:
 
-<strong>Email:</strong> hello@toolverse.app<br />
+<strong>Email:</strong> srinathnulidonda.dev@gmail.com<br />
 <strong>GitHub:</strong> github.com/srinathnulidonda/toolverse/issues<br />
 <strong>Twitter:</strong> @toolverse
 

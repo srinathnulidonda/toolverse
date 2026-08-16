@@ -5,8 +5,8 @@ export const contactMethods = [
     icon: "ti-mail",
     title: "Email Support",
     description: "Get help from our team",
-    value: "hello@toolverse.app",
-    href: "mailto:hello@toolverse.app",
+    value: "srinathnulidonda.dev@gmail.com",
+    href: "mailto:srinathnulidonda.dev@gmail.com",
     availability: "Response within 24h",
   },
   {

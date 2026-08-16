@@ -76,6 +76,9 @@ export default function ColorPreview({ color, presets = [], onColorChange }: Col
 
   const colorName = useMemo(() => (colorData ? getColorName(colorData.hex) : ""), [colorData]);
 
+  const presetStylesMap = useMemo(() => new Map(presets.map(preset => [preset.id, { background: preset.hex }])), [presets]);
+  const colorPreviewStyle: React.CSSProperties = useMemo(() => ({ background: colorData?.hex }), [colorData?.hex]);
+
   const goToOutput = useCallback(() => {
     setMobilePanel("output");
     setTimeout(() => rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
@@ -165,7 +168,7 @@ export default function ColorPreview({ color, presets = [], onColorChange }: Col
                       key={preset.id}
                       type="button"
                       className={styles.cpQuickSwatch}
-                      style={{ background: preset.hex }}
+                      style={presetStylesMap.get(preset.id)}
                       onClick={() => handlePickerChange(preset.hex)}
                       title={preset.name}
                       aria-label={`Use ${preset.name}`}
@@ -231,7 +234,7 @@ export default function ColorPreview({ color, presets = [], onColorChange }: Col
             <>
               <div className={styles.cpOutputBody}>
                 <div className={styles.cpPreviewCard}>
-                  <div className={styles.cpPreviewSwatch} style={{ background: colorData.hex }}>
+                  <div className={styles.cpPreviewSwatch} style={colorPreviewStyle}>
                     <div className={styles.cpPreviewOverlay}>
                       <span className={styles.cpPreviewHex}>{colorData.hex.toUpperCase()}</span>
                       <span className={styles.cpPreviewName}>{colorName}</span>
